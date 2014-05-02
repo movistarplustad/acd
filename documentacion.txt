@@ -1,0 +1,35 @@
+Instalar mongodb desde el Centro de software de Ubuntu
+
+http://www.tecnopedia.net/mongodb/tutorial-instalar-mongodb-en-ubuntu/
+Para tenerlo disponible en php
+sudo apt-get install php-pear
+sudo apt-get install php5-dev
+sudo pecl install mongo
+
+Versión 1:
+	en /etc/php5/apache2/php.ini
+	añadir
+	; mongoDB (fer)
+	extension=mongo.so
+
+Versión 2:
+	en /etc/php5/mods-available/mongo.ini
+	extension=mongo.so
+
+Cuando fallo con ubuntu 14.04
+sudo apt-get install php5-mongo
+
+Instalar Json
+http://stackoverflow.com/questions/18239405/php-fatal-error-call-to-undefined-function-json-decode
+	sudo apt-get install php5-json
+Then of course make sure you restart Apache:
+	sudo service apache2 restart
+Or if you are using PHP-FPM:
+	sudo service php5-fpm restart
+
+Notas:
+Apache y hosts
+/etc/hosts
+/etc/apache2
+sudo service apache2 restart
+Errores: /var/log/apache2/error.log

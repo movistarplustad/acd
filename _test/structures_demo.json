@@ -1,0 +1,10 @@
+{
+	"programa_tv" : {
+		"name" : "Programas TV",
+		"storage" : "text/plain"
+	},
+	"chat_tienda" : {
+		"name" : "Chat de tienda online",
+		"storage": "mongo db"
+	}
+}
