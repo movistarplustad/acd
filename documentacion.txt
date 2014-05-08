@@ -33,3 +33,5 @@ Apache y hosts
 /etc/apache2
 sudo service apache2 restart
 Errores: /var/log/apache2/error.log
+
+Ejemplo similar: http://www.wufoo.com.mx/examples/#bugtracker

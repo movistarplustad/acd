@@ -1,5 +1,5 @@
 <?php
-/* Prueba de listado de estructuras */
+/* Prueba de recuperar una de las estructuras */
 require ('../conf.php');
 require_once (DIR_BASE.'/class/structures_do.php');
 
