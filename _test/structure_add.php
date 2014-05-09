@@ -10,7 +10,7 @@ $numAdd = isset($_GET['n']) ? intval($_GET['n']) : 1;
 
 $structures_do = new structures_do();
 for ($n = 0; $n <= $numAdd; $n++) {
-$new_structure = new structure_do();
+	$new_structure = new structure_do();
 	$new_structure->setId("foo $n");
 	$new_structure->setName("Name foo $n");
 	$new_structure->setStorage('text/plain');

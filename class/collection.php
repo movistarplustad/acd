@@ -43,4 +43,9 @@ class collection {
 			return $this->elements[$_id];
 		}
 	}
+
+	public function set($id, $element) {
+		$_id = $this->getInternalIndex($id);
+		$this->elements[$_id] = $element;
+	}
 }

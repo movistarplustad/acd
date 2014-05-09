@@ -31,4 +31,12 @@ class structure_do {
 		// TODO
 		var_dump($jsonData);
 	}
+	public function tokenizeData() {
+		return array(
+			$this->getId() => array(
+				'name' => $this->getName(),
+				'storage' => $this->getStorage()
+			)
+		);
+	}
 }
