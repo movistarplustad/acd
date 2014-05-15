@@ -13,6 +13,13 @@ class structure_do {
 	public function getId() {
 		return $this->id;
 	}
+	public function generateId($name) {
+		$id = preg_replace('/[^a-z0-9_\-]/', '', strtolower($name));
+		if ($id === '') {
+			$id = 'id';
+		}
+		return $id;
+	}
 	public function setName($name) {
 		$this->name = $name;
 	}

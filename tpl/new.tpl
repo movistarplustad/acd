@@ -12,7 +12,9 @@
 <a href="index.php">Volver</a>
 <p class="result"><?=$resultDesc?></p>
 <form action="do_save_structure.php" method="post">
-	<input type="hidden" name="id" value="<?=htmlentities($id)?>"/>
+	<div>
+		<label for="id">Id</label>: <input type="text" name="id" id="id" value="<?=htmlentities($id)?>"/>
+	</div>
 	<div>
 		<label for="name">Nombre</label>: <input type="text" name="name" id="name" value="<?=htmlentities($name)?>"/>
 	</div>
@@ -27,7 +29,7 @@
 		?>
 		<label for="storage">Tipo Almacenamiento</label>: <select name="storage" id="storage"><?=$options?></select>
 	</div>
-	<input type="hidden" name="a" value="edit"/>
+	<input type="hidden" name="a" value="new"/>
 	<input type="submit" name="accion" value="guardar"/>
 </form>
 </body>
