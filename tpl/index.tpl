@@ -16,8 +16,12 @@
 		$estructura = $structures->get($id);
 		//echo "";
  ?>
- 	<li><?=$estructura->getName()?>
- 		<span class="tools"><a href="?a=edit&amp;id=<?=$id?>">editar</a>, <a href="?a=clone&amp;id=<?=$id?>">clonar</a>, <a href="?a=delete&amp;id=<?=$id?>">borrar</a></span>
+ 	<li>
+ 		<form action="do_process_structure.php" method="post">
+ 			<input type="text" name="id" value="<?=htmlentities($estructura->getId())?>"/>
+	 		<?=$estructura->getName()?>
+	 		<span class="tools"><input type="submit" name="a" value="edit"/>,  <input type="submit" name="a" value="clone"/>, <input type="submit" name="a" value="delete"/></span>
+	 	</form>
  	</li>
 <?php
 	}

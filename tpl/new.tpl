@@ -11,7 +11,7 @@
 <h2>Administración <span id="structure_name"><?=htmlentities($titleName)?></span></h2>
 <a href="index.php">Volver</a>
 <p class="result"><?=$resultDesc?></p>
-<form action="do_save_structure.php" method="post">
+<form action="do_process_structure.php" method="post">
 	<div>
 		<label for="id">Id</label>: <input type="text" name="id" id="id" value="<?=htmlentities($id)?>"/>
 	</div>
