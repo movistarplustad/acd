@@ -8,7 +8,7 @@ class structure_do {
 	}
 	/* Setters and getters attributes */
 	public function setId($id) {
-		$this->id = $id;
+		$this->id = (string)$id;
 	}
 	public function getId() {
 		return $this->id;
