@@ -40,6 +40,9 @@ switch ($accion) {
 			$returnUrl = 'index.php?a='.$accion.'&r=ko&id='.urlencode($id).'&name='.urlencode($name).'&storage='.urlencode($storage);
 		}		
 		break;
+	case 'clone':
+		$returnUrl = 'index.php?a=clone&id='.urlencode($id);
+		break;
 	case 'delete':
 		$result = $structures->remove($id) ? 'ok' : 'ko';
 		$structures->save();
