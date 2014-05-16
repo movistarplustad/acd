@@ -35,6 +35,22 @@ switch ($action) {
 		$storage = isset($_GET['storage']) ? $_GET['storage'] : '';
 		$tpl = DIR_BASE.'/tpl/new.tpl';
 		break;
+	case 'clone':
+		$id = $_GET['id'];
+		$estructura = $structures->get($id);
+		if ($estructura === null) {
+			/* Error, intentando editar una estructura que no existe */
+			$titleName = '(error)';
+			$tpl = DIR_BASE.'/tpl/error.tpl';
+		}
+		else {
+			$id = "cp_$id";
+			$name = '[copia] '.$estructura->getName();
+			$titleName = "(copia)";
+			$storage = $estructura->getStorage();
+			$tpl = DIR_BASE.'/tpl/new.tpl';
+		}
+		break;
 	case 'list':
 	default:
 		$tpl = DIR_BASE.'/tpl/index.tpl';
