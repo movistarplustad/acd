@@ -18,7 +18,7 @@
  ?>
  	<li>
  		<form action="do_process_structure.php" method="post">
- 			<input type="text" name="id" value="<?=htmlentities($estructura->getId())?>"/>
+ 			<input type="text" name="id" value="<?=htmlspecialchars($estructura->getId())?>"/>
 	 		<?=$estructura->getName()?>
 	 		<span class="tools"><input type="submit" name="a" value="edit"/>,  <input type="submit" name="a" value="clone"/>, <input type="submit" name="a" value="delete"/></span>
 	 	</form>
