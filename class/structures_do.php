@@ -6,6 +6,40 @@ class structures_do extends collection {
 	public function __construct() {
 		parent::__construct();
 	}
+	/* Overwrite add method using id of element */
+	public function add($element) {
+		$_id = $element->getId();
+		if ($this->hasKey($_id)) {
+			return false;
+		}
+		else {
+			$this->elements[$_id] = $element;
+			return true;
+		}
+	}
+	public function get($key) {
+		try {
+			return parent::get($key);
+		} catch (Exception $e) {
+			return null;
+		}
+	}
+	public function set($element, $key) {
+		try {
+			parent::set($element, $key);
+			return true;
+		} catch (Exception $e) {
+			return false;
+		}
+	}
+	public function remove($key) {
+		try {
+			parent::remove($key);
+			return true;
+		} catch (Exception $e) {
+			return false;
+		}
+	}
 	public function load($path = null) {
 		if ($path === null) {
 			$path = DIR_DATA.'/structures.json';

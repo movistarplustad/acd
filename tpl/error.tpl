@@ -8,7 +8,7 @@
 </head>
 <body>
 <h1>ACD</h1>
-<h2>Administración <span id="structure_name"><?=htmlentities($titleName)?></span></h2>
+<h2>Administración <span id="structure_name"><?=htmlspecialchars($titleName)?></span></h2>
 <a href="index.php">Volver</a>
 <p><em>Error</em>: No se ha podido recuperar la estructura.</p>
 </body>

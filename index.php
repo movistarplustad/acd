@@ -63,7 +63,7 @@ switch ($result) {
 		$resultDesc = 'Guardado';
 		break;
 	case 'ko':
-		$resultDesc = '<em>Error</em>, no se ha podido guardar';
+		$resultDesc = '<em>Error</em>, no se ha podido procesar';
 		break;
 	default:
 		$resultDesc = '';

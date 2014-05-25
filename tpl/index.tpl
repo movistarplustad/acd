@@ -9,6 +9,7 @@
 <body>
 <h1>ACD</h1>
 <h2>Administración estructuras</h2>
+<p class="result"><?=$resultDesc?></p>
 <div><a href="?a=new">Nueva</a></div>
 <ol id="structures_list">
 <?php
@@ -18,7 +19,7 @@
  ?>
  	<li>
  		<form action="do_process_structure.php" method="post">
- 			<input type="text" name="id" value="<?=htmlentities($estructura->getId())?>"/>
+ 			<input type="hidden" name="id" value="<?=htmlspecialchars($estructura->getId())?>"/>
 	 		<?=$estructura->getName()?>
 	 		<span class="tools"><input type="submit" name="a" value="edit"/>,  <input type="submit" name="a" value="clone"/>, <input type="submit" name="a" value="delete"/></span>
 	 	</form>
@@ -27,8 +28,10 @@
 	}
 ?>
 </ol>
+<!--
 <footer>
 	<a href="_test/">Tests</a>
 </footer>
+-->
 </body>
 </html>

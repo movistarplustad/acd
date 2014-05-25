@@ -1,4 +1,6 @@
 <?php
+class KeyInvalidException extends exception {}
+class KeyhasUseException extends exception {}
 class collection {
 	static $elements;
 
@@ -6,46 +8,52 @@ class collection {
 		$this->elements = array(); /* Create empty structure */
 	}
 
-	private function getInternalIndex($id) {
-		// TODO improve speed width associative index?
-		foreach ($this->elements as $key => $element) {
-			if ($element->getId() === $id) {
-				return $key;
+	public function hasKey($key) {
+		return isset($this->elements[$key]);
+	}
+
+	public function add($element, $key = null) {
+		if ($key == null) {
+			$this->elements[] = $obj;
+		}
+		else {
+			if ($this->hasKey($key)) {
+				throw new KeyHasUseException("Key $key already in use.");
+			}
+			else {
+				$this->elements[$key] = $obj;
 			}
 		}
-
-		return null;
 	}
 
-	public function add($element) {
-		//var_dump($element);
-		$this->elements[] = $element;
+	public function set($element, $key) {
+		$this->elements[$key] = $element;
 	}
 
-	public function remove($id) {
-		$_id = $this->getInternalIndex($id);
-		if ($_id === null) {
-			return false;
+	public function remove($key) {
+		if (isset($this->elements[$key])) {
+			unset($this->elements[$key]);
 		}
 		else {
-			unset($this->elements[$_id]);
-			return true;
+			throw new KeyInvalidException("Invalid key $key.");
 		}
 	}
 
-	public function get($id) {
-		$_id = $this->getInternalIndex($id);
-		if ($_id === null) {
-			return null;
+	public function get($key) {
+		if (isset($this->elements[$key])) {
+			return $this->elements[$key];
 		}
 		else {
-			
-			return $this->elements[$_id];
+			throw new KeyInvalidException("Invalid key $key.");
 		}
 	}
 
-	public function set($id, $element) {
-		$_id = $this->getInternalIndex($id);
-		$this->elements[$_id] = $element;
+	public function keys() {
+		return array_keys($this->elements);
 	}
+	public function length() {
+		return count($this->elements);
+	}
+
+
 }

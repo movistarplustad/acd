@@ -9,7 +9,12 @@ $storage = isset($_POST['storage']) ? $_POST['storage'] : null;
 $structures = new structures_do();
 $structures->load();
 
-$structureFound = $structures->get($id);
+try {
+	$structureFound = $structures->get($id);	
+} catch (Exception $e) {
+	$structureFound = null;
+}
+
 switch ($accion) {
 	case 'edit':
 		$returnUrl = 'index.php?a=edit&id='.urlencode($id);
@@ -31,7 +36,7 @@ switch ($accion) {
 			$modified_structure->setId($id );
 			$modified_structure->setName($name);
 			$modified_structure->setStorage($storage);
-			$structures->set($id, $modified_structure);
+			$structures->set($modified_structure, $id);
 			$structures->save();
 
 			$returnUrl = 'index.php?a=edit&r=ok&id='.urlencode($id);
@@ -44,8 +49,13 @@ switch ($accion) {
 		$returnUrl = 'index.php?a=clone&id='.urlencode($id);
 		break;
 	case 'delete':
-		$result = $structures->remove($id) ? 'ok' : 'ko';
-		$structures->save();
+		try {
+			$result = $structures->remove($id) ? 'ok' : 'ko';
+			$structures->save();
+		} catch (Exception $e) {
+			$result = 'ko';
+		}
+
 		$returnUrl = 'index.php?a='.$accion.'&r='.$result.'&id='.urlencode($id);
 		break;
 	default:
