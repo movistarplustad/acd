@@ -11,5 +11,7 @@
 <h2>Administración <span id="structure_name"><?=htmlspecialchars($titleName)?></span></h2>
 <a href="index.php">Volver</a>
 <p><em>Error</em>: No se ha podido recuperar la estructura.</p>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>
