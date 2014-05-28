@@ -30,5 +30,7 @@
 	<input type="hidden" name="a" value="save"/>
 	<input type="submit" name="accion" value="guardar"/>
 </form>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>

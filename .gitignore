@@ -2,6 +2,9 @@
 acd.sublime-project
 acd.sublime-workspace
 
+# Persisten data
+data/*
+
 # temp files
 *.swp
 
