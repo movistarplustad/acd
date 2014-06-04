@@ -1,10 +1,15 @@
 <?php
+include_once (DIR_BASE.'/class/fields_do.php');
+
+class StorageKeyInvalidException extends exception {}
 class structure_do {
 	static $id;
 	static $name; /* name, storage */
 	static $storage;
+	static $fields;
 	public function __construct() {
 		$this->id = null;
+		$this->fields = new fields_do();
 	}
 	/* Setters and getters attributes */
 	public function setId($id) {
@@ -27,10 +32,22 @@ class structure_do {
 		return $this->name;
 	}
 	public function setStorage($storage) {
-		$this->storage = $storage;
+		if (array_key_exists($storage, conf::$STORAGE_TYPES)) {
+			$this->storage = $storage;
+		}
+		else {
+			throw new StorageKeyInvalidException("Invalid storage key $storage.");
+		}
 	}
 	public function getStorage() {
 		return $this->storage;
+	}
+	public function addField($field) {
+		$this->getFields()->add($field);
+		d($this->getFields());
+	}
+	public function getFields() {
+		return $this->fields;
 	}
 
 	/* Serializes */
@@ -39,10 +56,21 @@ class structure_do {
 		var_dump($jsonData);
 	}
 	public function tokenizeData() {
+		$aFieldsData = array();
+d($this->getFields());
+		foreach ($this->getFields() as $field) {
+
+			$aFieldsData[] = array(
+				'type' => $field->getType(),
+				'name' => $field->getName()
+			);
+		}
+
 		return array(
 			$this->getId() => array(
 				'name' => $this->getName(),
-				'storage' => $this->getStorage()
+				'storage' => $this->getStorage(),
+				'fields' => $aFieldsData
 			)
 		);
 	}

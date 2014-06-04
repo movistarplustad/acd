@@ -14,14 +14,14 @@ class collection {
 
 	public function add($element, $key = null) {
 		if ($key == null) {
-			$this->elements[] = $obj;
+			$this->elements[] = $element;
 		}
 		else {
 			if ($this->hasKey($key)) {
 				throw new KeyHasUseException("Key $key already in use.");
 			}
 			else {
-				$this->elements[$key] = $obj;
+				$this->elements[$key] = $element;
 			}
 		}
 	}

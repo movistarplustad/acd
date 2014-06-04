@@ -27,6 +27,21 @@
 		?>
 		<label for="storage">Tipo Almacenamiento</label>: <select name="storage" id="storage"><?=$options?></select>
 	</div>
+	<div>
+		<?php
+		$field_types = '';
+		foreach (conf::$FIELD_TYPES as $key => $value) {
+			$field_types .= '<li>
+				<input type="radio" name="new_field" value="'.htmlspecialchars($key).'" id="field_'.$key.'"/>
+				<label for="field_'.$key.'">'.htmlspecialchars($value).'</label>';
+		}
+		?>
+		<fieldset>
+			<legend>Tipos de campo</legend>
+			<ul><?=$field_types?></ul>
+			<div><input type="submit" name="accion" value="Añadir"/></div>
+		</fieldset>
+	</div>
 	<input type="hidden" name="a" value="save"/>
 	<input type="submit" name="accion" value="guardar"/>
 </form>

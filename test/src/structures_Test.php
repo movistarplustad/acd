@@ -1,4 +1,5 @@
 <?php
+require_once (DIR_BASE.'/class/structures_do.php');
 
 class structures extends PHPUnit_Framework_TestCase
 {
@@ -74,7 +75,7 @@ class structures extends PHPUnit_Framework_TestCase
         // Assert
         $this->assertEquals($b->getId(), 'chat_tienda');
         $this->assertEquals($b->getName(), 'Chat de tienda online');
-        $this->assertEquals($b->getStorage(), 'mongo db');
+        $this->assertEquals($b->getStorage(), 'mongodb');
 
         // Act
         $b = $a->get('programa_tv');

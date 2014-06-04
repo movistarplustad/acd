@@ -6,6 +6,8 @@ $accion = $_POST['a'];
 $id = $_POST['id'];
 $name = isset($_POST['name']) ? $_POST['name'] : null;
 $storage = isset($_POST['storage']) ? $_POST['storage'] : null;
+$new_field_type = isset($_POST['new_field']) ? $_POST['new_field'] : null;
+
 $structures = new structures_do();
 $structures->load();
 
@@ -36,6 +38,11 @@ switch ($accion) {
 			$modified_structure->setId($id );
 			$modified_structure->setName($name);
 			$modified_structure->setStorage($storage);
+			if($new_field_type) {
+				$field = new field_do();
+				$field->setType($new_field_type);
+				$modified_structure->addField($field);
+			}
 			$structures->set($modified_structure, $id);
 			$structures->save();
 
