@@ -7,9 +7,10 @@ $id = $_POST['id'];
 $name = isset($_POST['name']) ? $_POST['name'] : null;
 $storage = isset($_POST['storage']) ? $_POST['storage'] : null;
 $new_field_type = isset($_POST['new_field']) ? $_POST['new_field'] : null;
+$fields = isset($_POST['field']) ? $_POST['field'] : array();
 
 $structures = new structures_do();
-$structures->load();
+$structures->loadFromFile(conf::$DATA_PATH);
 
 try {
 	$structureFound = $structures->get($id);	
@@ -35,9 +36,18 @@ switch ($accion) {
 			// TODO: Set de la estructura, actualizar structures con los nuevos datos
 			$modified_structure = new structure_do();
 			//var_dump($modified_structure->generateId($name));die();
-			$modified_structure->setId($id );
+			$modified_structure->setId($id);
 			$modified_structure->setName($name);
 			$modified_structure->setStorage($storage);
+			$numFields = count($fields);
+			for ($n = 0; $n < $numFields; $n++) {
+				if (!$fields[$n]['delete']) {
+					$field = new field_do();
+					$field->setType($fields[$n]['type']);
+					$field->setName($fields[$n]['name']);
+					$modified_structure->addField($field);
+				}
+			}
 			if($new_field_type) {
 				$field = new field_do();
 				$field->setType($new_field_type);

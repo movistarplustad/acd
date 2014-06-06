@@ -3,7 +3,7 @@ require ('conf.php');
 require_once (DIR_BASE.'/class/structures_do.php');
 
 $structures = new structures_do();
-$structures->load();
+$structures->loadFromFile(conf::$DATA_PATH);
 $estructuras = $structures->getAllStructures();
 //var_dump($estructuras);
 //var_dump(conf::$STORAGE_TYPES);
@@ -22,6 +22,7 @@ switch ($action) {
 			$name = $estructura->getName();
 			$titleName = $name;
 			$storage = $estructura->getStorage();
+			$fields = $estructura->getFields();
 			$tpl = DIR_BASE.'/tpl/edit.tpl';
 		}
 		break;

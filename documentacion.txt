@@ -1,3 +1,12 @@
+Git
+sudo apt-get install git
+
+Apache
+sudo apt-get install apache2
+
+Php
+sudo apt-get install php5 libapache2-mod-php5 php5-cli php5-mysql
+
 Instalar mongodb desde el Centro de software de Ubuntu
 
 http://www.tecnopedia.net/mongodb/tutorial-instalar-mongodb-en-ubuntu/
@@ -26,6 +35,11 @@ Then of course make sure you restart Apache:
 	sudo service apache2 restart
 Or if you are using PHP-FPM:
 	sudo service php5-fpm restart
+
+PHpUnit
+wget https://phar.phpunit.de/phpunit.phar
+chmod +x phpunit.phar
+mv phpunit.phar /usr/local/bin/phpunit
 
 Notas:
 Apache y hosts

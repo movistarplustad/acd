@@ -44,10 +44,21 @@ class structure_do {
 	}
 	public function addField($field) {
 		$this->getFields()->add($field);
-		d($this->getFields());
+//		d($this->getFields());
 	}
 	public function getFields() {
 		return $this->fields;
+	}
+
+	public function load($data) {
+		$this->setName($data['name']);
+		$this->setStorage($data['storage']);
+		foreach ($data['fields'] as $dataField) {
+			$field = new field_do();
+			$field->setType($dataField['type']);
+			$field->setName($dataField['name']);
+			$this->addField($field);
+		}
 	}
 
 	/* Serializes */
@@ -57,9 +68,10 @@ class structure_do {
 	}
 	public function tokenizeData() {
 		$aFieldsData = array();
-d($this->getFields());
-		foreach ($this->getFields() as $field) {
+		$aIdFields = $this->getFields()->keys();
 
+		foreach ($aIdFields as $id) {
+			$field = $this->getFields()->get($id);
 			$aFieldsData[] = array(
 				'type' => $field->getType(),
 				'name' => $field->getName()

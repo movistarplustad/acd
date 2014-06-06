@@ -40,7 +40,7 @@ class structures_do extends collection {
 			return false;
 		}
 	}
-	public function load($path = null) {
+	public function loadFromFile($path = null) {
 		if ($path === null) {
 			$path = DIR_DATA.'/structures.json';
 		}
@@ -51,8 +51,8 @@ class structures_do extends collection {
 			foreach ($estructura as $key => $value) {
 				$structure = new structure_do();
 				$structure->setId($key);
-				$structure->setName($value['name']);
-				$structure->setStorage($value['storage']);
+				$structure->load($value);
+
 				$this->add($structure);
 			}
 		}

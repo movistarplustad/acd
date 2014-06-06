@@ -10,7 +10,7 @@ class structures extends PHPUnit_Framework_TestCase
         /* Load data */
         // Arrange
         $a = new structures_do();
-        $a->load(DIR_BASE.'/test/data/structures_demo.json');
+        $a->loadFromFile(DIR_BASE.'/test/data/structures_demo.json');
 
         // Act
         $b = $a->getAllStructures();
@@ -24,7 +24,7 @@ class structures extends PHPUnit_Framework_TestCase
         /* Add structures */
         // Arrange
         $a = new structures_do();
-        //$a->load(DIR_BASE.'/test/data/structures_demo.json');
+        //$a->loadFromFile(DIR_BASE.'/test/data/structures_demo.json');
         $numAdd = 5;
         for ($n = 0; $n < $numAdd; $n++) {
             $new_structure = new structure_do();
@@ -67,7 +67,7 @@ class structures extends PHPUnit_Framework_TestCase
         /* Get structure */
         // Arrange
         $a = new structures_do();
-        $a->load(DIR_BASE.'/test/data/structures_demo.json');
+        $a->loadFromFile(DIR_BASE.'/test/data/structures_demo.json');
 
         // Act
         $b = $a->get('chat_tienda');
@@ -92,7 +92,7 @@ class structures extends PHPUnit_Framework_TestCase
         /* Delete structure */
         // Arrange
         $a = new structures_do();
-        $a->load(DIR_BASE.'/test/data/structures_demo.json');
+        $a->loadFromFile(DIR_BASE.'/test/data/structures_demo.json');
         $numInitialStructures = count($a->getAllStructures());
 
         // Act
@@ -104,7 +104,7 @@ class structures extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $numInitialStructures - count($b));
 
         // Arrange
-        $a->load(DIR_BASE.'/test/data/structures_demo.json');
+        $a->loadFromFile(DIR_BASE.'/test/data/structures_demo.json');
         $numInitialStructures = count($a->getAllStructures());
 
         // Act

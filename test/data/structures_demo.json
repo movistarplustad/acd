@@ -6,7 +6,7 @@
     },
     "chat_tienda": {
       "name": "Chat de tienda online",
-      "storage": "mongo db"
+      "storage": "mongodb"
     }
   }
 ]

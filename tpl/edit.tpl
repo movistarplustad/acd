@@ -29,15 +29,36 @@
 	</div>
 	<div>
 		<?php
+		$structure_fields = '';
+		$idFields = $fields->keys();
+		foreach ($idFields as $idField) {
+			$field = $fields->get($idField);
+			$structure_fields .= '<li>
+				<input type="text" name="field['.$idField.'][name]" value="'.htmlspecialchars($field->getName()).'" id="field_'.$idField.'"/>
+				<input type="hidden" name="field['.$idField.'][type]" value="'.htmlspecialchars($field->getType()).'"/>
+				<label for="field_'.$idField.'">'.htmlspecialchars($field->getType()).'</label>
+				<input type="checkbox" name="field['.$idField.'][delete]" value="1" id="delete_field_'.$idField.'"/>
+				<label for="delete_field_'.$idField.'">Delete</label>
+				</li>';
+		}
+		?>
+		<fieldset>
+			<legend>Campos</legend>
+			<ul><?=$structure_fields?></ul>
+		</fieldset>
+	</div>
+	<div>
+		<?php
 		$field_types = '';
 		foreach (conf::$FIELD_TYPES as $key => $value) {
 			$field_types .= '<li>
 				<input type="radio" name="new_field" value="'.htmlspecialchars($key).'" id="field_'.$key.'"/>
-				<label for="field_'.$key.'">'.htmlspecialchars($value).'</label>';
+				<label for="field_'.$key.'">'.htmlspecialchars($value).'</label>
+				</li>';
 		}
 		?>
 		<fieldset>
-			<legend>Tipos de campo</legend>
+			<legend>Añadir campo</legend>
 			<ul><?=$field_types?></ul>
 			<div><input type="submit" name="accion" value="Añadir"/></div>
 		</fieldset>
