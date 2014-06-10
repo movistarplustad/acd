@@ -2,11 +2,26 @@
   {
     "programa_tv": {
       "name": "Programas TV",
-      "storage": "text/plain"
+      "storage": "text/plain",
+      "fields": []
     },
     "chat_tienda": {
       "name": "Chat de tienda online",
-      "storage": "mongodb"
+      "storage": "mongodb",
+      "fields": [
+        {
+          "abierta": {
+            "type": "boolean",
+            "name": "Abierta"
+          }
+        },
+        {
+          "foo": {
+            "type": "text_simple",
+            "name": "pretty"
+          }
+        }
+      ]
     }
   }
 ]

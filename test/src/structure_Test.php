@@ -43,8 +43,18 @@ class structure extends PHPUnit_Framework_TestCase
 	public function testFields() {
 		/* Add */
 		$a = new structure_do();
-		$idFiedld = $a->addField('foo');
+		$f = new field_do();
+		$f->setId('foo');
+		$f->setName('var');
+		$f->setType('text_simple');
+		$this->assertEquals('foo', $f->getId());
+		$this->assertEquals('var', $f->getName());
+		$this->assertEquals('text_simple', $f->getType());
+
+		$idFiedld = $a->addField($f);
 		$field = $a->getFields()->get('foo');
-		$this->assertEquals('foo', $field->getType());
+		$this->assertEquals('foo', $field->getId());
+		$this->assertEquals('var', $field->getName());
+		$this->assertEquals('text_simple', $field->getType());
 	}
 }

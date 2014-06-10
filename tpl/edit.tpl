@@ -34,6 +34,7 @@
 		foreach ($idFields as $idField) {
 			$field = $fields->get($idField);
 			$structure_fields .= '<li>
+				<input type="hidden" name="field['.$idField.'][id]" value="'.htmlspecialchars($field->getId()).'"/>
 				<input type="text" name="field['.$idField.'][name]" value="'.htmlspecialchars($field->getName()).'" id="field_'.$idField.'"/>
 				<input type="hidden" name="field['.$idField.'][type]" value="'.htmlspecialchars($field->getType()).'"/>
 				<label for="field_'.$idField.'">'.htmlspecialchars($field->getType()).'</label>

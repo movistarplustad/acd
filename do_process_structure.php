@@ -43,6 +43,8 @@ switch ($accion) {
 			for ($n = 0; $n < $numFields; $n++) {
 				if (!$fields[$n]['delete']) {
 					$field = new field_do();
+					$idField = $fields[$n]['id'] === '' ? $field->generateId($fields[$n]['name']) : $fields[$n]['id'];
+					$field->setId($idField);
 					$field->setType($fields[$n]['type']);
 					$field->setName($fields[$n]['name']);
 					$modified_structure->addField($field);

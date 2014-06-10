@@ -12,6 +12,12 @@ class field extends PHPUnit_Framework_TestCase
 		$a = new field_do();
 
 		// Act
+		$a->setId('foo');
+
+		// Assert
+		$this->assertEquals('foo', $a->getId());
+
+		// Act
 		$a->setType('text_simple');
 
 		// Assert
