@@ -35,18 +35,18 @@ switch ($accion) {
 		if($bIdValid) {
 			// TODO: Set de la estructura, actualizar structures con los nuevos datos
 			$modified_structure = new structure_do();
-			//var_dump($modified_structure->generateId($name));die();
 			$modified_structure->setId($id);
 			$modified_structure->setName($name);
 			$modified_structure->setStorage($storage);
 			$numFields = count($fields);
-			for ($n = 0; $n < $numFields; $n++) {
-				if (!$fields[$n]['delete']) {
+			foreach ($fields as $idField => $data) {
+				//$n = 0; $n < $numFields; $n++) {
+				if (!$fields[$idField]['delete']) {
 					$field = new field_do();
-					$idField = $fields[$n]['id'] === '' ? $field->generateId($fields[$n]['name']) : $fields[$n]['id'];
-					$field->setId($idField);
-					$field->setType($fields[$n]['type']);
-					$field->setName($fields[$n]['name']);
+					$newId = $fields[$idField]['id'] === '' ? $field->generateId($fields[$idField]['name']) : $fields[$idField]['id'];
+					$field->setId($newId);
+					$field->setType($fields[$idField]['type']);
+					$field->setName($fields[$idField]['name']);
 					$modified_structure->addField($field);
 				}
 			}
