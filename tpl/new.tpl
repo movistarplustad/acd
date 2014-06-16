@@ -29,6 +29,29 @@
 		?>
 		<label for="storage">Tipo Almacenamiento</label>: <select name="storage" id="storage"><?=$options?></select>
 	</div>
+	<div>
+		<?php
+		$structure_fields = '';
+		$idFields = $fields->keys();
+		$n = 0;
+		foreach ($idFields as $idField) {
+			$field = $fields->get($idField);
+			$structure_fields .= '<li>
+				<input type="hidden" name="field['.$n.'][id]" value="'.htmlspecialchars($field->getId()).'"/>
+				<input type="text" name="field['.$n.'][name]" value="'.htmlspecialchars($field->getName()).'" id="field_'.$n.'"/>
+				<input type="hidden" name="field['.$n.'][type]" value="'.htmlspecialchars($field->getType()).'"/>
+				<label for="field_'.$n.'">'.htmlspecialchars($field->getType()).'</label>
+				<input type="checkbox" name="field['.$n.'][delete]" value="1" id="delete_field_'.$n.'"/>
+				<label for="delete_field_'.$n.'">Delete</label>
+				</li>';
+			$n++;
+		}
+		?>
+		<fieldset>
+			<legend>Campos</legend>
+			<ul><?=$structure_fields?></ul>
+		</fieldset>
+	</div>
 	<input type="hidden" name="a" value="new"/>
 	<input type="submit" name="accion" value="guardar"/>
 </form>

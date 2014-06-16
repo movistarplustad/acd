@@ -49,6 +49,7 @@ switch ($action) {
 			$name = '[copia] '.$estructura->getName();
 			$titleName = "(copia)";
 			$storage = $estructura->getStorage();
+			$fields = $estructura->getFields();
 			$tpl = DIR_BASE.'/tpl/new.tpl';
 		}
 		break;
