@@ -4,12 +4,16 @@
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="stylesheet" type="text/css" href="style/main.css"/>
+	<link href="style/icon_16.png" rel="icon" />
+	<link href="style/icon_128.png" sizes="128x128" rel="icon" />
+	<title>Administración estructuras</title>
 	<title>Administración estructuras</title>
 </head>
 <body>
 <h1>ACD</h1>
 <h2>Administración <span id="structure_name"><?=htmlspecialchars($titleName)?></span></h2>
-<a href="index.php">Volver</a>
+<a href="index.php" class="back">Volver</a>
 <p class="result"><?=$resultDesc?></p>
 <form action="do_process_structure.php" method="post">
 	<input type="hidden" name="id" value="<?=htmlspecialchars($id)?>"/>
@@ -63,11 +67,11 @@
 		<fieldset>
 			<legend>Añadir campo</legend>
 			<ul><?=$field_types?></ul>
-			<div><input type="submit" name="accion" value="Añadir"/></div>
+			<div><input type="submit" name="accion" value="Añadir" class="button add" /></div>
 		</fieldset>
 	</div>
 	<input type="hidden" name="a" value="save"/>
-	<input type="submit" name="accion" value="guardar"/>
+	<input type="submit" name="accion" value="guardar" class="button publish" />
 </form>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
