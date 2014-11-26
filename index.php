@@ -1,6 +1,10 @@
 <?php
 require ('conf.php');
 require_once (DIR_BASE.'/class/structures_do.php');
+require_once (DIR_BASE.'/class/auth.php');
+$nick = '';
+$hash = '';
+//echo auth::isLoged($nick, $hash);
 
 $structures = new structures_do();
 $structures->loadFromFile(conf::$DATA_PATH);
