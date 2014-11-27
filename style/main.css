@@ -62,7 +62,8 @@ a:active {
 }
 .button {
 	background-color: #FFF;
-	background-position: top left;
+	background-position: 0.3em center;
+	background-size: 1.5em;
 	background-repeat: no-repeat;
 	border-radius: 3px;
 	box-sizing: border-box;
@@ -70,30 +71,24 @@ a:active {
 	border-width: 1px;
 	border-style: solid;
 	border-color: #E3E3E3 #E3E3E3 #C2C2C2;
-	padding: 0.5em 0.5em 0.5em 1.5em;
+	padding: 0.5em 0.5em 0.5em 1.7em;
 	cursor: pointer;
 }
 .button.edit {
-	background: url(ic_mode_edit_24px.svg) no-repeat #FFF center left;
-	background-size: 1.5em;
+	background-image: url(ic_mode_edit_24px.svg);
 }
 .button.clone {
-	background: url(ic_content_copy_24px.svg) no-repeat #FFF center left;
-	background-size: 1.5em;
+	background-image: url(ic_content_copy_24px.svg);
 }
 .button.delete {
-	background: url(ic_delete_24px.svg) no-repeat #FFF center left;
-	background-size: 1.5em;
+	background-image: url(ic_delete_24px.svg);
 }
 .button.publish {
-	background: url(ic_publish_24px.svg) no-repeat #FFF center left;
-	background-size: 1.5em;
+	background-image: url(ic_publish_24px.svg);
 }
 .button.add {
-	background: url(ic_add_circle_outline_24px.svg) no-repeat #FFF center left;
-	background-size: 1.5em;
+	background-image: url(ic_add_circle_outline_24px.svg);
 }
-
 
 #structures_list .structure {
 	padding: 0.5em 0;
@@ -105,7 +100,7 @@ a:active {
 }
 .button.new {
 	font-size: 0.9em;
-	background: url(ic_add_circle_24px.svg) no-repeat #FFF center left;
+	background-image: url(ic_add_circle_24px.svg);
 	background-size: 1.5em;
 	text-decoration: none;
 }
