@@ -5,6 +5,6 @@ class auth  {
 			return true;
 		}
 		$path_data = DIR_DATA.'/auth.json';
-		return $path_data;
+		return false;
 	}
 }
