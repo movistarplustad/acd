@@ -7,6 +7,7 @@ class conf {
 	public static $DATA_PATH;
 	public static $STORAGE_TYPES;
 	public static $FIELD_TYPES;
+	public static $USE_AUTHENTICATION;
 }
 conf::$DATA_PATH = DIR_DATA.'/structures.json';
 conf::$STORAGE_TYPES = array(
@@ -22,6 +23,7 @@ conf::$FIELD_TYPES =  array(
 		'range' => 'Range',
 		'boolean' => 'Boolean'
 	);
+conf::$USE_AUTHENTICATION = false;
 
 /* Debug */
 if (file_exists(DIR_BASE.'/../tools/kint/Kint.class.php')) {

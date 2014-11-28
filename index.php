@@ -1,15 +1,25 @@
 <?php
 require ('conf.php');
 require_once (DIR_BASE.'/class/structures_do.php');
-
-$structures = new structures_do();
-$structures->loadFromFile(conf::$DATA_PATH);
-$estructuras = $structures->getAllStructures();
-//var_dump($estructuras);
-//var_dump(conf::$STORAGE_TYPES);
+require_once (DIR_BASE.'/class/auth.php');
+$nick = '';
+$hash = '';
+if (!auth::isLoged($nick, $hash)) {
+	$action = 'login';
+}
+else {
+	$structures = new structures_do();
+	$structures->loadFromFile(conf::$DATA_PATH);
+	$estructuras = $structures->getAllStructures();
+	//var_dump($estructuras);
+	//var_dump(conf::$STORAGE_TYPES);
+	$action = isset($_GET['a']) ? $_GET['a'] : 'list';
+}
 /* Show action block */
-$action = isset($_GET['a']) ? $_GET['a'] : 'list';
 switch ($action) {
+	case 'login':
+		$tpl = DIR_BASE.'/tpl/login.tpl';
+		break;
 	case 'edit':
 		$id = $_GET['id'];
 		$estructura = $structures->get($id);
