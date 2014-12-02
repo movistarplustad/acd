@@ -4,6 +4,10 @@
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="stylesheet" type="text/css" href="style/main.css"/>
+	<link href="style/icon_16.png" rel="icon" />
+	<link href="style/icon_128.png" sizes="128x128" rel="icon" />
+	<title>Administración estructuras</title>
 	<title>Administración estructuras</title>
 </head>
 <body>

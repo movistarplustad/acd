@@ -1,0 +1,124 @@
+/*
+Gris cabecera #5A5D6B
+Gris  menús #6F7588
+Tipografía negro #343646
+#424242
+Tipografía y fondo blanco #FDFDFD
+Background seleccionado #6491C8
+gris 1 #807F86
+gris 2 #9DA2AD
+títulos tipografía #3D78C0
+#74B9C3
+
+Iconos: http://google.github.io/material-design-icons/
+*/
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #F0F0F0;
+	color: #424242;
+	font-family: sans-serif;
+}
+h1 {
+	margin: 0;
+	padding: 0.5em 0 0 0;
+	background-color: #434343;
+	/*
+	background-image: url(icon_60.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+	*/
+	color: #FDFDFD;
+	text-align: center;
+}
+h1::after {
+	padding: 0;
+	margin: 0.5em 0 0 0;
+	display: block;
+	content: "";
+	background-color: #F0F0F0;
+	background-image: url(triangulo_separador.png);
+	background-repeat: no-repeat;
+	background-position: top center;
+	height: 8px;
+}
+h2 {
+	color: #3D78C0;
+	text-align: center;
+}
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+	color: #424242;
+}
+.back {
+	background: url(ic_chevron_left_24px.svg) no-repeat center left;
+	font-size: 1.5em;
+	background-size: 1.5em;
+	padding-left: 1.5em;
+	text-decoration: none;
+}
+.button {
+	background-color: #FFF;
+	background-position: 0.2em center;
+	background-repeat: no-repeat;
+	background-size: 1.5em;
+	border-radius: 3px;
+	box-sizing: border-box;
+	-moz-user-select: none;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #E3E3E3 #E3E3E3 #C2C2C2;
+	padding: 0.5em 0.5em 0.5em 1.8em;
+	cursor: pointer;
+}
+.button.edit {
+	background-image: url(ic_mode_edit_24px.svg);
+}
+.button.clone {
+	background-image: url(ic_content_copy_24px.svg);
+}
+.button.delete {
+	background-image: url(ic_delete_24px.svg);
+}
+.button.publish {
+	background-image: url(ic_publish_24px.svg);
+}
+.button.add {
+	background-image: url(ic_add_circle_outline_24px.svg);
+}
+
+
+#structures_list .structure {
+	padding: 0.5em 0;
+	border-bottom: 1px solid #E9E9E9;
+}
+#new_structure {
+	border-top: 1px solid #C2C2C2;
+	padding: 1em;
+}
+.button.new {
+	font-size: 0.9em;
+	background-image: url(ic_add_circle_24px.svg);
+	background-size: 1.5em;
+	text-decoration: none;
+}
+/*
+#new_structure {
+	font-size: 2em;
+	width: 1em;
+	height: 1em;
+	border-radius: 1em;
+	border: 1px solid #999;
+	background-color: #76BFCA;
+}
+#new_structure a {
+	display: block;
+	line-height: 1em;
+	text-align: center;
+	color: #fff;
+	text-decoration: none;
+}
+*/

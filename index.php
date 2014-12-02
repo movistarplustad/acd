@@ -44,6 +44,7 @@ switch ($action) {
 		$name = isset($_GET['name']) ? $_GET['name'] : '';
 		$titleName = '(nuevo)';
 		$storage = isset($_GET['storage']) ? $_GET['storage'] : '';
+		$fields = new fields_do();
 		$tpl = DIR_BASE.'/tpl/new.tpl';
 		break;
 	case 'clone':
