@@ -23,7 +23,7 @@ conf::$FIELD_TYPES =  array(
 		'range' => 'Range',
 		'boolean' => 'Boolean'
 	);
-conf::$USE_AUTHENTICATION = false;
+conf::$USE_AUTHENTICATION = true;
 
 /* Debug */
 if (file_exists(DIR_BASE.'/../tools/kint/Kint.class.php')) {

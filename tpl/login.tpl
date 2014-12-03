@@ -13,7 +13,7 @@
 	<h1>ACD</h1>
 	<h2>Identificación</h2>
 	
-	<form action="login.php" method="post" class="form_login">
+	<form action="do_login.php" method="post" class="form_login">
 		<p class="result"><?=$resultDesc?></p>
 		<div class="text">
 			<label for="login">Login</label>

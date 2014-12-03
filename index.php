@@ -2,9 +2,9 @@
 require ('conf.php');
 require_once (DIR_BASE.'/class/structures_do.php');
 require_once (DIR_BASE.'/class/auth.php');
-$nick = '';
-$hash = '';
-if (!auth::isLoged($nick, $hash)) {
+
+session_start();
+if (!auth::isLoged()) {
 	$action = 'login';
 }
 else {
