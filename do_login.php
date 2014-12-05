@@ -14,9 +14,9 @@ $remember = isset($_POST['remember']) && ($_POST['remember'] === '1');
 if (auth::loginByCredentials($loginCookie, $password, $remember)) {
 	$_SESSION['loged'] = true;
 }
-if (auth::loginByPersintence($login, $hash)) {
+elseif (auth::loginByPersintence($loginForm, $hash)) {
 	$_SESSION['loged']  = true;
 }
 
 
-header("Location:$returnUrl");
+//header("Location:$returnUrl");

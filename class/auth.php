@@ -8,13 +8,18 @@ class auth  {
 			return false;
 		}
 	}
-	public static function loginByPersintence($nick, $hash) {
-		$path_data = DIR_DATA.'/auth.json';
-		return false;
+	public static function loginByPersintence($login, $hash) {
+		echo "loginByPersintence";
+		$path_data = DIR_DATA.'/permanet_auth';
+		$result = !($login === '' || $hash === '');
+		return $result;
 	}
 
 	public static function loginByCredentials($login, $password, $remember) {
-		return true;
+		echo "loginByCredentials";
+		$path_data = DIR_DATA.'/auth.json';
+		$result = !($login === '' || $password === '');
+		return $result;
 	}
 	public static function logout() {
 		// Inicializar la sesión.
