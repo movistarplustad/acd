@@ -2,9 +2,9 @@
 require ('conf.php');
 require_once (DIR_BASE.'/class/structures_do.php');
 require_once (DIR_BASE.'/class/auth.php');
-$nick = '';
-$hash = '';
-if (!auth::isLoged($nick, $hash)) {
+
+session_start();
+if (!auth::isLoged()) {
 	$action = 'login';
 }
 else {
@@ -73,10 +73,13 @@ switch ($action) {
 $result = isset($_GET['r']) ? $_GET['r'] : '';
 switch ($result) {
 	case 'ok':
-		$resultDesc = 'Guardado';
+		$resultDesc = 'Saved';
 		break;
 	case 'ko':
-		$resultDesc = '<em>Error</em>, no se ha podido procesar';
+		$resultDesc = '<em>Error</em>, has not been able to process';
+		break;
+	case 'kologin':
+		$resultDesc = '<em>Error</em>, incorrect login or password';
 		break;
 	default:
 		$resultDesc = '';
@@ -90,4 +93,5 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
+
 require($tpl);

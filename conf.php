@@ -8,6 +8,9 @@ class conf {
 	public static $STORAGE_TYPES;
 	public static $FIELD_TYPES;
 	public static $USE_AUTHENTICATION;
+	public static $AUTHENTICATION_SEED;
+	public static $PATH_AUTH_CREDENTIALS_FILE;
+	public static $PATH_AUTH_PREMANENT_LOGIN_DIR;
 }
 conf::$DATA_PATH = DIR_DATA.'/structures.json';
 conf::$STORAGE_TYPES = array(
@@ -23,7 +26,10 @@ conf::$FIELD_TYPES =  array(
 		'range' => 'Range',
 		'boolean' => 'Boolean'
 	);
-conf::$USE_AUTHENTICATION = false;
+conf::$USE_AUTHENTICATION = true;
+conf::$AUTHENTICATION_SEED = 'radi0head';
+conf::$PATH_AUTH_CREDENTIALS_FILE = DIR_DATA.'/auth.json';
+conf::$PATH_AUTH_PREMANENT_LOGIN_DIR = DIR_DATA.'/auth_permanent_login';
 
 /* Debug */
 if (file_exists(DIR_BASE.'/../tools/kint/Kint.class.php')) {
