@@ -6,17 +6,20 @@ session_start();
 $returnUrl = 'index.php';
 // First: check is loged
 $loginCookie = isset($_COOKIE['login']) ? $_COOKIE['login'] : null;
-$hash = isset($_COOKIE['hash']) ? $_COOKIE['hash'] : null;
+$token = isset($_COOKIE['token']) ? $_COOKIE['token'] : null;
 $loginForm = isset($_POST['login']) ? $_POST['login'] : null;
 $password = isset($_POST['password']) ? $_POST['password'] : null;
 $remember = isset($_POST['remember']) && ($_POST['remember'] === '1');
 
-if (auth::loginByCredentials($loginCookie, $password, $remember)) {
-	$_SESSION['loged'] = true;
+if (auth::loginByCredentials($loginForm, $password, $remember)) {
+	$returnUrl .= '?r=okcred';
 }
-elseif (auth::loginByPersintence($loginForm, $hash)) {
-	$_SESSION['loged']  = true;
+elseif (auth::loginByPersintence($loginCookie, $token)) {
+	$returnUrl .= '?r=okpers';
+}
+else {
+	auth::logout();
+	$returnUrl .= '?r=kologin';
 }
 
-
-//header("Location:$returnUrl");
+header("Location:$returnUrl");

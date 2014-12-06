@@ -12,7 +12,7 @@
 <body>
 <h1>ACD</h1>
 <h2>Administración estructuras</h2>
-<a href="do_logout.php" class="logout" rel="nofollow">Logout</a>
+<a href="do_logout.php" class="logout" rel="nofollow">Logout (<?=htmlspecialchars($_SESSION['login'])?>)</a>
 <p class="result"><?=$resultDesc?></p>
 <ol id="structures_list">
 <?php
