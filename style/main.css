@@ -19,23 +19,16 @@ body {
 	color: #424242;
 	font-family: sans-serif;
 }
-header {
+h1 {
 	margin: 0;
 	padding: 0.5em 0 0 0;
 	background-color: #434343;
-	color: #FDFDFD;
-}
-header #header-menu {
-	position: absolute;
-}
-h1 {
 	/*
 	background-image: url(icon_60.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 	*/
-	padding: 0;
-	margin: 0;
+	color: #FDFDFD;
 	text-align: center;
 }
 h1::after {
@@ -129,3 +122,32 @@ a:active {
 	text-decoration: none;
 }
 */
+
+/* Login */
+.form_login {
+	background-color: #FFF;
+	padding: 1em;
+	border-radius: 0.5em;
+	width: 25em;
+	margin: auto;
+}
+.form_login .text {
+	clear: both;
+	padding: 0 0 0.5em 0;
+}
+.form_login .text label {
+
+	margin-right: 0.5em;
+	padding-top: 0.2em;
+	text-align: right;
+	font-weight: bold;
+}
+.form_login .text input {
+	margin: 0;
+	padding: 0;
+	font-size: 100%; 
+}
+.form_login .submit {
+	float: right;
+	margin: -1em 0.5em;
+}
