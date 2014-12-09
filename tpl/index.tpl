@@ -10,7 +10,14 @@
 	<title>Administración estructuras</title>
 </head>
 <body>
-<h1>ACD</h1>
+<header>
+	<div id="header-menu">
+		<a href="#tools"><img src="style/ic_menu_24px_inverse.svg" alt="Menu" height="30"/><span class="label"> menu</span></a>
+	</div>
+	<h1>
+	
+	ACD</h1>
+</header>
 <h2>Administración estructuras</h2>
 <a href="do_logout.php" class="logout" rel="nofollow">Logout (<?=htmlspecialchars($_SESSION['login'])?>)</a>
 <p class="result"><?=$resultDesc?></p>
