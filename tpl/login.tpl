@@ -9,8 +9,11 @@
 	<link href="style/icon_128.png" sizes="128x128" rel="icon" />
 	<title>Administración estructuras</title>
 </head>
-	<body>
+<body>
+<header>
 	<h1>ACD</h1>
+</header>
+<main>
 	<h2>Identificación</h2>
 	
 	<form action="do_login.php" method="post" class="form_login">
@@ -27,8 +30,9 @@
 			<input type="checkbox" name="remember" id="remember" value="<?=('1')?>"/>
 			<label for="remember">Remember</label>
 		</div>
-		<div class="submit"><input type="submit" name="a" value="Enter"/></submit>
+		<div class="submit"><input type="submit" name="a" value="Enter"/></div>
 	</form>
+</main>
 
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
