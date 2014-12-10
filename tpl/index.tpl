@@ -14,9 +14,7 @@
 	<div id="header-menu">
 		<a href="#tools"><img src="style/ic_menu_24px_inverse.svg" alt="Menu" height="30"/><span class="label"> menu</span></a>
 	</div>
-	<h1>
-	
-	ACD</h1>
+	<h1>ACD</h1>
 </header>
 <main>
 	<h2>Administración estructuras</h2>
