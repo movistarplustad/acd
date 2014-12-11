@@ -1,11 +1,19 @@
 var editor = {
+	$body : null,
 	$iDelete : null,
 	init : function() {
+		/* Tools menu */
+		editor.$body = $("body");
+		$("#header-menu .tools-menu")
+			.bind("click", function(e) {
+				editor.$body.toggleClass("withOptions");
+				e.preventDefault();
+			})
 		/* Delete buttons */
-		$iDelete = $('input[value=delete]');
+		editor.$iDelete = $('input[value=delete]');
 
 		/* Prevent accidental  delete*/
-		$iDelete.bind("click", editor.confirmDelete);
+		editor.$iDelete.bind("click", editor.confirmDelete);
 	},
 	confirmDelete : function(e) {
 		var bDelete = window.confirm("remove the structure?");
@@ -14,4 +22,8 @@ var editor = {
 		}
 	}
 };
+var isSupported = document.getElementById && document.getElementsByTagName;
+if (isSupported) {
+	document.documentElement.className = "js";
+}
 $(document).ready(editor.init);
