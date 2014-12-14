@@ -12,41 +12,41 @@
 <body>
 <header>
 	<div id="header-menu">
-		<a href="#tools"><img src="style/ic_menu_24px_inverse.svg" alt="Menu" height="30"/><span class="label"> menu</span></a>
+		<a href="#tools" class="tools-menu"><img src="style/ic_menu_24px_inverse.svg" alt="Menu" height="30"/><span class="label"> menu</span></a>
 	</div>
-	<h1>
-	
-	ACD</h1>
+	<h1>ACD</h1>
 </header>
-<main>
-	<h2>Administración estructuras</h2>
-	<p class="result"><?=$resultDesc?></p>
-	<ol id="structures_list">
-	<?php
-		foreach ($estructuras as $id) {
-			$estructura = $structures->get($id);
-			//echo "";
-	?>
-		<li class="structure">
-			<form action="do_process_structure.php" method="post">
-				<input type="hidden" name="id" value="<?=htmlspecialchars($estructura->getId())?>"/>
-				<?=$estructura->getName()?>
-				<span class="tools"><input type="submit" name="a" value="edit" class="button edit"/>,  <input type="submit" name="a" value="clone" class="button clone"/>, <input type="submit" name="a" value="delete" class="button delete"/></span>
-			</form>
-		</li>
-	<?php
-		}
-	?>
-	</ol>
-	<div id="new_structure"><a href="?a=new" title="new structure" class="button new">New structure</a></div>
-</main>
-<aside id="tools">
-	<nav>
-		<ul>
-			<li><a href="do_logout.php" class="logout" rel="nofollow">Logout (<?=htmlspecialchars($_SESSION['login'])?>)</a></li>
-		</ul>
-	</nav>
-</aside>
+<div id="wrapper">
+	<main>
+		<h2>Administración estructuras</h2>
+		<p class="result"><?=$resultDesc?></p>
+		<ol id="structures_list">
+		<?php
+			foreach ($estructuras as $id) {
+				$estructura = $structures->get($id);
+				//echo "";
+		?>
+			<li class="structure">
+				<form action="do_process_structure.php" method="post">
+					<input type="hidden" name="id" value="<?=htmlspecialchars($estructura->getId())?>"/>
+					<?=$estructura->getName()?>
+					<span class="tools"><input type="submit" name="a" value="edit" class="button edit"/>,  <input type="submit" name="a" value="clone" class="button clone"/>, <input type="submit" name="a" value="delete" class="button delete"/></span>
+				</form>
+			</li>
+		<?php
+			}
+		?>
+		</ol>
+		<div id="new_structure"><a href="?a=new" title="new structure" class="button new">New structure</a></div>
+	</main>
+	<aside id="tools">
+		<nav>
+			<ul>
+				<li><a href="do_logout.php" class="no-button logout" rel="nofollow">Logout (<?=htmlspecialchars($_SESSION['login'])?>)</a></li>
+			</ul>
+		</nav>
+	</aside>
+</div>
 <!--
 <footer>
 	<a href="_test/">Tests</a>

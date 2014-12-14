@@ -10,9 +10,13 @@
 	<title>Administración estructuras</title>
 </head>
 <body>
-<h1>ACD</h1>
+<header>
+	<div id="header-menu">
+		<a href="index.php" class="back"><img src="style/ic_chevron_left_24px_inverse.svg" alt="Menu" height="30"/><span class="label"> back</span></a>
+	</div>
+	<h1>ACD</h1>
+</header>
 <h2>Administración <span id="structure_name"><?=htmlspecialchars($titleName)?></span></h2>
-<a href="index.php" class="back">Volver</a>
 <p class="result"><?=$resultDesc?></p>
 <form action="do_process_structure.php" method="post">
 	<div>

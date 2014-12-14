@@ -19,9 +19,14 @@ body {
 	color: #424242;
 	font-family: sans-serif;
 }
+#header-menu {
+	position: absolute;
+	margin: 0.5em 0.8em;
+	z-index: 10;
+}
 h1 {
 	margin: 0;
-	padding: 0.5em 0 0 0;
+	padding: 0.1em 0 0.1em 0;
 	background-color: #434343;
 	/*
 	background-image: url(icon_60.png);
@@ -30,18 +35,53 @@ h1 {
 	*/
 	color: #FDFDFD;
 	text-align: center;
+	position: relative;
 }
 h1::after {
-	padding: 0;
-	margin: 0.5em 0 0 0;
-	display: block;
+	width: 14px;
+	height: 14px;
 	content: "";
-	background-color: #F0F0F0;
-	background-image: url(triangulo_separador.png);
-	background-repeat: no-repeat;
-	background-position: top center;
-	height: 8px;
+	position: absolute;
+	bottom: -7px;
+	left: calc(50% - 7px);
+	transform: rotate(-45deg);
+	background: linear-gradient(45deg, #434343 0%, #434343 50%, transparent 50%, transparent 100%) repeat scroll 0% 0% transparent;
 }
+.js #wrapper {
+	display: flex;
+}
+.js #wrapper > aside {
+	order: 0;
+	width: 0;
+	overflow: hidden;
+}
+.js .withOptions #wrapper > aside {
+	width: 14em;
+	border-width: 0 1px 0 0;
+	border-style: solid;
+	border-color: #E9E9E9;
+	/* box-shadow: 10px 0px 5px #DEDEDE; */
+	background-color: #FFF;
+}
+#wrapper > main {
+	order: 1;
+}
+#wrapper,
+#wrapper > aside,
+#wrapper > main {
+	transition-property: width;
+	transition-duration: 0.5s;
+}
+#tools ul {
+	list-style: none;
+	padding: 1em 0.5em;
+	margin: 0;
+	width: 14em;
+}
+.logout {
+	background-image: url(ic_account_box_24px.svg);
+}
+
 h2 {
 	color: #3D78C0;
 	text-align: center;
@@ -54,10 +94,15 @@ a:active {
 	color: #424242;
 }
 .back {
-	background: url(ic_chevron_left_24px.svg) no-repeat center left;
 	font-size: 1.5em;
 	background-size: 1.5em;
-	padding-left: 1.5em;
+	text-decoration: none;
+}
+.no-button {
+	background-position: 0.2em center;
+	background-repeat: no-repeat;
+	background-size: 1.5em;
+	padding: 0.5em 0.5em 0.5em 1.8em;
 	text-decoration: none;
 }
 .button {
@@ -151,3 +196,4 @@ a:active {
 	float: right;
 	margin: -1em 0.5em;
 }
+
