@@ -3,10 +3,10 @@ include_once (DIR_BASE.'/class/fields_do.php');
 
 class StorageKeyInvalidException extends exception {}
 class structure_do {
-	static $id;
-	static $name; /* name, storage */
-	static $storage;
-	static $fields;
+	protected $id;
+	protected $name; /* name, storage */
+	protected $storage;
+	protected $fields;
 	public function __construct() {
 		$this->id = null;
 		$this->fields = new fields_do();

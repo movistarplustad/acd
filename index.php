@@ -1,15 +1,25 @@
 <?php
 require ('conf.php');
 require_once (DIR_BASE.'/class/structures_do.php');
+require_once (DIR_BASE.'/class/auth.php');
 
-$structures = new structures_do();
-$structures->loadFromFile(conf::$DATA_PATH);
-$estructuras = $structures->getAllStructures();
-//var_dump($estructuras);
-//var_dump(conf::$STORAGE_TYPES);
+session_start();
+if (!auth::isLoged()) {
+	$action = 'login';
+}
+else {
+	$structures = new structures_do();
+	$structures->loadFromFile(conf::$DATA_PATH);
+	$estructuras = $structures->getAllStructures();
+	//var_dump($estructuras);
+	//var_dump(conf::$STORAGE_TYPES);
+	$action = isset($_GET['a']) ? $_GET['a'] : 'list';
+}
 /* Show action block */
-$action = isset($_GET['a']) ? $_GET['a'] : 'list';
 switch ($action) {
+	case 'login':
+		$tpl = DIR_BASE.'/tpl/login.tpl';
+		break;
 	case 'edit':
 		$id = $_GET['id'];
 		$estructura = $structures->get($id);
@@ -34,6 +44,7 @@ switch ($action) {
 		$name = isset($_GET['name']) ? $_GET['name'] : '';
 		$titleName = '(nuevo)';
 		$storage = isset($_GET['storage']) ? $_GET['storage'] : '';
+		$fields = new fields_do();
 		$tpl = DIR_BASE.'/tpl/new.tpl';
 		break;
 	case 'clone':
@@ -62,10 +73,13 @@ switch ($action) {
 $result = isset($_GET['r']) ? $_GET['r'] : '';
 switch ($result) {
 	case 'ok':
-		$resultDesc = 'Guardado';
+		$resultDesc = 'Saved';
 		break;
 	case 'ko':
-		$resultDesc = '<em>Error</em>, no se ha podido procesar';
+		$resultDesc = '<em>Error</em>, has not been able to process';
+		break;
+	case 'kologin':
+		$resultDesc = '<em>Error</em>, incorrect login or password';
 		break;
 	default:
 		$resultDesc = '';
@@ -79,4 +93,5 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
+
 require($tpl);

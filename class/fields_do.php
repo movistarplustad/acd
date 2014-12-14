@@ -7,7 +7,7 @@ class fields_do extends collection {
 		parent::__construct();
 	}
 	/* Overwrite add method using id of element */
-	public function add($element) {
+	public function add($element, $key = null) {
 		$_id = $element->getId();
 		if ($this->hasKey($_id)) {
 			return false;

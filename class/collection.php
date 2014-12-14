@@ -2,7 +2,7 @@
 class KeyInvalidException extends exception {}
 class KeyhasUseException extends exception {}
 class collection {
-	static $elements;
+	protected $elements;
 
 	public function __construct() {
 		$this->elements = array(); /* Create empty structure */
