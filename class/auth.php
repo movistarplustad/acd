@@ -19,7 +19,7 @@ class auth  {
 		}
 	}
 
-	private static function loadAllCredentials() {
+	protected static function loadAllCredentials() {
 		$path = conf::$PATH_AUTH_CREDENTIALS_FILE;
 		$content = file_get_contents($path);
 		$aCredentials = json_decode($content, true);
@@ -29,13 +29,14 @@ class auth  {
 	public static function loginByCredentials($login, $password, $remember) {
 		$aCredentials = auth::loadAllCredentials();
 		// TODO: controlar errores
-		$bLoginCorrect = isset($aCredentials[$login]) && ($aCredentials[$login] === auth::hashPassword($password));
+		$bLoginCorrect = isset($aCredentials[$login]) && ($aCredentials[$login]['password'] === auth::hashPassword($password));
 
 		// Remember login
 		if ($bLoginCorrect && $remember) {
 			$persistentData = array(
 				'login' => $login,
 				'token' => hash('sha1', uniqid()),
+				'rol' => $aCredentials[$login]['rol'],
 				'timestamp' => time()
 			);
 			$jsonCredentials = json_encode($persistentData);
@@ -58,8 +59,9 @@ class auth  {
 
 		if ($bLoginCorrect) {
 			$_SESSION['loged'] = true;
-			$_SESSION['loged_by_password'] = true;
+			$_SESSION['login_method'] = 'password';
 			$_SESSION['login'] = $login;
+			$_SESSION['rol'] = $aCredentials[$login]['rol'];
 		}
 		return $bLoginCorrect;
 	}
@@ -72,11 +74,11 @@ class auth  {
 
 			$bLoginCorrect = ($aPersistentCredentials['login'] === $login && $aPersistentCredentials['token'] === $token);
 		}
-
 		if ($bLoginCorrect) {
 			$_SESSION['loged'] = true;
-			$_SESSION['loged_by_password'] = false;
+			$_SESSION['login_method'] = 'persistence';
 			$_SESSION['login'] = $login;
+			$_SESSION['rol'] = $aPersistentCredentials['rol'];
 		}
 
 		return $bLoginCorrect;
@@ -111,6 +113,25 @@ class auth  {
 		}
 		setcookie('login', '', time() - 42000, '/', '', 0, 0);
 		setcookie('token', '', time() - 42000, '/', '', 0, 0);
+	}
+	public static function getCredentials($login) {
+		$aCredentials = auth::loadAllCredentials();
+		// TODO: controlar errores
+		if (isset($aCredentials[$login])) {
+			$aCredentials = array(
+				'loged' => true,
+				'login_method' => 'only_login',
+				'login' => $login,
+				'rol' => $aCredentials[$login]['rol']);
+		}
+		else {
+			$aCredentials = array(
+				'loged' => false,
+				'login_method' => 'only_login',
+				'login' => $login,
+				'rol' => '');
+		}
+		return $aCredentials;
 	}
 	public static function addUser($login, $password) {
 		if ($login === '' || $password === '') {

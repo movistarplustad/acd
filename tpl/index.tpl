@@ -42,7 +42,7 @@
 	<aside id="tools">
 		<nav>
 			<ul>
-				<li><a href="do_logout.php" class="no-button logout" rel="nofollow">Logout (<?=htmlspecialchars($_SESSION['login'])?>)</a></li>
+				<li><a href="do_logout.php" class="no-button logout" rel="nofollow">Logout (<?=htmlspecialchars($_SESSION['login'])?>)</a> <?=htmlspecialchars($_SESSION['rol'])?></li>
 			</ul>
 		</nav>
 	</aside>
