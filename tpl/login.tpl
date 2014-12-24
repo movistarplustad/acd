@@ -20,11 +20,11 @@
 		<p class="result"><?=$resultDesc?></p>
 		<div class="text">
 			<label for="login">Login</label>
-			<input type="text" name="login" value="<?=htmlspecialchars('')?>" spellcheck="false" placeholder="e.g. tiranosaurus" id="login"/>
+			<input type="text" name="login" value="<?=htmlspecialchars($tplUser)?>" spellcheck="false" placeholder="e.g. tiranosaurus" id="login"/>
 		</div>
 		<div class="text">
 			<label for="password">Password</label>
-			<input type="password" name="password" value="<?=htmlspecialchars('')?>" placeholder="e.g. *******" id="password"/>
+			<input type="password" name="password" value="" placeholder="e.g. *******" id="password"/>
 		</div>
 		<div class="remember">
 			<input type="checkbox" name="remember" id="remember" value="<?=('1')?>"/>

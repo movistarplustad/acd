@@ -18,6 +18,7 @@ else {
 /* Show action block */
 switch ($action) {
 	case 'login':
+		$tplUser = isset($_GET['login']) ? $_GET['login'] : '';
 		$tpl = DIR_BASE.'/tpl/login.tpl';
 		break;
 	case 'edit':

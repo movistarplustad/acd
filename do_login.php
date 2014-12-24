@@ -19,7 +19,7 @@ elseif (auth::loginByPersintence($loginCookie, $token)) {
 }
 else {
 	auth::logout();
-	$returnUrl .= '?r=kologin';
+	$returnUrl .= '?r=kologin&login='.urlencode($loginForm);
 }
 
 header("Location:$returnUrl");
