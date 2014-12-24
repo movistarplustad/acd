@@ -2,7 +2,7 @@
 class AuthInvalidUserException extends exception {}
 class auth  {
 	private static function hashPassword($password) {
-		return hash('sha1', conf::$AUTHENTICATION_SEED.$password);
+		return password_hash($password, PASSWORD_DEFAULT);
 	}
 	private static function persistentFilePath($login) {
 		return conf::$PATH_AUTH_PREMANENT_LOGIN_DIR.'/'.hash('sha1', $login);
@@ -29,7 +29,7 @@ class auth  {
 	public static function loginByCredentials($login, $password, $remember) {
 		$aCredentials = auth::loadAllCredentials();
 		// TODO: controlar errores
-		$bLoginCorrect = isset($aCredentials[$login]) && ($aCredentials[$login]['password'] === auth::hashPassword($password));
+		$bLoginCorrect = isset($aCredentials[$login]) && password_verify($password, $aCredentials[$login]['password']);
 
 		// Remember login
 		if ($bLoginCorrect && $remember) {
@@ -52,7 +52,7 @@ class auth  {
 				exit;
 			}
 			fclose($handle);
-			$expiration = time()+31536000; // 1 year
+			$expiration = time()+conf::$AUTH_PERSITENT_EXPIRATION_TIME;
 			setcookie('login', $persistentData['login'],$expiration , '/', '', 0, 0);
 			setcookie('token', $persistentData['token'], $expiration, '/', '', 0, 1);
 		}

@@ -9,7 +9,7 @@ class conf {
 	public static $STORAGE_TYPES;
 	public static $FIELD_TYPES;
 	public static $USE_AUTHENTICATION;
-	public static $AUTHENTICATION_SEED;
+	public static $AUTH_PERSITENT_EXPIRATION_TIME;
 	public static $PATH_AUTH_CREDENTIALS_FILE;
 	public static $PATH_AUTH_PREMANENT_LOGIN_DIR;
 }
@@ -28,7 +28,7 @@ conf::$FIELD_TYPES =  array(
 		'boolean' => 'Boolean'
 	);
 conf::$USE_AUTHENTICATION = true;
-conf::$AUTHENTICATION_SEED = 'radi0head';
+conf::$AUTH_PERSITENT_EXPIRATION_TIME = 31536000; // 1 year
 conf::$PATH_AUTH_CREDENTIALS_FILE = DIR_DATA.'/auth.json';
 conf::$PATH_AUTH_PREMANENT_LOGIN_DIR = DIR_DATA.'/auth_permanent_login';
 
