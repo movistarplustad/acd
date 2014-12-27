@@ -2,7 +2,7 @@
 require ('conf.php');
 require_once (DIR_BASE.'/class/structures_do.php');
 
-$accion = $_POST['a'];
+$accion = strtolower($_POST['a']);
 $id = $_POST['id'];
 $name = isset($_POST['name']) ? $_POST['name'] : null;
 $storage = isset($_POST['storage']) ? $_POST['storage'] : null;

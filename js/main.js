@@ -16,7 +16,7 @@ var editor = {
 		editor.$iDelete.bind("click", editor.confirmDelete);
 	},
 	confirmDelete : function(e) {
-		var bDelete = window.confirm("remove the structure?");
+		var bDelete = window.confirm("remove permanently this structure?");
 		if(!bDelete) {
 			e.preventDefault();
 		}

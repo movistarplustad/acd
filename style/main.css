@@ -50,6 +50,10 @@ h1::after {
 .js #wrapper {
 	display: flex;
 }
+.js .login #wrapper,
+.js .error #wrapper {
+	justify-content: center;
+}
 .js #wrapper > aside {
 	order: 0;
 	width: 0;
@@ -196,4 +200,6 @@ a:active {
 	float: right;
 	margin: -1em 0.5em;
 }
-
+h2 .structure_name {
+	font-style: italic;
+}

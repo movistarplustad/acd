@@ -39,13 +39,7 @@
 		</ol>
 		<div id="new_structure"><a href="?a=new" title="new structure" class="button new">New structure</a></div>
 	</main>
-	<aside id="tools" class="rol-<?=htmlspecialchars($_SESSION['rol'])?>">
-		<nav>
-			<ul>
-				<li><a href="do_logout.php" class="no-button logout" rel="nofollow" title="<?=htmlspecialchars($_SESSION['login'])?> - <?=htmlspecialchars($_SESSION['rol'])?>">Logout (<?=htmlspecialchars($_SESSION['login'])?>)</a></li>
-			</ul>
-		</nav>
-	</aside>
+	<?=$tplVar['tools']?>
 </div>
 <!--
 <footer>

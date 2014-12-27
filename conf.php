@@ -3,6 +3,7 @@
 define('DIR_BASE', dirname(__FILE__));
 define('DIR_DATA', DIR_BASE.'/data');
 define('DIR_TEST', DIR_BASE.'/test');
+define('DIR_TEMPLATES', DIR_BASE.'/tpl');
 
 class conf {
 	public static $DATA_PATH;
