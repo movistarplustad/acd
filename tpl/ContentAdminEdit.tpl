@@ -43,7 +43,7 @@
 		<div>
 			<?php
 			$field_types = '';
-			foreach (conf::$FIELD_TYPES as $key => $value) {
+			foreach ($fieldTypes as $key => $value) {
 				$field_types .= '<li>
 					<input type="radio" name="new_field" value="'.htmlspecialchars($key).'" id="field_'.$key.'"/>
 					<label for="field_'.$key.'">'.htmlspecialchars($value).'</label>
@@ -53,10 +53,10 @@
 			<fieldset>
 				<legend>Añadir campo</legend>
 				<ul><?=$field_types?></ul>
-				<div><input type="submit" name="accion" value="add" class="button add" /></div>
+				<div><input type="submit" name="accion" value="add" class="button add"/></div>
 			</fieldset>
 		</div>
 		<input type="hidden" name="a" value="<?=$actionValue?>"/>
-		<input type="submit" name="accion" value="save" class="button publish" />
+		<input type="submit" name="accion" value="save" class="button publish"/>
 	</form>
 </main>

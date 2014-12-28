@@ -2,7 +2,7 @@
 namespace Acd\Ou;
 require_once (DIR_BASE.'/class/Template.php');
 // Output
-class ContentAdminIndex extends \acd\Template {
+class ContentAdmin extends \acd\Template {
 	protected $actionType;
 	public function __construct() {
 		$this->__set('resultDesc', '');
@@ -40,6 +40,9 @@ class ContentAdminIndex extends \acd\Template {
 	}
 	public function setStorage($storage){
 		$this->__set('storage', $storage);
+	}
+	public function setFieldTypes($fieldTypes) {
+		$this->__set('fieldTypes', $fieldTypes);
 	}
 	public function setFields($fields){
 		$this->__set('fields', $fields);

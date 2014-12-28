@@ -5,7 +5,7 @@ require_once (DIR_BASE.'/class/auth.php');
 require_once (DIR_BASE.'/tpl/BaseSkeleton.php');
 require_once (DIR_BASE.'/tpl/Tools.php');
 require_once (DIR_BASE.'/tpl/HeaderMenu.php');
-require_once (DIR_BASE.'/tpl/ContentAdminIndex.php');
+require_once (DIR_BASE.'/tpl/ContentAdmin.php');
 
 session_start();
 if (!auth::isLoged()) {
@@ -21,26 +21,19 @@ else {
 }
 /* Show action block */
 $skeletonOu = new \Acd\Ou\BaseSkeleton();
-$contentOu = new \Acd\Ou\ContentAdminIndex();
+$contentOu = new \Acd\Ou\ContentAdmin();
 switch ($action) {
 	case 'login':
-		$skeletonOu ->setBodyClass('login');
+		$skeletonOu->setBodyClass('login');
 		$contentOu->setActionType('login');
-		$tplVar['login'] = isset($_GET['login']) ? $_GET['login'] : '';//BORRAR
-		$tpl = DIR_BASE.'/tpl/login.tpl';//BORRAR
 		$contentOu->setLogin(isset($_GET['login']) ? $_GET['login'] : '');
 		break;
 	case 'new':
 		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
 
 		$estructura = new structure_do();
-		$id = isset($_GET['id']) ? $_GET['id'] : '';//BORRAR
-		$name = isset($_GET['name']) ? $_GET['name'] : '';//BORRAR
-		$titleName = '(nuevo)';//BORRAR
-		$storage = isset($_GET['storage']) ? $_GET['storage'] : '';//BORRAR
-		$fields = new fields_do();//BORRAR
-		$tpl = DIR_BASE.'/tpl/new.tpl';//BORRAR
 
+		$skeletonOu->setBodyClass('new');
 		$contentOu->setActionType('new');
 		$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
 		$contentOu->setStorage($estructura->getStorage());
@@ -48,7 +41,6 @@ switch ($action) {
 		$headerMenuOu = new \Acd\Ou\HeaderMenu();
 		$headerMenuOu->setType('back');
 
-		$skeletonOu->setBodyClass('new');
 		$skeletonOu->setHeadTitle('New structure');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		break;
@@ -58,23 +50,17 @@ switch ($action) {
 		$contentOu->setStructureId($id);
 		if ($estructura === null) {
 			/* Error, intentando editar una estructura que no existe */
-			$skeletonOu ->setBodyClass('error');
+			$skeletonOu->setBodyClass('error');
 			$contentOu->setActionType('error');
-			$titleName = '(error)';//BORRAR
-			$tpl = DIR_BASE.'/tpl/error.tpl';//BORRAR
 		}
 		else {
 			$skeletonOu->setBodyClass('edit');
 			$contentOu->setActionType('edit');
-			$name = $estructura->getName();//BORRAR
-			$titleName = $name;//BORRAR
 			$contentOu->setStructureName($estructura->getName());
-			$storage = $estructura->getStorage();//BORRAR
 			$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
 			$contentOu->setStorage($estructura->getStorage());
-			$fields = $estructura->getFields();//BORRAR
+			$contentOu->setFieldTypes(conf::$FIELD_TYPES);
 			$contentOu->setFields($estructura->getFields());
-			$tpl = DIR_BASE.'/tpl/edit.tpl';//BORRAR
 		}
 		$headerMenuOu = new \Acd\Ou\HeaderMenu();
 		$headerMenuOu->setType('back');
@@ -88,23 +74,16 @@ switch ($action) {
 		$contentOu->setStructureId("dup_$id");
 		if ($estructura === null) {
 			/* Error, intentando editar una estructura que no existe */
-			$titleName = '(error)';//BORRAR
-			$tpl = DIR_BASE.'/tpl/error.tpl';//BORRAR
-			$skeletonOu ->setBodyClass('error');
+			$skeletonOu->setBodyClass('error');
 			$contentOu->setActionType('error');
 		}
 		else {
-			$id = "dup_$id";//BORRAR
-			$name = '[copy] '.$estructura->getName();//BORRAR
-			$titleName = "(copy)";//BORRAR
-			$storage = $estructura->getStorage();//BORRAR
-			$fields = $estructura->getFields();//BORRAR
-			$tpl = DIR_BASE.'/tpl/new.tpl';//BORRAR
-			$contentOu->setActionType('clone');
 			$skeletonOu->setBodyClass('clone');
+			$contentOu->setActionType('clone');
 			$contentOu->setStructureName('[copy] '.$estructura->getName());
 			$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
 			$contentOu->setStorage($estructura->getStorage());
+			$contentOu->setFieldTypes(conf::$FIELD_TYPES);
 			$contentOu->setFields($estructura->getFields());
 		}
 
@@ -119,7 +98,6 @@ switch ($action) {
 		$toolsOu = new \Acd\Ou\tools();
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
-		$tplVar['tools'] = $toolsOu->render();//BORRAR
 
 		$headerMenuOu = new \Acd\Ou\HeaderMenu();
 		$headerMenuOu->setType('menu');
@@ -132,7 +110,6 @@ switch ($action) {
 		$skeletonOu->setHeadTitle('Manage structures');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
-		$tpl = DIR_BASE.'/tpl/index.tpl';
 		break;
 }
 
@@ -157,5 +134,4 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-//require($tpl);
 echo $skeletonOu->render();

@@ -1,5 +1,5 @@
 <main>
-	<h2>New structure</span></h2>
+	<h2>New structure</h2>
 	<p class="result"><?=$resultDesc?></p>
 	<form action="do_process_structure.php" method="post">
 		<div>
