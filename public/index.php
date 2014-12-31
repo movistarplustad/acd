@@ -1,5 +1,5 @@
 <?php
-require ('conf.php');
+require ('../conf.php');
 require_once (DIR_BASE.'/class/structures_do.php');
 require_once (DIR_BASE.'/class/auth.php');
 require_once (DIR_BASE.'/tpl/BaseSkeleton.php');
