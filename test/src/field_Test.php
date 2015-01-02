@@ -1,7 +1,9 @@
 <?php
+namespace Acd;
+
 include_once (DIR_BASE.'/class/field_do.php');
 
-class field extends PHPUnit_Framework_TestCase
+class field extends \PHPUnit_Framework_TestCase
 {
 	// ...
 

@@ -1,7 +1,9 @@
 <?php
+namespace Acd;
+
 include_once (DIR_BASE.'/class/collection.php');
 
-class TypeKeyInvalidException extends exception {}
+class TypeKeyInvalidException extends \exception {}
 class field_do {
 	protected $id;
 	protected $type;

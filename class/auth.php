@@ -1,5 +1,7 @@
 <?php
-class AuthInvalidUserException extends exception {}
+namespace Acd;
+
+class AuthInvalidUserException extends \exception {}
 class auth  {
 	private static function hashPassword($password, $cost=11){
 		//return password_hash($password, PASSWORD_DEFAULT); // php5.5
@@ -57,7 +59,7 @@ class auth  {
 	}
 
 	protected static function loadAllCredentials() {
-		$path = conf::$PATH_AUTH_CREDENTIALS_FILE;
+		$path = \Acd\conf::$PATH_AUTH_CREDENTIALS_FILE;
 		$content = file_get_contents($path);
 		$aCredentials = json_decode($content, true);
 

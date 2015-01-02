@@ -1,4 +1,6 @@
 <?php
+namespace Acd;
+
 include_once (DIR_BASE.'/class/collection.php');
 include_once (DIR_BASE.'/class/structure_do.php');
 

@@ -1,6 +1,8 @@
 <?php
-class KeyInvalidException extends exception {}
-class KeyhasUseException extends exception {}
+namespace Acd;
+
+class KeyInvalidException extends \exception {}
+class KeyhasUseException extends \exception {}
 class collection {
 	protected $elements;
 
@@ -18,7 +20,7 @@ class collection {
 		}
 		else {
 			if ($this->hasKey($key)) {
-				throw new KeyHasUseException("Key $key already in use.");
+				throw new KeyHasUseException("Key '$key' already in use.");
 			}
 			else {
 				$this->elements[$key] = $element;
@@ -35,7 +37,7 @@ class collection {
 			unset($this->elements[$key]);
 		}
 		else {
-			throw new KeyInvalidException("Invalid key $key.");
+			throw new KeyInvalidException("Invalid key '$key'.");
 		}
 	}
 
@@ -44,7 +46,7 @@ class collection {
 			return $this->elements[$key];
 		}
 		else {
-			throw new KeyInvalidException("Invalid key $key.");
+			throw new KeyInvalidException("Invalid key '$key'.");
 		}
 	}
 

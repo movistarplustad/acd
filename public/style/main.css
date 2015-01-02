@@ -82,6 +82,9 @@ h1::after {
 	margin: 0;
 	width: 14em;
 }
+#tools li {
+	padding: 0.7em 0;
+}
 .logout {
 	background-image: url(ic_account_box_24px.svg);
 }

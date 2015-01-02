@@ -1,10 +1,12 @@
 <?php
+namespace Acd;
+
 include_once (DIR_BASE.'/class/auth.php');
 // Set  routes to data tests
-conf::$PATH_AUTH_CREDENTIALS_FILE = DIR_TEST.'/data/auth.json';
-conf::$PATH_AUTH_PREMANENT_LOGIN_DIR = DIR_TEST.'/data/auth_permanent_login';
+\Acd\conf::$PATH_AUTH_CREDENTIALS_FILE = DIR_TEST.'/data/auth.json';
+\Acd\conf::$PATH_AUTH_PREMANENT_LOGIN_DIR = DIR_TEST.'/data/auth_permanent_login';
 
-class auth_test extends PHPUnit_Framework_TestCase
+class auth_Test extends \PHPUnit_Framework_TestCase
 {
 	// ...
 

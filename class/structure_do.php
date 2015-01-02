@@ -1,7 +1,9 @@
 <?php
+namespace Acd;
+
 include_once (DIR_BASE.'/class/fields_do.php');
 
-class StorageKeyInvalidException extends exception {}
+class StorageKeyInvalidException extends \exception {}
 class structure_do {
 	protected $id;
 	protected $name; /* name, storage */

@@ -1,8 +1,10 @@
 <?php
+namespace Acd;
+
 require_once (DIR_BASE.'/class/structure_do.php');
 
 
-class structure extends PHPUnit_Framework_TestCase
+class structure extends \PHPUnit_Framework_TestCase
 {
 	// ...
 

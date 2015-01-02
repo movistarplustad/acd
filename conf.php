@@ -1,4 +1,5 @@
 <?php
+namespace Acd;
 //Ficheros
 define('DIR_BASE', dirname(__FILE__));
 define('DIR_DATA', DIR_BASE.'/data');
@@ -6,14 +7,17 @@ define('DIR_TEST', DIR_BASE.'/test');
 define('DIR_TEMPLATES', DIR_BASE.'/tpl');
 
 class conf {
+	public static $DIR_TEMPLATES;
 	public static $DATA_PATH;
 	public static $STORAGE_TYPES;
 	public static $FIELD_TYPES;
+	public static $PERMISSION_PATH;
 	public static $USE_AUTHENTICATION;
 	public static $AUTH_PERSITENT_EXPIRATION_TIME;
 	public static $PATH_AUTH_CREDENTIALS_FILE;
 	public static $PATH_AUTH_PREMANENT_LOGIN_DIR;
 }
+conf::$DIR_TEMPLATES = DIR_BASE.'/tpl';
 conf::$DATA_PATH = DIR_DATA.'/structures.json';
 conf::$STORAGE_TYPES = array(
 		'text/plain' => 'text/plain',
@@ -28,6 +32,7 @@ conf::$FIELD_TYPES =  array(
 		'range' => 'Range',
 		'boolean' => 'Boolean'
 	);
+conf::$PERMISSION_PATH = DIR_DATA.'/permission.json';
 conf::$USE_AUTHENTICATION = true;
 conf::$AUTH_PERSITENT_EXPIRATION_TIME = 31536000; // 1 year
 conf::$PATH_AUTH_CREDENTIALS_FILE = DIR_DATA.'/auth.json';
