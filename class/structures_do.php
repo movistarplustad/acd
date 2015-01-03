@@ -22,7 +22,7 @@ class structures_do extends collection {
 	public function get($key) {
 		try {
 			return parent::get($key);
-		} catch (Exception $e) {
+		} catch (KeyInvalidException $e) {
 			return null;
 		}
 	}
@@ -30,7 +30,7 @@ class structures_do extends collection {
 		try {
 			parent::set($element, $key);
 			return true;
-		} catch (Exception $e) {
+		} catch (KeyInvalidException $e) {
 			return false;
 		}
 	}
@@ -38,7 +38,7 @@ class structures_do extends collection {
 		try {
 			parent::remove($key);
 			return true;
-		} catch (Exception $e) {
+		} catch (KeyInvalidException $e) {
 			return false;
 		}
 	}
