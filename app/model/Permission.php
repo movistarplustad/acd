@@ -1,13 +1,13 @@
 <?php
-namespace Acd;
+namespace Acd\Model;
 
 //class TypeKeyInvalidException extends exception {}
-class permission {
+class Permission {
 	protected $map;
 	public function __construct() {
 	}
 	public function load() {
-		$content = file_get_contents(conf::$PERMISSION_PATH);
+		$content = file_get_contents(\Acd\conf::$PERMISSION_PATH);
 		$this->map = json_decode($content);
 	}
 	public function hasAccess($rol, $item) {
@@ -16,6 +16,4 @@ class permission {
 		}
 		return $bPresent;
 	}
-
-
 }

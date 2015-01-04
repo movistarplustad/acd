@@ -1,7 +1,8 @@
 <?php
 namespace Acd;
 
-require_once (DIR_BASE.'/class/structure_do.php');
+require_once (DIR_BASE.'/app/model/StructureDo.php');
+require_once (DIR_BASE.'/app/model/FieldDo.php');
 
 
 class structure extends \PHPUnit_Framework_TestCase
@@ -12,7 +13,7 @@ class structure extends \PHPUnit_Framework_TestCase
 	{
 		/* Id */
 		// Arrange
-		$a = new structure_do();
+		$a = new Model\StructureDo();
 
 		// Act
 		$a->setId('foo id');
@@ -22,7 +23,7 @@ class structure extends \PHPUnit_Framework_TestCase
 
 		/* Name */
 		// Arrange
-		$a = new structure_do();
+		$a = new Model\StructureDo();
 
 		// Act
 		$a->setName('foo name');
@@ -32,7 +33,7 @@ class structure extends \PHPUnit_Framework_TestCase
 
 		/* Storage */
 		// Arrange
-		$a = new structure_do();
+		$a = new Model\StructureDo();
 
 		// Act
 		$a->setStorage('mongodb');
@@ -44,8 +45,8 @@ class structure extends \PHPUnit_Framework_TestCase
 
 	public function testFields() {
 		/* Add */
-		$a = new structure_do();
-		$f = new field_do();
+		$a = new Model\StructureDo();
+		$f = new Model\FieldDo();
 		$f->setId('foo');
 		$f->setName('var');
 		$f->setType('text_simple');

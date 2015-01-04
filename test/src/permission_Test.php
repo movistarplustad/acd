@@ -1,7 +1,7 @@
 <?php
 namespace Acd;
 
-include_once (DIR_BASE.'/class/permission.php');
+include_once (DIR_BASE.'/app/model/Permission.php');
 
 class permission_Test extends \PHPUnit_Framework_TestCase
 {
@@ -11,7 +11,7 @@ class permission_Test extends \PHPUnit_Framework_TestCase
 	{
 		/* Type */
 		// Arrange
-		$a = new permission();
+		$a = new Model\Permission();
 		$a->load();
 
 		// Act

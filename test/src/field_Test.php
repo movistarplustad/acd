@@ -1,7 +1,8 @@
 <?php
 namespace Acd;
 
-include_once (DIR_BASE.'/class/field_do.php');
+include_once (DIR_BASE.'/app/model/FieldDo.php');
+include_once (DIR_BASE.'/app/model/StructureDo.php');
 
 class field extends \PHPUnit_Framework_TestCase
 {
@@ -11,7 +12,7 @@ class field extends \PHPUnit_Framework_TestCase
 	{
 		/* Type */
 		// Arrange
-		$a = new field_do();
+		$a = new Model\FieldDo();
 
 		// Act
 		$a->setId('foo');
@@ -27,7 +28,7 @@ class field extends \PHPUnit_Framework_TestCase
 
 		/* Name */
 		// Arrange
-		$a = new structure_do();
+		$a = new Model\StructureDo();
 
 		// Act
 		$a->setName('foo name');

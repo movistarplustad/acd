@@ -1,10 +1,10 @@
 <?php
-namespace Acd;
+namespace Acd\Model;
 
-include_once (DIR_BASE.'/class/collection.php');
-include_once (DIR_BASE.'/class/structure_do.php');
+include_once (DIR_BASE.'/app/model/Collection.php');
+include_once (DIR_BASE.'/app/model/StructureDo.php');
 
-class structures_do extends collection {
+class StructuresDo extends Collection {
 	public function __construct() {
 		parent::__construct();
 	}
@@ -51,7 +51,7 @@ class structures_do extends collection {
 		// TODO: controlar errores
 		foreach ($json_a as $estructura) {
 			foreach ($estructura as $key => $value) {
-				$structure = new structure_do();
+				$structure = new StructureDo();
 				$structure->setId($key);
 				$structure->load($value);
 
@@ -98,7 +98,7 @@ class structures_do extends collection {
 	}
 
 	/* Return array of ids of all structures */
-	/* TODO mover a collection */
+	/* TODO mover a Collection */
 	public function getAllStructures() {
 		$structuresList = array();
 		foreach ($this->elements as $key => $value) {

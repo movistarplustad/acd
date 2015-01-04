@@ -1,20 +1,14 @@
 <?php
 namespace Acd;
 
-require ('../conf.php');
-require_once (DIR_BASE.'/class/structures_do.php');
-require_once (DIR_BASE.'/class/auth.php');
-require_once (DIR_BASE.'/tpl/BaseSkeleton.php');
-require_once (DIR_BASE.'/tpl/Tools.php');
-require_once (DIR_BASE.'/tpl/HeaderMenu.php');
-require_once (DIR_BASE.'/tpl/ContentAdmin.php');
+require ('../autoload.php');
 
 session_start();
-if (!auth::isLoged()) {
+if (!Model\Auth::isLoged()) {
 	$action = 'login';
 }
 else {
-	$structures = new structures_do();
+	$structures = new Model\StructuresDo();
 	$structures->loadFromFile(conf::$DATA_PATH);
 	$estructuras = $structures->getAllStructures();
 	//var_dump($estructuras);
@@ -22,8 +16,8 @@ else {
 	$action = isset($_GET['a']) ? $_GET['a'] : 'list';
 }
 /* Show action block */
-$skeletonOu = new \Acd\Ou\BaseSkeleton();
-$contentOu = new \Acd\Ou\ContentAdmin();
+$skeletonOu = new View\BaseSkeleton();
+$contentOu = new View\ContentAdmin();
 switch ($action) {
 	case 'login':
 		$skeletonOu->setBodyClass('login');
@@ -33,14 +27,14 @@ switch ($action) {
 	case 'new':
 		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
 
-		$estructura = new structure_do();
+		$estructura = new Model\StructureDo();
 
 		$skeletonOu->setBodyClass('new');
 		$contentOu->setActionType('new');
 		$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
 		$contentOu->setStorage($estructura->getStorage());
 
-		$headerMenuOu = new \Acd\Ou\HeaderMenu();
+		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('back');
 
 		$skeletonOu->setHeadTitle('New structure');
@@ -64,7 +58,7 @@ switch ($action) {
 			$contentOu->setFieldTypes(conf::$FIELD_TYPES);
 			$contentOu->setFields($estructura->getFields());
 		}
-		$headerMenuOu = new \Acd\Ou\HeaderMenu();
+		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('back');
 
 		$skeletonOu->setHeadTitle('Edit structure');
@@ -89,7 +83,7 @@ switch ($action) {
 			$contentOu->setFields($estructura->getFields());
 		}
 
-		$headerMenuOu = new \Acd\Ou\HeaderMenu();
+		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('back');
 
 		$skeletonOu->setHeadTitle('Clone structure');
@@ -97,11 +91,11 @@ switch ($action) {
 		break;
 	case 'list':
 	default:
-		$toolsOu = new \Acd\Ou\tools();
+		$toolsOu = new View\Tools();
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
-		$headerMenuOu = new \Acd\Ou\HeaderMenu();
+		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('menu');
 
 		$contentOu->setActionType('index');

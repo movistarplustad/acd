@@ -2,7 +2,7 @@
 namespace Acd;
 
 require ('../conf.php');
-require_once (DIR_BASE.'/class/structures_do.php');
+require_once (DIR_BASE.'/app/model/StructuresDo.php');
 
 $accion = strtolower($_POST['a']);
 $id = $_POST['id'];
@@ -11,8 +11,8 @@ $storage = isset($_POST['storage']) ? $_POST['storage'] : null;
 $new_field_type = isset($_POST['new_field']) ? $_POST['new_field'] : null;
 $fields = isset($_POST['field']) ? $_POST['field'] : array();
 
-$structures = new structures_do();
-$structures->loadFromFile(conf::$DATA_PATH);
+$structures = new Model\StructuresDo();
+$structures->loadFromFile(\Acd\conf::$DATA_PATH);
 
 try {
 	$structureFound = $structures->get($id);	
@@ -36,7 +36,7 @@ switch ($accion) {
 		}
 		if($bIdValid) {
 			// TODO: Set de la estructura, actualizar structures con los nuevos datos
-			$modified_structure = new structure_do();
+			$modified_structure = new Model\StructureDo();
 			$modified_structure->setId($id);
 			$modified_structure->setName($name);
 			$modified_structure->setStorage($storage);
@@ -44,7 +44,7 @@ switch ($accion) {
 			foreach ($fields as $idField => $data) {
 				//$n = 0; $n < $numFields; $n++) {
 				if (!$fields[$idField]['delete']) {
-					$field = new field_do();
+					$field = new Model\FieldDo();
 					$newId = $fields[$idField]['id'] === '' ? $field->generateId($fields[$idField]['name']) : $fields[$idField]['id'];
 					$field->setId($newId);
 					$field->setType($fields[$idField]['type']);
@@ -53,7 +53,7 @@ switch ($accion) {
 				}
 			}
 			if($new_field_type) {
-				$field = new field_do();
+				$field = new Model\FieldDo();
 				$field->setType($new_field_type);
 				$modified_structure->addField($field);
 			}

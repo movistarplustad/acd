@@ -1,8 +1,8 @@
 <?php
-namespace Acd\Ou;
-require_once (DIR_BASE.'/class/Template.php');
+namespace Acd\View;
+require_once (DIR_BASE.'/app/view/Template.php');
 // Output
-class ContentAdmin extends \acd\Template {
+class ContentAdmin extends \Acd\View\Template {
 	protected $actionType;
 	public function __construct() {
 		$this->__set('resultDesc', '');

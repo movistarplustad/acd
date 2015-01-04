@@ -1,8 +1,8 @@
 <?php
-namespace Acd\Ou;
-require_once (DIR_BASE.'/class/Template.php');
+namespace Acd\View;
+require_once (DIR_BASE.'/app/view/Template.php');
 // Output
-class HeaderMenu extends \acd\Template {
+class HeaderMenu extends \Acd\View\Template {
 	protected $type;
 	public function setType($type) {
 		$this->type = $type;

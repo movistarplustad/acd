@@ -1,10 +1,10 @@
 <?php
-namespace Acd;
+namespace Acd\Model;
 
-include_once (DIR_BASE.'/class/collection.php');
-include_once (DIR_BASE.'/class/field_do.php');
+include_once (DIR_BASE.'/app/model/Collection.php');
+include_once (DIR_BASE.'/app/model/FieldDo.php');
 
-class fields_do extends collection {
+class FieldsDo extends Collection {
 	public function __construct() {
 		parent::__construct();
 	}

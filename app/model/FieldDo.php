@@ -1,10 +1,8 @@
 <?php
-namespace Acd;
-
-include_once (DIR_BASE.'/class/collection.php');
+namespace Acd\Model;
 
 class TypeKeyInvalidException extends \exception {}
-class field_do {
+class FieldDo {
 	protected $id;
 	protected $type;
 	protected $name;
@@ -24,7 +22,7 @@ class field_do {
 		return $id;
 	}
 	public function setType($type) {
-		if (array_key_exists($type, conf::$FIELD_TYPES)) {
+		if (array_key_exists($type, \Acd\conf::$FIELD_TYPES)) {
 			$this->type = $type;
 		}
 		else {

@@ -2,10 +2,10 @@
 namespace Acd;
 
 require ('../conf.php');
-require_once (DIR_BASE.'/class/auth.php');
+require_once (DIR_BASE.'/app/model/Auth.php');
 
 $returnUrl = 'index.php';
 //session_start();
-auth::logout();
+Model\Auth::logout();
 
 header("Location:$returnUrl");

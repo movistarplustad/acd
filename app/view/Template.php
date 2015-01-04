@@ -1,8 +1,8 @@
 <?php
-namespace acd;
+namespace Acd\View;
 // http://chadminick.com/articles/simple-php-template-engine.html
 class Template {
-	private $vars	= array();
+	private $vars = array();
 
 	public function __get($name) {
 		return $this->vars[$name];

@@ -1,17 +1,17 @@
 <?php
-namespace Acd;
+namespace Acd\Model;
 
-include_once (DIR_BASE.'/class/fields_do.php');
+include_once (DIR_BASE.'/app/model/FieldsDo.php');
 
 class StorageKeyInvalidException extends \exception {}
-class structure_do {
+class StructureDo {
 	protected $id;
 	protected $name; /* name, storage */
 	protected $storage;
 	protected $fields;
 	public function __construct() {
 		$this->id = null;
-		$this->fields = new fields_do();
+		$this->fields = new FieldsDo();
 	}
 	/* Setters and getters attributes */
 	public function setId($id) {
@@ -34,7 +34,7 @@ class structure_do {
 		return $this->name;
 	}
 	public function setStorage($storage) {
-		if (array_key_exists($storage, conf::$STORAGE_TYPES)) {
+		if (array_key_exists($storage, \Acd\conf::$STORAGE_TYPES)) {
 			$this->storage = $storage;
 		}
 		else {
@@ -55,7 +55,7 @@ class structure_do {
 		$this->setName($data['name']);
 		$this->setStorage($data['storage']);
 		foreach ($data['fields'] as $dataField) {
-			$field = new field_do();
+			$field = new FieldDo();
 			$field->load($dataField);
 			$this->addField($field);
 		}

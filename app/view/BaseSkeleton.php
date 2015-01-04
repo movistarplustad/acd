@@ -1,8 +1,8 @@
 <?php
-namespace Acd\Ou;
-require_once (DIR_BASE.'/class/Template.php');
+namespace Acd\View;
+require_once (DIR_BASE.'/app/view/Template.php');
 // Output
-class BaseSkeleton extends \acd\Template {
+class BaseSkeleton extends \Acd\View\Template {
 	public function __construct() {
 		$this->__set('bodyClass', '');
 		$this->__set('headTitle', 'ACD');
@@ -26,6 +26,6 @@ class BaseSkeleton extends \acd\Template {
 		$this->__set('tools', $tools);
 	}
 	public function render($tpl = '') {
-		return parent::render(DIR_TEMPLATES.'/BaseSkeleton.tpl');
+		return parent::render(\Acd\conf::$DIR_TEMPLATES.'/BaseSkeleton.tpl');
 	}
 }

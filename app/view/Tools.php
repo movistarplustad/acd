@@ -1,8 +1,8 @@
 <?php
-namespace Acd\Ou;
-require_once (DIR_BASE.'/class/Template.php');
+namespace Acd\View;
+require_once (DIR_BASE.'/app/view/Template.php');
 // Output
-class Tools extends \acd\Template {
+class Tools extends \Acd\View\Template {
 	public function setLogin($login) {
 		$this->__set('login', $login);
 	}

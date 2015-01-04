@@ -1,8 +1,8 @@
 <?php
-namespace Acd;
+namespace Acd\Model;
 
 class AuthInvalidUserException extends \exception {}
-class auth  {
+class Auth  {
 	private static function hashPassword($password, $cost=11){
 		//return password_hash($password, PASSWORD_DEFAULT); // php5.5
 
@@ -44,17 +44,17 @@ class auth  {
 	}
 
 	private static function persistentFilePath($login) {
-		return conf::$PATH_AUTH_PREMANENT_LOGIN_DIR.'/'.hash('sha1', $login);
+		return \Acd\conf::$PATH_AUTH_PREMANENT_LOGIN_DIR.'/'.hash('sha1', $login);
 	}
 	public static function isLoged() {
-		if (conf::$USE_AUTHENTICATION === false || (isset($_SESSION['loged']) && $_SESSION['loged'] === true)) {
+		if (\Acd\conf::$USE_AUTHENTICATION === false || (isset($_SESSION['loged']) && $_SESSION['loged'] === true)) {
 			return true;
 		}
 		else {
 			$loginCookie = isset($_COOKIE['login']) ? $_COOKIE['login'] : null;
 			$token = isset($_COOKIE['token']) ? $_COOKIE['token'] : null;
 
-			return auth::loginByPersintence($loginCookie, $token);
+			return Auth::loginByPersintence($loginCookie, $token);
 		}
 	}
 
@@ -66,9 +66,9 @@ class auth  {
 		return $aCredentials;
 	}
 	public static function loginByCredentials($login, $password, $remember) {
-		$aCredentials = auth::loadAllCredentials();
+		$aCredentials = Auth::loadAllCredentials();
 		// TODO: controlar errores
-		$bLoginCorrect = isset($aCredentials[$login]) && auth::validate_pw($password, $aCredentials[$login]['password']);
+		$bLoginCorrect = isset($aCredentials[$login]) && Auth::validate_pw($password, $aCredentials[$login]['password']);
 
 		// Remember login
 		if ($bLoginCorrect && $remember) {
@@ -79,7 +79,7 @@ class auth  {
 				'timestamp' => time()
 			);
 			$jsonCredentials = json_encode($persistentData);
-			$path = auth::persistentFilePath($login);
+			$path = Auth::persistentFilePath($login);
 			if (!$handle = fopen($path, 'a')) {
 				 echo "Cannot open file ($path)";
 				 exit;
@@ -91,7 +91,7 @@ class auth  {
 				exit;
 			}
 			fclose($handle);
-			$expiration = time()+conf::$AUTH_PERSITENT_EXPIRATION_TIME;
+			$expiration = time()+\Acd\conf::$AUTH_PERSITENT_EXPIRATION_TIME;
 			setcookie('login', $persistentData['login'],$expiration , '/', '', 0, 0);
 			setcookie('token', $persistentData['token'], $expiration, '/', '', 0, 1);
 		}
@@ -106,7 +106,7 @@ class auth  {
 	}
 	public static function loginByPersintence($login, $token) {
 		$bLoginCorrect = false;
-		$path = auth::persistentFilePath($login);
+		$path = Auth::persistentFilePath($login);
 		if(file_exists($path)) {
 			$content = file_get_contents($path);
 			$aPersistentCredentials = json_decode($content, true);
@@ -146,7 +146,7 @@ class auth  {
 		// Eliminar los datos persistentes
 		$loginCookie = isset($_COOKIE['login']) ? $_COOKIE['login'] : null;
 		$token = isset($_COOKIE['token']) ? $_COOKIE['token'] : null;
-		$path = auth::persistentFilePath($loginCookie);
+		$path = Auth::persistentFilePath($loginCookie);
 		if (file_exists($path)) {
 			unlink($path);
 		}
@@ -154,7 +154,7 @@ class auth  {
 		setcookie('token', '', time() - 42000, '/', '', 0, 0);
 	}
 	public static function getCredentials($login) {
-		$aCredentials = auth::loadAllCredentials();
+		$aCredentials = Auth::loadAllCredentials();
 		// TODO: controlar errores
 		if (isset($aCredentials[$login])) {
 			$aCredentials = array(
@@ -176,12 +176,12 @@ class auth  {
 		if ($login === '' || $password === '') {
 			throw new AuthInvalidUserException("Invalid login or password [$login] : [$password]");
 		}
-		$aCredentials = auth::loadAllCredentials();
-		$aCredentials[$login] = auth::hashPassword($password);
+		$aCredentials = Auth::loadAllCredentials();
+		$aCredentials[$login] = Auth::hashPassword($password);
 		$jsonCredentials = json_encode($aCredentials);
 
-		$path = conf::$PATH_AUTH_CREDENTIALS_FILE;
-		$tempPath = conf::$PATH_AUTH_CREDENTIALS_FILE.'.tmp';
+		$path = \Acd\conf::$PATH_AUTH_CREDENTIALS_FILE;
+		$tempPath = \Acd\conf::$PATH_AUTH_CREDENTIALS_FILE.'.tmp';
 		if (!$handle = fopen($tempPath, 'a')) {
 			 echo "Cannot open file ($tempPath)";
 			 exit;

@@ -1,9 +1,9 @@
 <?php
-namespace Acd;
+namespace Acd\Model;
 
 class KeyInvalidException extends \exception {}
 class KeyhasUseException extends \exception {}
-class collection {
+class Collection {
 	protected $elements;
 
 	public function __construct() {

@@ -4,7 +4,7 @@ namespace Acd;
 define('DIR_BASE', dirname(__FILE__));
 define('DIR_DATA', DIR_BASE.'/data');
 define('DIR_TEST', DIR_BASE.'/test');
-define('DIR_TEMPLATES', DIR_BASE.'/tpl');
+define('DIR_TEMPLATES', DIR_BASE.'/app/view');
 
 class conf {
 	public static $DIR_TEMPLATES;
@@ -17,7 +17,7 @@ class conf {
 	public static $PATH_AUTH_CREDENTIALS_FILE;
 	public static $PATH_AUTH_PREMANENT_LOGIN_DIR;
 }
-conf::$DIR_TEMPLATES = DIR_BASE.'/tpl';
+conf::$DIR_TEMPLATES = DIR_BASE.'/app/view';
 conf::$DATA_PATH = DIR_DATA.'/structures.json';
 conf::$STORAGE_TYPES = array(
 		'text/plain' => 'text/plain',

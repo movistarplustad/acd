@@ -2,7 +2,7 @@
 namespace Acd;
 
 require ('../conf.php');
-require_once (DIR_BASE.'/class/auth.php');
+require_once (DIR_BASE.'/app/model/Auth.php');
 session_start();
 
 $returnUrl = 'index.php';
@@ -13,14 +13,14 @@ $loginForm = isset($_POST['login']) ? $_POST['login'] : null;
 $password = isset($_POST['password']) ? $_POST['password'] : null;
 $remember = isset($_POST['remember']) && ($_POST['remember'] === '1');
 
-if (auth::loginByCredentials($loginForm, $password, $remember)) {
+if (Model\Auth::loginByCredentials($loginForm, $password, $remember)) {
 	$returnUrl .= '?r=okcred';
 }
-elseif (auth::loginByPersintence($loginCookie, $token)) {
+elseif (Model\Auth::loginByPersintence($loginCookie, $token)) {
 	$returnUrl .= '?r=okpers';
 }
 else {
-	auth::logout();
+	Model\Auth::logout();
 	$returnUrl .= '?r=kologin&login='.urlencode($loginForm);
 }
 

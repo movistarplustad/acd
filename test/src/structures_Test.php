@@ -1,7 +1,7 @@
 <?php
 namespace Acd;
 
-require_once (DIR_BASE.'/class/structures_do.php');
+require_once (DIR_BASE.'/app/model/StructuresDo.php');
 
 class structures extends \PHPUnit_Framework_TestCase
 {
@@ -11,7 +11,7 @@ class structures extends \PHPUnit_Framework_TestCase
     {
         /* Load data */
         // Arrange
-        $a = new structures_do();
+        $a = new Model\StructuresDo();
         $a->loadFromFile(DIR_BASE.'/test/data/structures_demo.json');
 
         // Act
@@ -25,11 +25,11 @@ class structures extends \PHPUnit_Framework_TestCase
 
         /* Add structures */
         // Arrange
-        $a = new structures_do();
+        $a = new Model\StructuresDo();
         //$a->loadFromFile(DIR_BASE.'/test/data/structures_demo.json');
         $numAdd = 5;
         for ($n = 0; $n < $numAdd; $n++) {
-            $new_structure = new structure_do();
+            $new_structure = new Model\StructureDo();
             $new_structure->setId("foo $n");
             $new_structure->setName("Name foo $n");
             $new_structure->setStorage('text/plain');
@@ -45,14 +45,14 @@ class structures extends \PHPUnit_Framework_TestCase
         $this->assertEquals($c->getId(), 'foo 3');
 
         // Arrange
-        $a = new structures_do();
-        $new_structure1 = new structure_do();
+        $a = new Model\StructuresDo();
+        $new_structure1 = new Model\StructureDo();
         $new_structure1->setId("foo");
         $new_structure1->setName("Name foo");
         $new_structure1->setStorage('text/plain');
         $resultOk = $a->add($new_structure1);
 
-        $new_structure2 = new structure_do();
+        $new_structure2 = new Model\StructureDo();
         $new_structure2->setId("foo");
         $new_structure2->setName("Name foo");
         $new_structure2->setStorage('text/plain');
@@ -68,7 +68,7 @@ class structures extends \PHPUnit_Framework_TestCase
 
         /* Get structure */
         // Arrange
-        $a = new structures_do();
+        $a = new Model\StructuresDo();
         $a->loadFromFile(DIR_BASE.'/test/data/structures_demo.json');
 
         // Act
@@ -93,7 +93,7 @@ class structures extends \PHPUnit_Framework_TestCase
 
         /* Delete structure */
         // Arrange
-        $a = new structures_do();
+        $a = new Model\StructuresDo();
         $a->loadFromFile(DIR_BASE.'/test/data/structures_demo.json');
         $numInitialStructures = count($a->getAllStructures());
 
