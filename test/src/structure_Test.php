@@ -60,4 +60,26 @@ class structure extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('var', $field->getName());
 		$this->assertEquals('text_simple', $field->getType());
 	}
+
+	public function testLoadFromFile() {
+		$a = new Model\StructureDo();
+		$a->setId('chat_tienda');
+		$a->loadFromFile(DIR_BASE.'/test/data/structures_demo.json');
+		$this->assertEquals('chat_tienda', $a->getId());
+		$this->assertEquals('Chat de tienda online', $a->getName());
+		$this->assertEquals('mongodb', $a->getStorage());
+
+		$field = $a->getFields()->get('foo');
+		$this->assertEquals('foo', $field->getId());
+		$this->assertEquals('pretty', $field->getName());
+		$this->assertEquals('text_simple', $field->getType());
+
+		$field = $a->getFields()->get('abierta');
+		$this->assertEquals('abierta', $field->getId());
+		$this->assertEquals('Abierta', $field->getName());
+		$this->assertEquals('boolean', $field->getType());
+
+		$this->setExpectedException('\Acd\Model\KeyInvalidException');
+		$fields = $a->getFields()->get('no_exists');
+	}
 }

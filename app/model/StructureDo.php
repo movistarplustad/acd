@@ -61,6 +61,25 @@ class StructureDo {
 		}
 	}
 
+	public function 	loadFromFile($path = null) {
+		if ($path === null) {
+			$path = DIR_DATA.'/structures.json';
+		}
+		$content = file_get_contents($path);
+		$json_a = json_decode($content, true);
+		// TODO: controlar errores
+		foreach ($json_a as $estructura) {
+			foreach ($estructura as $key => $value) {
+				if(strval($key) === $this->getId()) {
+					$this->setId($key);
+					$this->load($value);
+				}
+			}
+		}
+
+		return true;
+	}
+
 	/* Serializes */
 	public function setFromJson($jsonData) {
 		// TODO

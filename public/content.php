@@ -39,9 +39,9 @@ switch ($action) {
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('backContent');
 
-		$contentOu = new View\ContentEditIndex();
-$structures = array();
-		$contentOu->setStructures($structures);
+		$contentOu = new View\ContentEditListContent();
+		$contentOu->setId($id);
+		$contentOu->load();
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
