@@ -10,9 +10,6 @@ if (!Model\Auth::isLoged()) {
 else {
 	$structures = new Model\StructuresDo();
 	$structures->loadFromFile(conf::$DATA_PATH);
-	$estructuras = $structures->getAllStructures();
-	//var_dump($estructuras);
-	//var_dump(conf::$STORAGE_TYPES);
 	$action = isset($_GET['a']) ? $_GET['a'] : 'list';
 }
 /* Show action block */
@@ -41,15 +38,11 @@ switch ($action) {
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		break;
 	case 'edit':
-		$id = $_GET['id'];
-		$estructura = $structures->get($id);
-		$contentOu->setStructureId($id);
-		if ($estructura === null) {
-			/* Error, intentando editar una estructura que no existe */
-			$skeletonOu->setBodyClass('error');
-			$contentOu->setActionType('error');
-		}
-		else {
+		try {
+			$id = $_GET['id'];
+			$estructura = $structures->get($id);
+			$contentOu->setStructureId($id);
+
 			$skeletonOu->setBodyClass('edit');
 			$contentOu->setActionType('edit');
 			$contentOu->setStructureName($estructura->getName());
@@ -57,7 +50,12 @@ switch ($action) {
 			$contentOu->setStorage($estructura->getStorage());
 			$contentOu->setFieldTypes(conf::$FIELD_TYPES);
 			$contentOu->setFields($estructura->getFields());
+		} catch (\Exception $e) {
+			/* Error, intentando editar una estructura que no existe */
+			$skeletonOu->setBodyClass('error');
+			$contentOu->setActionType('error');
 		}
+
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('back');
 
@@ -100,7 +98,6 @@ switch ($action) {
 
 		$contentOu->setActionType('index');
 		$contentOu->setStructures($structures);
-		$contentOu->setTODO($estructuras);
 
 		$skeletonOu->setBodyClass('index');
 		$skeletonOu->setHeadTitle('Manage structures');

@@ -14,7 +14,7 @@ switch ($action) {
 		return;
 		break;
 	case 'list': 
-	$structures = new Model\StructureIterator();
+	$structures = new Model\StructuresDo();
 	$structures->loadFromFile(conf::$DATA_PATH);
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('menu');

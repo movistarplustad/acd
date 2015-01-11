@@ -1,8 +1,7 @@
 <?php
 namespace Acd;
 
-require ('../conf.php');
-require_once (DIR_BASE.'/app/model/StructuresDo.php');
+require ('../autoload.php');
 
 $accion = strtolower($_POST['a']);
 $id = $_POST['id'];
@@ -16,7 +15,7 @@ $structures->loadFromFile(\Acd\conf::$DATA_PATH);
 
 try {
 	$structureFound = $structures->get($id);	
-} catch (Exception $e) {
+} catch (\Exception $e) {
 	$structureFound = null;
 }
 
@@ -43,7 +42,7 @@ switch ($accion) {
 			$numFields = count($fields);
 			foreach ($fields as $idField => $data) {
 				//$n = 0; $n < $numFields; $n++) {
-				if (!$fields[$idField]['delete']) {
+				if (!isset($fields[$idField]['delete'])) {
 					$field = new Model\FieldDo();
 					$newId = $fields[$idField]['id'] === '' ? $field->generateId($fields[$idField]['name']) : $fields[$idField]['id'];
 					$field->setId($newId);
@@ -71,9 +70,11 @@ switch ($accion) {
 		break;
 	case 'delete':
 		try {
-			$result = $structures->remove($id) ? 'ok' : 'ko';
+			$structures->remove($id);
 			$structures->save();
-		} catch (Exception $e) {
+			$result = 'ok';
+		} catch (\Exception $e) {
+			d($e);
 			$result = 'ko';
 		}
 

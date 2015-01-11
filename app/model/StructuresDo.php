@@ -1,47 +1,8 @@
 <?php
 namespace Acd\Model;
 
-include_once (DIR_BASE.'/app/model/Collection.php');
-include_once (DIR_BASE.'/app/model/StructureDo.php');
-
-class StructuresDo extends Collection {
-	public function __construct() {
-		parent::__construct();
-	}
-	/* Overwrite add method using id of element */
-	public function add($element, $key = null) {
-		$_id = $element->getId();
-		if ($this->hasKey($_id)) {
-			return false;
-		}
-		else {
-			$this->elements[$_id] = $element;
-			return true;
-		}
-	}
-	public function get($key) {
-		try {
-			return parent::get($key);
-		} catch (KeyInvalidException $e) {
-			return null;
-		}
-	}
-	public function set($element, $key) {
-		try {
-			parent::set($element, $key);
-			return true;
-		} catch (KeyInvalidException $e) {
-			return false;
-		}
-	}
-	public function remove($key) {
-		try {
-			parent::remove($key);
-			return true;
-		} catch (KeyInvalidException $e) {
-			return false;
-		}
-	}
+class StructuresDo extends Collection 
+{
 	public function loadFromFile($path = null) {
 		if ($path === null) {
 			$path = DIR_DATA.'/structures.json';
@@ -55,12 +16,13 @@ class StructuresDo extends Collection {
 				$structure->setId($key);
 				$structure->load($value);
 
-				$this->add($structure);
+				$this->add($structure, $key);
 			}
 		}
 
 		return true;
 	}
+
 	public function save($path = null) {
 		if ($path === null) {
 			$path = DIR_DATA.'/structures.json';
@@ -82,7 +44,6 @@ class StructuresDo extends Collection {
 		}
 		fclose($handle);
 		rename($tempPath, $path);
-
 	}
 
 	public function tokenizeData() {
@@ -94,7 +55,6 @@ class StructuresDo extends Collection {
 		}
 
 		return $aData;
-
 	}
 
 	/* Return array of ids of all structures */

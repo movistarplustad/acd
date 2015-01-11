@@ -3,13 +3,12 @@
 	<p class="result"><?=$resultDesc?></p>
 	<ol id="structures_list">
 	<?php
-		foreach ($estructuras as $id) {
-			$estructure = $structures->get($id);
+		foreach ($structures as $structure) {
 	?>
 		<li class="structure">
 			<form action="do_process_structure.php" method="post">
-				<input type="hidden" name="id" value="<?=htmlspecialchars($estructure->getId())?>"/>
-				<?=htmlspecialchars($estructure->getName())?>
+				<input type="hidden" name="id" value="<?=htmlspecialchars($structure->getId())?>"/>
+				<?=htmlspecialchars($structure->getName())?>
 				<span class="tools"><input type="submit" name="a" value="edit" class="button edit"/>,  <input type="submit" name="a" value="clone" class="button clone"/>, <input type="submit" name="a" value="delete" class="button delete"/></span>
 			</form>
 		</li>

@@ -38,6 +38,7 @@ class structures extends \PHPUnit_Framework_TestCase
 
         // Act
         $b = $a->getAllStructures();
+        $this->setExpectedException('\Acd\Model\KeyInvalidException');
         $c = $a->get('foo 3');
 
         // Assert

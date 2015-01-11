@@ -2,7 +2,8 @@
 namespace Acd\View;
 require_once (DIR_BASE.'/app/view/Template.php');
 // Output
-class ContentAdmin extends \Acd\View\Template {
+class ContentAdmin extends \Acd\View\Template
+{
 	protected $actionType;
 	public function __construct() {
 		$this->__set('resultDesc', '');
@@ -27,9 +28,6 @@ class ContentAdmin extends \Acd\View\Template {
 	// INDEX
 	public function setStructures($structures) {
 		$this->__set('structures', $structures);
-	}
-	public function setTODO($estructuras) {
-		$this->__set('estructuras', $estructuras);
 	}
 	// EDIT
 	public function setStructureId($structureId) {

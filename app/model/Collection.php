@@ -3,11 +3,17 @@ namespace Acd\Model;
 
 class KeyInvalidException extends \exception {}
 class KeyhasUseException extends \exception {}
-class Collection {
+class Collection implements \IteratorAggregate
+{
 	protected $elements;
 
 	public function __construct() {
 		$this->elements = array(); /* Create empty structure */
+	}
+
+	// return iterator
+	public function getIterator() {
+		return new \ArrayIterator( $this->elements );
 	}
 
 	public function hasKey($key) {
