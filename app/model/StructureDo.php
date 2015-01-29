@@ -63,6 +63,7 @@ class StructureDo
 	}
 
 	public function 	loadFromFile($path = null) {
+		$bLoaded = false;
 		if ($path === null) {
 			$path = DIR_DATA.'/structures.json';
 		}
@@ -74,11 +75,12 @@ class StructureDo
 				if(strval($key) === $this->getId()) {
 					$this->setId($key);
 					$this->load($value);
+					$bLoaded = true;
 				}
 			}
 		}
 
-		return true;
+		return $bLoaded;
 	}
 
 	/* Serializes */

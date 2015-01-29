@@ -20,10 +20,8 @@
 		<div>
 			<?php
 			$structure_fields = '';
-			$idFields = $fields->keys();
 			$n = 0;
-			foreach ($idFields as $idField) {
-				$field = $fields->get($idField);
+			foreach ($fields as $field) {
 				$structure_fields .= '<li>
 					<input type="hidden" name="field['.$n.'][id]" value="'.htmlspecialchars($field->getId()).'"/>
 					<input type="text" name="field['.$n.'][name]" value="'.htmlspecialchars($field->getName()).'" id="field_'.$n.'"/>

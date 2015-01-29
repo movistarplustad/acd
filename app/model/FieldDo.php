@@ -2,10 +2,12 @@
 namespace Acd\Model;
 
 class TypeKeyInvalidException extends \exception {}
-class FieldDo {
+class FieldDo
+{
 	protected $id;
 	protected $type;
 	protected $name;
+	protected $value;
 	public function __construct() {
 	}
 	public function setId($id) {
@@ -37,6 +39,12 @@ class FieldDo {
 	}
 	public function getName() {
 		return $this->name;
+	}
+	public function setValue($value) {
+		$this->value = $value;
+	}
+	public function getValue() {
+		return $this->value;
 	}
 	public function load($data) {
 		$id = key($data);

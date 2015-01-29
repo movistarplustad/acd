@@ -22,6 +22,18 @@
           }
         }
       ]
+    },
+    "estructura_texto": {
+      "name": "Con dos campos",
+      "storage": "text/plain",
+      "fields": [
+        {
+          "abierta": {
+            "type": "boolean",
+            "name": "Abierta"
+          }
+        }
+      ]
     }
   }
 ]

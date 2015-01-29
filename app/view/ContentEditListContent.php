@@ -19,6 +19,9 @@ class ContentEditListContent extends Template {
 	public function load() {
 		$this->structure->loadFromFile();
 	}
+	public function setContents($contents) {
+		$this->__set('contents', $contents);
+	}
 
 	public function render($tpl = '') {
 		$tpl = DIR_TEMPLATES.'/ContentEditListContent.tpl';

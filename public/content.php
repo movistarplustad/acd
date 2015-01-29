@@ -3,7 +3,7 @@ namespace Acd;
 
 require ('../autoload.php');
 session_start();
-$action = isset($_GET['a']) ? $_GET['a'] : 'list';
+$action = isset($_GET['a']) ? $_GET['a'] : 'list_structures';
 if (!Model\Auth::isLoged()) {
 	$action = 'login';
 }
@@ -13,7 +13,7 @@ switch ($action) {
 		header('Location: index.php');
 		return;
 		break;
-	case 'list': 
+	case 'list_structures': 
 	$structures = new Model\StructuresDo();
 	$structures->loadFromFile(conf::$DATA_PATH);
 		$headerMenuOu = new View\HeaderMenu();
@@ -34,7 +34,7 @@ switch ($action) {
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;
-	case 'edit':
+	case 'list_contents':
 		$id = $_GET['id'];
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('backContent');
@@ -42,6 +42,11 @@ switch ($action) {
 		$contentOu = new View\ContentEditListContent();
 		$contentOu->setId($id);
 		$contentOu->load();
+
+		$contentLoader = new Model\ContentLoader();
+		$contentLoader->setId($id);
+		$contents = $contentLoader->loadContent('all');
+		$contentOu->setContents($contents);
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');

@@ -18,7 +18,7 @@ class structures extends \PHPUnit_Framework_TestCase
         $b = $a->getAllStructures();
 
         // Assert
-        $this->assertEquals(2, count($b));
+        $this->assertEquals(3, count($b));
 
         //TODO Load data from invalid source
 

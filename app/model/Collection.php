@@ -6,6 +6,7 @@ class KeyhasUseException extends \exception {}
 class Collection implements \IteratorAggregate
 {
 	protected $elements;
+	private $limits;
 
 	public function __construct() {
 		$this->elements = array(); /* Create empty structure */
@@ -63,5 +64,11 @@ class Collection implements \IteratorAggregate
 		return count($this->elements);
 	}
 
+	public function setLimits($limits) {
+		$this->limits = $limits;
+	}
+	public function getLimits() {
+		return $this->limits;
+	}
 
 }

@@ -9,7 +9,11 @@ define('DIR_TEMPLATES', DIR_BASE.'/app/view');
 class conf {
 	public static $DIR_TEMPLATES;
 	public static $DATA_PATH;
+	public static $DATA_DIR_PATH;
 	public static $STORAGE_TYPES;
+	public static $STORAGE_TYPE_TEXTPLAIN;
+	public static $STORAGE_TYPE_MONGODB;
+	public static $STORAGE_TYPE_MYSQL;
 	public static $FIELD_TYPES;
 	public static $PERMISSION_PATH;
 	public static $USE_AUTHENTICATION;
@@ -19,10 +23,14 @@ class conf {
 }
 conf::$DIR_TEMPLATES = DIR_BASE.'/app/view';
 conf::$DATA_PATH = DIR_DATA.'/structures.json';
+conf::$DATA_DIR_PATH = DIR_DATA.'/structures';
+conf::$STORAGE_TYPE_TEXTPLAIN  = 'text/plain';
+conf::$STORAGE_TYPE_MONGODB  = 'mongodb';
+conf::$STORAGE_TYPE_MYSQL  = 'mysql';
 conf::$STORAGE_TYPES = array(
-		'text/plain' => 'text/plain',
-		'mongodb' => 'Mongo DB',
-		'mysql' => 'MySql'
+		conf::$STORAGE_TYPE_TEXTPLAIN => 'text/plain',
+		conf::$STORAGE_TYPE_MONGODB => 'Mongo DB',
+		conf::$STORAGE_TYPE_MYSQL => 'MySql'
 	);
 conf::$FIELD_TYPES =  array(
 		'text_simple' => 'Simple text',
