@@ -11,6 +11,9 @@
 				case 'backContent':
 					?><a href="content.php" class="back"><img src="style/ic_chevron_left_24px_inverse.svg" alt="Menu" height="30"/><span class="label"> back</span></a><?php
 					break;
+				case 'backListContent':
+					?><a href="<?=$this->url?>" class="back"><img src="style/ic_chevron_left_24px_inverse.svg" alt="Menu" height="30"/><span class="label"> back</span></a><?php
+					break;
 			}
 		?>
 	</div>

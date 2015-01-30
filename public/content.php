@@ -30,7 +30,7 @@ switch ($action) {
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('indexContent');
-		$skeletonOu->setHeadTitle('Manage structures');
+		$skeletonOu->setHeadTitle('Manage contents');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;
@@ -50,7 +50,26 @@ switch ($action) {
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
-		$skeletonOu->setHeadTitle('Manage structures');
+		$skeletonOu->setHeadTitle('Manage contents');
+		$skeletonOu->setHeaderMenu($headerMenuOu->render());
+		break;
+	case 'edit':
+		$id = $_GET['id'];
+		$idStructureType = $_GET['idt'];
+		$headerMenuOu = new View\HeaderMenu();
+		$headerMenuOu->setType('backListContent');
+		$headerMenuOu->setUrl('content.php?a=list_contents&amp;id='.urlencode($idStructureType));
+
+		$contentOu = new View\ContentEditContent();
+		$contentLoader = new Model\ContentLoader();
+		$contentLoader->setId($idStructureType);
+		$content = $contentLoader->loadContent('id', $id);
+		$content = $content->get($id); // TODO cambiar por next / first...
+		$contentOu->setContent($content);
+		
+		$skeletonOu = new View\BaseSkeleton();
+		$skeletonOu->setBodyClass('editContent');
+		$skeletonOu->setHeadTitle('Manage contents');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		break;
 }
