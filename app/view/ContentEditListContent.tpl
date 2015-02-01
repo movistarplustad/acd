@@ -6,7 +6,7 @@
 		foreach ($contents as $content) {
 	?>
 		<li class="content">
-			<a href="?a=edit&amp;id=<?=htmlspecialchars($content->getId())?>&amp;idt=<?=htmlspecialchars($content->getIdStructure())?>"><?=htmlspecialchars($content->getTitulo())?></a>
+			<a href="?a=edit&amp;id=<?=htmlspecialchars($content->getId())?>&amp;idt=<?=htmlspecialchars($content->getIdStructure())?>"><?=htmlspecialchars($content->getTitle())?></a>
 		</li>
 	<?php
 		}

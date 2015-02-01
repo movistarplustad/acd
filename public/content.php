@@ -61,6 +61,11 @@ switch ($action) {
 		$headerMenuOu->setUrl('content.php?a=list_contents&amp;id='.urlencode($idStructureType));
 
 		$contentOu = new View\ContentEditContent();
+		$structure = new Model\StructureDo();
+		$structure->setId($idStructureType);
+		$structure->loadFromFile();
+		$contentOu->setStructure($structure);
+
 		$contentLoader = new Model\ContentLoader();
 		$contentLoader->setId($idStructureType);
 		$content = $contentLoader->loadContent('id', $id);

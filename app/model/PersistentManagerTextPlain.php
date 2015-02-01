@@ -59,7 +59,6 @@ class PersistentManagerTextPlain implements iPersistentManager
 			$contentKeyValue[$field->getName()] = $field->getValue();
 		}
 		*/
-		$contentKeyValue = $contentDo->getData();
 		/* Add to old data */
 		$allElements = $this->_loadAll($structureDo);
 		$idContent = $contentDo->getId();
@@ -67,8 +66,9 @@ class PersistentManagerTextPlain implements iPersistentManager
 			$idContent = $this->getNewId();
 			$contentDo->setId($idContent);
 		}
+		$contentKeyValue = $contentDo->tokenizeData();
 		$allElements[$idContent] = $contentKeyValue;
-
+ 
 		/* TODO: Se repite en save y delete */
 		$jAllElements = json_encode($allElements);
 		$path = $this->getStoragePath($structureDo);
@@ -124,10 +124,8 @@ class PersistentManagerTextPlain implements iPersistentManager
 		$allElements = $this->_loadAll($structureDo);
 		if (isset($allElements[$id])) {
 			$contentFound = new ContentDo();
-			foreach ($allElements[$id] as $key => $value) {
-				$contentFound->setData($key, $value);
-			}
-			$result = new Collection();
+			$contentFound->load($allElements[$id], $structureDo->getId());
+			$result = new ContentsDo();
 			$result->add($contentFound, $id);
 
 			return $result;

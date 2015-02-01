@@ -8,9 +8,7 @@ class ContentsDo extends Collection
 			// TODO revisar si debe ir el id además de como key en el propio contenido
 			unset($content);
 			$content = new ContentDo();
-			$content->setId($key);
-			$content->setIdStructure($idStructure);
-			$content->setData($data);
+			$content->load($data, $idStructure);
 			$this->add($content, $content->getId());
 		}
 

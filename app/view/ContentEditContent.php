@@ -5,8 +5,6 @@ namespace Acd\View;
 class ContentEditContent extends Template {
 	public function __construct() {
 		$this->__set('resultDesc', '');
-		$structure = new \Acd\Model\StructureDo();
-		$this->__set('structure', $structure);
 	}	
 
 	// INDEX
@@ -14,13 +12,13 @@ class ContentEditContent extends Template {
 	public function setId($id) {
 		$this->structure->setId($id);
 	}
-	public function setStructure($structure) {
-		$this->__set('structure', $structure);
-	}
 	public function load() {
 		$this->structure->loadFromFile();
 	}
 	*/
+	public function setStructure($structure) {
+		$this->__set('structure', $structure);
+	}
 	public function setContent($content) {
 		$this->__set('content', $content);
 	}
