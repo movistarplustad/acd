@@ -14,4 +14,20 @@ class FieldsDo extends Collection
 		return true;
 		}
 	}
+	public function setValue($key, $value) {
+		if ($this->hasKey($key)) {
+			$this->get($key)->setValue($value);
+		}
+		else {
+			$element = new FieldDo();
+			$element->setId($key);
+			$element->setName($key);
+			$element->setValue($value);
+			$this->add($element, $key);
+		}
+	}
+	public function getValue($key) {
+		return $this->get($key)->getValue();
+
+	}
 }

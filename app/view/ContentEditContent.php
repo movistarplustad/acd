@@ -22,6 +22,9 @@ class ContentEditContent extends Template {
 	public function setContent($content) {
 		$this->__set('content', $content);
 	}
+	public function newContent($bnewContent) {
+		$this->__set('bNew', true);
+	}
 
 	public function render($tpl = '') {
 		$tpl = DIR_TEMPLATES.'/ContentEditContent.tpl';

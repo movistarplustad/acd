@@ -34,8 +34,10 @@ switch ($action) {
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;
+	case 'delete':
 	case 'list_contents':
 		$id = $_GET['id'];
+		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('backContent');
 
@@ -47,6 +49,33 @@ switch ($action) {
 		$contentLoader->setId($id);
 		$contents = $contentLoader->loadContent('all');
 		$contentOu->setContents($contents);
+
+		$skeletonOu = new View\BaseSkeleton();
+		$skeletonOu->setBodyClass('editContent');
+		$skeletonOu->setHeadTitle('Manage contents');
+		$skeletonOu->setHeaderMenu($headerMenuOu->render());
+
+		if ($action == 'delete' && $bResult) {
+			$contentOu->setResultDesc('Done');
+		}
+		break;
+	case 'new':
+		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
+		$idStructureType = $_GET['idt'];
+		$headerMenuOu = new View\HeaderMenu();
+		$headerMenuOu->setType('backListContent');
+		$headerMenuOu->setUrl('content.php?a=list_contents&amp;id='.urlencode($idStructureType));
+
+		$contentOu = new View\ContentEditContent();
+		$structure = new Model\StructureDo();
+		$structure->setId($idStructureType);
+		$structure->loadFromFile();
+		$contentOu->setStructure($structure);
+
+		$content = new Model\ContentDo();
+		$content->setIdStructure($idStructureType);
+		$contentOu->setContent($content);
+		$contentOu->newContent(true);
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');

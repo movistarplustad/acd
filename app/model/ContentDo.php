@@ -12,6 +12,7 @@ class ContentDo
 
 	public function __construct() {
 		$this->id = null;
+		$this->idStructure = null;
 		$this->fields = new FieldsDo();
 	}
 	/* Setters and getters attributes */
@@ -33,7 +34,27 @@ class ContentDo
 	public function getTitle() {
 		return $this->title;
 	}
+	public function addField($field) {
+		$this->getFields()->add($field);
+	}
+	public function getFields() {
+		return $this->fields;
+	}
+	private function setFields($fields) {
+		$this->fields = $fields;
+	}
+	public function getFieldValue($fieldName) {
+		try {
+			return $this->getFields()->getValue($fieldName);
+		} catch (KeyInvalidException $e) {
+			return '';
+		}
+	}
+	public function setFieldValue($fieldName, $value) {
+		$this->getFields()->setValue($fieldName, $value);
+	}
 	public function setData($keyData, $data = null) {
+		echo "TODO";
 		/* Setting full structure */
 		if ($data === null) {
 			// TODO errores si campo existe y tipo dato válido
@@ -45,6 +66,14 @@ class ContentDo
 		}
 	}
 	public function getData($key = null) {
+		$data = array();
+		foreach ($this->getFields() as $field) {
+			$data[$field->getName()] = $field->getValue();
+		}
+
+		return $data;
+		/*
+		echo "TODO borrar";
 		if ($key === null) {
 			return $this->data;
 		}
@@ -56,14 +85,26 @@ class ContentDo
 				throw new ContentKeyInvalidException("Invalid conten key $key.");
 			}
 		}
+		*/
 	}
 	public function load($rawData, $idStructure = null) {
 		$this->setId($rawData['id']);
 		$this->setTitle($rawData['title']);
 		$this->setIdStructure($idStructure);
-		foreach ($rawData['data'] as $key => $value) {
-			$this->setData($key, $value);
+		$fields = $this->getFields();
+		if (!is_null($rawData['data'])){
+			foreach ($rawData['data'] as $key => $value) {
+				unset($field);
+				$field = new FieldDo();
+				$field->setId($key);
+				$field->setName($key);
+				$field->setValue($value);
+				$fields->add($field);
+
+				//$this->setData($key, $value);
+			}
 		}
+		//$this->setFields($fields);
 	}
 	public function tokenizeData() {
 		$aFieldsData = array();

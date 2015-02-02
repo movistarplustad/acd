@@ -4,7 +4,7 @@
 	<form action="do_process_structure.php" method="post">
 		<input type="hidden" name="id" value="<?=htmlspecialchars($structureId)?>"/>
 		<div>
-			<label for="name">Nombre</label>: <input type="text" name="name" id="name" value="<?=htmlspecialchars($structureName)?>"/>
+			<label for="name">Name</label>: <input type="text" name="name" id="name" value="<?=htmlspecialchars($structureName)?>"/>
 		</div>
 		<div>
 			<?php
@@ -34,7 +34,7 @@
 			}
 			?>
 			<fieldset>
-				<legend>Campos</legend>
+				<legend>Fields</legend>
 				<ul><?=$structure_fields?></ul>
 			</fieldset>
 		</div>
@@ -49,7 +49,7 @@
 			}
 			?>
 			<fieldset>
-				<legend>Añadir campo</legend>
+				<legend>Add new field</legend>
 				<ul><?=$field_types?></ul>
 				<div><input type="submit" name="accion" value="add" class="button add"/></div>
 			</fieldset>
