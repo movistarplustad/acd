@@ -25,7 +25,9 @@ class ContentEditContent extends Template {
 	public function newContent($bnewContent) {
 		$this->__set('bNew', true);
 	}
-
+	public function setResultDesc($resultDesc) {
+		$this->__set('resultDesc', $resultDesc);
+	}
 	public function render($tpl = '') {
 		$tpl = DIR_TEMPLATES.'/ContentEditContent.tpl';
 		return parent::render($tpl);

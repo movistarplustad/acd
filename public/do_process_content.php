@@ -5,6 +5,9 @@ require ('../autoload.php');
 
 $accion = strtolower($_POST['a']);
 $id = $_POST['id'];
+if ($accion == 'save' && $id == '') {
+	$accion = 'new';
+}
 $idStructure = $_POST['ids'];
 $title = isset($_POST['title']) ? $_POST['title'] : null;
 $fields = isset($_POST['field']) ? $_POST['field'] : array();
@@ -15,13 +18,13 @@ $contents = $contentLoader->loadContent('id', $id);
 //TODO Resolver mejor
 
 try {
-	if (is_null($contents)) {
+	if (is_null($contents) || $contents->length() === 0) {
 		$structureFound = false;
 		$modified_content = new Model\ContentDo();
 		$modified_content->setIdStructure($idStructure);
 	}
 	else {
-		$structureFound = true;	
+		$structureFound = true;
 		$modified_content = $contents->getFirst();
 	}
 } catch (\Exception $e) {
@@ -39,7 +42,8 @@ switch ($accion) {
 				$modified_content->setFieldValue($fields[$idField]['name'], $fields[$idField]['value']);
 			}
 
-			$contentLoader->saveContent($modified_content);
+			$modified_content = $contentLoader->saveContent($modified_content);
+			$id = $modified_content->getId();
 
 			$returnUrl = 'content.php?a=edit&r=ok&id='.urlencode($id).'&idt='.urlencode($idStructure);
 		/* TODO ERROR

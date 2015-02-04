@@ -60,7 +60,6 @@ switch ($action) {
 		}
 		break;
 	case 'new':
-		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
 		$idStructureType = $_GET['idt'];
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('backListContent');
@@ -81,8 +80,10 @@ switch ($action) {
 		$skeletonOu->setBodyClass('editContent');
 		$skeletonOu->setHeadTitle('Manage contents');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
+
 		break;
 	case 'edit':
+		$bResult = isset($_GET['r']) && $_GET['r'] == 'ok' ? true : false;
 		$id = $_GET['id'];
 		$idStructureType = $_GET['idt'];
 		$headerMenuOu = new View\HeaderMenu();
@@ -105,8 +106,13 @@ switch ($action) {
 		$skeletonOu->setBodyClass('editContent');
 		$skeletonOu->setHeadTitle('Manage contents');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
+
+		if ($bResult) {
+			$contentOu->setResultDesc('Done');
+		}
 		break;
 }
+
 $skeletonOu->setContent($contentOu->render());
 
 header("Content-Type: text/html");

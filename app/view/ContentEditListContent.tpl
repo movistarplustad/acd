@@ -12,5 +12,5 @@
 		}
 	?>
 	</ol>
-	<div id="new_structure"><a href="?a=new&amp;idt=<?=htmlspecialchars($content->getIdStructure())?>" title="New content" class="button new">new content</a></div>
+	<div id="new_structure"><a href="?a=new&amp;idt=<?=htmlspecialchars($structure->getId())?>" title="New content" class="button new">new content</a></div>
 </main>
