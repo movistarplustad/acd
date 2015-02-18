@@ -6,15 +6,6 @@ class MongoConnectionException extends \exception {}
 class MongoDocumentNotFound extends \exception {}
 class PersistentManagerMongoDB implements iPersistentManager
 {
-	//private function getStoragePath($structureDo) {
-	//	return \Acd\conf::$DATA_DIR_PATH.'/'.$structureDo->getId().'.json';
-	//}
-
-	private function getNewId() {
-		//TODO?
-		return uniqid();
-	}
-
 	public function initialize($structureDo) {
 		$mongo = new \MongoClient();
 		$db = $mongo->acd;
@@ -22,11 +13,11 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 			//$db = $m->selectDB('comedy');
 		echo "seleccionando ".$structureDo->getId();
-//Get list of databases
-$m->admin->command(array("listDatabases" => 1));
+	//Get list of databases
+	$m->admin->command(array("listDatabases" => 1));
 //Get list of Collections in test db
-d($db->listCollections());
-d($db);
+//d($db->listCollections());
+//d($db);
 	}
 	public function isInitialized($structureDo) {
 		try {
@@ -62,8 +53,8 @@ d($db);
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
-		// TODO	
-		echo "falta update";
+		// TODO	 revisar
+		echo "falta update ".$contentDo->getId();
 		$mongo = new \MongoClient();
 		$db = $mongo->acd;
 		//$mongoCollection = $db->selectCollection($structureDo->getId());
@@ -71,15 +62,29 @@ d($db);
 		$insert = $contentDo->tokenizeData();
 		$insert['id_structure'] = $structureDo->getId();
 		unset ($insert['id']);
-		$mongoCollection->insert($insert);
-		$contentDo->setId($insert['_id']);
+		if ($contentDo->getId()) {
+			$oId = new \MongoId($contentDo->getId());
+			//d(array('_id' => $oId), array('$set' => $insert));
+
+			$mongoCollection->update(array('_id' => $oId), array('$set' => $insert));
+		}
+		else {
+			$mongoCollection->insert($insert);
+			$contentDo->setId($insert['_id']);
+		}
+		
 		//echo "save ".$contentDo->getId();die();
 		return $contentDo;
 	}
 
 	public function delete($structureDo, $idContent) {
 		if ($this->isInitialized($structureDo)) {
-		// TODO
+		// TODO revisar
+			$mongo = new \MongoClient();
+			$db = $mongo->acd;
+			$mongoCollection = $db->selectCollection('content');
+			$oId = new \MongoId($idContent);
+			$mongoCollection->remove(array('_id' => $oId));
 		}
 
 	}
@@ -87,27 +92,27 @@ d($db);
 	private function loadById($structureDo, $query) {
 		$id = $query->getCondition();
 //echo "loadById ".$structureDo->getId()." $id";
-		// TODO
-$mongo = new \MongoClient();
-$db = $mongo->acd;
-$mongoCollection = $db->selectCollection('content');
-try {
-	$oId = new \MongoId($id);
-}
-catch( \MongoException $e ) {
-	return null;
-}
-try {
-	$documentFound = $mongoCollection->findOne(array("_id" => $oId));
-	$documentFound['id'] = $id;
-	$contentFound = new ContentDo();
-	$contentFound->load($documentFound, $structureDo->getId());
-	$result = new ContentsDo();
-	$result->add($contentFound, $id);
-}
-catch( MongoDocumentNotFound $e ) {
-	$result = null;
-}
+		// TODO revisar
+		$mongo = new \MongoClient();
+		$db = $mongo->acd;
+		$mongoCollection = $db->selectCollection('content');
+		try {
+			$oId = new \MongoId($id);
+		}
+		catch( \MongoException $e ) {
+			return null;
+		}
+		try {
+			$documentFound = $mongoCollection->findOne(array("_id" => $oId));
+			$documentFound['id'] = $id;
+			$contentFound = new ContentDo();
+			$contentFound->load($documentFound, $structureDo->getId());
+			$result = new ContentsDo();
+			$result->add($contentFound, $id);
+		}
+		catch( MongoDocumentNotFound $e ) {
+			$result = null;
+		}
 
 //d($result);
 		return $result;
