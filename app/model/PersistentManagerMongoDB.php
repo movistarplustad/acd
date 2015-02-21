@@ -9,15 +9,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 	public function initialize($structureDo) {
 		$mongo = new \MongoClient();
 		$db = $mongo->acd;
-		$db->createCollection($structureDo->getId(), false);
-
-			//$db = $m->selectDB('comedy');
-		echo "seleccionando ".$structureDo->getId();
-	//Get list of databases
-	$m->admin->command(array("listDatabases" => 1));
-//Get list of Collections in test db
-//d($db->listCollections());
-//d($db);
+		$db->createCollection('content', false);
 	}
 	public function isInitialized($structureDo) {
 		try {
@@ -64,7 +56,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 		unset ($insert['id']);
 		if ($contentDo->getId()) {
 			$oId = new \MongoId($contentDo->getId());
-			//d(array('_id' => $oId), array('$set' => $insert));
 
 			$mongoCollection->update(array('_id' => $oId), array('$set' => $insert));
 		}
@@ -73,7 +64,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$contentDo->setId($insert['_id']);
 		}
 		
-		//echo "save ".$contentDo->getId();die();
 		return $contentDo;
 	}
 
@@ -91,7 +81,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 	private function loadById($structureDo, $query) {
 		$id = $query->getCondition();
-//echo "loadById ".$structureDo->getId()." $id";
 		// TODO revisar
 		$mongo = new \MongoClient();
 		$db = $mongo->acd;
@@ -114,7 +103,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$result = null;
 		}
 
-//d($result);
 		return $result;
 	}
 
@@ -133,8 +121,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$contentFound->load($documentFound, $structureDo->getId());
 			$result->add($contentFound, $id);
 		}
-		//echo "loadAll";
-		//TODO
+		//TODO revisar
 		// Purge to limits
 		$limits = $query->getLimits();
 		//$limits->setTotal(count($aContents));
