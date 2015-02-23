@@ -20,6 +20,10 @@ class conf {
 	public static $AUTH_PERSITENT_EXPIRATION_TIME;
 	public static $PATH_AUTH_CREDENTIALS_FILE;
 	public static $PATH_AUTH_PREMANENT_LOGIN_DIR;
+	public static $MYSQL_SERVER;
+	public static $MYSQL_USER;
+	public static $MYSQL_PASSWORD;
+	public static $MYSQL_SCHEMA;
 }
 conf::$DIR_TEMPLATES = DIR_BASE.'/app/view';
 conf::$DATA_PATH = DIR_DATA.'/structures.json';
@@ -45,6 +49,11 @@ conf::$USE_AUTHENTICATION = true;
 conf::$AUTH_PERSITENT_EXPIRATION_TIME = 31536000; // 1 year
 conf::$PATH_AUTH_CREDENTIALS_FILE = DIR_DATA.'/auth.json';
 conf::$PATH_AUTH_PREMANENT_LOGIN_DIR = DIR_DATA.'/auth_permanent_login';
+
+conf::$MYSQL_SERVER = 'localhost';
+conf::$MYSQL_USER = 'usuarioweb';
+conf::$MYSQL_PASSWORD = 'strip';
+conf::$MYSQL_SCHEMA = 'acd';
 
 /* Debug */
 if (file_exists(DIR_BASE.'/../tools/kint/Kint.class.php')) {

@@ -1,7 +1,7 @@
 <?php
 namespace Acd\Model;
 
-class PersistentStorageQueryTypeNotImplemented extends \exception {}
+class PersistentStorageQueryTypeNotImplemented extends \exception {} // TODO mover a sitio común
 class MongoConnectionException extends \exception {}
 class MongoDocumentNotFound extends \exception {}
 class PersistentManagerMongoDB implements iPersistentManager
@@ -46,7 +46,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$this->initialize($structureDo);
 		}
 		// TODO	 revisar
-		echo "falta update ".$contentDo->getId();
 		$mongo = new \MongoClient();
 		$db = $mongo->acd;
 		//$mongoCollection = $db->selectCollection($structureDo->getId());
@@ -88,7 +87,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		try {
 			$oId = new \MongoId($id);
 		}
-		catch( \MongoException $e ) {
+		catch( \MongoConnectionException $e ) {
 			return null;
 		}
 		try {
@@ -123,7 +122,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		}
 		//TODO revisar
 		// Purge to limits
-		$limits = $query->getLimits();
+		//$limits = $query->getLimits();
 		//$limits->setTotal(count($aContents));
 
 		return $result;
