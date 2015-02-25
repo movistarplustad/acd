@@ -1,5 +1,5 @@
 <main>
-	<h2>Manage content <spam class="structure_name"><?=htmlspecialchars($structure->getName())?></spam></h2>
+	<h2>Manage elements <spam class="structure_name"><?=htmlspecialchars($structure->getName())?></spam></h2>
 	<p class="result"><?=$resultDesc?></p>
 	<ol id="structures_list">
 	<?php

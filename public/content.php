@@ -30,7 +30,7 @@ switch ($action) {
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('indexContent');
-		$skeletonOu->setHeadTitle('Manage contents');
+		$skeletonOu->setHeadTitle('Manage content type');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;
@@ -52,7 +52,7 @@ switch ($action) {
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
-		$skeletonOu->setHeadTitle('Manage contents');
+		$skeletonOu->setHeadTitle('Manage elements');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 
 		if ($action == 'delete' && $bResult) {
@@ -78,7 +78,7 @@ switch ($action) {
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
-		$skeletonOu->setHeadTitle('Manage contents');
+		$skeletonOu->setHeadTitle('Manage content');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 
 		break;
@@ -104,7 +104,7 @@ switch ($action) {
 		
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
-		$skeletonOu->setHeadTitle('Manage contents');
+		$skeletonOu->setHeadTitle('Manage content');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 
 		if ($bResult) {
