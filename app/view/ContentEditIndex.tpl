@@ -1,5 +1,5 @@
 <main>
-	<h2>Manage contents</h2>
+	<h2>Manage content type</h2>
 	<p class="result"><?=$resultDesc?></p>
 	<ol id="structures_list">
 	<?php
