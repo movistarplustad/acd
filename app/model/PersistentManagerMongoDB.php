@@ -1,9 +1,7 @@
 <?php
 namespace Acd\Model;
 
-class PersistentStorageQueryTypeNotImplemented extends \exception {} // TODO mover a sitio común
-class MongoConnectionException extends \exception {}
-class MongoDocumentNotFound extends \exception {}
+class PersistentStorageQueryTypeNotImplemented extends \Exception {} // TODO mover a sitio común
 class PersistentManagerMongoDB implements iPersistentManager
 {
 	public function initialize($structureDo) {
@@ -19,7 +17,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 			return true;
 		}
-		catch ( MongoConnectionException $e ) {
+		catch ( \Exception $e ) {
 			return false;
 		}
 	}
@@ -87,7 +85,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		try {
 			$oId = new \MongoId($id);
 		}
-		catch( \MongoConnectionException $e ) {
+		catch( \Exception $e ) {
 			return null;
 		}
 		try {
@@ -98,7 +96,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$result = new ContentsDo();
 			$result->add($contentFound, $id);
 		}
-		catch( MongoDocumentNotFound $e ) {
+		catch( \Exception $e ) {
 			$result = null;
 		}
 

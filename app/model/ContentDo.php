@@ -92,7 +92,7 @@ class ContentDo
 		$this->setTitle($rawData['title']);
 		$this->setIdStructure($idStructure);
 		$fields = $this->getFields();
-		if (!is_null($rawData['data'])){
+		if (is_array($rawData['data'])){
 			foreach ($rawData['data'] as $key => $value) {
 				unset($field);
 				$field = new FieldDo();
