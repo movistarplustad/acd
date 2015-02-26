@@ -51,6 +51,7 @@ Errores: /var/log/apache2/error.log
 Ejemplo similar: http://www.wufoo.com.mx/examples/#bugtracker
 
 Modelo datos MySql
+
 CREATE SCHEMA `acd` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci ;
 
 CREATE TABLE `acd`.`content` (
@@ -61,3 +62,9 @@ CREATE TABLE `acd`.`content` (
   PRIMARY KEY (`id`),
   INDEX `tipo_contenido` (`id_structure` ASC, `title` ASC));
 
+CREATE USER `usuarioweb`@`localhost` IDENTIFIED BY `strip`;
+GRANT SELECT ON acd.* TO `usuarioweb`@`localhost`;
+GRANT INSERT ON acd.* TO `usuarioweb`@`localhost`;
+GRANT UPDATE ON acd.* TO `usuarioweb`@`localhost`;
+GRANT DELETE ON acd.* TO `usuarioweb`@`localhost`;
+FLUSH PRIVILEGES;
