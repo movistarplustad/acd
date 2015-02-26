@@ -83,6 +83,7 @@ switch ($action) {
 
 		break;
 	case 'edit':
+	case 'clone':
 		$bResult = isset($_GET['r']) && $_GET['r'] == 'ok' ? true : false;
 		$id = $_GET['id'];
 		$idStructureType = $_GET['idt'];
@@ -100,6 +101,10 @@ switch ($action) {
 		$contentLoader->setId($idStructureType);
 		$content = $contentLoader->loadContent('id', $id);
 		$content = $content->get($id); // TODO cambiar por next / first...
+		if ($action == 'clone') {
+			$content->setId(null);
+			$content->setTitle('[copy] '.$content->getTitle());
+		}
 		$contentOu->setContent($content);
 		
 		$skeletonOu = new View\BaseSkeleton();
@@ -111,6 +116,8 @@ switch ($action) {
 			$contentOu->setResultDesc('Done');
 		}
 		break;
+	default:
+		dd("Error 404");
 }
 
 $skeletonOu->setContent($contentOu->render());

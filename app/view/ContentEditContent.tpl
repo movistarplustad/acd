@@ -35,6 +35,13 @@
 			</fieldset>
 		</div>
 		<input type="submit" name="a" value="save" class="button publish"/>
-		<input type="submit" name="a" value="delete" class="button delete"/><!-- No sacar si es nuevo (id=='') -->
+		<?php
+			if($content->getId()) {
+		?>
+			<input type="submit" name="a" value="clone" class="button clone"/>
+			<input type="submit" name="a" value="delete" class="button delete"/>
+		<?php
+			}
+		?>
 	</form>
 </main>
