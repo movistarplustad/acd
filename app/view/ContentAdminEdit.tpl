@@ -15,7 +15,7 @@
 				
 			}
 			?>
-			<label for="storage">Tipo Almacenamiento</label>: <select name="storage" id="storage"><?=$options?></select>
+			<label for="storage">Storage type</label>: <select name="storage" id="storage"><?=$options?></select>
 		</div>
 		<div>
 			<?php
@@ -26,7 +26,7 @@
 					<input type="hidden" name="field['.$n.'][id]" value="'.htmlspecialchars($field->getId()).'"/>
 					<input type="text" name="field['.$n.'][name]" value="'.htmlspecialchars($field->getName()).'" id="field_'.$n.'"/>
 					<input type="hidden" name="field['.$n.'][type]" value="'.htmlspecialchars($field->getType()).'"/>
-					<label for="field_'.$n.'">'.htmlspecialchars($field->getType()).'</label>
+					<label for="field_'.$n.'">'.htmlspecialchars($fieldTypes[$field->getType()]).'</label>
 					<input type="checkbox" name="field['.$n.'][delete]" value="1" id="delete_field_'.$n.'"/>
 					<label for="delete_field_'.$n.'">Delete</label>
 					</li>';

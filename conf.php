@@ -36,14 +36,7 @@ conf::$STORAGE_TYPES = array(
 		conf::$STORAGE_TYPE_MONGODB => 'Mongo DB',
 		conf::$STORAGE_TYPE_MYSQL => 'MySql'
 	);
-conf::$FIELD_TYPES =  array(
-		'text_simple' => 'Simple text',
-		'text_multiline' => 'Multiline text area',
-		'integer' => 'Integer number',
-		'float' => 'Decimal number',
-		'range' => 'Range',
-		'boolean' => 'Boolean'
-	);
+
 conf::$PERMISSION_PATH = DIR_DATA.'/permission.json';
 conf::$USE_AUTHENTICATION = true;
 conf::$AUTH_PERSITENT_EXPIRATION_TIME = 31536000; // 1 year

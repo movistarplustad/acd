@@ -4,10 +4,37 @@ namespace Acd\Model;
 class TypeKeyInvalidException extends \exception {}
 class FieldDo
 {
-	protected $id;
-	protected $type;
-	protected $name;
-	protected $value;
+	const TYPE_TEXT_SIMPLE = 'text_simple';
+	const TYPE_TEXT_MULTILINE = 'text_multiline';
+	const TYPE_INTEGER = 'integer';
+	const TYPE_FLOAT = 'float';
+	const TYPE_RANGE = 'range';
+	const TYPE_BOOLEAN = 'boolean';
+	const TYPE_DATE = 'date';
+	const TYPE_DATE_TIME = 'date_time';
+	const TYPE_DATE_RANGE = 'date_range';
+	const TYPE_DATE_TIME_RANGE = 'date_time_range';
+
+	private $id;
+	private $type;
+	private $name;
+	private $value;
+
+	public static function getAvailableTypes() {
+		return array(
+			self::TYPE_TEXT_SIMPLE => 'Simple text',
+			self::TYPE_TEXT_MULTILINE => 'Multiline text area',
+			self::TYPE_INTEGER => 'Integer number',
+			self::TYPE_FLOAT => 'Decimal number',
+			self::TYPE_RANGE => 'Range',
+			self::TYPE_BOOLEAN => 'Boolean',
+			self::TYPE_DATE => 'Date',
+			self::TYPE_DATE_TIME => 'Date with time',
+			self::TYPE_DATE_RANGE => 'Range of dates',
+			self::TYPE_DATE_TIME_RANGE => 'Range of dates with time'
+		);
+	}
+
 	public function __construct() {
 	}
 	public function setId($id) {
@@ -24,7 +51,7 @@ class FieldDo
 		return $id;
 	}
 	public function setType($type) {
-		if (array_key_exists($type, \Acd\conf::$FIELD_TYPES)) {
+		if (array_key_exists($type, $this->getAvailableTypes())) {
 			$this->type = $type;
 		}
 		else {

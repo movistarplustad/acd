@@ -14,18 +14,16 @@
 		</div>
 		<div>
 			<?php
+			$fieldOU = new Acd\View\Field();
 			$fields = $structure->getFields();
 			$structure_fields = '';
 			$n = 0;
 			foreach ($fields as $field) {
-				$fieldName = $field->getName();
-				$fieldValue = $content->getFieldValue($fieldName);
-				
-				$structure_fields .= '<li>
-				<input type="hidden" name="field['.$n.'][id]" value="'.htmlspecialchars($fieldName).'"/>
-				<input type="hidden" name="field['.$n.'][name]" value="'.htmlspecialchars($fieldName).'"/>
-				<label for="field_'.$n.'">'.$fieldName.'</label>
-				<input type="text" name="field['.$n.'][value]" value="'.htmlspecialchars($fieldValue).'" id="field_'.$n.'"/>';
+				$field->setValue($content->getFieldValue($field->getName())); // TODO: enrevesadísimo
+				$fieldOU->setField($field);
+				$fieldOU->setId($n);
+				$structure_fields .= '<li>'.$fieldOU->render().'</li>';
+
 				$n++;
 			}
 			?>
