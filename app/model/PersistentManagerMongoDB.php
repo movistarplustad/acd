@@ -103,6 +103,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 		return $result;
 	}
 
+	private function loadDepth ($structureDo, $query) {
+	}
+
 	private function loadAll($structureDo, $query) {
 		$mongo = new \MongoClient();
 		$db = $mongo->acd;

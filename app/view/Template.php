@@ -1,6 +1,7 @@
 <?php
 namespace Acd\View;
 // http://chadminick.com/articles/simple-php-template-engine.html
+class TemplateException extends \Exception {}
 class Template {
 	private $vars = array();
 
@@ -16,8 +17,12 @@ class Template {
 	}
 
 	public function render($view_template_file) {
+		if (!file_exists($view_template_file)) {
+			throw new TemplateException("Unknown template [$view_template_file]", 1);
+			
+		}
 		if(array_key_exists('view_template_file', $this->vars)) {
-			throw new Exception("Cannot bind variable called 'view_template_file'");
+			throw new TemplateException("Cannot bind variable called 'view_template_file'");
 		}
 		extract($this->vars);
 		ob_start();

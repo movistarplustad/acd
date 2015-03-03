@@ -6,9 +6,11 @@ class Query
 	private $type;
 	private $condition;
 	private $limits;
+	private $depth;
 	
 	public function __construct() {
-		$this->limits = new Limits(0, 50);
+		$this->setLimits (new Limits(0, 50));
+		$this->setDepth (10);
 	}
 	public function setType($type) {
 		$this->type = $type;
@@ -27,5 +29,11 @@ class Query
 	}
 	public function getLimits() {
 		return $this->limits;
+	}
+	public function setDepth($depth) {
+		$this->depth = $depth;
+	}
+	public function getDepth() {
+		return $this->depth;
 	}
 }

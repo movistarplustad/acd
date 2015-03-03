@@ -14,6 +14,8 @@ class FieldDo
 	const TYPE_DATE_TIME = 'date_time';
 	const TYPE_DATE_RANGE = 'date_range';
 	const TYPE_DATE_TIME_RANGE = 'date_time_range';
+	const TYPE_COLLECTION = 'collection';
+	const TYPE_CONTENT = 'content';
 
 	private $id;
 	private $type;
@@ -31,7 +33,9 @@ class FieldDo
 			self::TYPE_DATE => 'Date',
 			self::TYPE_DATE_TIME => 'Date with time',
 			self::TYPE_DATE_RANGE => 'Range of dates',
-			self::TYPE_DATE_TIME_RANGE => 'Range of dates with time'
+			self::TYPE_DATE_TIME_RANGE => 'Range of dates with time',
+			self::TYPE_COLLECTION => 'Collection of other elements',
+			self::TYPE_CONTENT => 'Reference to other content'
 		);
 	}
 
