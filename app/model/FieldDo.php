@@ -104,21 +104,27 @@ class FieldDo
 	public function loadData($id, $value) {
 		$this->setId($id);
 		$this->setName($id);
-		if (isset($value['ref'])) {
-			//d("loadData", $value['ref']);
-			$this->setRef('kkkk'.$value['ref']);
-			$this->setValue("mierdas");
-		}
-		else {
+		if (is_array($value)) {
+			{
+				if (isset($value['ref'])) {
+					$this->setRef($value['ref']);
+				}
+				if (isset($value['value'])) {
+					$this->setValue($value['value']);
+				}
+			}
+		// TODO: Raro
+		} else {
 			$this->setValue($value);
-			$this->setRef('xxxxx');
 		}
 	}
 	public function tokenizeData() {
 		return array(
 			$this->getId() => array(
 				'type' => $this->getType(),
-				'name' => $this->getName()
+				'name' => $this->getName(),
+				'value' => $this->getValue(),
+				'ref' => $this->getRef()
 			)
 		);
 	}

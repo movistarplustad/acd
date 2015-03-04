@@ -19,7 +19,9 @@
 			$structure_fields = '';
 			$n = 0;
 			foreach ($fields as $field) {
-				$field->setValue($content->getFieldValue($field->getName())); // TODO: enrevesadísimo
+				$idField = $field->getName();
+				$fieldFromContent = $content->getFields()->get($idField);
+				$field->loadData($idField, $fieldFromContent->tokenizeData()[$idField]); // TODO: ¡¡bastante enrevesado para estar dentro de un tpl!!
 				$fieldOU->setField($field);
 				$fieldOU->setId($n);
 				$structure_fields .= '<li>'.$fieldOU->render().'</li>';

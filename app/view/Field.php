@@ -26,8 +26,7 @@ class Field extends Template {
 		$this->field = $field;
 		$this->__set('fieldName', $field->getName());
 		$this->__set('fieldValue', $field->getValue());
-//$kk = $field->getRef();
-		d($field->getValue(), $field->getRef());
+		$this->__set('fieldRef', $field->getRef());
 		/*
 		switch ($field->getType()) {
 			case 'content':

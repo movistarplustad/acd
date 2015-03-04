@@ -92,7 +92,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$documentFound = $mongoCollection->findOne(array("_id" => $oId));
 			$documentFound = $this->normalizeDocument($documentFound);
 			$contentFound = new ContentDo();
-d($documentFound);
+//!d($documentFound);
 			$contentFound->load($documentFound, $structureDo->getId());
 			$result = new ContentsDo();
 			$result->add($contentFound, $id);
