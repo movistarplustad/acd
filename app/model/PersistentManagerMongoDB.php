@@ -90,8 +90,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 		}
 		try {
 			$documentFound = $mongoCollection->findOne(array("_id" => $oId));
-			$documentFound['id'] = $id;
+			$documentFound = $this->normalizeDocument($documentFound);
 			$contentFound = new ContentDo();
+d($documentFound);
 			$contentFound->load($documentFound, $structureDo->getId());
 			$result = new ContentsDo();
 			$result->add($contentFound, $id);
@@ -103,6 +104,25 @@ class PersistentManagerMongoDB implements iPersistentManager
 		return $result;
 	}
 
+	// Transform a mongodb document to normalized document (aseptic persistent storage)
+	private function normalizeDocument($document) {
+		$document['id'] = (string) $document['_id'];
+
+		foreach ($document['data'] as $key => $value) {
+			// External content
+			if (is_array($value) && isset($value['ref'])) {
+				$normalizedRef = [
+					'ref' => (string) $value['ref']['$id']
+					// value
+					// TODO instance
+				];
+				$document['data'][$key] = $normalizedRef;
+			}
+			
+		}
+		unset($document['_id']);
+		return $document;
+	}
 	private function loadDepth ($structureDo, $query) {
 	}
 
@@ -115,11 +135,10 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$cursor = $mongoCollection->find($byStructureQuery);
 		$result = new ContentsDo();
 		foreach ($cursor as $documentFound) {
-			$id = $documentFound['_id']->{'$id'};
-			$documentFound['id'] = $id;
+			$documentFound = $this->normalizeDocument($documentFound);
 			$contentFound = new ContentDo();
 			$contentFound->load($documentFound, $structureDo->getId());
-			$result->add($contentFound, $id);
+			$result->add($contentFound, $documentFound['id']);
 		}
 		//TODO revisar
 		// Purge to limits

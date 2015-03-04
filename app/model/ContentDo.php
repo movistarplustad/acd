@@ -96,13 +96,10 @@ class ContentDo
 			foreach ($rawData['data'] as $key => $value) {
 				unset($field);
 				$field = new FieldDo();
-				$field->setId($key);
-				$field->setName($key);
-				$field->setValue($value);
+				$field->loadData($key, $value);
 				$fields->add($field);
-
-				//$this->setData($key, $value);
 			}
+			//d($fields);
 		}
 		//$this->setFields($fields);
 	}

@@ -26,6 +26,19 @@ class Field extends Template {
 		$this->field = $field;
 		$this->__set('fieldName', $field->getName());
 		$this->__set('fieldValue', $field->getValue());
+//$kk = $field->getRef();
+		d($field->getValue(), $field->getRef());
+		/*
+		switch ($field->getType()) {
+			case 'content':
+			d($field->getValue());
+				$this->__set('fieldValue', $field->getValue());
+				break;
+			default:
+				$this->__set('fieldValue', $field->getValue());
+				break;
+		}
+		*/
 	}
 	public function newContent($bnewContent) {
 		$this->__set('bNew', true);
