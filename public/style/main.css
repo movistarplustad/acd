@@ -206,3 +206,8 @@ a:active {
 h2 .structure_name {
 	font-style: italic;
 }
+
+/* Field controls */
+input[readonly] {
+	color: #999;
+}
