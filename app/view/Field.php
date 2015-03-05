@@ -27,6 +27,7 @@ class Field extends Template {
 		$this->__set('fieldName', $field->getName());
 		$this->__set('fieldValue', $field->getValue());
 		$this->__set('fieldRef', $field->getRef());
+		$this->__set('fieldStructureRef', $field->getStructureRef());
 		/*
 		switch ($field->getType()) {
 			case 'content':
@@ -38,6 +39,10 @@ class Field extends Template {
 				break;
 		}
 		*/
+	}
+	public function setParent($parent) {
+		$this->__set('idStructureParent', $parent->getIdStructure());
+		$this->__set('idParent', $parent->getId());
 	}
 	public function newContent($bnewContent) {
 		$this->__set('bNew', true);

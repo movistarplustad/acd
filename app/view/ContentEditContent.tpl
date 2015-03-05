@@ -20,10 +20,16 @@
 			$n = 0;
 			foreach ($fields as $field) {
 				$idField = $field->getName();
-				$fieldFromContent = $content->getFields()->get($idField);
-				$field->loadData($idField, $fieldFromContent->tokenizeData()[$idField]); // TODO: ¡¡bastante enrevesado para estar dentro de un tpl!!
+				try {
+					$fieldFromContent = $content->getFields()->get($idField);
+					$field->loadData($idField, $fieldFromContent->tokenizeData()[$idField]); // TODO: ¡¡bastante enrevesado para estar dentro de un tpl!!
+				}
+				catch( \Exception $e ) {
+					$field->loadData($idField, []);
+				}
 				$fieldOU->setField($field);
 				$fieldOU->setId($n);
+				$fieldOU->setParent($content);
 				$structure_fields .= '<li>'.$fieldOU->render().'</li>';
 
 				$n++;

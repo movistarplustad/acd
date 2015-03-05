@@ -22,6 +22,7 @@ class FieldDo
 	private $name;
 	private $value;
 	private $ref; // For fields that are external content
+	private $refStructure; // Id of type of external content
 	private $instance; // Attributes for the relation width external content, eg. date validation
 
 	public static function getAvailableTypes() {
@@ -81,11 +82,15 @@ class FieldDo
 	}
 	public function setRef($ref) {
 		$this->ref = $ref;
-		//d("setRef", $this->getName(), $this->getValue, $this->ref);
 	}
 	public function getRef() {
-		//d("getRef", $this->getName(), $this->getValue, $this->ref);
 		return $this->ref;
+	}
+	public function setStructureRef($refStructure) {
+		$this->refStructure = $refStructure;
+	}
+	public function getStructureRef() {
+		return $this->refStructure;
 	}
 	public function setInstance($instance) {
 		$this->instance = $instance;
@@ -108,6 +113,7 @@ class FieldDo
 			{
 				if (isset($value['ref'])) {
 					$this->setRef($value['ref']);
+					$this->setStructureRef($value['id_structure']);
 				}
 				if (isset($value['value'])) {
 					$this->setValue($value['value']);
@@ -124,7 +130,8 @@ class FieldDo
 				'type' => $this->getType(),
 				'name' => $this->getName(),
 				'value' => $this->getValue(),
-				'ref' => $this->getRef()
+				'ref' => $this->getRef(),
+				'id_structure' => $this->getStructureRef()
 			)
 		);
 	}
