@@ -47,7 +47,11 @@ class Auth  {
 		return \Acd\conf::$PATH_AUTH_PREMANENT_LOGIN_DIR.'/'.hash('sha1', $login);
 	}
 	public static function isLoged() {
-		if (\Acd\conf::$USE_AUTHENTICATION === false || (isset($_SESSION['loged']) && $_SESSION['loged'] === true)) {
+		if (\Acd\conf::$USE_AUTHENTICATION === false) {
+			Auth::loginByFake();
+			return true;
+		}
+		elseif  (isset($_SESSION['loged']) && $_SESSION['loged'] === true) {
 			return true;
 		}
 		else {
@@ -121,6 +125,13 @@ class Auth  {
 		}
 
 		return $bLoginCorrect;
+	}
+	// Mode no login required
+	public static function loginByFake() {
+			$_SESSION['loged'] = true;
+			$_SESSION['login_method'] = 'fake';
+			$_SESSION['login'] = 'no-login';
+			$_SESSION['rol'] = \Acd\conf::$ROL_DEVELOPER ;
 	}
 	public static function logout() {
 		// Inicializar la sesión.
