@@ -61,9 +61,18 @@ switch ($action) {
 		break;
 	case 'new':
 		$idStructureType = $_GET['idt'];
+		// Posible parent
+		@$idParent = $_GET['idp'] ?: null; // TODO duplicado en edit y clone
+		@$idTypeParent = $_GET['idtp'] ?: null;
+
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('backListContent');
-		$headerMenuOu->setUrl('content.php?a=list_contents&amp;id='.urlencode($idStructureType));
+		if ($idParent) {
+			$headerMenuOu->setUrl('content.php?a=edit&amp;id='.urlencode($idParent).'&amp;idt='.urlencode($idTypeParent));
+		}
+		else {
+			$headerMenuOu->setUrl('content.php?a=list_contents&amp;id='.urlencode($idStructureType));
+		}
 
 		$contentOu = new View\ContentEditContent();
 		$structure = new Model\StructureDo();
@@ -87,9 +96,18 @@ switch ($action) {
 		$bResult = isset($_GET['r']) && $_GET['r'] == 'ok' ? true : false;
 		$id = $_GET['id'];
 		$idStructureType = $_GET['idt'];
+		// Posible parent
+		@$idParent = $_GET['idp'] ?: null;
+		@$idTypeParent = $_GET['idtp'] ?: null;
+
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('backListContent');
-		$headerMenuOu->setUrl('content.php?a=list_contents&amp;id='.urlencode($idStructureType));
+		if ($idParent) {
+			$headerMenuOu->setUrl('content.php?a=edit&amp;id='.urlencode($idParent).'&amp;idt='.urlencode($idTypeParent));
+		}
+		else {
+			$headerMenuOu->setUrl('content.php?a=list_contents&amp;id='.urlencode($idStructureType));
+		}
 
 		$contentOu = new View\ContentEditContent();
 		$structure = new Model\StructureDo();

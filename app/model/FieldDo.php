@@ -107,6 +107,7 @@ class FieldDo
 	}
 	// Load content
 	public function loadData($id, $value) {
+//d("FieldDO", $value, debug_backtrace()); 
 		$this->setId($id);
 		$this->setName($id);
 		if (is_array($value)) {

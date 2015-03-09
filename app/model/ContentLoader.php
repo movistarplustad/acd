@@ -46,7 +46,7 @@ class ContentLoader extends StructureDo
 			$this->setStructureLoaded($this->loadFromFile());
 		}
 		$persistentManager = $this->getManager();
-		
+
 		$query = new Query();
 		$query->setType($method);
 		$query->setCondition($params);

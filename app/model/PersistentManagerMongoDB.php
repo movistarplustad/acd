@@ -92,7 +92,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$documentFound = $mongoCollection->findOne(array("_id" => $oId));
 			$documentFound = $this->normalizeDocument($documentFound);
 			$contentFound = new ContentDo();
-//!d($documentFound);
 			$contentFound->load($documentFound, $structureDo->getId());
 			$result = new ContentsDo();
 			$result->add($contentFound, $id);
@@ -105,27 +104,29 @@ class PersistentManagerMongoDB implements iPersistentManager
 	}
 
 	// Transform a mongodb document to normalized document (aseptic persistent storage)
+	//TODO ver por qué no puede meterse dentro de normalizeDocument
+	function normalizeRef($DBRef) {
+		return [
+				'ref' => (string) $DBRef['ref']['$id'],
+				'id_structure' => $DBRef['id_structure']
+				// value
+				// TODO instance
+			];
+	}
 	private function normalizeDocument($document) {
-		function normalizeRef($DBRef) {
-			return [
-					'ref' => (string) $DBRef['ref']['$id'],
-					'id_structure' => $DBRef['id_structure']
-					// value
-					// TODO instance
-				];
-		}
+
 
 		$document['id'] = (string) $document['_id'];
 		foreach ($document['data'] as $key => $value) {
 			// External content
 			if (isset($value['ref']) && \MongoDBRef::isRef($value['ref'])) {
-				$document['data'][$key] = normalizeRef($value);
+				$document['data'][$key] = $this->	normalizeRef($value);
 			}
 			// Collection
 			if (isset($value['ref'])  && $value['ref'] === 'collection') {
 				$normalizedRef = array();
 				foreach ($value['items'] as $collectionValue) {
-					$normalizedRef[] = normalizeRef($collectionValue['item']);
+					$normalizedRef[] = $this->normalizeRef($collectionValue['item']);
 				}
 				$document['data'][$key] = $normalizedRef;
 				// TODO instance

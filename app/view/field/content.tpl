@@ -6,7 +6,7 @@
 <?php
 if ($fieldRef) {
 ?>
-	<a href="content.php?a=edit&amp;id=<?=htmlspecialchars($fieldRef)?>&amp;idt=<?=htmlspecialchars($fieldStructureRef)?>&amp;idp=<?=htmlspecialchars($idParent)?>idtp=<?=htmlspecialchars($idStructureParent)?>">Editar</a>
+	<a href="content.php?a=edit&amp;id=<?=htmlspecialchars($fieldRef)?>&amp;idt=<?=htmlspecialchars($fieldStructureRef)?>&amp;idp=<?=htmlspecialchars($idParent)?>&amp;idtp=<?=htmlspecialchars($idStructureParent)?>">Edit</a>
 <?php
 }
 ?>
