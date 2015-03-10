@@ -106,22 +106,32 @@ class FieldDo
 		$this->setName($data[$id]['name']);
 	}
 	// Load content
+	private function setValueReference($value) {
+		if (isset($value['ref'])) {
+			$this->setRef($value['ref']);
+			$this->setStructureRef($value['id_structure']);
+		}
+		if (isset($value['value'])) {
+			$this->setValue($value['value']);
+		}
+	}
 	public function loadData($id, $value) {
-//d("FieldDO", $value, debug_backtrace()); 
 		$this->setId($id);
 		$this->setName($id);
 		if (is_array($value)) {
-			{
-				if (isset($value['ref'])) {
-					$this->setRef($value['ref']);
-					$this->setStructureRef($value['id_structure']);
-				}
-				if (isset($value['value'])) {
-					$this->setValue($value['value']);
-				}
+			if  (is_array($value['ref'])) {
+				// Collection
+d("FieldDO collection", $value, debug_backtrace()); 
+				$this->setValueReference($value);
+			}
+			else {
+d("FieldDO relation", $value, debug_backtrace()); 
+				$this->setValueReference($value);
 			}
 		// TODO: Raro
 		} else {
+			// Simple data field (number, string...)
+//d("FieldDO no array", $value, debug_backtrace()); 
 			$this->setValue($value);
 		}
 	}
