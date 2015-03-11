@@ -111,6 +111,11 @@ class FieldDo
 			$this->setRef($value['ref']);
 			$this->setStructureRef($value['id_structure']);
 		}
+		elseif (is_array($value)) {
+			// Collection
+			// Atention: $value for simple relation it is also an array
+			$this->setRef($value);
+		}
 		if (isset($value['value'])) {
 			$this->setValue($value['value']);
 		}
@@ -119,19 +124,10 @@ class FieldDo
 		$this->setId($id);
 		$this->setName($id);
 		if (is_array($value)) {
-			if  (is_array($value['ref'])) {
-				// Collection
-d("FieldDO collection", $value, debug_backtrace()); 
-				$this->setValueReference($value);
-			}
-			else {
-d("FieldDO relation", $value, debug_backtrace()); 
-				$this->setValueReference($value);
-			}
-		// TODO: Raro
+			// Collection & reference
+			$this->setValueReference($value);
 		} else {
 			// Simple data field (number, string...)
-//d("FieldDO no array", $value, debug_backtrace()); 
 			$this->setValue($value);
 		}
 	}

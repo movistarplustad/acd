@@ -28,7 +28,7 @@ class Field extends Template {
 		$this->__set('fieldValue', $field->getValue());
 		$this->__set('fieldRef', $field->getRef());
 		$this->__set('fieldStructureRef', $field->getStructureRef());
-//d($field);
+
 		/*
 		switch ($field->getType()) {
 			case 'content':

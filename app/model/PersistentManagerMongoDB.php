@@ -93,6 +93,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$documentFound = $this->normalizeDocument($documentFound);
 			$contentFound = new ContentDo();
 			$contentFound->load($documentFound, $structureDo->getId());
+			//d($documentFound);
 			$result = new ContentsDo();
 			$result->add($contentFound, $id);
 		}
@@ -114,26 +115,24 @@ class PersistentManagerMongoDB implements iPersistentManager
 			];
 	}
 	private function normalizeDocument($document) {
-
-
 		$document['id'] = (string) $document['_id'];
 		foreach ($document['data'] as $key => $value) {
 			// External content
 			if (isset($value['ref']) && \MongoDBRef::isRef($value['ref'])) {
-				$document['data'][$key] = $this->	normalizeRef($value);
+				$document['data'][$key] = $this->normalizeRef($value);
 			}
 			// Collection
-			if (isset($value['ref'])  && $value['ref'] === 'collection') {
+			if (isset($value['ref'])  && is_array($value['ref']) && !\MongoDBRef::isRef($value['ref'])) {
 				$normalizedRef = array();
-				foreach ($value['items'] as $collectionValue) {
-					$normalizedRef[] = $this->normalizeRef($collectionValue['item']);
+				foreach ($value['ref'] as $collectionValue) {
+					$normalizedRef[] = $this->normalizeRef($collectionValue);
 				}
 				$document['data'][$key] = $normalizedRef;
 				// TODO instance
 			}
 		}
 		unset($document['_id']);
-//+d($document);
+
 		return $document;
 	}
 	private function loadDepth ($structureDo, $query) {
