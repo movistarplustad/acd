@@ -46,6 +46,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		}
 		// TODO	 revisar
 		// TODO Faltan guardar las relaciones
+		$aIdChildsRelated = []; // Store all related content id
 		$mongo = new \MongoClient();
 		$db = $mongo->acd;
 		//$mongoCollection = $db->selectCollection($structureDo->getId());
@@ -57,12 +58,16 @@ class PersistentManagerMongoDB implements iPersistentManager
 			if (isset($value['ref'])) {
 				// Relation
 				$insert['data'][$key]['ref'] = \MongoDBRef::create('content', new \MongoId($value['ref']));
-				//d('Relacion', $insert['data'][$key]['ref'] );
+
+				$aIdChildsRelated[] = $insert['data'][$key]['ref'] ; // For table relations
 			}
 			elseif (is_array($value)) {
+				// Collection relation
 				foreach ($value as $id => $item) {
 					$value[$id]['ref'] = \MongoDBRef::create('content', new \MongoId($item['ref']));
 					$value[$id]['id_structure'] = $item['id_structure'];
+
+					$aIdChildsRelated[] = $value[$id]['ref']; // For table relations
 				}
 				$insert['data'][$key]= [
 					'id_structure' => self::STRUCTURE_TYPE_COLLECTION,
@@ -79,9 +84,25 @@ class PersistentManagerMongoDB implements iPersistentManager
 		else {
 			$mongoCollection->insert($insert);
 			$contentDo->setId($insert['_id']);
+			$oId = new \MongoId($insert['_id']);
 		}
-		
+
+		$this->updateRelations($db, \MongoDBRef::create('content', $oId), $aIdChildsRelated);
+
 		return $contentDo;
+	}
+	private function updateRelations($db, $parent, $children) {
+		// Redundant cache content relations 
+		$mongoCollection = $db->selectCollection('relation');
+		//d("Padre . Hijos", $parent, $children);
+		// emptying old relations & add news
+		$mongoCollection->remove(array('parent' => $parent));
+		foreach ($children as $child) {
+			$mongoCollection->insert([
+				'parent' => $parent,
+				'child' => $child
+				]);
+		}
 	}
 
 	public function delete($structureDo, $idContent) {
@@ -94,6 +115,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$mongoCollection->remove(array('_id' => $oId));
 		}
 
+		$this->updateRelations($db,  \MongoDBRef::create('content', $oId), array());
 	}
 
 	private function loadById($structureDo, $query) {

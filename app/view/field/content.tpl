@@ -7,6 +7,7 @@
 if ($fieldRef) {
 ?>
 	<a href="content.php?a=edit&amp;id=<?=htmlspecialchars($fieldRef)?>&amp;idt=<?=htmlspecialchars($fieldStructureRef)?>&amp;idp=<?=htmlspecialchars($idParent)?>&amp;idtp=<?=htmlspecialchars($idStructureParent)?>">Edit</a>
+	<a href="content_rel.php?a=select_type&amp;id=<?=htmlspecialchars($fieldRef)?>&amp;idt=<?=htmlspecialchars($fieldStructureRef)?>&amp;idp=<?=htmlspecialchars($idParent)?>&amp;idtp=<?=htmlspecialchars($idStructureParent)?>&amp;f=<?=htmlspecialchars($fieldName)?>">Find</a>
 <?php
 }
 ?>

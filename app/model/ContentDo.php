@@ -9,11 +9,13 @@ class ContentDo
 	private $title;
 	//private $data; /* Array key/value of variable fields */
 	private $fields;
+	private $parent; /* ContentDo Relation in complex structures */
 
 	public function __construct() {
 		$this->id = null;
 		$this->idStructure = null;
 		$this->fields = new FieldsDo();
+		$this->parent = null;
 	}
 	/* Setters and getters attributes */
 	public function setId($id) {
@@ -106,6 +108,12 @@ class ContentDo
 			}
 		}
 		*/
+	}
+	public function setParent($parent) {
+		$this->parent = $parent; // ContentDO
+	}
+	public function getParent() {
+		return $this->parent;
 	}
 	public function load($rawData, $idStructure = null) {
 		$this->setId($rawData['id']);
