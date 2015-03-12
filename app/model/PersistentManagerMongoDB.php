@@ -4,6 +4,7 @@ namespace Acd\Model;
 class PersistentStorageQueryTypeNotImplemented extends \Exception {} // TODO mover a sitio común
 class PersistentManagerMongoDB implements iPersistentManager
 {
+	const STRUCTURE_TYPE_COLLECTION = '_collection';
 	public function initialize($structureDo) {
 		$mongo = new \MongoClient();
 		$db = $mongo->acd;
@@ -63,7 +64,10 @@ class PersistentManagerMongoDB implements iPersistentManager
 					$value[$id]['ref'] = \MongoDBRef::create('content', new \MongoId($item['ref']));
 					$value[$id]['id_structure'] = $item['id_structure'];
 				}
-				$insert['data'][$key]= $value;
+				$insert['data'][$key]= [
+					'id_structure' => self::STRUCTURE_TYPE_COLLECTION,
+					'ref' => $value
+					];
 			}
 		}
 		unset ($insert['id']);
@@ -130,6 +134,52 @@ class PersistentManagerMongoDB implements iPersistentManager
 				// TODO instance
 			];
 	}
+	/* 
+	Sample of docs
+	Simple relation
+	----------------------
+	{
+	        "_id" : ObjectId("54f5c87f6803fa670c8b4567"),
+	        "data" : {
+	                "titulo" : "Foto 1",
+	                "imagen" : {
+	                        "ref" : DBRef("content", ObjectId("54f5c8016803fa7c058b4568")),
+	                        "id_structure" : "imagen",
+	                },
+	                "enlace" : {
+	                        "ref" : DBRef("content", ObjectId("54f5c82b6803fabb068b4567")),
+	                        "id_structure" : "enlace",
+	                }
+	        },
+	        "id_structure" : "item_mosaico",
+	        "title" : "El segundo del mosaico"
+	}
+
+	Collection relation
+	---------------------------
+	{
+	        "_id" : ObjectId("54f5abce6803fa59088b4567"),
+	        "data" : {
+	                "elementos" : {
+	                        "id_structure" : "_collection",
+	                        "ref" : [
+	                                {
+	                                        "ref" : DBRef("content", ObjectId("54f5a6f66803fa7c058b4567")),
+	                                        "id_structure" : "item_mosaico"
+	                                },
+	                                {
+	                                        "ref" : DBRef("content", ObjectId("54f5c87f6803fa670c8b4567")),
+	                                        "id_structure" : "item_mosaico"
+	                                }
+	                        ]
+	                },
+	                "titulo" : "¡Un mosaico!"
+	        },
+	        "id_structure" : "mosaico",
+	        "title" : "Primer mosaico"
+	}
+
+	*/
 	private function normalizeDocument($document) {
 		$document['id'] = (string) $document['_id'];
 		foreach ($document['data'] as $key => $value) {
@@ -138,10 +188,10 @@ class PersistentManagerMongoDB implements iPersistentManager
 				$document['data'][$key] = $this->normalizeRef($value);
 			}
 			// Collection
-			elseif (is_array($value)) {
+			elseif (is_array($value) && isset($value['id_structure']) && $value['id_structure'] === self::STRUCTURE_TYPE_COLLECTION) {
 				// Atention: $value for simple relation it is also an array
 				$normalizedRef = array();
-				foreach ($value as $collectionValue) {
+				foreach ($value['ref'] as $collectionValue) {
 					$normalizedRef[] = $this->normalizeRef($collectionValue);
 				}
 				$document['data'][$key] = $normalizedRef;
