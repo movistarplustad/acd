@@ -44,12 +44,28 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$this->initialize($structureDo);
 		}
 		// TODO	 revisar
+		// TODO Faltan guardar las relaciones
 		$mongo = new \MongoClient();
 		$db = $mongo->acd;
 		//$mongoCollection = $db->selectCollection($structureDo->getId());
 		$mongoCollection = $db->selectCollection('content');
 		$insert = $contentDo->tokenizeData();
 		$insert['id_structure'] = $structureDo->getId();
+		// Replace relations by MongoDBRefs
+		foreach ($insert['data'] as $key => $value) {
+			if (isset($value['ref'])) {
+				// Relation
+				$insert['data'][$key]['ref'] = \MongoDBRef::create('content', new \MongoId($value['ref']));
+				//d('Relacion', $insert['data'][$key]['ref'] );
+			}
+			elseif (is_array($value)) {
+				foreach ($value as $id => $item) {
+					$value[$id]['ref'] = \MongoDBRef::create('content', new \MongoId($item['ref']));
+					$value[$id]['id_structure'] = $item['id_structure'];
+				}
+				$insert['data'][$key]= $value;
+			}
+		}
 		unset ($insert['id']);
 		if ($contentDo->getId()) {
 			$oId = new \MongoId($contentDo->getId());
@@ -93,7 +109,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$documentFound = $this->normalizeDocument($documentFound);
 			$contentFound = new ContentDo();
 			$contentFound->load($documentFound, $structureDo->getId());
-			//d($documentFound);
+			//+d($documentFound);
 			$result = new ContentsDo();
 			$result->add($contentFound, $id);
 		}
@@ -122,9 +138,10 @@ class PersistentManagerMongoDB implements iPersistentManager
 				$document['data'][$key] = $this->normalizeRef($value);
 			}
 			// Collection
-			if (isset($value['ref'])  && is_array($value['ref']) && !\MongoDBRef::isRef($value['ref'])) {
+			elseif (is_array($value)) {
+				// Atention: $value for simple relation it is also an array
 				$normalizedRef = array();
-				foreach ($value['ref'] as $collectionValue) {
+				foreach ($value as $collectionValue) {
 					$normalizedRef[] = $this->normalizeRef($collectionValue);
 				}
 				$document['data'][$key] = $normalizedRef;

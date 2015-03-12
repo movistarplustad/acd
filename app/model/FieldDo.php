@@ -110,11 +110,13 @@ class FieldDo
 		if (isset($value['ref'])) {
 			$this->setRef($value['ref']);
 			$this->setStructureRef($value['id_structure']);
+			// TODO: add instance data
 		}
 		elseif (is_array($value)) {
 			// Collection
 			// Atention: $value for simple relation it is also an array
 			$this->setRef($value);
+			// TODO: add instance data
 		}
 		if (isset($value['value'])) {
 			$this->setValue($value['value']);

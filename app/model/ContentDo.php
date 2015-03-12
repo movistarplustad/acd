@@ -68,7 +68,27 @@ class ContentDo
 	public function getData($key = null) {
 		$data = array();
 		foreach ($this->getFields() as $field) {
-			$data[$field->getName()] = $field->getValue();
+			$ref = $field->getRef();
+			$value = null;
+			if ($ref) {
+				if (is_array($ref)) {
+					// Collection of references
+					$value = $ref;
+				}
+				else {
+					// External content
+					$value = [
+						'ref' => $ref,
+						'id_structure' =>  $field->getStructureRef()
+					];
+				}
+
+			}
+			else {
+				// Simple field (Number, string...)
+				$value = $field->getValue();
+			}
+			$data[$field->getName()] = $value;
 		}
 
 		return $data;

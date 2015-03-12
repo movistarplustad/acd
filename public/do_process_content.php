@@ -39,7 +39,8 @@ switch ($accion) {
 			$numFields = count($fields);
 			foreach ($fields as $idField => $data) {
 				//$n = 0; $n < $numFields; $n++) {
-				$modified_content->setFieldValue($fields[$idField]['name'], $fields[$idField]['value']);
+				@$normalizedvalue = $fields[$idField]['value'] ?: '';
+				$modified_content->setFieldValue($fields[$idField]['name'], $normalizedvalue);
 			}
 
 			$modified_content = $contentLoader->saveContent($modified_content);
