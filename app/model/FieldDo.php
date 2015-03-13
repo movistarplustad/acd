@@ -114,10 +114,9 @@ class FieldDo
 		}
 		elseif (is_array($value)) {
 			//d($value, debug_backtrace());
-			//d($value);
 			// Collection
 			// Atention: $value for simple relation it is also an array
-			$this->setRef($value);
+			$this->setRef($value['value']);
 			// TODO: add instance data
 		}
 		if (isset($value['value'])) {

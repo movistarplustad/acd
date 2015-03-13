@@ -28,7 +28,8 @@ class Field extends Template {
 		$this->__set('fieldValue', $field->getValue());
 		$ref = $field->getRef();
 		//$ref = is_string($ref) ? $ref : '';
-		$this->__set('fieldRef', $ref);		d($ref);
+		$this->__set('fieldRef', $ref);
+//d($ref);
 		$this->__set('fieldStructureRef', $field->getStructureRef());
 
 		/*

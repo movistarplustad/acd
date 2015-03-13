@@ -119,6 +119,7 @@ switch ($action) {
 		$contentLoader->setId($idStructureType);
 		$content = $contentLoader->loadContent('id', $id);
 		$content = $content->get($id); // TODO cambiar por next / first...
+		//dd($content);
 		if ($action == 'clone') {
 			$content->setId(null);
 			$content->setTitle('[copy] '.$content->getTitle());

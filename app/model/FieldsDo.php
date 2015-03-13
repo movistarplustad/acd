@@ -14,20 +14,33 @@ class FieldsDo extends Collection
 		return true;
 		}
 	}
+	private function newField($key) {
+			$element = new FieldDo();
+			$element->setId($key);
+			$element->setName($key);
+			return $element;
+	}
 	public function setValue($key, $value) {
 		if ($this->hasKey($key)) {
 			$this->get($key)->setValue($value);
 		}
 		else {
-			$element = new FieldDo();
-			$element->setId($key);
-			$element->setName($key);
+			$element = $this->newField($key);
 			$element->setValue($value);
 			$this->add($element, $key);
 		}
 	}
 	public function getValue($key) {
 		return $this->get($key)->getValue();
-
+	}
+	public function setStructureRef($key, $value) {
+		if ($this->hasKey($key)) {
+			$this->get($key)->setType($value);
+		}
+		else {
+			$element = $this->newField($key);
+			$element->setStructureRef($value);
+			$this->add($element, $key);
+		}
 	}
 }

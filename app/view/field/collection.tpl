@@ -5,14 +5,17 @@
 <ul>
 <?php 
 //	$id ='TODO';
-	foreach ($fieldRef as $fieldRefItem) {
-		$idItem = $id.'_'.$fieldRefItem['id_structure'];
+	if ($fieldRef) { // TODO hacer que en el futuro fieldRef sea un array vacío
+		foreach ($fieldRef as $fieldRefItem) {
+			$idItem = $id.'_'.$fieldRefItem['id_structure'];
 ?>
-	<li>
-		<input type="text" name="field[<?=$id?>][value][]" value="<?=htmlspecialchars($fieldRefItem['ref'])?>" id="field_<?=$dItem?>" readonly="readonly"/>
-		<a href="content.php?a=edit&amp;id=<?=htmlspecialchars($fieldRefItem['ref'])?>&amp;idt=<?=htmlspecialchars($fieldRefItem['id_structure'])?>&amp;idp=<?=htmlspecialchars($idParent)?>&amp;idtp=<?=htmlspecialchars($idStructureParent)?>">Edit</a>
-	</li>
+		<li>
+			<input type="text" name="field[<?=$id?>][value][]" value="<?=htmlspecialchars($fieldRefItem['ref'])?>" readonly="readonly"/>
+			<input type="text" name="field[<?=$id?>][type][]" value="<?=htmlspecialchars($fieldRefItem['id_structure'])?>" />
+			<a href="content.php?a=edit&amp;id=<?=htmlspecialchars($fieldRefItem['ref'])?>&amp;idt=<?=htmlspecialchars($fieldRefItem['id_structure'])?>&amp;idp=<?=htmlspecialchars($idParent)?>&amp;idtp=<?=htmlspecialchars($idStructureParent)?>">Edit</a>
+		</li>
 <?php
+		}
 	}
 ?>
 </ul>

@@ -39,10 +39,24 @@ switch ($accion) {
 			$numFields = count($fields);
 			foreach ($fields as $idField => $data) {
 				//$n = 0; $n < $numFields; $n++) {
-				@$normalizedvalue = $fields[$idField]['value'] ?: '';
+				@$fields[$idField]['value'] = $fields[$idField]['value'] ?: ''; // Forze set
+				// If get array of values and types the field is collection, preparte normalized value
+				if (is_array($fields[$idField]['value']) && is_array($fields[$idField]['type'])) {
+					$normalizedvalue = [];
+					foreach ($fields[$idField]['value'] as $key => $value) {
+						$normalizedvalue[] = [
+							'ref'=> $fields[$idField]['value'][$key],
+							'id_structure' => $fields[$idField]['type'][$key]
+							];
+					}
+				}
+				else {
+					$normalizedvalue = $fields[$idField]['value'];
+				}
+				//d($normalizedvalue);
 				$modified_content->setFieldValue($fields[$idField]['name'], $normalizedvalue);
 			}
-
+			//dd($fields, $modified_content);
 			$modified_content = $contentLoader->saveContent($modified_content);
 			$id = $modified_content->getId();
 

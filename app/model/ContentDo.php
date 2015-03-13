@@ -55,6 +55,9 @@ class ContentDo
 	public function setFieldValue($fieldName, $value) {
 		$this->getFields()->setValue($fieldName, $value);
 	}
+	public function setStructureRef($fieldName, $structureRef) {
+		$this->getFields()->setStructureRef($fieldName, $structureRef);
+	}	
 	public function setData($keyData, $data = null) {
 		echo "TODO";
 		/* Setting full structure */

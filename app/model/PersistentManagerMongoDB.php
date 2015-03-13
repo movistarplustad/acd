@@ -41,6 +41,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		}
 	}
 	public function save($structureDo, $contentDo) {
+		//dd($contentDo);
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
@@ -57,15 +58,19 @@ class PersistentManagerMongoDB implements iPersistentManager
 		foreach ($insert['data'] as $key => $value) {
 			if (isset($value['ref'])) {
 				// Relation
+				//d("Relation", $value, $insert['data'][$key]['id_structure'], $value['id_structure']);
 				$insert['data'][$key]['ref'] = \MongoDBRef::create('content', new \MongoId($value['ref']));
+				$insert['data'][$key]['id_structure'] = $value['id_structure'];
 
 				$aIdChildsRelated[] = $insert['data'][$key]['ref'] ; // For table relations
 			}
 			elseif (is_array($value)) {
 				// Collection relation
 				foreach ($value as $id => $item) {
+					//d("Collection", $item);
 					$value[$id]['ref'] = \MongoDBRef::create('content', new \MongoId($item['ref']));
 					$value[$id]['id_structure'] = $item['id_structure'];
+
 
 					$aIdChildsRelated[] = $value[$id]['ref']; // For table relations
 				}
@@ -106,6 +111,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 	}
 
 	public function delete($structureDo, $idContent) {
+		// TODO No permitir elminar elementos que están asociados a algo
 		if ($this->isInitialized($structureDo)) {
 		// TODO revisar
 			$mongo = new \MongoClient();
