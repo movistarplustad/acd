@@ -149,6 +149,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 	// Transform a mongodb document to normalized document (aseptic persistent storage)
 	//TODO ver por qué no puede meterse dentro de normalizeDocument
 	function normalizeRef($DBRef) {
+		//var_dump($DBRef);
 		return [
 				'ref' => (string) $DBRef['ref']['$id'],
 				'id_structure' => $DBRef['id_structure']
@@ -203,10 +204,12 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 	*/
 	private function normalizeDocument($document) {
+		//d($document);
 		$document['id'] = (string) $document['_id'];
+
 		foreach ($document['data'] as $key => $value) {
 			// External content
-			if (isset($value['ref']) && \MongoDBRef::isRef($value['ref'])) {
+			if(isset($value['ref']) && \MongoDBRef::isRef($value['ref'])) {
 				$document['data'][$key] = $this->normalizeRef($value);
 			}
 			// Collection

@@ -22,10 +22,11 @@
 				$idField = $field->getName();
 				try {
 					$fieldFromContent = $content->getFields()->get($idField);
-					$field->loadData($idField, $fieldFromContent->tokenizeData()[$idField]); // TODO: ¡¡bastante enrevesado para estar dentro de un tpl!!
+					//+d($fieldFromContent->tokenizeData()[$idField]);
+					$field->loadData($idField, $fieldFromContent->tokenizeData()[$idField], false); // TODO: ¡¡bastante enrevesado para estar dentro de un tpl!!
 				}
 				catch( \Exception $e ) {
-					$field->loadData($idField, []);
+					$field->loadData($idField, '', true);
 				}
 				$fieldOU->setField($field);
 				$fieldOU->setId($n);

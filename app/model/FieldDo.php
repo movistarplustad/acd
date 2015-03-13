@@ -113,6 +113,8 @@ class FieldDo
 			// TODO: add instance data
 		}
 		elseif (is_array($value)) {
+			//d($value, debug_backtrace());
+			//d($value);
 			// Collection
 			// Atention: $value for simple relation it is also an array
 			$this->setRef($value);
@@ -122,9 +124,24 @@ class FieldDo
 			$this->setValue($value['value']);
 		}
 	}
-	public function loadData($id, $value) {
+	public function loadData($id, $value, $bOnlyValue) {
+		//d(debug_backtrace());
 		$this->setId($id);
 		$this->setName($id);
+
+		if ($bOnlyValue) {
+			if (isset($value['ref'])) {
+				$this->setRef($value);
+			}
+			else {
+				$this->setValue($value);
+			}
+			
+		}
+		else {
+			$this->setValueReference($value);	
+		}
+		/*
 		if (is_array($value)) {
 			// Collection & reference
 			$this->setValueReference($value);
@@ -132,6 +149,7 @@ class FieldDo
 			// Simple data field (number, string...)
 			$this->setValue($value);
 		}
+		*/
 	}
 	public function tokenizeData() {
 		return array(

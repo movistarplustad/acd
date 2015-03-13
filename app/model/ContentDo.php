@@ -124,7 +124,8 @@ class ContentDo
 			foreach ($rawData['data'] as $key => $value) {
 				unset($field);
 				$field = new FieldDo();
-				$field->loadData($key, $value);
+				//d($value);
+				$field->loadData($key, $value, true);
 				$fields->add($field);
 			}
 			//d($fields);
