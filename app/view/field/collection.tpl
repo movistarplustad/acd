@@ -11,7 +11,7 @@
 ?>
 		<li>
 			<input type="text" name="field[<?=$id?>][value][]" value="<?=htmlspecialchars($fieldRefItem['ref'])?>" readonly="readonly"/>
-			<input type="text" name="field[<?=$id?>][type][]" value="<?=htmlspecialchars($fieldRefItem['id_structure'])?>" />
+			<input type="hidden" name="field[<?=$id?>][type][]" value="<?=htmlspecialchars($fieldRefItem['id_structure'])?>" />
 			<a href="content.php?a=edit&amp;id=<?=htmlspecialchars($fieldRefItem['ref'])?>&amp;idt=<?=htmlspecialchars($fieldRefItem['id_structure'])?>&amp;idp=<?=htmlspecialchars($idParent)?>&amp;idtp=<?=htmlspecialchars($idStructureParent)?>">Edit</a>
 		</li>
 <?php

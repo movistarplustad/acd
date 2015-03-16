@@ -67,6 +67,7 @@ class PersistentManagerTextPlain implements iPersistentManager
 			$contentDo->setId($idContent);
 		}
 		$contentKeyValue = $contentDo->tokenizeData();
+		$contentKeyValue['save_ts'] = time(); // Log, timestamp for last save / update operation
 		$allElements[$idContent] = $contentKeyValue;
  
 		/* TODO: Se repite en save y delete */

@@ -60,7 +60,8 @@ class PersistentManagerMySql implements iPersistentManager
 			$id = $this->mysqli->real_escape_string($contentDo->getId());
 			$title = $this->mysqli->real_escape_string($contentDo->getTitle());
 			$data = $this->mysqli->real_escape_string(serialize($contentDo->getData()));
-			$select = "UPDATE content SET title = '$title', data ='$data' WHERE id = '$id'";
+			// Log, timestamp for last save / update operation
+			$select = "UPDATE content SET title = '$title', data ='$data', save_ts = CURRENT_TIMESTAMP WHERE id = '$id'";
 			if ($this->mysqli->query($select) !== true) {
 				throw new PersistentManagerMySqlException("Update failed when save document", self::UPDATE_FAILED);
 			}
@@ -70,7 +71,8 @@ class PersistentManagerMySql implements iPersistentManager
 			$title = $this->mysqli->real_escape_string($contentDo->getTitle());
 			$data = $this->mysqli->real_escape_string(serialize($contentDo->getData()));
 			$idStructure = $this->mysqli->real_escape_string($structureDo->getId());
-			$select = "INSERT INTO content (title, data, id_structure) VALUES ('$title', '$data', '$idStructure')";
+			// Log, timestamp for last save / update operation
+			$select = "INSERT INTO content (title, data, id_structure, save_ts) VALUES ('$title', '$data', '$idStructure', CURRENT_TIMESTAMP)";
 			if ($this->mysqli->query($select) !== true) {
 				throw new PersistentManagerMySqlException("Insert failed when save document", self::INSERT_FAILED);
 			}

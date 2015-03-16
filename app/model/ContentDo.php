@@ -73,44 +73,10 @@ class ContentDo
 	public function getData($key = null) {
 		$data = array();
 		foreach ($this->getFields() as $field) {
-			$ref = $field->getRef();
-			$value = null;
-			if ($ref) {
-				if (is_array($ref)) {
-					// Collection of references
-					$value = $ref;
-				}
-				else {
-					// External content
-					$value = [
-						'ref' => $ref,
-						'id_structure' =>  $field->getStructureRef()
-					];
-				}
-
-			}
-			else {
-				// Simple field (Number, string...)
-				$value = $field->getValue();
-			}
-			$data[$field->getName()] = $value;
+			$data[$field->getName()] = $field->getValue();
 		}
 
 		return $data;
-		/*
-		echo "TODO borrar";
-		if ($key === null) {
-			return $this->data;
-		}
-		else {
-			if (isset($this->data[$key])) {
-				return $this->data[$key];
-			}
-			else {
-				throw new ContentKeyInvalidException("Invalid conten key $key.");
-			}
-		}
-		*/
 	}
 	public function setParent($parent) {
 		$this->parent = $parent; // ContentDO

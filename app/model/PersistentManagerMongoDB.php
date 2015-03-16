@@ -81,6 +81,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			}
 		}
 		unset ($insert['id']);
+		$insert['save_ts'] = time(); // Log, timestamp for last save / update operation
 		if ($contentDo->getId()) {
 			$oId = new \MongoId($contentDo->getId());
 

@@ -50,6 +50,13 @@ switch ($accion) {
 							];
 					}
 				}
+				elseif (isset($fields[$idField]['value']) && isset($fields[$idField]['type'])) {
+					// Field type relation
+					$normalizedvalue = [
+						'ref'=> $fields[$idField]['value'],
+						'id_structure' => $fields[$idField]['type']
+					];
+				}
 				else {
 					$normalizedvalue = $fields[$idField]['value'];
 				}
