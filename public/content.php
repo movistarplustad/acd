@@ -120,6 +120,37 @@ switch ($action) {
 		$content = $contentLoader->loadContent('id', $id);
 		$content = $content->get($id); // TODO cambiar por next / first...
 		//dd($content);
+$modifiedFieldName = 'imagen alternativa'; // elementos
+$modifiedFieldPosition = 0; // 2 
+$modifiedRef ='xx54f5c82b6803fabb068b4567';
+$modifiedIdStructure = 'enlace';
+try {
+	
+//d($content->getFields());
+
+	$modifiedField = $content->getFields()->get($modifiedFieldName);
+	$val = $modifiedField->getValue();
+	$val[$modifiedFieldPosition]['ref'] = $modifiedRef;
+	$val[$modifiedFieldPosition]['id_structure'] = $modifiedIdStructure;
+					$val = [
+						'ref'=> $modifiedRef,
+						'id_structure' => $modifiedIdStructure
+					];
+//d($content);
+//d($modifiedFieldName, $val);
+	$content->setFieldValue($modifiedFieldName, $val);
+
+	$modifiedField->setDirty(true, $modifiedFieldPosition);
+
+	//d($modifiedField, $modifiedField->getDirty()); // Colección
+
+}
+catch(\Exception $e) {
+	$contentOu->setResultDesc("Error, field <em>$modifiedFieldName</em> not found in content");
+	$bResult = false;
+}
+//dd($content->getFields()->get('Fotos')->getValue()); // Colección
+//dd($content->getFields()->get('enlace')->getRef()); // Elemento simple 
 		if ($action == 'clone') {
 			$content->setId(null);
 			$content->setTitle('[copy] '.$content->getTitle());

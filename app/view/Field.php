@@ -27,6 +27,13 @@ class Field extends Template {
 		$this->__set('fieldName', $field->getName());
 		$this->__set('fieldValue', $field->getValue());
 		$ref = $field->getRef();
+		// Fake ref for simples tpl
+		if (!is_array($ref)) {
+			$ref = [
+				'ref' => '',
+				'id_structure' => ''
+			];
+		}
 		//$ref = is_string($ref) ? $ref : '';
 		$this->__set('fieldRef', $ref);
 //d($ref);

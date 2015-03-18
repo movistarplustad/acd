@@ -24,6 +24,7 @@ class FieldDo
 	private $ref; // For fields that are external content
 	private $refStructure; // Id of type of external content
 	private $instance; // Attributes for the relation width external content, eg. date validation
+	private $bDirty; // Field indicator to store if the value has modified without save
 
 	public static function getAvailableTypes() {
 		return array(
@@ -43,6 +44,7 @@ class FieldDo
 	}
 
 	public function __construct() {
+		$this->setDirty(false);
 	}
 	public function setId($id) {
 		$this->id = (string)$id;
@@ -98,6 +100,18 @@ class FieldDo
 	public function getInstance() {
 		return $this->instance;
 	}
+	public function setDirty($bDirty, $numItem = 0) {
+		$this->bDirty = (boolean)$bDirty;
+		if($this->bDirty) {
+			$this->dirtyNumItem = $numItem; // For collections, other fields numItem === 0
+		}
+		else {
+			$this->dirtyNumItem = false;
+		}
+	}
+	public function getDirty() {
+		return $this->bDirty === false ? false : $this->dirtyNumItem; // It field is dirty return position (0 for simple fields)
+	}
 	// Load structure configuration
 	public function load($data) {
 		$id = key($data);
@@ -131,11 +145,9 @@ class FieldDo
 		if ($bOnlyValue) {
 			if (isset($value['ref'])) {
 				$this->setRef($value);
+
 			}
-			else {
-				$this->setValue($value);
-			}
-			
+			$this->setValue($value);			
 		}
 		else {
 			$this->setValueReference($value);	
