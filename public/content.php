@@ -119,36 +119,43 @@ switch ($action) {
 		$contentLoader->setId($idStructureType);
 		$content = $contentLoader->loadContent('id', $id);
 		$content = $content->get($id); // TODO cambiar por next / first...
-		//dd($content);
-$modifiedFieldName = 'imagen alternativa'; // elementos
-$modifiedFieldPosition = 0; // 2 
-$modifiedRef ='xx54f5c82b6803fabb068b4567';
-$modifiedIdStructure = 'enlace';
-try {
-	
-//d($content->getFields());
+		//dd($contentLoader->getFields(),$structure, $content);
 
-	$modifiedField = $content->getFields()->get($modifiedFieldName);
-	$val = $modifiedField->getValue();
-	$val[$modifiedFieldPosition]['ref'] = $modifiedRef;
-	$val[$modifiedFieldPosition]['id_structure'] = $modifiedIdStructure;
-					$val = [
-						'ref'=> $modifiedRef,
-						'id_structure' => $modifiedIdStructure
-					];
-//d($content);
-//d($modifiedFieldName, $val);
-	$content->setFieldValue($modifiedFieldName, $val);
+		// Modify relations or collection of relations
+		//&idm=imagen alternativa&refm=yy54f5c82b6803fabb068b4567&reftm=enlace&posm=0
+		if (isset($_GET['idm'])) {
+			$modifiedFieldName = $_GET['idm']; //'imagen alternativa'; // elementos
+			$modifiedRef = $_GET['refm']; //'xx54f5c82b6803fabb068b4567';
+			$modifiedIdStructure = $_GET['reftm']; //''enlace';
+			@$modifiedFieldPosition = $_GET['posm'] ?: null; //0; // 2 
+			try {
+			//d($content->getFields());
+				$modifiedField = $content->getFields()->get($modifiedFieldName);
+				d($modifiedField->getType());
+				$val = $modifiedField->getValue();
+				$newRef = [
+					'ref'=> $modifiedRef,
+					'id_structure' => $modifiedIdStructure
+				];
+				// TODO sacar el tipo de elemento del campo
+				if ($modifiedFieldPosition === '-') {
+					$val = $newRef;
+				}
+				else {
+					$val[$modifiedFieldPosition] = $newRef;
+				}
+				//d($content);
+				//d($modifiedFieldName, $val);
+				$content->setFieldValue($modifiedFieldName, $val);
+				//d($content);
 
-	$modifiedField->setDirty(true, $modifiedFieldPosition);
-
-	//d($modifiedField, $modifiedField->getDirty()); // Colección
-
-}
-catch(\Exception $e) {
-	$contentOu->setResultDesc("Error, field <em>$modifiedFieldName</em> not found in content");
-	$bResult = false;
-}
+				$modifiedField->setDirty(true, $modifiedFieldPosition);
+			}
+			catch(\Exception $e) {
+				$contentOu->setResultDesc("Error, field <em>$modifiedFieldName</em> not found in content");
+				$bResult = false;
+			}
+		}
 //dd($content->getFields()->get('Fotos')->getValue()); // Colección
 //dd($content->getFields()->get('enlace')->getRef()); // Elemento simple 
 		if ($action == 'clone') {

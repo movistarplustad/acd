@@ -8,6 +8,11 @@ if (!Model\Auth::isLoged()) {
 	$action = 'login';
 }
 else {
+	// Temporal patch
+	if ($_SESSION['rol'] == 'editor') {
+		header('Location: content.php');
+		die();
+	}
 	$structures = new Model\StructuresDo();
 	$structures->loadFromFile(conf::$DATA_PATH);
 	$action = isset($_GET['a']) ? $_GET['a'] : 'list';

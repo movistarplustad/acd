@@ -46,7 +46,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$this->initialize($structureDo);
 		}
 		// TODO	 revisar
-		// TODO Faltan guardar las relaciones
 		$aIdChildsRelated = []; // Store all related content id
 		$mongo = new \MongoClient();
 		$db = $mongo->acd;
@@ -55,29 +54,40 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$insert = $contentDo->tokenizeData();
 		$insert['id_structure'] = $structureDo->getId();
 		// Replace relations by MongoDBRefs
-		foreach ($insert['data'] as $key => $value) {
-			if (isset($value['ref'])) {
-				// Relation
-				//d("Relation", $value, $insert['data'][$key]['id_structure'], $value['id_structure']);
-				$insert['data'][$key]['ref'] = \MongoDBRef::create('content', new \MongoId($value['ref']));
-				$insert['data'][$key]['id_structure'] = $value['id_structure'];
+		//d($structureDo->getFields(), $contentDo->getFields());
+		foreach ($structureDo->getFields() as $field) {
+			$key = $field->getName();
+			$value = $insert['data'][$key];
+			switch ($field->getType()) {
+				case $field::TYPE_CONTENT:
+					// Relation
+					if($value['ref']) {
+						$insert['data'][$key]['ref'] = \MongoDBRef::create('content', new \MongoId($value['ref']));
+						$insert['data'][$key]['id_structure'] = $value['id_structure'];
+	
+						$oIdChildsRelated[] = $insert['data'][$key]['ref']; // For table relations
+					}
+					break;
+				case $field::TYPE_COLLECTION:
+					// Collection relation
+					if(!is_array($value)) {
+						$value = [];
+					}
+					foreach ($value as $id => $item) {
+						$value[$id]['ref'] = \MongoDBRef::create('content', new \MongoId($item['ref']));
+						$value[$id]['id_structure'] = $item['id_structure'];
 
-				$aIdChildsRelated[] = $insert['data'][$key]['ref'] ; // For table relations
-			}
-			elseif (is_array($value)) {
-				// Collection relation
-				foreach ($value as $id => $item) {
-					//d("Collection", $item);
-					$value[$id]['ref'] = \MongoDBRef::create('content', new \MongoId($item['ref']));
-					$value[$id]['id_structure'] = $item['id_structure'];
 
-
-					$aIdChildsRelated[] = $value[$id]['ref']; // For table relations
-				}
-				$insert['data'][$key]= [
-					'id_structure' => self::STRUCTURE_TYPE_COLLECTION,
-					'ref' => $value
-					];
+						$oIdChildsRelated[] = $value[$id]['ref']; // For table relations
+					}
+					$insert['data'][$key]= [
+						'id_structure' => self::STRUCTURE_TYPE_COLLECTION,
+						'ref' => $value
+						];
+					break;
+				default:
+					// Other type no treatment is necessary
+					break;
 			}
 		}
 		unset ($insert['id']);
@@ -93,7 +103,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$oId = new \MongoId($insert['_id']);
 		}
 
-		$this->updateRelations($db, \MongoDBRef::create('content', $oId), $aIdChildsRelated);
+		if(isset($oIdChildsRelated)) {
+			$this->updateRelations($db, \MongoDBRef::create('content', $oId), $oIdChildsRelated);
+		}
 
 		return $contentDo;
 	}
@@ -141,8 +153,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$documentFound = $mongoCollection->findOne(array("_id" => $oId));
 			$documentFound = $this->normalizeDocument($documentFound);
 			$contentFound = new ContentDo();
-			$contentFound->load($documentFound, $structureDo->getId());
+			$contentFound->load($documentFound, $structureDo);
 			//+d($documentFound);
+			//+d($contentFound);
 			$result = new ContentsDo();
 			$result->add($contentFound, $id);
 		}
@@ -248,7 +261,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		foreach ($cursor as $documentFound) {
 			$documentFound = $this->normalizeDocument($documentFound);
 			$contentFound = new ContentDo();
-			$contentFound->load($documentFound, $structureDo->getId());
+			$contentFound->load($documentFound, $structureDo);
 			$result->add($contentFound, $documentFound['id']);
 		}
 		//TODO revisar

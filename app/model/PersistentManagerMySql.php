@@ -111,7 +111,7 @@ class PersistentManagerMySql implements iPersistentManager
 					$documentFound['data'] = unserialize($obj->data);
 
 					$contentFound = new ContentDo();
-					$contentFound->load($documentFound, $structureDo->getId());
+					$contentFound->load($documentFound, $structureDo);
 					
 					$result->add($contentFound, $id);
 				}
@@ -143,7 +143,7 @@ class PersistentManagerMySql implements iPersistentManager
 				$documentFound['data'] = unserialize($obj->data);
 
 				$contentFound = new ContentDo();
-				$contentFound->load($documentFound, $structureDo->getId());
+				$contentFound->load($documentFound, $structureDo);
 				$result->add($contentFound, $obj->id);
 			} 
 			/* free result set */

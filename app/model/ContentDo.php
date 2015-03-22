@@ -84,21 +84,25 @@ class ContentDo
 	public function getParent() {
 		return $this->parent;
 	}
-	public function load($rawData, $idStructure = null) {
+	// With the data structure, build the skeleton of content
+	private function buildSkeleton($structure) {
+		$this->setIdStructure($structure->getId());
+		$this->setFields($structure->getFields());
+	}
+	public function load($rawData, $structure = null) {
 		$this->setId($rawData['id']);
 		$this->setTitle($rawData['title']);
-		$this->setIdStructure($idStructure);
+		if($structure !== null) {
+			$this->buildSkeleton($structure);
+		}
 		$fields = $this->getFields();
 		if (is_array($rawData['data'])){
 			foreach ($rawData['data'] as $key => $value) {
-				unset($field);
-				$field = new FieldDo();
-				//d($value);
-				$field->loadData($key, $value, true);
-				$fields->add($field);
+				$this->getFields()->setValue($key, $value);
 			}
-			//d($fields);
+			//d($this->getFields());
 		}
+//+d($this);
 		//$this->setFields($fields);
 	}
 	public function tokenizeData() {

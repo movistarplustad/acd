@@ -53,11 +53,15 @@ class FieldDo
 		return $this->id;
 	}
 	public function generateId($name) {
+		// Temporarily disabled. I think it makes no sense
+		return $name;
+		/*
 		$id = preg_replace('/[^a-z0-9_\-]/', '', strtolower($name));
 		if ($id === '') {
 			$id = 'id';
 		}
 		return $id;
+		*/
 	}
 	public function setType($type) {
 		if (array_key_exists($type, $this->getAvailableTypes())) {
@@ -86,7 +90,19 @@ class FieldDo
 		$this->ref = $ref;
 	}
 	public function getRef() {
-		return $this->ref;
+		if($this->getType() == self::TYPE_CONTENT && $this->ref === null) {
+			return $ref = [
+				'ref' => '',
+				'id_structure' => ''
+			];
+		}
+		elseif($this->getType() == self::TYPE_COLLECTION && $this->ref === null) {
+			return [];
+		}
+		else {
+			return $this->ref;
+		}
+
 	}
 	public function setStructureRef($refStructure) {
 		$this->refStructure = $refStructure;
@@ -147,7 +163,7 @@ class FieldDo
 				$this->setRef($value);
 
 			}
-			$this->setValue($value);			
+			$this->setValue($value);
 		}
 		else {
 			$this->setValueReference($value);	

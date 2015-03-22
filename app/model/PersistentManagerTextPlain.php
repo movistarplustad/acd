@@ -125,7 +125,7 @@ class PersistentManagerTextPlain implements iPersistentManager
 		$allElements = $this->_loadAll($structureDo);
 		if (isset($allElements[$id])) {
 			$contentFound = new ContentDo();
-			$contentFound->load($allElements[$id], $structureDo->getId());
+			$contentFound->load($allElements[$id], $structureDo);
 			$result = new ContentsDo();
 			$result->add($contentFound, $id);
 
@@ -139,7 +139,7 @@ class PersistentManagerTextPlain implements iPersistentManager
 		$limits = $query->getLimits();
 		$limits->setTotal(count($aContents));
 		$contents = new ContentsDo();
-		$contents->loadFromArray(array_slice($aContents, $limits->getLower(), $limits->getUpper()), $structureDo->getId());
+		$contents->loadFromArray(array_slice($aContents, $limits->getLower(), $limits->getUpper()), $structureDo);
 		$contents->setLimits($limits);
 
 		//d("FER", $aContents, $limits, $contents);

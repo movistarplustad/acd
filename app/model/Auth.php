@@ -183,12 +183,16 @@ class Auth  {
 		}
 		return $aCredentials;
 	}
-	public static function addUser($login, $password) {
+	public static function addUser($login, $password, $rol) {
 		if ($login === '' || $password === '') {
 			throw new AuthInvalidUserException("Invalid login or password [$login] : [$password]");
 		}
+		if ($rol !== \Acd\conf::$ROL_DEVELOPER && $rol !== \Acd\conf::$ROL_EDITOR) {
+			throw new AuthInvalidUserException("Invalid rol [$rol]");
+		}
 		$aCredentials = Auth::loadAllCredentials();
-		$aCredentials[$login] = Auth::hashPassword($password);
+		$aCredentials[$login]['password'] = Auth::hashPassword($password);
+		$aCredentials[$login]['rol'] = $rol;
 		$jsonCredentials = json_encode($aCredentials);
 
 		$path = \Acd\conf::$PATH_AUTH_CREDENTIALS_FILE;

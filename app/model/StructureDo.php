@@ -22,11 +22,15 @@ class StructureDo
 		return $this->id;
 	}
 	public function generateId($name) {
+		// Temporarily disabled. I think it makes no sense
+		return $name;
+		/*
 		$id = preg_replace('/[^a-z0-9_\-]/', '', strtolower($name));
 		if ($id === '') {
 			$id = 'id';
 		}
 		return $id;
+		*/
 	}
 	public function setName($name) {
 		$this->name = $name;
