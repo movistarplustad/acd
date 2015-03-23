@@ -18,4 +18,7 @@
 		}
 	}
 ?>
+	<li>
+		<a href="content_rel.php?a=select_type&amp;idp=<?=htmlspecialchars($idParent)?>&amp;idtp=<?=htmlspecialchars($idStructureParent)?>&amp;f=<?=htmlspecialchars($fieldName)?>">Find</a>
+	</li>
 </ul>

@@ -4,8 +4,8 @@ namespace Acd;
 require ('../autoload.php');
 session_start();
 $action =$_GET['a'];
-$id = $_GET['id'];
-$idStructureType = $_GET['idt'];
+@$id = $_GET['id'];
+@$idStructureType = $_GET['idt'];
 $idParent = $_GET['idp'];
 $idStructureTypeParent = $_GET['idtp'];
 $idField = $_GET['f'];
@@ -21,7 +21,6 @@ switch ($action) {
 	case 'select_type': 
 		$structures = new Model\StructuresDo();
 		$structures->loadFromFile(conf::$DATA_PATH);
-		dd($structures);
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('menu');
 
@@ -29,8 +28,10 @@ switch ($action) {
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
-		$contentOu = new View\ContentEditIndex();
+		$contentOu = new View\ContentEditSearch();
 		//$contentOu->setActionType('index');
+		$contentOu->setId($idParent);
+		$contentOu->setType($idStructureTypeParent);
 		$contentOu->setStructures($structures);
 		//$contentOu->setTODO($estructuras);
 

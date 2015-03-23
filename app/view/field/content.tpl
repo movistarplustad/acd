@@ -12,7 +12,7 @@
 if ($fieldRef ['ref']) {
 ?>
 	<a href="content.php?a=edit&amp;id=<?=htmlspecialchars($fieldRef['ref'])?>&amp;idt=<?=htmlspecialchars($fieldRef['id_structure'])?>&amp;idp=<?=htmlspecialchars($idParent)?>&amp;idtp=<?=htmlspecialchars($idStructureParent)?>">Edit</a>
-	<a href="content_rel.php?a=select_type&amp;id=<?=htmlspecialchars($fieldRef['ref'])?>&amp;idt=<?=htmlspecialchars($fieldRef['id_structure'])?>&amp;idp=<?=htmlspecialchars($idParent)?>&amp;idtp=<?=htmlspecialchars($idStructureParent)?>&amp;f=<?=htmlspecialchars($fieldName)?>">Find</a>
 <?php
 }
 ?>
+<a href="content_rel.php?a=select_type&amp;idp=<?=htmlspecialchars($idParent)?>&amp;idtp=<?=htmlspecialchars($idStructureParent)?>&amp;f=<?=htmlspecialchars($fieldName)?>">Find</a>

@@ -127,26 +127,32 @@ switch ($action) {
 			$modifiedFieldName = $_GET['idm']; //'imagen alternativa'; // elementos
 			$modifiedRef = $_GET['refm']; //'xx54f5c82b6803fabb068b4567';
 			$modifiedIdStructure = $_GET['reftm']; //''enlace';
-			@$modifiedFieldPosition = $_GET['posm'] ?: null; //0; // 2 
+			$modifiedFieldPosition = isset($_GET['posm']) ? $_GET['posm'] : null;
 			try {
-			//d($content->getFields());
 				$modifiedField = $content->getFields()->get($modifiedFieldName);
-				d($modifiedField->getType());
-				$val = $modifiedField->getValue();
-				$newRef = [
-					'ref'=> $modifiedRef,
-					'id_structure' => $modifiedIdStructure
-				];
-				// TODO sacar el tipo de elemento del campo
-				if ($modifiedFieldPosition === '-') {
-					$val = $newRef;
-				}
-				else {
-					$val[$modifiedFieldPosition] = $newRef;
-				}
+				//d($modifiedField->getType());
+				switch ($modifiedField->getType()) {
+					case Model\FieldDO::TYPE_CONTENT:
+						$newRef = [
+							'ref'=> $modifiedRef,
+							'id_structure' => $modifiedIdStructure
+						];
+						break;
+					case Model\FieldDO::TYPE_COLLECTION:
+						$newRef = $modifiedField->getValue();
+
+						$newRef[$modifiedFieldPosition] = [
+							'ref'=> $modifiedRef,
+							'id_structure' => $modifiedIdStructure
+						];
+						break;
+					default:
+				 		$newRef = $modifiedField;
+						break;
+				} 
 				//d($content);
 				//d($modifiedFieldName, $val);
-				$content->setFieldValue($modifiedFieldName, $val);
+				$content->setFieldValue($modifiedFieldName, $newRef);
 				//d($content);
 
 				$modifiedField->setDirty(true, $modifiedFieldPosition);
