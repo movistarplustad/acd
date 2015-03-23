@@ -5,10 +5,12 @@ require ('../autoload.php');
 session_start();
 $action =$_GET['a'];
 @$id = $_GET['id'];
-@$idStructureType = $_GET['idt'];
+@$idStructureTypeSearch = $_GET['idt'];
+@$titleSearch = $_GET['s'];
 $idParent = $_GET['idp'];
 $idStructureTypeParent = $_GET['idtp'];
 $idField = $_GET['f'];
+@$positionInField = $_GET['p'];
 if (!Model\Auth::isLoged()) {
 	$action = 'login';
 }
@@ -19,6 +21,7 @@ switch ($action) {
 		return;
 		break;
 	case 'select_type': 
+	case 'search': 
 		$structures = new Model\StructuresDo();
 		$structures->loadFromFile(conf::$DATA_PATH);
 		$headerMenuOu = new View\HeaderMenu();
@@ -32,8 +35,27 @@ switch ($action) {
 		//$contentOu->setActionType('index');
 		$contentOu->setId($idParent);
 		$contentOu->setType($idStructureTypeParent);
+		$contentOu->setIdField($idField);
+		$contentOu->setPositionInField($positionInField);
 		$contentOu->setStructures($structures);
-		//$contentOu->setTODO($estructuras);
+		$contentOu->setTitleSeach($titleSearch);
+		$contentOu->setStructureTypeSeach($idStructureTypeSearch);
+
+		if ($action === 'search') {
+			$contentLoader = new Model\ContentLoader();
+			$contentLoader->setId($idStructureTypeSearch);
+			$whereCondition = [];
+			if($titleSearch) {
+				$whereCondition['title'] = $titleSearch;
+			}
+			if($idStructureTypeSearch) {
+				$whereCondition['idStructure'] = $idStructureTypeSearch;
+			}
+			$matchContents = $contentLoader->loadContent('editorSearch', $whereCondition);
+			//d($matchContents);
+			$contentOu->setResultSearch($matchContents);
+		}
+
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('indexContent');

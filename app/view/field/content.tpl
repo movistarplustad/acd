@@ -11,8 +11,8 @@
 <?php
 if ($fieldRef ['ref']) {
 ?>
-	<a href="content.php?a=edit&amp;id=<?=htmlspecialchars($fieldRef['ref'])?>&amp;idt=<?=htmlspecialchars($fieldRef['id_structure'])?>&amp;idp=<?=htmlspecialchars($idParent)?>&amp;idtp=<?=htmlspecialchars($idStructureParent)?>">Edit</a>
+	<a href="content.php?a=edit&amp;id=<?=urlencode($fieldRef['ref'])?>&amp;idt=<?=urlencode($fieldRef['id_structure'])?>&amp;idp=<?=urlencode($idParent)?>&amp;idtp=<?=urlencode($idStructureParent)?>">Edit</a>
 <?php
 }
 ?>
-<a href="content_rel.php?a=select_type&amp;idp=<?=htmlspecialchars($idParent)?>&amp;idtp=<?=htmlspecialchars($idStructureParent)?>&amp;f=<?=htmlspecialchars($fieldName)?>">Find</a>
+<a href="content_rel.php?a=select_type&amp;idp=<?=urlencode($idParent)?>&amp;idtp=<?=urlencode($idStructureParent)?>&amp;f=<?=urlencode($fieldName)?>&amp;idt=<?=urlencode($fieldRef['id_structure'])?>">Find</a>

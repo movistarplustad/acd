@@ -30,6 +30,10 @@ class PersistentManagerMongoDB implements iPersistentManager
 					break;
 				case 'all':
 					return $this->loadAll($structureDo, $query);
+					break;
+				case 'editorSearch':
+					return $this->loadEditorSearch($structureDo, $query);
+					break;
 				default:
 					throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
 					break;
@@ -269,6 +273,33 @@ class PersistentManagerMongoDB implements iPersistentManager
 		//$limits = $query->getLimits();
 		//$limits->setTotal(count($aContents));
 
+		return $result;
+	}
+
+	private function loadEditorSearch($structureDo, $query) {
+		//db.content.find({"id_structure": "item_mosaico", "title" : /.*quinto.*/i}).pretty()
+		$title = $query->getCondition()['title'];
+		$idStructure = $query->getCondition()['idStructure'];
+		$filter = array();
+		if(isset($query->getCondition()['title'])) {
+			$search = $query->getCondition()['title'];
+			$filter['title'] = array('$regex' => new \MongoRegex("/^.*$search.*/i"));
+		}
+		if(isset($query->getCondition()['idStructure'])) {
+			$filter['id_structure'] = $query->getCondition()['idStructure'];
+		}
+
+		$mongo = new \MongoClient();
+		$db = $mongo->acd;
+		$mongoCollection = $db->selectCollection('content');
+		$cursor = $mongoCollection->find($filter);
+		$result = new ContentsDo();
+		foreach ($cursor as $documentFound) {
+			$documentFound = $this->normalizeDocument($documentFound);
+			$contentFound = new ContentDo();
+			$contentFound->load($documentFound, $structureDo);
+			$result->add($contentFound, $documentFound['id']);
+		}
 		return $result;
 	}
 }
