@@ -4,7 +4,7 @@
 		: 'Edit content <spam class="structure_name">'.htmlspecialchars($structure->getName()).'</spam>';
 ?>
 <main>
-	<h2><?=$title?></h2>
+	<h2><?=$title?></h2>(TODO: Añadir número de sitios en los que está relacionado)
 	<p class="result"><?=$resultDesc?></p>
 	<form action="do_process_content.php" method="post">
 		<input type="hidden" name="id" value="<?=htmlspecialchars($content->getId())?>"/>
@@ -38,7 +38,7 @@
 			?>
 			<fieldset>
 				<legend>Fields</legend>
-				<ul><?=$structure_fields?></ul>
+				<ul class="fields"><?=$structure_fields?></ul>
 			</fieldset>
 		</div>
 		<input type="submit" name="a" value="save" class="button publish"/>

@@ -11,8 +11,13 @@
 <?php
 if ($fieldRef ['ref']) {
 ?>
-	<a href="content.php?a=edit&amp;id=<?=urlencode($fieldRef['ref'])?>&amp;idt=<?=urlencode($fieldRef['id_structure'])?>&amp;idp=<?=urlencode($idParent)?>&amp;idtp=<?=urlencode($idStructureParent)?>">Edit</a>
+	<a href="content.php?a=edit&amp;id=<?=urlencode($fieldRef['ref'])?>&amp;idt=<?=urlencode($fieldRef['id_structure'])?>&amp;idp=<?=urlencode($idParent)?>&amp;idtp=<?=urlencode($idStructureParent)?>" class="button edit">Edit</a>
+	<a href="do_clear_field.php?a=clear&amp;idp=<?=urlencode($idParent)?>&amp;idtp=<?=urlencode($idStructureParent)?>&amp;f=<?=urlencode($fieldName)?>" class="button clear">Clear</a>
+<?php
+}
+if ($idParent) {
+?>
+<a href="content_rel.php?a=select_type&amp;idp=<?=urlencode($idParent)?>&amp;idtp=<?=urlencode($idStructureParent)?>&amp;f=<?=urlencode($fieldName)?>&amp;idt=<?=urlencode($fieldRef['id_structure'])?>" class="button search">Find</a>
 <?php
 }
 ?>
-<a href="content_rel.php?a=select_type&amp;idp=<?=urlencode($idParent)?>&amp;idtp=<?=urlencode($idStructureParent)?>&amp;f=<?=urlencode($fieldName)?>&amp;idt=<?=urlencode($fieldRef['id_structure'])?>">Find</a>

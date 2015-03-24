@@ -278,8 +278,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 	private function loadEditorSearch($structureDo, $query) {
 		//db.content.find({"id_structure": "item_mosaico", "title" : /.*quinto.*/i}).pretty()
-		$title = $query->getCondition()['title'];
-		$idStructure = $query->getCondition()['idStructure'];
 		$filter = array();
 		if(isset($query->getCondition()['title'])) {
 			$search = $query->getCondition()['title'];

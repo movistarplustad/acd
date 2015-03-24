@@ -141,7 +141,12 @@ a:active {
 .button.add {
 	background-image: url(ic_add_circle_outline_24px.svg);
 }
-
+.button.search {
+	background-image: url(ic_search_24px.svg);
+}
+.button.clear {
+	background-image: url(ic_clear_24px.svg);
+}
 
 #structures_list .structure {
 	padding: 0.5em 0;
@@ -208,6 +213,12 @@ h2 .structure_name {
 }
 
 /* Field controls */
+.fields li {
+	line-height: 2.5em;
+}
+.fields li .button {
+	font-size: 0.75em;
+}
 input[readonly] {
 	color: #999;
 }
