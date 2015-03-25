@@ -12,7 +12,7 @@
 if ($fieldRef ['ref']) {
 ?>
 	<a href="content.php?a=edit&amp;id=<?=urlencode($fieldRef['ref'])?>&amp;idt=<?=urlencode($fieldRef['id_structure'])?>&amp;idp=<?=urlencode($idParent)?>&amp;idtp=<?=urlencode($idStructureParent)?>" class="button edit">Edit</a>
-	<a href="do_clear_field.php?a=clear&amp;idp=<?=urlencode($idParent)?>&amp;idtp=<?=urlencode($idStructureParent)?>&amp;f=<?=urlencode($fieldName)?>" class="button clear">Clear</a>
+	<a href="content.php?a=edit&amp;id=<?=urlencode($idParent)?>&amp;idt=<?=urlencode($idStructureParent)?>&amp;idm=<?=urlencode($fieldName)?>&amp;refm=&amp;reftm=&amp;posm=" class="button clear">Clear</a>
 <?php
 }
 if ($idParent) {

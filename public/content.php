@@ -141,10 +141,17 @@ switch ($action) {
 					case Model\FieldDO::TYPE_COLLECTION:
 						$newRef = $modifiedField->getValue();
 
-						$newRef[$modifiedFieldPosition] = [
-							'ref'=> $modifiedRef,
-							'id_structure' => $modifiedIdStructure
-						];
+						/* Modify or delete item */
+						if ($modifiedRef) {
+							$newRef[$modifiedFieldPosition] = [
+								'ref'=> $modifiedRef,
+								'id_structure' => $modifiedIdStructure
+							];
+						}
+						else {
+							unset ($newRef[$modifiedFieldPosition]);
+						}
+
 						break;
 					default:
 				 		$newRef = $modifiedField;
