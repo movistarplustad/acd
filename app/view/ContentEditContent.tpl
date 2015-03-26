@@ -4,7 +4,14 @@
 		: 'Edit content <spam class="structure_name">'.htmlspecialchars($structure->getName()).'</spam>';
 ?>
 <main>
-	<h2><?=$title?></h2>(TODO: Añadir número de sitios en los que está relacionado)
+	<h2><?=$title?></h2>
+	<?php
+		if($content->getCountParents() !== null) {
+	?>
+		<p>#Relations: <?=$content->getCountParents()?></p>
+	<?php
+		}
+	?>
 	<p class="result"><?=$resultDesc?></p>
 	<form action="do_process_content.php" method="post">
 		<input type="hidden" name="id" value="<?=htmlspecialchars($content->getId())?>"/>

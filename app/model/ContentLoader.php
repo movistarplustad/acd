@@ -41,17 +41,30 @@ class ContentLoader extends StructureDo
 		}
 	}
 	public function loadContent($method, $params = null) {
-		/* Get metainformation */
-		if (!$this->getStructureLoaded()) {
-			$this->setStructureLoaded($this->loadFromFile());
-		}
-		$persistentManager = $this->getManager();
+		switch ($method) {
+			case 'id+countParents':
+				$content = $this->loadContent('id', $params);
 
-		$query = new Query();
-		$query->setType($method);
-		$query->setCondition($params);
-		$query->setLimits($this->getLimits());
-		return $persistentManager->load($this, $query);
+				// Set the relations number to content, and content is contents->get($id)
+				$content->get($params)->setCountParents($this->loadContent('countParents', $params));
+
+				return $content;
+			break;
+			default:
+				/* Get metainformation */
+				if (!$this->getStructureLoaded()) {
+					$this->setStructureLoaded($this->loadFromFile());
+				}
+				$persistentManager = $this->getManager();
+
+				$query = new Query();
+				$query->setType($method);
+				$query->setCondition($params);
+				$query->setLimits($this->getLimits());
+				return $persistentManager->load($this, $query);
+			break;
+		}
+
 	}
 	public function saveContent($contentDo) {
 		/* Get metainformation */

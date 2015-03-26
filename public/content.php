@@ -117,8 +117,8 @@ switch ($action) {
 
 		$contentLoader = new Model\ContentLoader();
 		$contentLoader->setId($idStructureType);
-		$content = $contentLoader->loadContent('id', $id);
-		$content = $content->get($id); // TODO cambiar por next / first...
+		$contents = $contentLoader->loadContent('id+countParents', $id);
+		$content = $contents->get($id); // TODO cambiar por next / first...
 		//dd($contentLoader->getFields(),$structure, $content);
 
 		// Modify relations or collection of relations

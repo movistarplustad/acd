@@ -34,6 +34,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 				case 'editorSearch':
 					return $this->loadEditorSearch($structureDo, $query);
 					break;
+				case 'countParents':
+					return $this->countParents($structureDo, $query);
+					break;
 				default:
 					throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
 					break;
@@ -299,5 +302,18 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$result->add($contentFound, $documentFound['id']);
 		}
 		return $result;
+	}
+
+	private function countParents($structureDo, $query) {
+		$id = $query->getCondition();
+		$filter = ['child' => \MongoDBRef::create('content', new \MongoId($id))];
+
+		$mongo = new \MongoClient();
+		$db = $mongo->acd;
+		$mongoCollection = $db->selectCollection('relation');
+		$cursor = $mongoCollection->find($filter);
+
+		return $cursor->count();
+		// db.relation.find({"child" : DBRef("content", ObjectId("5510618a06b13a931ca41c07"))}).pretty()
 	}
 }

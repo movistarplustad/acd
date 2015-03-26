@@ -10,6 +10,7 @@ class ContentDo
 	//private $data; /* Array key/value of variable fields */
 	private $fields;
 	private $parent; /* ContentDo Relation in complex structures */
+	private $countParents; /* Number of parent, used in conten editor for info */
 
 	public function __construct() {
 		$this->id = null;
@@ -83,6 +84,12 @@ class ContentDo
 	}
 	public function getParent() {
 		return $this->parent;
+	}
+	public function setCountParents($countParents) {
+		$this->countParents = $countParents;
+	}
+	public function getCountParents() {
+		return $this->countParents;
 	}
 	// With the data structure, build the skeleton of content
 	private function buildSkeleton($structure) {
