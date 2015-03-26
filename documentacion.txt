@@ -58,6 +58,13 @@ CREATE TABLE `acd`.`content` (
   `title` VARCHAR(256) NULL,
   `data` BLOB NULL,
   `id_structure` VARCHAR(256) NULL,
+  `save_ts` TIMESTAMP NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `tipo_contenido` (`id_structure` ASC, `title` ASC));
+  INDEX `content_type` (`id_structure` ASC, `title` ASC));
 
+ALTER TABLE `acd`.`content` ADD `save_ts` TIMESTAMP NOT NULL;
+
+CREATE TABLE `acd`.`relation` (
+  `parent` INT NOT NULL,
+  `child` INT NOT NULL,
+  INDEX `related_contents` (`parent` ASC, `child` ASC));

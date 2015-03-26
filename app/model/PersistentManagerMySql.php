@@ -42,6 +42,12 @@ class PersistentManagerMySql implements iPersistentManager
 				break;
 			case 'all':
 				return $this->loadAll($structureDo, $query);
+				case 'editorSearch':
+					return $this->loadEditorSearch($structureDo, $query);
+					break;
+				case 'countParents':
+					return $this->countParents($structureDo, $query);
+					break;
 			default:
 				throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
 				break;
@@ -156,5 +162,34 @@ class PersistentManagerMySql implements iPersistentManager
 
 
 		return $result;
+	}
+
+	private function loadEditorSearch($structureDo, $query) {
+		// SELECT id, title, data FROM content WHERE id_structure = 'directo' AND title LIKE '%foo%'; 
+		$limit = $query->getLimits()->getUpper();
+		$filter = array();
+		if(isset($query->getCondition()['title'])) {
+			$search = $this->mysqli->real_escape_string($query->getCondition()['title']);
+			$filter['title'] = "title LIKE '%".$search."%'";
+		}
+		if(isset($query->getCondition()['idStructure'])) {
+			$search = $this->mysqli->real_escape_string($query->getCondition()['idStructure']);
+			$filter['id_structure'] = "id_structure = '".$search."'";
+		}
+		$where = '';
+		if ($filter) {
+			$where = ' WHERE '.implode(' AND ', $filter);
+		}
+		$select = "SELECT id, title, data FROM content $where LIMIT $limit";
+
+		d("TODO", $select);
+		return $result;
+	}
+
+	private function countParents($structureDo, $query) {
+		//SELECT count(*) FROM relation WHERE child = 1
+		//d("TODO");
+
+		return '?';
 	}
 }

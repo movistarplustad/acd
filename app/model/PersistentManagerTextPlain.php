@@ -37,6 +37,12 @@ class PersistentManagerTextPlain implements iPersistentManager
 					break;
 				case 'all':
 					return $this->loadAll($structureDo, $query);
+				case 'editorSearch':
+					return $this->loadEditorSearch($structureDo, $query);
+					break;
+				case 'countParents':
+					return $this->countParents($structureDo, $query);
+					break;
 				default:
 					throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
 					break;
@@ -118,6 +124,27 @@ class PersistentManagerTextPlain implements iPersistentManager
 		$path = $this->getStoragePath($structureDo);
 		$content = file_get_contents($path);
 		return json_decode($content, true);
+	}
+
+	private function loadEditorSearch($structureDo, $query) {
+		//db.content.find({"id_structure": "item_mosaico", "title" : /.*quinto.*/i}).pretty()
+		$filter = array();
+		if(isset($query->getCondition()['title'])) {
+			$search = $query->getCondition()['title'];
+			$filter['title'] = array('$regex' => new \MongoRegex("/^.*$search.*/i"));
+		}
+		if(isset($query->getCondition()['idStructure'])) {
+			$filter['id_structure'] = $query->getCondition()['idStructure'];
+		}
+
+		d("TODO");
+		return $result;
+	}
+
+	private function countParents($structureDo, $query) {
+		//d("TODO");
+
+		return '?';
 	}
 
 	private function loadById($structureDo, $query) {
