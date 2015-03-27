@@ -116,6 +116,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		return $contentDo;
 	}
+
 	private function updateRelations($db, $parent, $children) {
 		// Redundant cache content relations 
 		$mongoCollection = $db->selectCollection('relation');

@@ -84,8 +84,51 @@ class PersistentManagerMySql implements iPersistentManager
 			}
 			$contentDo->setId($this->mysqli->insert_id);
 		}
-		
+
+		foreach ($structureDo->getFields() as $field) {
+			switch ($field->getType()) {
+				case $field::TYPE_CONTENT:
+					// Relation
+					$child =  $field->getValue()['ref'];
+					if ($child) {
+						$oIdChildsRelated[] = $child; // For table relations
+					}
+					break;
+				case $field::TYPE_COLLECTION:
+					// Collection relation
+					foreach ($field->getValue() as $fieldValue) {
+						$child = $fieldValue['ref'];
+						if ($child) {
+							$oIdChildsRelated[] = $child;
+						}
+					}
+					break;
+			}
+		}
+
+		if(isset($oIdChildsRelated)) {
+			$this->updateRelations($contentDo->getId(), $oIdChildsRelated);
+		}
+
 		return $contentDo;
+	}
+
+	private function updateRelations($parent, $children) {
+		// Redundant cache content relations 
+		//d("Padre . Hijos", $parent, $children);
+		// emptying old relations & add news
+		$parent = $this->mysqli->real_escape_string($parent);
+		$select = "DELETE FROM relation WHERE parent = '$parent'";
+		if ($this->mysqli->query($select) !== true) {
+			throw new PersistentManagerMySqlException("Delete parent relation failed", self::DELETE_FAILED);
+		}
+		foreach ($children as $child) {
+			$child = $this->mysqli->real_escape_string($child);
+			$select = "INSERT INTO relation (parent, child) VALUES ($parent, $child)";
+			if ($this->mysqli->query($select) !== true) {
+				throw new PersistentManagerMySqlException("Insert failed when save parent relation", self::INSERT_FAILED);
+			}
+		}
 	}
 
 	public function delete($structureDo, $idContent) {
@@ -182,14 +225,38 @@ class PersistentManagerMySql implements iPersistentManager
 		}
 		$select = "SELECT id, title, data FROM content $where LIMIT $limit";
 
-		d("TODO", $select);
+		$result = new ContentsDo();
+		if ($dbResult = $this->mysqli->query($select)) {
+			while($obj = $dbResult->fetch_object()){
+				$documentFound = array();
+				$documentFound['id'] = $obj->id;
+				$documentFound['title'] = $obj->title;
+				$documentFound['data'] = unserialize($obj->data);
+
+				$contentFound = new ContentDo();
+				$contentFound->load($documentFound, $structureDo);
+				$result->add($contentFound, $obj->id);
+			} 
+			/* free result set */
+			$dbResult->close();
+		}
+
 		return $result;
 	}
 
 	private function countParents($structureDo, $query) {
 		//SELECT count(*) FROM relation WHERE child = 1
-		//d("TODO");
 
-		return '?';
+		$id = $this->mysqli->real_escape_string($query->getCondition());
+		$select = "SELECT count(*) as total FROM relation WHERE child = $id";
+		$total = '?';
+
+		if ($dbResult = $this->mysqli->query($select)) {
+			while($obj = $dbResult->fetch_object()){
+				$total = $obj->total;
+			}
+		}
+
+		return $total;
 	}
 }
