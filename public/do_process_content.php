@@ -78,17 +78,14 @@ switch ($accion) {
 	case 'delete':
 		try {
 			$contentLoader->deleteContent($id);
-			$result = 'ok';
+			$returnUrl = 'content.php?a='.$accion.'&r=ok&id='.urlencode($idStructure);
 		} catch (\Exception $e) {
-			d($e);
-			$result = 'ko';
+			$returnUrl = 'content.php?a=edit&r=ko_delete&id='.urlencode($id).'&idt='.urlencode($idStructure);
 		}
 
-		$returnUrl = 'content.php?a='.$accion.'&r='.$result.'&id='.urlencode($idStructure);
 		break;
 	default:
 		$returnUrl = '404.html';
 		break;
 }
-
 header("Location:$returnUrl");

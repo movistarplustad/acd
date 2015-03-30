@@ -5,9 +5,6 @@ class PersistentStorageQueryTypeNotImplemented extends \exception {} // TODO mov
 class PersistentManagerMySqlException extends \exception {} // TODO Unificar
 class PersistentManagerMySql implements iPersistentManager
 {
-	const NO_CONNECTION = 1;
-	const UPDATE_FAILED = 2;
-	const INSERT_FAILED = 3;
 	private $mysqli;
 	public function initialize($structureDo) {
 		//Datos de global.php
@@ -137,7 +134,15 @@ class PersistentManagerMySql implements iPersistentManager
 		}
 		$id = $this->mysqli->real_escape_string($idContent);
 		$select = "DELETE FROM content WHERE id = '$id'";
-		if ($this->mysqli->query($select) !== true) {
+		// It is not allowed to delete a content with relations, beacause break integrity
+		$query = new Query();
+		$query->setType('countParents');
+		$query->setCondition($id);
+		$numRelations = $this->countParents($structureDo, $query);
+		if ($numRelations > 0) {
+			throw new PersistentManagerMySqlException("Delete failed, the content has $numRelations relationships", self::DELETE_FAILED);
+		}
+		elseif ($this->mysqli->query($select) !== true) {
 			throw new PersistentManagerMySqlException("Delete failed", self::DELETE_FAILED);
 		}
 	}

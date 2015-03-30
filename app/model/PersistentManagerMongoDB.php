@@ -2,6 +2,7 @@
 namespace Acd\Model;
 
 class PersistentStorageQueryTypeNotImplemented extends \Exception {} // TODO mover a sitio común
+class PersistentManagerMongoDBException extends \exception {} // TODO Unificar
 class PersistentManagerMongoDB implements iPersistentManager
 {
 	const STRUCTURE_TYPE_COLLECTION = '_collection';
@@ -132,14 +133,23 @@ class PersistentManagerMongoDB implements iPersistentManager
 	}
 
 	public function delete($structureDo, $idContent) {
-		// TODO No permitir elminar elementos que están asociados a algo
 		if ($this->isInitialized($structureDo)) {
-		// TODO revisar
-			$mongo = new \MongoClient();
-			$db = $mongo->acd;
-			$mongoCollection = $db->selectCollection('content');
-			$oId = new \MongoId($idContent);
-			$mongoCollection->remove(array('_id' => $oId));
+			// TODO revisar
+			// It is not allowed to delete a content with relations, beacause break integrity
+			$query = new Query();
+			$query->setType('countParents');
+			$query->setCondition($idContent);
+			$numRelations = $this->countParents($structureDo, $query);
+			if ($numRelations > 0) {
+				throw new PersistentManagerMongoDBException("Delete failed, the content has $numRelations relationships", self::DELETE_FAILED);
+			}
+			else {
+				$mongo = new \MongoClient();
+				$db = $mongo->acd;
+				$mongoCollection = $db->selectCollection('content');
+				$oId = new \MongoId($idContent);
+				$mongoCollection->remove(array('_id' => $oId));
+			}
 		}
 
 		$this->updateRelations($db,  \MongoDBRef::create('content', $oId), array());

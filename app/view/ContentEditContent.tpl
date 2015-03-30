@@ -2,13 +2,15 @@
 	$title = (isset($bNew) && $bNew === true)
 		? 'New content'
 		: 'Edit content <spam class="structure_name">'.htmlspecialchars($structure->getName()).'</spam>';
+	$relationCount = $content->getCountParents();
+	$deleteDisabled = $relationCount > 0 ? ' disabled="disabled"' : '';
 ?>
 <main>
 	<h2><?=$title?></h2>
 	<?php
 		if($content->getCountParents() !== null) {
 	?>
-		<p>#Relations: <?=$content->getCountParents()?></p>
+		<p>#Relations: <?=$relationCount?></p>
 	<?php
 		}
 	?>
@@ -53,7 +55,7 @@
 			if($content->getId()) {
 		?>
 			<input type="submit" name="a" value="clone" class="button clone"/>
-			<input type="submit" name="a" value="delete" class="button delete"/>
+			<input type="submit" name="a" value="delete" class="button delete"<?=$deleteDisabled?>/>
 		<?php
 			}
 		?>
