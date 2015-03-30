@@ -68,3 +68,10 @@ CREATE TABLE `acd`.`relation` (
   `parent` INT NOT NULL,
   `child` INT NOT NULL,
   INDEX `related_contents` (`parent` ASC, `child` ASC));
+
+CREATE  TABLE `acd`.`structure` (
+  `id` VARCHAR(64) NOT NULL ,
+  `name` VARCHAR(256) NOT NULL ,
+  `storage` ENUM('text/plain', 'mysql', 'mongodb') NOT NULL ,
+  `fields` BLOB NOT NULL ,
+  PRIMARY KEY (`id`) );

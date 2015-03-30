@@ -3,12 +3,30 @@ namespace Acd\Model;
 
 class StructuresDo extends Collection 
 {
-	public function loadFromFile($path = null) {
-		if ($path === null) {
-			$path = DIR_DATA.'/structures.json';
+	private function getManager() {
+		switch (\Acd\conf::$DEFAULT_STORAGE) {
+			case \Acd\conf::$STORAGE_TYPE_TEXTPLAIN:
+				//echo "tipo texto";
+				return new PersistentStructureManagerTextPlain();
+				break;
+			case \Acd\conf::$STORAGE_TYPE_MONGODB:
+				//echo "tipo mongo";
+				return new PersistentStructureManagerMongoDB();
+				break;
+			case \Acd\conf::$STORAGE_TYPE_MYSQL:
+				//echo "tipo mysql";
+				return new PersistentStructureManagerMySql();
+				break;
+			default:
+				throw new PersistentStorageUnknownInvalidException("Invalid type of persistent storage ".$this->getStorage().".");
+				break;
 		}
-		$content = file_get_contents($path);
-		$json_a = json_decode($content, true);
+	}
+
+	public function loadFromFile($path = null) {
+		$dataManager = $this->getManager();
+		$json_a = $dataManager->loadAll();
+		+d($json_a);
 		// TODO: controlar errores
 		foreach ($json_a as $estructura) {
 			foreach ($estructura as $key => $value) {
@@ -24,26 +42,8 @@ class StructuresDo extends Collection
 	}
 
 	public function save($path = null) {
-		if ($path === null) {
-			$path = DIR_DATA.'/structures.json';
-		}
-		/* Construct the json */
-		$data = $this->tokenizeData();
-		$tempPath = DIR_DATA.'/temp.json';
-		$somecontent = json_encode($data);
-
-		if (!$handle = fopen($tempPath, 'a')) {
-			 echo "Cannot open file ($tempPath)";
-			 exit;
-		}
-
-		// Write $somecontent to our opened file.
-		if (fwrite($handle, $somecontent) === FALSE) {
-			echo "Cannot write to file ($tempPath)";
-			exit;
-		}
-		fclose($handle);
-		rename($tempPath, $path);
+		$dataManager = $this->getManager();
+		$dataManager->save($this);
 	}
 
 	public function tokenizeData() {

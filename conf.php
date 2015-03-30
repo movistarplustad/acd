@@ -14,6 +14,7 @@ class conf {
 	public static $STORAGE_TYPE_TEXTPLAIN;
 	public static $STORAGE_TYPE_MONGODB;
 	public static $STORAGE_TYPE_MYSQL;
+	public static $DEFAULT_STORAGE;
 	public static $FIELD_TYPES;
 	public static $PERMISSION_PATH;
 	public static $USE_AUTHENTICATION;
@@ -38,6 +39,7 @@ conf::$STORAGE_TYPES = array(
 		conf::$STORAGE_TYPE_MONGODB => 'Mongo DB',
 		conf::$STORAGE_TYPE_MYSQL => 'MySql'
 	);
+conf::$DEFAULT_STORAGE = conf::$STORAGE_TYPE_MYSQL;
 
 conf::$PERMISSION_PATH = DIR_DATA.'/permission.json';
 conf::$USE_AUTHENTICATION = true;
