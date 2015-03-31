@@ -42,31 +42,28 @@ class PersistentStructureManagerMySql implements iPersistentStructureManager
 				$result[] = $documentFound;
 			}
 		}
-		d($documentFound);
-		return $documentFound;
-		$path = \ACD\conf::$DATA_PATH;
-		$content = file_get_contents($path);
-		d( json_decode($content, true));
-		return json_decode($content, true);
+		//+d($result);
+		return $result;
 	}
 	public function save($structuresDo) {
-		$path = \ACD\conf::$DATA_PATH;
-		/* Construct the json */
+		if (!$this->isInitialized()) {
+			$this->initialize();
+		}
 		$data = $structuresDo->tokenizeData();
-		$tempPath = DIR_DATA.'/temp.json';
-		$somecontent = json_encode($data);
-
-		if (!$handle = fopen($tempPath, 'a')) {
-			 echo "Cannot open file ($tempPath)";
-			 exit;
+		foreach ($structuresDo as $structure) {
+			$id = $this->mysqli->real_escape_string($structure->getId());
+			$name = $this->mysqli->real_escape_string($structure->getName());
+			$storage = $this->mysqli->real_escape_string($structure->getStorage());
+			//d(json_encode($structure->tokenizeData()[$structure->getId()]['fields']));
+			$fields = $this->mysqli->real_escape_string(json_encode($structure->tokenizeData()[$structure->getId()]['fields']));
+			$select = "INSERT INTO structure (id, name, storage, fields)
+				VALUE ('$id', '$name', '$storage', '$fields')
+				ON DUPLICATE KEY UPDATE
+				id = '$id', name = '$name', storage = '$storage', fields = '$fields'";
+			if ($this->mysqli->query($select) !== true) {
+				throw new PersistentManagerMySqlException("Update failed when save structure", self::SAVE_FAILED);
+			}
 		}
-
-		// Write $somecontent to our opened file.
-		if (fwrite($handle, $somecontent) === FALSE) {
-			throw new PersistentStructureManagerMySqlException("Cannot write to file ($tempPath)", self::SAVE_FAILED);
-			exit;
-		}
-		fclose($handle);
-		rename($tempPath, $path);
+		return;
 	}
 }

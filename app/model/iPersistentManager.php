@@ -7,6 +7,7 @@ interface iPersistentManager
 	const UPDATE_FAILED = 2;
 	const INSERT_FAILED = 4;
 	const DELETE_FAILED = 8;
+	const SAVE_FAILED = 16;
 
 	public function initialize($structureDo); // Prepare storage to use
 	public function isInitialized($structureDo); // Inform if the storage it's ready to use

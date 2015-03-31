@@ -39,7 +39,7 @@ conf::$STORAGE_TYPES = array(
 		conf::$STORAGE_TYPE_MONGODB => 'Mongo DB',
 		conf::$STORAGE_TYPE_MYSQL => 'MySql'
 	);
-conf::$DEFAULT_STORAGE = conf::$STORAGE_TYPE_MYSQL;
+conf::$DEFAULT_STORAGE = conf::$STORAGE_TYPE_MONGODB;
 
 conf::$PERMISSION_PATH = DIR_DATA.'/permission.json';
 conf::$USE_AUTHENTICATION = true;

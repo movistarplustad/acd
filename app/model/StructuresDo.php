@@ -26,7 +26,7 @@ class StructuresDo extends Collection
 	public function loadFromFile($path = null) {
 		$dataManager = $this->getManager();
 		$json_a = $dataManager->loadAll();
-		+d($json_a);
+		//+d($json_a);
 		// TODO: controlar errores
 		foreach ($json_a as $estructura) {
 			foreach ($estructura as $key => $value) {

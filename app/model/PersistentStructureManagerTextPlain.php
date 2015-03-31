@@ -7,6 +7,7 @@ class PersistentStructureManagerTextPlain implements iPersistentStructureManager
 	public function loadAll() {
 		$path = \ACD\conf::$DATA_PATH;
 		$content = file_get_contents($path);
+		//+d(json_decode($content, true));
 		return json_decode($content, true);
 	}
 	public function save($structuresDo) {
