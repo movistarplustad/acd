@@ -10,6 +10,17 @@ class PersistentStructureManagerTextPlain implements iPersistentStructureManager
 		//+d(json_decode($content, true));
 		return json_decode($content, true);
 	}
+	public function loadById($id) {
+		$allStructures = $this->loadAll();
+		$structure = [];
+
+		foreach ($allStructures as $structure) {
+				if(strval(key($structure)) === $id) {
+					$structure[$id]['id'] = $id;
+				}
+		}
+		return $structure;
+	}
 	public function save($structuresDo) {
 		$path = \ACD\conf::$DATA_PATH;
 		/* Construct the json */

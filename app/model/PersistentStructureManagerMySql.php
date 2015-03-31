@@ -36,6 +36,7 @@ class PersistentStructureManagerMySql implements iPersistentStructureManager
 		if ($dbResult = $this->mysqli->query($select)) {
 			while($obj = $dbResult->fetch_object()){
 				$documentFound = array();
+				$documentFound[$obj->id]['id'] = $obj->id;
 				$documentFound[$obj->id]['name'] = $obj->name;
 				$documentFound[$obj->id]['storage'] = $obj->storage;
 				$documentFound[$obj->id]['fields'] = json_decode( $obj->fields, true);
@@ -45,11 +46,32 @@ class PersistentStructureManagerMySql implements iPersistentStructureManager
 		//+d($result);
 		return $result;
 	}
+	public function loadById($id) {
+		if (!$this->isInitialized()) {
+			$this->initialize();
+		}
+		$id = $this->mysqli->real_escape_string($id);
+		$select = "SELECT id, name, storage, fields FROM structure WHERE id = '$id'";
+		if ($dbResult = $this->mysqli->query($select)) {
+			while($obj = $dbResult->fetch_object()){
+				$documentFound = array();
+				$documentFound[$obj->id]['id'] = $obj->id;
+				$documentFound[$obj->id]['name'] = $obj->name;
+				$documentFound[$obj->id]['storage'] = $obj->storage;
+				$documentFound[$obj->id]['fields'] = json_decode( $obj->fields, true);
+			}
+		}
+		return $documentFound;
+	}
 	public function save($structuresDo) {
 		if (!$this->isInitialized()) {
 			$this->initialize();
 		}
-		$data = $structuresDo->tokenizeData();
+		// TODO ir más finos en bbdd que borrar todo y volver a guardarlo
+		$select = "DELETE FROM structure";
+		if ($this->mysqli->query($select) !== true) {
+			throw new PersistentManagerMySqlException("Update failed when empty old structures", self::SAVE_FAILED);
+		}
 		foreach ($structuresDo as $structure) {
 			$id = $this->mysqli->real_escape_string($structure->getId());
 			$name = $this->mysqli->real_escape_string($structure->getName());

@@ -44,7 +44,7 @@ switch ($accion) {
 				//$n = 0; $n < $numFields; $n++) {
 				if (!isset($fields[$idField]['delete'])) {
 					$field = new Model\FieldDo();
-					$newId = $fields[$idField]['id'] === '' ? $field->generateId($fields[$idField]['name']) : $fields[$idField]['id'];
+					$newId = ($fields[$idField]['id'] === ''  || $fields[$idField]['id'] === $field::EMPTY_ID )? $field->generateId($fields[$idField]['name']) : $fields[$idField]['id'];
 					$field->setId($newId);
 					$field->setType($fields[$idField]['type']);
 					$field->setName($fields[$idField]['name']);

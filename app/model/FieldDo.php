@@ -4,6 +4,8 @@ namespace Acd\Model;
 class TypeKeyInvalidException extends \exception {}
 class FieldDo
 {
+	const EMPTY_ID = '__NEW';
+
 	const TYPE_TEXT_SIMPLE = 'text_simple';
 	const TYPE_TEXT_MULTILINE = 'text_multiline';
 	const TYPE_INTEGER = 'integer';
@@ -179,8 +181,9 @@ class FieldDo
 		*/
 	}
 	public function tokenizeData() {
+		$id = $this->getId() ? $this->getId() : self::EMPTY_ID;
 		return array(
-			$this->getId() => array(
+			$id => array(
 				'type' => $this->getType(),
 				'name' => $this->getName(),
 				'value' => $this->getValue(),

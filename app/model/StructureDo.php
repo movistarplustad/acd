@@ -56,6 +56,27 @@ class StructureDo
 		return $this->fields;
 	}
 
+	// TODO Repetido en StructuresDO
+	private function getManager() {
+		switch (\Acd\conf::$DEFAULT_STORAGE) {
+			case \Acd\conf::$STORAGE_TYPE_TEXTPLAIN:
+				//echo "tipo texto";
+				return new PersistentStructureManagerTextPlain();
+				break;
+			case \Acd\conf::$STORAGE_TYPE_MONGODB:
+				//echo "tipo mongo";
+				return new PersistentStructureManagerMongoDB();
+				break;
+			case \Acd\conf::$STORAGE_TYPE_MYSQL:
+				//echo "tipo mysql";
+				return new PersistentStructureManagerMySql();
+				break;
+			default:
+				throw new PersistentStorageUnknownInvalidException("Invalid type of persistent storage ".$this->getStorage().".");
+				break;
+		}
+	}
+
 	public function load($data) {
 		$this->setName($data['name']);
 		$this->setStorage($data['storage']);
@@ -66,22 +87,15 @@ class StructureDo
 		}
 	}
 
-	public function 	loadFromFile($path = null) {
+	public function loadFromFile($path = null) {
+		$dataManager = $this->getManager();
+		//TODO
+		$document = $dataManager->loadById($this->getId());
 		$bLoaded = false;
-		if ($path === null) {
-			$path = DIR_DATA.'/structures.json';
-		}
-		$content = file_get_contents($path);
-		$json_a = json_decode($content, true);
-		// TODO: controlar errores
-		foreach ($json_a as $estructura) {
-			foreach ($estructura as $key => $value) {
-				if(strval($key) === $this->getId()) {
-					$this->setId($key);
-					$this->load($value);
-					$bLoaded = true;
-				}
-			}
+		if ($document) {
+			//$this->setId($document['id']);
+			$this->load($document[$this->getId()]);
+			$bLoaded = true;
 		}
 
 		return $bLoaded;

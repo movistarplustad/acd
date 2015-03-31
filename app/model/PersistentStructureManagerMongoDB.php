@@ -37,35 +37,43 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 		foreach ($cursor as $documentFound) {
 			$id = $documentFound['_id'];
 			unset($documentFound['_id']);
-			$result[$id] = array($documentFound);
+			$result[] = array($id =>$documentFound);
 		}
 		//+d($result);
+		return $result;
+	}
+	public function loadById($id) {
+		if (!$this->isInitialized()) {
+			$this->initialize();
+		}
+		$mongoCollection = $this->db->selectCollection('structure');
+		$documentFound = $mongoCollection->findOne(array("_id" => $id));
+		// TODO controlar errores
+		$documentFound['id'] = $id;
+		unset($documentFound['_id']);
+		$result = array();
+		$result[$id] = $documentFound;
+
 		return $result;
 	}
 	public function save($structuresDo) {
 		if (!$this->isInitialized()) {
 			$this->initialize();
 		}
+		$mongoCollection = $this->db->selectCollection('structure');
+		//$data = $structuresDo->tokenizeData();
+		// TODO ir más finos en bbdd que borrar todo y volver a guardarlo
+		$mongoCollection->remove(array()); 
+		foreach ($structuresDo as $structure) {
+			$id = $structure->getId();
+			$insert = $structure->tokenizeData()[$id];
+			$insert['_id'] = $id;
+			//d($insert);
+			$mongoCollection->update(array('_id' => $id), $insert, array('upsert' => true));
+
+		}
 		//db.structure.update({'_id' : 'chat_tienda'},{'_id' : 'chat_tienda',       "name": "Chat de tienda online Mongo", "storage" : "mongodb", 'fieds' : []}, {upsert :true})
-		dd("TODO");
-		$path = \ACD\conf::$DATA_PATH;
-		/* Construct the json */
-		$data = $structuresDo->tokenizeData();
-		$tempPath = DIR_DATA.'/temp.json';
-		$somecontent = json_encode($data);
-
-		if (!$handle = fopen($tempPath, 'a')) {
-			 echo "Cannot open file ($tempPath)";
-			 exit;
-		}
-
-		// Write $somecontent to our opened file.
-		if (fwrite($handle, $somecontent) === FALSE) {
-			throw new PersistentStructureManagerTextPlainException("Cannot write to file ($tempPath)", self::SAVE_FAILED);
-			exit;
-		}
-		fclose($handle);
-		rename($tempPath, $path);
+		//$mongoCollection->update(array('_id' => $oId), array('$set' => $insert), array('upsert' => true));
 	}
 }
 /*
