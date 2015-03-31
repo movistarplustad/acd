@@ -89,12 +89,10 @@ class StructureDo
 
 	public function loadFromFile($path = null) {
 		$dataManager = $this->getManager();
-		//TODO
 		$document = $dataManager->loadById($this->getId());
 		$bLoaded = false;
 		if ($document) {
-			//$this->setId($document['id']);
-			$this->load($document[$this->getId()]);
+			$this->load($document);
 			$bLoaded = true;
 		}
 

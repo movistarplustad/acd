@@ -55,10 +55,10 @@ class PersistentStructureManagerMySql implements iPersistentStructureManager
 		if ($dbResult = $this->mysqli->query($select)) {
 			while($obj = $dbResult->fetch_object()){
 				$documentFound = array();
-				$documentFound[$obj->id]['id'] = $obj->id;
-				$documentFound[$obj->id]['name'] = $obj->name;
-				$documentFound[$obj->id]['storage'] = $obj->storage;
-				$documentFound[$obj->id]['fields'] = json_decode( $obj->fields, true);
+				$documentFound['id'] = $obj->id;
+				$documentFound['name'] = $obj->name;
+				$documentFound['storage'] = $obj->storage;
+				$documentFound['fields'] = json_decode( $obj->fields, true);
 			}
 		}
 		return $documentFound;

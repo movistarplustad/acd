@@ -12,14 +12,15 @@ class PersistentStructureManagerTextPlain implements iPersistentStructureManager
 	}
 	public function loadById($id) {
 		$allStructures = $this->loadAll();
-		$structure = [];
 
+		$result = [];
 		foreach ($allStructures as $structure) {
 				if(strval(key($structure)) === $id) {
-					$structure[$id]['id'] = $id;
+					$result = $structure[$id];
+					$result['id'] = $id;
 				}
 		}
-		return $structure;
+		return $result;
 	}
 	public function save($structuresDo) {
 		$path = \ACD\conf::$DATA_PATH;

@@ -51,10 +51,8 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 		// TODO controlar errores
 		$documentFound['id'] = $id;
 		unset($documentFound['_id']);
-		$result = array();
-		$result[$id] = $documentFound;
 
-		return $result;
+		return $documentFound;
 	}
 	public function save($structuresDo) {
 		if (!$this->isInitialized()) {
