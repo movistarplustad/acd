@@ -82,6 +82,8 @@ class PersistentManagerMySql implements iPersistentManager
 			$contentDo->setId($this->mysqli->insert_id);
 		}
 
+		$bChildsRelated = false;
+		$oIdChildsRelated = [];
 		foreach ($structureDo->getFields() as $field) {
 			switch ($field->getType()) {
 				case $field::TYPE_CONTENT:
@@ -90,6 +92,7 @@ class PersistentManagerMySql implements iPersistentManager
 					if ($child) {
 						$oIdChildsRelated[] = $child; // For table relations
 					}
+					$bChildsRelated = true;
 					break;
 				case $field::TYPE_COLLECTION:
 					// Collection relation
@@ -99,11 +102,12 @@ class PersistentManagerMySql implements iPersistentManager
 							$oIdChildsRelated[] = $child;
 						}
 					}
+					$bChildsRelated = true;
 					break;
 			}
 		}
 
-		if(isset($oIdChildsRelated)) {
+		if($bChildsRelated) {
 			$this->updateRelations($contentDo->getId(), $oIdChildsRelated);
 		}
 

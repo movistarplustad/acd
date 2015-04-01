@@ -27,7 +27,10 @@ class PersistentManagerMongoDB implements iPersistentManager
 		if ($this->isInitialized($structureDo)) {
 			switch ($query->getType()) {
 				case 'id':
-					return $this->loadById($structureDo, $query);
+					return $this->loadById($structureDo, $query->getCondition());
+					break;
+				case 'id-deep':
+					return $this->loadIdDepth($structureDo, $query);
 					break;
 				case 'all':
 					return $this->loadAll($structureDo, $query);
@@ -63,6 +66,8 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$insert['id_structure'] = $structureDo->getId();
 		// Replace relations by MongoDBRefs
 		//d($structureDo->getFields(), $contentDo->getFields());
+		$bChildsRelated = false;
+		$oIdChildsRelated = [];
 		foreach ($structureDo->getFields() as $field) {
 			$key = $field->getName();
 			$value = $insert['data'][$key];
@@ -75,6 +80,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 	
 						$oIdChildsRelated[] = $insert['data'][$key]['ref']; // For table relations
 					}
+					$bChildsRelated = true;
 					break;
 				case $field::TYPE_COLLECTION:
 					// Collection relation
@@ -92,6 +98,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 						'id_structure' => self::STRUCTURE_TYPE_COLLECTION,
 						'ref' => $value
 						];
+					$bChildsRelated = true;
 					break;
 				default:
 					// Other type no treatment is necessary
@@ -110,8 +117,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$contentDo->setId($insert['_id']);
 			$oId = new \MongoId($insert['_id']);
 		}
-
-		if(isset($oIdChildsRelated)) {
+		if($bChildsRelated) {
 			$this->updateRelations($db, \MongoDBRef::create('content', $oId), $oIdChildsRelated);
 		}
 
@@ -155,8 +161,8 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$this->updateRelations($db,  \MongoDBRef::create('content', $oId), array());
 	}
 
-	private function loadById($structureDo, $query) {
-		$id = $query->getCondition();
+	private function loadById($structureDo, $id) {
+		//$id = $query->getCondition();
 		// TODO revisar
 		$mongo = new \MongoClient();
 		$db = $mongo->acd;
@@ -265,7 +271,12 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		return $document;
 	}
-	private function loadDepth ($structureDo, $query) {
+	private function loadIdDepth ($structureDo, $query) {
+		$idContent = $query->getCondition('id');
+		$depth = $query->getCondition('depth');
+		$depth = $query->getDepth();
+		d($idContent, $depth);
+		return $this->loadById($structureDo, $idContent);
 	}
 
 	private function loadAll($structureDo, $query) {

@@ -47,7 +47,7 @@ switch ($action) {
 
 		$contentLoader = new Model\ContentLoader();
 		$contentLoader->setId($id);
-		$contents = $contentLoader->loadContent('all');
+		$contents = $contentLoader->loadContents('all');
 		$contentOu->setContents($contents);
 
 		$skeletonOu = new View\BaseSkeleton();
@@ -117,7 +117,7 @@ switch ($action) {
 
 		$contentLoader = new Model\ContentLoader();
 		$contentLoader->setId($idStructureType);
-		$contents = $contentLoader->loadContent('id+countParents', $id);
+		$contents = $contentLoader->loadContents('id+countParents', $id);
 		$content = $contents->get($id); // TODO cambiar por next / first...
 		//dd($contentLoader->getFields(),$structure, $content);
 

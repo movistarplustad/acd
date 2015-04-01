@@ -28,7 +28,7 @@ class content extends \PHPUnit_Framework_TestCase
 	public function testLoadContentById() {
 		$cl = new Model\ContentLoader();
 		$cl->setId('estructura_texto');
-		$colContent = $cl->loadContent('byId', '1');
+		$colContent = $cl->loadContents('byId', '1');
 		
 		$this->assertEquals('structure foo', $colContent);
 	}
@@ -76,10 +76,10 @@ class content extends \PHPUnit_Framework_TestCase
 		$content->setId('id-demo');
 		$content->setData('Título', 'El campo Título');
 		$cl->saveContent($content);
-		$colContent = $cl->loadContent('id', 'id-demo');
+		$colContent = $cl->loadContents('id', 'id-demo');
 
 		$cl->deleteContent('id-demo');
-		$colContent = $cl->loadContent('id', 'id-demo');
+		$colContent = $cl->loadContents('id', 'id-demo');
 
 		$this->assertNull($colContent);
 	}

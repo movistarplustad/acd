@@ -40,13 +40,13 @@ class ContentLoader extends StructureDo
 				break;
 		}
 	}
-	public function loadContent($method, $params = null) {
+	public function loadContents($method, $params = null) {
 		switch ($method) {
 			case 'id+countParents':
-				$content = $this->loadContent('id', $params);
+				$content = $this->loadContents('id', $params);
 
 				// Set the relations number to content, and content is contents->get($id)
-				$content->get($params)->setCountParents($this->loadContent('countParents', $params));
+				$content->get($params)->setCountParents($this->loadContents('countParents', $params));
 
 				return $content;
 			break;

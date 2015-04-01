@@ -21,8 +21,13 @@ class Query
 	public function setCondition($condition) {
 		$this->condition = $condition;
 	}
-	public function getCondition() {
-		return $this->condition;
+	public function getCondition($condition = null) {
+		if (is_null($condition)) {
+			return $this->condition;
+		}
+		else {
+			return @$this->condition[$condition] ?: null;
+		}
 	}
 	public function setLimits($limits) {
 		$this->limits = $limits;

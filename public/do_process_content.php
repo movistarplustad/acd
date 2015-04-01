@@ -14,7 +14,7 @@ $fields = isset($_POST['field']) ? $_POST['field'] : array();
 
 $contentLoader = new \ACD\Model\ContentLoader();
 $contentLoader->setId($idStructure);
-$contents = $contentLoader->loadContent('id', $id);
+$contents = $contentLoader->loadContents('id', $id);
 //TODO Resolver mejor
 
 try {
