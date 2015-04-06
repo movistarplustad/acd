@@ -35,8 +35,11 @@ class PersistentManagerMySql implements iPersistentManager
 		}
 		switch ($query->getType()) {
 			case 'id':
-				return $this->loadById($structureDo, $query);
+				return $this->loadById($structureDo, $query->getCondition());
 				break;
+				case 'id-deep':
+					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth());
+					break;
 			case 'all':
 				return $this->loadAll($structureDo, $query);
 				case 'editorSearch':
@@ -151,14 +154,13 @@ class PersistentManagerMySql implements iPersistentManager
 		}
 	}
 
-	private function loadById($structureDo, $query) {
+	private function loadById($structureDo, $id) {
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
-		$id = $query->getCondition();
 
 		try {
-			$id = $this->mysqli->real_escape_string($query->getCondition());
+			$id = $this->mysqli->real_escape_string($id);
 			$select = "SELECT id, title, data FROM content WHERE id = '$id'";
 			if ($dbResult = $this->mysqli->query($select)) {
 				$result = new ContentsDo();
@@ -181,7 +183,48 @@ class PersistentManagerMySql implements iPersistentManager
 
 		return $result;
 	}
+	// Cache from structure data
+	// TODO Unify in iPersistentStructure Manager?
+	private function getStructure($id) {
+		if (!isset($this->structuresCache[$id])) {
+			$structure = new structureDo();
+			$structure->setId($id);
+			$structure->loadFromFile();
+			$this->structuresCache[$id] = $structure;
+		}
 
+		return $this->structuresCache[$id];
+	}
+	private function loadIdDepth ($structureDo, $idContent, $depth) {
+		if ($depth > 0) {
+			$depth--;
+			$content = $this->loadById($structureDo, $idContent)->get($idContent);
+			$fields = $content->getFields();
+			// Walk fields and fill their values
+			foreach ($fields as $field) {
+				switch($field->getType()) {
+					case 'content' :
+						// Has relation info?
+						if($field->getValue() && $field->getValue()['id_structure']) {
+							$structureTmp = $this->getStructure($field->getValue()['id_structure']);
+							$field->setValue($this->loadIdDepth ($structureTmp, $field->getValue()['ref'], $depth));
+						}
+						break;
+					case 'collection' :
+						$newVal = [];
+						foreach ($field->getValue() as $itemCollection) {
+							$structureTmp = $this->getStructure($itemCollection['id_structure']);
+							$newVal[] = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth);
+						}
+
+						$field->setValue($newVal);
+						break;
+				}
+			}
+
+			return $content;
+		}
+	}
 	private function loadAll($structureDo, $query) {
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
