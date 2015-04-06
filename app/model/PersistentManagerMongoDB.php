@@ -6,6 +6,7 @@ class PersistentManagerMongoDBException extends \exception {} // TODO Unificar
 class PersistentManagerMongoDB implements iPersistentManager
 {
 	const STRUCTURE_TYPE_COLLECTION = '_collection';
+	private $structuresCache;
 	public function initialize($structureDo) {
 		$mongo = new \MongoClient();
 		$db = $mongo->acd;
@@ -271,6 +272,18 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		return $document;
 	}
+	// Cache from structure data
+	// TODO Unify in iPersistentStructure Manager?
+	private function getStructure($id) {
+		if (!isset($this->structuresCache[$id])) {
+			$structure = new structureDo();
+			$structure->setId($id);
+			$structure->loadFromFile();
+			$this->structuresCache[$id] = $structure;
+		}
+
+		return $this->structuresCache[$id];
+	}
 	private function loadIdDepth ($structureDo, $idContent, $depth) {
 		if ($depth > 0) {
 			$depth--;
@@ -280,19 +293,19 @@ class PersistentManagerMongoDB implements iPersistentManager
 			foreach ($fields as $field) {
 				switch($field->getType()) {
 					case 'content' :
-						$structureTmp = new structureDo();
-						$structureTmp->setId($field->getValue()['id_structure']);
-						$structureTmp->loadFromFile();
-						$field->setValue($this->loadIdDepth ($structureTmp, $field->getValue()['ref'], $depth));
+						// Has relation info?
+						if($field->getValue() && $field->getValue()['id_structure']) {
+							$structureTmp = $this->getStructure($field->getValue()['id_structure']);
+							$field->setValue($this->loadIdDepth ($structureTmp, $field->getValue()['ref'], $depth));
+						}
 						break;
 					case 'collection' :
 						$newVal = [];
 						foreach ($field->getValue() as $itemCollection) {
-							$structureTmp = new structureDo();
-							$structureTmp->setId($itemCollection['id_structure']);
-							$structureTmp->loadFromFile();
+							$structureTmp = $this->getStructure($itemCollection['id_structure']);
 							$newVal[] = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth);
 						}
+
 						$field->setValue($newVal);
 						break;
 				}

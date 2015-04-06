@@ -76,6 +76,8 @@
 <?php
 				}
 ?>
+			// Manage pure data
+			var_dump($contentWithLevelOfDepth->tokenizeData());
 		</pre>
 	</article>
 </main>

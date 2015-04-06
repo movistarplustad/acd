@@ -44,7 +44,9 @@ class ContentDo
 		return $this->fields;
 	}
 	private function setFields($fields) {
-		$this->fields = $fields;
+		foreach ($fields as $field) {
+			$this->fields->add(clone $field);
+		}
 	}
 	public function getFieldValue($fieldName) {
 		try {
@@ -114,8 +116,26 @@ class ContentDo
 	}
 	public function tokenizeData() {
 		$aFieldsData = array();
-		// TODO usar fields
-		$aFieldsData = $this->getData();
+		// Test if the field value is a real value or reference
+		foreach ($this->getFields() as $field) {
+			switch ($field->getType()) {
+				case 'content':
+					$itemValue = $field->getValue();
+					$value = is_object($itemValue) ? $itemValue->tokenizeData() : $itemValue;
+					break;
+				case 'collection':
+					$value = [];
+					foreach ($field->getValue() as $itemValue) {
+						$value[] = is_object($itemValue) ? $itemValue->tokenizeData() : $itemValue;
+					}
+					break;
+				default:
+					$value = $field->getValue();
+					break;
+			}
+			$aFieldsData[$field->getName()] = $value;
+		}
+
 		return  array(
 			'id' => $this->getId(),
 			'title' => $this->getTitle(),
