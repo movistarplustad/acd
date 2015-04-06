@@ -57,4 +57,25 @@
 		<input type="hidden" name="a" value="<?=$actionValue?>"/>
 		<input type="submit" name="accion" value="save" class="button publish"/>
 	</form>
+
+
+	<article class="dev_sample">
+		<h1>Examples for developer</h1>		
+		<pre>
+			$contentLoader = new \ACD\Model\ContentLoader();
+			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
+			// Sample #1
+			$plainContent = $contentLoader->loadContents('id', $idContent);
+			// Sample #2
+			$contentWithLevelOfDepth = $contentLoader->loadContents('id-deep', ['id' => $idContent, 'depth' => 5]);
+			// Value of field
+<?php
+				foreach ($fields as $field) {
+?>
+			echo $plainContent->getFields()->getValue('<?=htmlspecialchars($field->getName())?>');
+<?php
+				}
+?>
+		</pre>
+	</article>
 </main>

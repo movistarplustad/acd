@@ -30,7 +30,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 					return $this->loadById($structureDo, $query->getCondition());
 					break;
 				case 'id-deep':
-					return $this->loadIdDepth($structureDo, $query);
+					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth());
 					break;
 				case 'all':
 					return $this->loadAll($structureDo, $query);
@@ -271,12 +271,35 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		return $document;
 	}
-	private function loadIdDepth ($structureDo, $query) {
-		$idContent = $query->getCondition('id');
-		$depth = $query->getCondition('depth');
-		$depth = $query->getDepth();
-		d($idContent, $depth);
-		return $this->loadById($structureDo, $idContent);
+	private function loadIdDepth ($structureDo, $idContent, $depth) {
+		if ($depth > 0) {
+			$depth--;
+			$content = $this->loadById($structureDo, $idContent)->get($idContent);
+			$fields = $content->getFields();
+			// Walk fields and fill their values
+			foreach ($fields as $field) {
+				switch($field->getType()) {
+					case 'content' :
+						$structureTmp = new structureDo();
+						$structureTmp->setId($field->getValue()['id_structure']);
+						$structureTmp->loadFromFile();
+						$field->setValue($this->loadIdDepth ($structureTmp, $field->getValue()['ref'], $depth));
+						break;
+					case 'collection' :
+						$newVal = [];
+						foreach ($field->getValue() as $itemCollection) {
+							$structureTmp = new structureDo();
+							$structureTmp->setId($itemCollection['id_structure']);
+							$structureTmp->loadFromFile();
+							$newVal[] = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth);
+						}
+						$field->setValue($newVal);
+						break;
+				}
+			}
+
+			return $content;
+		}
 	}
 
 	private function loadAll($structureDo, $query) {

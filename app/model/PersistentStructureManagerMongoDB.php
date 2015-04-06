@@ -39,7 +39,6 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 			unset($documentFound['_id']);
 			$result[] = array($id =>$documentFound);
 		}
-		//+d($result);
 		return $result;
 	}
 	public function loadById($id) {

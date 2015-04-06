@@ -19,6 +19,10 @@ class Query
 		return $this->type;
 	}
 	public function setCondition($condition) {
+		if(isset($condition['depth'])) {
+			$this->setDepth($condition['depth']);
+			unset($condition['depth']);
+		}
 		$this->condition = $condition;
 	}
 	public function getCondition($condition = null) {
