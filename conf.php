@@ -34,11 +34,23 @@ conf::$DATA_DIR_PATH = DIR_DATA.'/structures';
 conf::$STORAGE_TYPE_TEXTPLAIN  = 'text/plain';
 conf::$STORAGE_TYPE_MONGODB  = 'mongodb';
 conf::$STORAGE_TYPE_MYSQL  = 'mysql';
-conf::$STORAGE_TYPES = array(
-		conf::$STORAGE_TYPE_TEXTPLAIN => 'text/plain',
-		conf::$STORAGE_TYPE_MONGODB => 'Mongo DB',
-		conf::$STORAGE_TYPE_MYSQL => 'MySql'
-	);
+conf::$STORAGE_TYPES = [
+		conf::$STORAGE_TYPE_TEXTPLAIN => 
+			[
+				'name' => 'text/plain',
+				'disabled' => false
+			],
+		conf::$STORAGE_TYPE_MONGODB =>
+			[
+				'name' => 'Mongo DB',
+				'disabled' => false
+			],
+		conf::$STORAGE_TYPE_MYSQL =>
+			[
+				'name' => 'MySql',
+				'disabled' => false
+			]
+	];
 conf::$DEFAULT_STORAGE = conf::$STORAGE_TYPE_MONGODB;
 
 conf::$PERMISSION_PATH = DIR_DATA.'/permission.json';

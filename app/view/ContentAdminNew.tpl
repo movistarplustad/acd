@@ -13,7 +13,8 @@
 			$options = '';
 			foreach ($storageTypes as $key => $value) {
 				$selected = $storage === $key ? ' selected="selected"' : '';
-				$options .= '<option value="'.htmlspecialchars($key).'"'.$selected.'>'.htmlspecialchars($value).'</option>';
+				$disabled = $value['disabled'] ? ' disabled="disabled"' : '';
+				$options .= '<option value="'.htmlspecialchars($key).'"'.$selected.$disabled.'>'.htmlspecialchars($value['name']).'</option>';
 				
 			}
 			?>
