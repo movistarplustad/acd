@@ -1,7 +1,8 @@
 <!-- TODO -->
 <?php
-	@$fieldRef['ref']= $fieldRef['ref'] ?: ''; // TODO, porner el valor por defecto mejor  a nivel de clase
-	@$fieldRef['id_structure']= $fieldRef['id_structure'] ?: ''; 
+//	@$fieldRef['ref']= $fieldRef['ref'] ?: ''; // TODO, porner el valor por defecto mejor  a nivel de clase
+//	@$fieldRef['id_structure']= $fieldRef['id_structure'] ?: ''; 
+d($fieldRef);
 ?>
 <input type="hidden" name="field[<?=$id?>][id]" value="<?=htmlspecialchars($fieldName)?>"/>
 <input type="hidden" name="field[<?=$id?>][name]" value="<?=htmlspecialchars($fieldName)?>"/>

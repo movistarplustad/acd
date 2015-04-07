@@ -310,8 +310,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 						break;
 				}
 			}
-
-			return $content;
+			$result = new ContentsDo();
+			$result->add($content, $idContent);
+			return $result;
 		}
 	}
 

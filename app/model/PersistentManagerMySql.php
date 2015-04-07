@@ -221,8 +221,9 @@ class PersistentManagerMySql implements iPersistentManager
 						break;
 				}
 			}
-
-			return $content;
+			$result = new ContentsDo();
+			$result->add($content, $idContent);
+			return $result;
 		}
 	}
 	private function loadAll($structureDo, $query) {

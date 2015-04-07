@@ -108,6 +108,12 @@ class ContentDo
 		if (is_array($rawData['data'])){
 			foreach ($rawData['data'] as $key => $value) {
 				$this->getFields()->setValue($key, $value);
+				switch ($this->getFields()->get($key)->getType()) {
+					case 'content':
+					case 'collection':
+						$this->getFields()->setRef($key, $value);
+						break;
+				};
 			}
 			//d($this->getFields());
 		}

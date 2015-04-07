@@ -44,6 +44,7 @@ class ContentLoader extends StructureDo
 		switch ($method) {
 			case 'id+countParents':
 				$content = $this->loadContents('id', $params);
+				$content = $this->loadContents('id-deep', ['id' => $params, 'depth' => 2]);
 
 				// Set the relations number to content, and content is contents->get($id)
 				$content->get($params)->setCountParents($this->loadContents('countParents', $params));

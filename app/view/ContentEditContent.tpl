@@ -23,21 +23,16 @@
 		</div>
 		<div>
 			<?php
+			// TODO: ¡¡bastante enrevesado para estar dentro de un tpl!!
 			$fieldOU = new Acd\View\Field();
 			$fields = $structure->getFields();
 			$structure_fields = '';
 			$n = 0;
 			foreach ($fields as $field) {
-				$idField = $field->getName();
-				try {
-					$fieldFromContent = $content->getFields()->get($idField);
-					//+d($fieldFromContent->tokenizeData()[$idField]);
-					$field->loadData($idField, $fieldFromContent->tokenizeData()[$idField], false); // TODO: ¡¡bastante enrevesado para estar dentro de un tpl!!
-				}
-				catch( \Exception $e ) {
-					$field->loadData($idField, '', true);
-				}
-				$fieldOU->setField($field);
+				// Use structure field and fill with content field
+				$fieldValue = $content->getFields()->get($field->getName());
+
+				$fieldOU->setField($fieldValue);
 				$fieldOU->setId($n);
 				$fieldOU->setParent($content);
 				$structure_fields .= '<li>'.$fieldOU->render().'</li>';
