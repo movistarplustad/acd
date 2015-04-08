@@ -132,13 +132,13 @@ switch ($action) {
 				$modifiedField = $content->getFields()->get($modifiedFieldName);
 				//d($modifiedField->getType());
 				switch ($modifiedField->getType()) {
-					case Model\FieldDO::TYPE_CONTENT:
+					case Model\FieldDo::TYPE_CONTENT:
 						$newRef = [
 							'ref'=> $modifiedRef,
 							'id_structure' => $modifiedIdStructure
 						];
 						break;
-					case Model\FieldDO::TYPE_COLLECTION:
+					case Model\FieldDo::TYPE_COLLECTION:
 						$newRef = $modifiedField->getValue();
 
 						/* Modify or delete item */

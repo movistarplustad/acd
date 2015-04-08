@@ -53,7 +53,7 @@ switch ($action) {
 			$contentOu->setStructureName($estructura->getName());
 			$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
 			$contentOu->setStorage($estructura->getStorage());
-			$contentOu->setFieldTypes(Model\FieldDO::getAvailableTypes());
+			$contentOu->setFieldTypes(Model\FieldDo::getAvailableTypes());
 			$contentOu->setFields($estructura->getFields());
 		} catch (\Exception $e) {
 			/* Error, intentando editar una estructura que no existe */
@@ -82,7 +82,7 @@ switch ($action) {
 			$contentOu->setStructureName('[copy] '.$estructura->getName());
 			$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
 			$contentOu->setStorage($estructura->getStorage());
-			$contentOu->setFieldTypes(Model\FieldDO::getAvailableTypes());
+			$contentOu->setFieldTypes(Model\FieldDo::getAvailableTypes());
 			$contentOu->setFields($estructura->getFields());
 		}
 
