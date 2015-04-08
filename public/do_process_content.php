@@ -25,7 +25,7 @@ try {
 	}
 	else {
 		$structureFound = true;
-		$modified_content = $contents->getFirst();
+		$modified_content = $contents->one();
 	}
 } catch (\Exception $e) {
 	$structureFound = null;
