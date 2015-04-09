@@ -66,7 +66,7 @@ switch ($accion) {
 				//d($normalizedvalue);
 				$modified_content->setFieldValue($fields[$idField]['name'], $normalizedvalue);
 			}
-			//dd($fields, $modified_content);
+			dd($fields, $modified_content);
 			$modified_content = $contentLoader->saveContent($modified_content);
 			$id = $modified_content->getId();
 

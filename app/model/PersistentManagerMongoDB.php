@@ -289,7 +289,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 	private function loadIdDepth ($structureDo, $idContent, $depth) {
 		if ($depth > 0) {
 			$depth--;
-			$content = $this->loadById($structureDo, $idContent)->get($idContent);
+			$content = $this->loadById($structureDo, $idContent);
 			$fields = $content->getFields();
 			// Walk fields and fill their values
 			foreach ($fields as $field) {

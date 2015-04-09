@@ -138,6 +138,7 @@ class ContentDo
 
 		return  array(
 			'id' => $this->getId(),
+			'structure' => $this->getIdStructure(),
 			'title' => $this->getTitle(),
 			'data' => $aFieldsData
 		);
