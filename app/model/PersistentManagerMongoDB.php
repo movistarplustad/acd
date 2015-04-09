@@ -181,14 +181,16 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$contentFound->load($documentFound, $structureDo);
 			//+d($documentFound);
 			//+d($contentFound);
-			$result = new ContentsDo();
-			$result->add($contentFound, $id);
+			//$result = new ContentsDo();
+			//$result->add($contentFound, $id);
 		}
 		catch( \Exception $e ) {
-			$result = null;
+			//$result = null;
+			$contentFound = null;
 		}
 
-		return $result;
+		//return $result;
+		return $contentFound;
 	}
 
 	// Transform a mongodb document to normalized document (aseptic persistent storage)

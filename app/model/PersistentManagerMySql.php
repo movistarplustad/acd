@@ -163,7 +163,7 @@ class PersistentManagerMySql implements iPersistentManager
 			$id = $this->mysqli->real_escape_string($id);
 			$select = "SELECT id, title, data FROM content WHERE id = '$id'";
 			if ($dbResult = $this->mysqli->query($select)) {
-				$result = new ContentsDo();
+				//$result = new ContentsDo();
 				while($obj = $dbResult->fetch_object()){
 					$documentFound = array();
 					$documentFound['id'] = $obj->id;
@@ -173,15 +173,16 @@ class PersistentManagerMySql implements iPersistentManager
 					$contentFound = new ContentDo();
 					$contentFound->load($documentFound, $structureDo);
 					
-					$result->add($contentFound, $id);
+					//$result->add($contentFound, $id);
 				}
 			}
 		}
 		catch( \Exception $e ) {
-			$result = null;
+			$contentFound = null;
 		}
 
-		return $result;
+		//return $result;
+		return $contentFound;
 	}
 	// Cache from structure data
 	// TODO Unify in iPersistentStructure Manager?

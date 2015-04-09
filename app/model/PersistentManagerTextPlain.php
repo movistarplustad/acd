@@ -153,10 +153,11 @@ class PersistentManagerTextPlain implements iPersistentManager
 		if (isset($allElements[$id])) {
 			$contentFound = new ContentDo();
 			$contentFound->load($allElements[$id], $structureDo);
-			$result = new ContentsDo();
-			$result->add($contentFound, $id);
 
-			return $result;
+			return $contentFound;
+			//$result = new ContentsDo();
+			//$result->add($contentFound, $id);
+			//return $result;
 		}
 	}
 

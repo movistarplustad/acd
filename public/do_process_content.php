@@ -14,18 +14,21 @@ $fields = isset($_POST['field']) ? $_POST['field'] : array();
 
 $contentLoader = new \ACD\Model\ContentLoader();
 $contentLoader->setId($idStructure);
-$contents = $contentLoader->loadContents('id', $id);
+//$contents = $contentLoader->loadContents('id', $id);
+$content = $contentLoader->loadContents('id', $id);
 //TODO Resolver mejor
 
 try {
-	if (is_null($contents) || $contents->length() === 0) {
+	//if (is_null($contents) || $contents->length() === 0) {
+	if (is_null($content)) {
 		$structureFound = false;
 		$modified_content = new Model\ContentDo();
 		$modified_content->setIdStructure($idStructure);
 	}
 	else {
 		$structureFound = true;
-		$modified_content = $contents->one();
+		//$modified_content = $contents->one();
+		$modified_content = $content;
 	}
 } catch (\Exception $e) {
 	$structureFound = null;
