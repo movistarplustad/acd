@@ -19,7 +19,7 @@
 		<input type="hidden" name="id" value="<?=htmlspecialchars($content->getId())?>"/>
 		<input type="hidden" name="ids" value="<?=htmlspecialchars($content->getIdStructure())?>"/>
 		<div>
-			<label for="title">Title</label>: <input type="text" name="title" id="title" value="<?=htmlspecialchars($content->getTitle())?>"/>
+			<label for="title">Title</label>: <input type="text" name="title" id="title" value="<?=htmlspecialchars($content->getTitle())?>" required="required"/>
 		</div>
 		<div>
 			<?php

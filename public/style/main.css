@@ -223,6 +223,9 @@ input[readonly] {
 	color: #999;
 }
 /* Collection */
+.collection li {
+	width: 20em;
+}
 .ui-sortable {
 	padding: 0;
 	margin: 0;

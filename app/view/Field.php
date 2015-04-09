@@ -1,6 +1,5 @@
 <?php
 namespace Acd\View;
-//require_once (DIR_BASE.'/app/view/Template.php');
 // Output
 class Field extends Template {
 	const EXCEPTION_TEMPLATE_FORM_TYPE = 1;
@@ -60,7 +59,7 @@ class Field extends Template {
 	private function getFormTemplate() {
 		$type = $this->field->getType();
 		if (array_key_exists($type, $this->field->getAvailableTypes())) {
-			$tpl = DIR_TEMPLATES."/field/$type.tpl";
+			$tpl = \Acd\conf::$DIR_TEMPLATES."/field/$type.tpl";
 			//d($tpl);
 			return $tpl;
 		}

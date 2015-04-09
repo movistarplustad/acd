@@ -1,8 +1,6 @@
 <?php
 namespace Acd\Model;
 
-include_once (DIR_BASE.'/app/model/FieldsDo.php');
-
 class StorageKeyInvalidException extends \exception {}
 class StructureDo
 {

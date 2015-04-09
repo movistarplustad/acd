@@ -4,7 +4,7 @@
 	<form action="do_process_structure.php" method="post">
 		<input type="hidden" name="id" value="<?=htmlspecialchars($structureId)?>"/>
 		<div>
-			<label for="name">Name</label>: <input type="text" name="name" id="name" value="<?=htmlspecialchars($structureName)?>"/>
+			<label for="name">Name</label>: <input type="text" name="name" id="name" value="<?=htmlspecialchars($structureName)?>" required="required"/>
 		</div>
 		<div>
 			<?php

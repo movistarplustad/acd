@@ -1,8 +1,7 @@
 <?php
 namespace Acd;
 
-require ('../conf.php');
-require_once (DIR_BASE.'/app/model/Auth.php');
+require ('../autoload.php');
 
 $returnUrl = 'index.php';
 //session_start();

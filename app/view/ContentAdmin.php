@@ -1,6 +1,5 @@
 <?php
 namespace Acd\View;
-require_once (DIR_BASE.'/app/view/Template.php');
 // Output
 class ContentAdmin extends \Acd\View\Template
 {
@@ -49,20 +48,20 @@ class ContentAdmin extends \Acd\View\Template
 	public function render($tpl = '') {
 		switch ($this->getActionType()) {
 			case 'login':
-				$tpl = DIR_TEMPLATES.'/ContentLogin.tpl';
+				$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentLogin.tpl';
 				break;
 			case 'error':
-				$tpl = DIR_TEMPLATES.'/ContentError.tpl';
+				$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentError.tpl';
 				break;
 			case 'index':
-				$tpl = DIR_TEMPLATES.'/ContentAdminIndex.tpl';
+				$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentAdminIndex.tpl';
 				break;
 			case 'new':
-				$tpl = DIR_TEMPLATES.'/ContentAdminNew.tpl';
+				$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentAdminNew.tpl';
 				break;
 			case 'edit':
 			case 'clone':
-				$tpl = DIR_TEMPLATES.'/ContentAdminEdit.tpl';
+				$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentAdminEdit.tpl';
 				break;
 		}
 		return parent::render($tpl);

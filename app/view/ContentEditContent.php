@@ -1,6 +1,5 @@
 <?php
 namespace Acd\View;
-//require_once (DIR_BASE.'/app/view/Template.php');
 // Output
 class ContentEditContent extends Template {
 	public function __construct() {
@@ -29,7 +28,7 @@ class ContentEditContent extends Template {
 		$this->__set('resultDesc', $resultDesc);
 	}
 	public function render($tpl = '') {
-		$tpl = DIR_TEMPLATES.'/ContentEditContent.tpl';
+		$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentEditContent.tpl';
 		return parent::render($tpl);
 	}
 }

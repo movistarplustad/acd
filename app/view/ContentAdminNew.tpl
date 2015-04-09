@@ -3,10 +3,10 @@
 	<p class="result"><?=$resultDesc?></p>
 	<form action="do_process_structure.php" method="post">
 		<div>
-			<label for="id">Id</label>: <input type="text" name="id" id="id" value=""/>
+			<label for="id">Id</label>: <input type="text" name="id" id="id" value="" required="required"/>
 		</div>
 		<div>
-			<label for="name">Name</label>: <input type="text" name="name" id="name" value=""/>
+			<label for="name">Name</label>: <input type="text" name="name" id="name" value="" required="required"/>
 		</div>
 		<div>
 			<?php

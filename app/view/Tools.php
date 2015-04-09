@@ -1,6 +1,5 @@
 <?php
 namespace Acd\View;
-require_once (DIR_BASE.'/app/view/Template.php');
 // Output
 class Tools extends \Acd\View\Template {
 	public function setLogin($login) {

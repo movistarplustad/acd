@@ -1,10 +1,10 @@
 <?php
 namespace Acd;
 //Ficheros
-define('DIR_BASE', dirname(__FILE__));
-define('DIR_DATA', DIR_BASE.'/data');
-define('DIR_TEST', DIR_BASE.'/test');
-define('DIR_TEMPLATES', DIR_BASE.'/app/view');
+define(__NAMESPACE__ .'\DIR_BASE', dirname(__FILE__));
+define(__NAMESPACE__ .'\DIR_DATA', DIR_BASE.'/data');
+define(__NAMESPACE__ .'\DIR_TEST', DIR_BASE.'/test');
+define(__NAMESPACE__ .'\DIR_TEMPLATES', DIR_BASE.'/app/view');
 
 class conf {
 	public static $DIR_TEMPLATES;
@@ -38,7 +38,7 @@ conf::$STORAGE_TYPES = [
 		conf::$STORAGE_TYPE_TEXTPLAIN => 
 			[
 				'name' => 'text/plain',
-				'disabled' => false
+				'disabled' => true
 			],
 		conf::$STORAGE_TYPE_MONGODB =>
 			[
@@ -48,7 +48,7 @@ conf::$STORAGE_TYPES = [
 		conf::$STORAGE_TYPE_MYSQL =>
 			[
 				'name' => 'MySql',
-				'disabled' => false
+				'disabled' => true
 			]
 	];
 conf::$DEFAULT_STORAGE = conf::$STORAGE_TYPE_MONGODB;
