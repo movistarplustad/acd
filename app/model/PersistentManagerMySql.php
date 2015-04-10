@@ -99,10 +99,12 @@ class PersistentManagerMySql implements iPersistentManager
 					break;
 				case $field::TYPE_COLLECTION:
 					// Collection relation
-					foreach ($field->getValue() as $fieldValue) {
-						$child = $fieldValue['ref'];
-						if ($child) {
-							$oIdChildsRelated[] = $child;
+					if(is_array($field)) {
+						foreach ($field->getValue() as $fieldValue) {
+							$child = $fieldValue['ref'];
+							if ($child) {
+								$oIdChildsRelated[] = $child;
+							}
 						}
 					}
 					$bChildsRelated = true;
@@ -159,6 +161,7 @@ class PersistentManagerMySql implements iPersistentManager
 			$this->initialize($structureDo);
 		}
 
+		$contentFound = null;
 		try {
 			$id = $this->mysqli->real_escape_string($id);
 			$select = "SELECT id, title, data FROM content WHERE id = '$id'";

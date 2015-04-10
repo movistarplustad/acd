@@ -40,6 +40,13 @@ class ContentLoader extends StructureDo
 				break;
 		}
 	}
+	// Load structure
+	public function loadStructure() {
+		/* Get metainformation */
+		if (!$this->getStructureLoaded()) {
+			$this->setStructureLoaded($this->loadFromFile());
+		}
+	}
 	// TODO Need loadContent and loadConents?
 	public function loadContents($method, $params = null) {
 		switch ($method) {
@@ -54,9 +61,7 @@ class ContentLoader extends StructureDo
 			break;
 			default:
 				/* Get metainformation */
-				if (!$this->getStructureLoaded()) {
-					$this->setStructureLoaded($this->loadFromFile());
-				}
+				$this->loadStructure();
 				$persistentManager = $this->getManager();
 
 				$query = new Query();
@@ -70,17 +75,13 @@ class ContentLoader extends StructureDo
 	}
 	public function saveContent($contentDo) {
 		/* Get metainformation */
-		if (!$this->getStructureLoaded()) {
-			$this->setStructureLoaded($this->loadFromFile());
-		}
+		$this->loadStructure();
 		$persistentManager = $this->getManager();
 		$NewContentDo = $persistentManager->save($this, $contentDo);
 		return $NewContentDo;
 	}
 	public function deleteContent($id) {
-		if (!$this->getStructureLoaded()) {
-			$this->setStructureLoaded($this->loadFromFile());
-		}
+		$this->loadStructure();
 		$persistentManager = $this->getManager();
 
 		return $persistentManager->delete($this, $id);

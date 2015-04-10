@@ -22,8 +22,11 @@ try {
 	//if (is_null($contents) || $contents->length() === 0) {
 	if (is_null($content)) {
 		$structureFound = false;
+		$structure = new Model\StructureDo();
+		$structure->setId($idStructure);
+		$structure->loadFromFile();
 		$modified_content = new Model\ContentDo();
-		$modified_content->setIdStructure($idStructure);
+		$modified_content->buildSkeleton($structure);
 	}
 	else {
 		$structureFound = true;
@@ -40,33 +43,34 @@ switch ($accion) {
 	case 'save':
 			$modified_content->setTitle($title);
 			$numFields = count($fields);
-			foreach ($fields as $idField => $data) {
+			$formater = new Model\ValueFormater();
+			foreach ($fields as $key => $data) {
 				//$n = 0; $n < $numFields; $n++) {
-				@$fields[$idField]['value'] = $fields[$idField]['value'] ?: ''; // Forze set
+				$fieldId = $fields[$key]['id'];
+				$fieldType = $modified_content->getFieldType($fieldId);
+				@$fields[$key]['value'] = $fields[$key]['value'] ?: ''; // Forze set
 				// If get array of values and types the field is collection, preparte normalized value
-				if (is_array($fields[$idField]['value']) && is_array($fields[$idField]['type'])) {
+				if ($fieldType === 'collection' && is_array($fields[$key]['value']) && is_array($fields[$key]['type'])) {
 					$normalizedvalue = [];
-					foreach ($fields[$idField]['value'] as $key => $value) {
+					foreach ($fields[$key]['value'] as $keyValue => $value) {
 						$normalizedvalue[] = [
-							'ref'=> $fields[$idField]['value'][$key],
-							'id_structure' => $fields[$idField]['type'][$key]
+							'ref'=> $fields[$key]['value'][$keyValue],
+							'id_structure' => $fields[$key]['type'][$keyValue]
 							];
 					}
 				}
-				elseif (isset($fields[$idField]['value']) && isset($fields[$idField]['type'])) {
+				elseif ($fieldType === 'content' && isset($fields[$key]['value']) && isset($fields[$key]['type'])) {
 					// Field type relation
 					$normalizedvalue = [
-						'ref'=> $fields[$idField]['value'],
-						'id_structure' => $fields[$idField]['type']
+						'ref'=> $fields[$key]['value'],
+						'id_structure' => $fields[$key]['type']
 					];
 				}
 				else {
-					$normalizedvalue = $fields[$idField]['value'];
+					$normalizedvalue = $formater->decode($fields[$key]['value'], $fieldType, $formater::FORMAT_EDITOR);
 				}
-				//d($normalizedvalue);
-				$modified_content->setFieldValue($fields[$idField]['name'], $normalizedvalue);
+				$modified_content->setFieldValue($fieldId, $normalizedvalue);
 			}
-			dd($fields, $modified_content);
 			$modified_content = $contentLoader->saveContent($modified_content);
 			$id = $modified_content->getId();
 

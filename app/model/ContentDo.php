@@ -48,6 +48,13 @@ class ContentDo
 			$this->fields->add(clone $field);
 		}
 	}
+	public function getFieldType($fieldName) {
+		try {
+			return $this->getFields()->getType($fieldName);
+		} catch (KeyInvalidException $e) {
+			return '';
+		}
+	}
 	public function getFieldValue($fieldName) {
 		try {
 			return $this->getFields()->getValue($fieldName);
@@ -94,7 +101,7 @@ class ContentDo
 		return $this->countParents;
 	}
 	// With the data structure, build the skeleton of content
-	private function buildSkeleton($structure) {
+	public function buildSkeleton($structure) {
 		$this->setIdStructure($structure->getId());
 		$this->setFields($structure->getFields());
 	}

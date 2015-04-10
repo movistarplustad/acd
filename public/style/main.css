@@ -70,6 +70,9 @@ h1::after {
 #wrapper > main {
 	order: 1;
 }
+#wrapper > main {
+	min-width: 80%;
+}
 #wrapper,
 #wrapper > aside,
 #wrapper > main {
@@ -193,7 +196,6 @@ a:active {
 	padding: 0 0 0.5em 0;
 }
 .form_login .text label {
-
 	margin-right: 0.5em;
 	padding-top: 0.2em;
 	text-align: right;
@@ -224,7 +226,7 @@ input[readonly] {
 }
 /* Collection */
 .collection li {
-	width: 20em;
+
 }
 .ui-sortable {
 	padding: 0;
