@@ -10,12 +10,12 @@ class ValueFormater
 	const FORMAT_INTERNAL = 0;
 	const FORMAT_EDITOR = 1;
 
-	public function decode($value, $type, $format) {
+	public static function decode($value, $type, $format) {
 		switch ($format) {
 			case self::FORMAT_EDITOR:
 				switch ($type) {
 					case self::TYPE_DATE:
-						$valueDecode = \DateTime::createFromFormat('d-m-Y', $value);
+						$valueDecode = \DateTime::createFromFormat('Y-m-d', $value);
 						$valueDecode->setTime(0, 0, 0); 
 						return $valueDecode->getTimeStamp();
 						break;
@@ -29,17 +29,15 @@ class ValueFormater
 				break;
 		}
 	}
-	public function encode($value, $type, $format) {
-		switch ($format) {
-			case self::FORMAT_EDITOR:
-				switch ($type) {
-					case self::TYPE_DATE:
-						return date(DATE_ATOM, $value);
-						break;
-					default:
-						return $value;
-						break;
-			}
+	public static function encode($value, $type, $format) {
+		$formater[self::TYPE_DATE][self::FORMAT_EDITOR] = function ($value) {
+			return date('Y-m-d', $value);
+		};
+		if(isset($formater[$type][$format])) {
+			return $formater[$type][$format]($value);
+		}
+		else {
+			return $value;
 		}
 	}
 }

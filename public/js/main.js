@@ -27,7 +27,8 @@ var editor = {
 		if(inputElem.type === "text") {
 			$("input[type=date]")
 				.datepicker({
-					dateFormat: 'dd-mm-yy',
+					dateFormat: 'yy-mm-dd',
+					firstDay: 1,
 					dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
 					dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
 					monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
