@@ -106,13 +106,13 @@ class ValueFormater
 				return $result;
 			};
 			$formater[self::TYPE_DATE_TIME][self::FORMAT_EDITOR] = function ($value) {
-				return date('Y-m-d\Th:m:i\Z', $value);
+				return date('Y-m-d\TH:i:s\Z', $value);
 			};
 			$formater[self::TYPE_DATE_TIME_RANGE][self::FORMAT_EDITOR] = function ($aValue) {
 				$result = [];
 				foreach ($aValue as $value) {
 					if($value) {
-						$result[] = date('Y-m-d\Th:i:s\Z', $value);
+						$result[] = date('Y-m-d\TH:i:s\Z', $value);
 					}
 				}
 				$result = array_pad($result, 2, '');
