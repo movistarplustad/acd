@@ -22,18 +22,67 @@ var editor = {
 
 		/* Date fields */
 		/* Polyfill */
+		// 1990-12-31T23:59:60Z
 		var inputElem = document.createElement("input");
 		inputElem.setAttribute("type", "date");
 		if(inputElem.type === "text") {
-			$("input[type=date]")
-				.datepicker({
-					dateFormat: 'yy-mm-dd',
-					firstDay: 1,
-					dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-					dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
-					monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+			$("input[type=date]").datetimepicker({
+				lang:'es',
+				timepicker:false,
+				format:"Y-m-d",
+				onShow:function( ct , $input){
+					this.setOptions({
+						minDate: false,
+						maxDate: false
+					});
+					if ($input.hasClass("start")){
+						var value = $input.siblings("input[type=date]").val();
+//console.log("max"+value, Date.parseDate(value, "Y-m-d"),"max null");
+						this.setOptions({
+							maxDate: value ? Date.parseDate(value, "Y-m-d").dateFormat("Y/m/d") : false
+						})
+					}
+					if ($input.hasClass("end")){
+						var value = $input.siblings("input[type=date]").val();
+//console.log("min"+value, Date.parseDate(value, "Y-m-d"), "min null");
+						this.setOptions({
+							minDate: value ? Date.parseDate(value, "Y-m-d").dateFormat("Y/m/d") : false
+						})
+					}
+				}
+			}
+		)}
+		inputElem.setAttribute("type", "datetime");
+		if(inputElem.type === "text") {
+			$("input[type=datetime]").datetimepicker({
+				lang:'es',
+				step: 30,
+				dayOfWeekStart: 1,
+				format:"Y-m-dTH:i:sZ",
+				onShow:function( ct , $input){
+					this.setOptions({
+						minDate: false,
+						maxDate: false
+					});
+					if ($input.hasClass("start")){
+						var value = $input.siblings("input[type=date]").val();
+//console.log("max"+value, Date.parseDate(value, "Y-m-d"),"max null");
+						this.setOptions({
+							maxDate: value ? Date.parseDate(value, "Y-m-d").dateFormat("Y/m/d") : false
+						})
+					}
+					if ($input.hasClass("end")){
+						var value = $input.siblings("input[type=date]").val();
+//console.log("min"+value, Date.parseDate(value, "Y-m-d"), "min null");
+						this.setOptions({
+							minDate: value ? Date.parseDate(value, "Y-m-d").dateFormat("Y/m/d") : false
+						})
+					}
+				}
+
 				});
 		}
+
 	},
 	confirmDelete : function(e) {
 		var bDelete = window.confirm("remove permanently this element?");
