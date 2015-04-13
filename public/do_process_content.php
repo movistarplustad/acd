@@ -10,6 +10,7 @@ if ($accion == 'save' && $id == '') {
 }
 $idStructure = $_POST['ids'];
 $title = isset($_POST['title']) ? $_POST['title'] : null;
+$tags = isset($_POST['tags']) ? \Acd\Model\ValueFormater::decode($_POST['tags'] , \Acd\Model\ValueFormater::TYPE_TAGS, \Acd\Model\ValueFormater::FORMAT_EDITOR): array();
 $fields = isset($_POST['field']) ? $_POST['field'] : array();
 
 $contentLoader = new \ACD\Model\ContentLoader();
@@ -42,6 +43,7 @@ switch ($accion) {
 	case 'new':
 	case 'save':
 			$modified_content->setTitle($title);
+			$modified_content->setTags($tags);
 			$numFields = count($fields);
 			$formater = new Model\ValueFormater();
 			foreach ($fields as $key => $data) {

@@ -16,11 +16,19 @@
 	?>
 	<p class="result"><?=$resultDesc?></p>
 	<form action="do_process_content.php" method="post">
-		<input type="hidden" name="id" value="<?=htmlspecialchars($content->getId())?>"/>
-		<input type="hidden" name="ids" value="<?=htmlspecialchars($content->getIdStructure())?>"/>
-		<div>
-			<label for="title">Title</label>: <input type="text" name="title" id="title" value="<?=htmlspecialchars($content->getTitle())?>" required="required"/>
-		</div>
+		<fieldset class="internal">
+			<legend>Internal data</legend>
+			<input type="hidden" name="id" value="<?=htmlspecialchars($content->getId())?>"/>
+			<input type="hidden" name="ids" value="<?=htmlspecialchars($content->getIdStructure())?>"/>
+			<ul>
+				<li>
+					<label for="title">Title</label>: <input type="text" name="title" id="title" value="<?=htmlspecialchars($contentTitle)?>" required="required"/>
+				</li>
+				<li>
+					<label for="tags">Tags</label>: <input type="text" name="tags" id="tags" value="<?=htmlspecialchars($contentTags)?>"<?=$userRol?>/>
+				</li>
+			</ul>
+		</fieldset>
 		<div>
 			<?php
 			$fieldOU = new Acd\View\Field();
@@ -45,7 +53,7 @@
 				$n++;
 			}
 			?>
-			<fieldset>
+			<fieldset class="fields">
 				<legend>Fields</legend>
 				<ul class="fields"><?=$structure_fields?></ul>
 			</fieldset>

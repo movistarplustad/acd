@@ -176,6 +176,7 @@ switch ($action) {
 			$content->setTitle('[copy] '.$content->getTitle());
 		}
 		$contentOu->setContent($content);
+		$contentOu->setUserRol($_SESSION['rol']);
 		
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');

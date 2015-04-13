@@ -58,7 +58,7 @@ var editor = {
 				lang:'es',
 				step: 30,
 				dayOfWeekStart: 1,
-				format:"Y-m-dTH:i:sZ",
+				format:"Y-m-dTH:i:00Z",
 				onShow:function( ct , $input){
 					this.setOptions({
 						minDate: false,

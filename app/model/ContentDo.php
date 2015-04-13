@@ -2,11 +2,13 @@
 namespace Acd\Model;
 
 class ContentKeyInvalidException extends \exception {}
+class ContentDoException extends \exception {}
 class ContentDo
 {
 	private $id;
 	private $idStructure;
 	private $title;
+	private $tags;
 	//private $data; /* Array key/value of variable fields */
 	private $fields;
 	private $parent; /* ContentDo Relation in complex structures */
@@ -15,6 +17,7 @@ class ContentDo
 	public function __construct() {
 		$this->id = null;
 		$this->idStructure = null;
+		$this->tags = array();
 		$this->fields = new FieldsDo();
 		$this->parent = null;
 	}
@@ -36,6 +39,17 @@ class ContentDo
 	}
 	public function getTitle() {
 		return $this->title;
+	}
+	public function setTags($tags) {
+		if (is_array($tags)) {
+			$this->tags = $tags;
+		}
+		else {
+			throw new ContentDoException("Input data should be an array", 1);
+		}
+	}
+	public function getTags() {
+		return $this->tags;
 	}
 	public function addField($field) {
 		$this->getFields()->add($field);
@@ -108,6 +122,8 @@ class ContentDo
 	public function load($rawData, $structure = null) {
 		$this->setId($rawData['id']);
 		$this->setTitle($rawData['title']);
+		@$tags = $rawData['tags'] ?: [];
+		$this->setTags($tags);
 		if($structure !== null) {
 			$this->buildSkeleton($structure);
 		}
@@ -145,8 +161,9 @@ class ContentDo
 
 		return  array(
 			'id' => $this->getId(),
-			'structure' => $this->getIdStructure(),
+			'id_structure' => $this->getIdStructure(),
 			'title' => $this->getTitle(),
+			'tags' => $this->getTags(),
 			'data' => $aFieldsData
 		);
 	}

@@ -18,6 +18,7 @@ class FieldDo
 	const TYPE_DATE_TIME_RANGE = 'date_time_range';
 	const TYPE_COLLECTION = 'collection';
 	const TYPE_CONTENT = 'content';
+	// const TYPE_TAGS = 'tags'; // TODO do in future
 
 	private $id;
 	private $type;
