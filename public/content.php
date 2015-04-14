@@ -84,6 +84,7 @@ switch ($action) {
 		$content->setIdStructure($idStructureType);
 		$contentOu->setContent($content);
 		$contentOu->newContent(true);
+		$contentOu->setUserRol($_SESSION['rol']);
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
