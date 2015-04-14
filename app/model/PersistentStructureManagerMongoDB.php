@@ -8,7 +8,7 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 	private $db;
 	public function initialize() {
 		try {
-			$this->mongo = new \MongoClient();
+			$this->mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
 			$this->db = $this->mongo->acd;
 			return true;
 		}
