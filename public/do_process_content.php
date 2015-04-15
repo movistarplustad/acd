@@ -68,6 +68,16 @@ switch ($accion) {
 						'id_structure' => $fields[$key]['type']
 					];
 				}
+				elseif ($fieldType === 'file' ) {
+					$normalizedvalue = [
+						'value' => $fields[$key]['value'],
+						'original_name' => $_FILES['field']['name'][$key]['file'],
+						'tmp_name' => $_FILES['field']['tmp_name'][$key]['file'],
+						'type' => $_FILES['field']['type'][$key]['file'],
+						'size' => $_FILES['field']['size'][$key]['file'],
+						'delete' => isset($fields[$key]['delete'])
+					];
+				}
 				else {
 					$normalizedvalue = $formater->decode($fields[$key]['value'], $fieldType, $formater::FORMAT_EDITOR);
 				}
