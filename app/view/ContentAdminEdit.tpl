@@ -65,10 +65,12 @@
 		<pre>
 			$contentLoader = new \ACD\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
-			// Sample #1
+			// Sample #1 by id, only content without related content
 			$plainContent = $contentLoader->loadContents('id', $idContent);
-			// Sample #2
+			// Sample #2 by id, with n related levels
 			$contentWithLevelOfDepth = $contentLoader->loadContents('id-deep', ['id' => $idContent, 'depth' => 5]);
+			// Sample #3 by any match tag, with n related levels
+			$contentByTagWithLevelOfDepth = $contentLoader->loadContents('tag-one-deep', ['tags' => ['portadacine', 'otros'], 'depth' => 2]);
 			// Value of field
 <?php
 				foreach ($fields as $field) {

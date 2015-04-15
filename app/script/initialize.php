@@ -11,10 +11,7 @@ $aCollections = [
 	'structure'
 	];
 $aCollectionsInDB = [];
-$aCollectionsInDBtmp = $db->getCollectionInfo();
-foreach ($aCollectionsInDBtmp as $value) {
-	$aCollectionsInDB[] = $value['name'];
-}
+$aCollectionsInDB = $db->getCollectionNames();
 foreach ($aCollections as $collectionName) {
 	if (in_array($collectionName, $aCollectionsInDB)) {
 		echo "$collectionName is ok\n";
@@ -34,5 +31,5 @@ var_dump($mongoCollection->getIndexInfo());
 // Content
 echo "Creating indexed in content collection\n";
 $mongoCollection = $db->selectCollection('content');
-$mongoCollection->createIndex (['tags' => 1]);
+$mongoCollection->createIndex (['id_structure' => 1, 'tags' => 1]);
 var_dump($mongoCollection->getIndexInfo());

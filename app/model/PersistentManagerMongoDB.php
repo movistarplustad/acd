@@ -25,6 +25,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 				case 'id-deep':
 					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth());
 					break;
+				case 'tag-one-deep': // First element matching with tag
+					return $this->loadTagOneDepth($structureDo, $query->getCondition('tags'), $query->getDepth());
+					break;
 				case 'all':
 					return $this->loadAll($structureDo, $query);
 					break;
@@ -108,7 +111,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$oId = new \MongoId($insert['_id']);
 		}
 		if($bChildsRelated) {
-			$this->updateRelations($db, \MongoDBRef::create('content', $oId), $oIdChildsRelated);
+			$this->updateRelations($this->db, \MongoDBRef::create('content', $oId), $oIdChildsRelated);
 		}
 
 		return $contentDo;
@@ -274,6 +277,20 @@ class PersistentManagerMongoDB implements iPersistentManager
 		}
 
 		return $this->structuresCache[$id];
+	}
+	private function loadTagOneDepth ($structureDo, $tags, $depth) {
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+		$mongoCollection = $this->db->selectCollection('content');
+		// db.content.find({"tags":{ $in : ["portadacine"]}, "id_structure" : "padre"}).pretty()
+		$documentFound = $mongoCollection->findOne(array('tags' => array('$in' => $tags), 'id_structure' => $structureDo->getId()));
+		if ($documentFound) {
+			return $this->loadIdDepth ($structureDo, (string) $documentFound['_id'], $depth);
+		}
+		else {
+			return null;
+		}
 	}
 	private function loadIdDepth ($structureDo, $idContent, $depth) {
 		if ($depth > 0) {
