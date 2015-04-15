@@ -234,6 +234,13 @@ h2 .structure_name {
 .fields li .button {
 	font-size: 0.75em;
 }
+.field.text {
+	width: 70%;
+}
+.field.textarea {
+	width: 70%;
+	height: 10em;
+}
 input[readonly] {
 	color: #999;
 }

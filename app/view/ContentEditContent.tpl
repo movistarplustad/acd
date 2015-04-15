@@ -15,14 +15,14 @@
 		}
 	?>
 	<p class="result"><?=$resultDesc?></p>
-	<form action="do_process_content.php" method="post">
+	<form action="do_process_content.php" method="post" enctype="multipart/form-data">
 		<fieldset class="internal">
 			<legend>Internal data</legend>
 			<input type="hidden" name="id" value="<?=htmlspecialchars($content->getId())?>"/>
 			<input type="hidden" name="ids" value="<?=htmlspecialchars($content->getIdStructure())?>"/>
 			<ul>
 				<li>
-					<label for="title">Title</label>: <input type="text" name="title" id="title" value="<?=htmlspecialchars($contentTitle)?>" required="required"/>
+					<label for="title">Title</label>: <input type="text" name="title" id="title" value="<?=htmlspecialchars($contentTitle)?>" required="required" class="field text"/>
 				</li>
 				<li>
 					<label for="tags">Tags</label>: <input type="text" name="tags" id="tags" value="<?=htmlspecialchars($contentTags)?>"<?=$userRol?>/>
