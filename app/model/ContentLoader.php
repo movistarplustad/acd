@@ -89,7 +89,8 @@ class ContentLoader extends StructureDo
 				$uploadData = $field->getValue();
 				$fieldId = $field->getId();
 				$fileName = md5($contentId);
-				$destinationPath = \Acd\conf::$DATA_CONTENT_PATH.'/'.urlencode($structureId ).'/'.urlencode($fieldId).'/'.substr($fileName, 0, 3);
+				$relativePath = urlencode($structureId ).'/'.urlencode($fieldId).'/'.substr($fileName, 0, 3);
+				$destinationPath = \Acd\conf::$DATA_CONTENT_PATH.'/'.$relativePath;
 				if($uploadData['delete']) {
 					if (is_writable($destinationPath.'/'.$fileName)){
 						unlink ($destinationPath.'/'.$fileName);
@@ -97,6 +98,11 @@ class ContentLoader extends StructureDo
 							rmdir($destinationPath);
 						}
 						// after the attribute 'delete' is removed
+						$uploadData['alt'] = '';
+						$uploadData['value'] = '';
+						$uploadData['original_name'] = '';
+						$uploadData['type'] = '';
+						$uploadData['size'] = '';
 					}
 				}
 				if($uploadData['tmp_name'] && $uploadData['size']) {
@@ -104,8 +110,12 @@ class ContentLoader extends StructureDo
 						mkdir($destinationPath, 0755, true);
 					}
 					move_uploaded_file($uploadData['tmp_name'], $destinationPath.'/'.$fileName);
-					d($contentId, 'save', $field, $destinationPath, $field->getValue());
+					$uploadData['value'] = $relativePath.'/'.$fileName;
 				}
+				unset($uploadData['tmp_name']);
+				unset($uploadData['delete']);
+				$field->setValue($uploadData);
+				//d($contentId, $field, $uploadData, $field->getValue());
 			}
 		}
 
@@ -115,7 +125,29 @@ class ContentLoader extends StructureDo
 		$this->loadStructure();
 		$persistentManager = $this->getManager();
 
+		$contentDo = $this->loadContents('id', $id);
+		$this->deleteUpload($contentDo);
+
 		return $persistentManager->delete($this, $id);
+	}
+	private function deleteUpload($contentDo) {
+		$contentId = $contentDo->getId();
+		$structureId = $contentDo->getIdStructure();
+		foreach ($contentDo->getFields() as $field) {
+			if ($field->getType() === $field::TYPE_FILE){
+				// TODO unify with saveUpload
+				$fieldId = $field->getId();
+				$fileName = md5($contentId);
+				$relativePath = urlencode($structureId ).'/'.urlencode($fieldId).'/'.substr($fileName, 0, 3);
+				$destinationPath = \Acd\conf::$DATA_CONTENT_PATH.'/'.$relativePath;
+				if (is_writable($destinationPath.'/'.$fileName)){
+					unlink ($destinationPath.'/'.$fileName);
+					if (count(scandir($destinationPath)) == 2) {
+						rmdir($destinationPath);
+					}
+				}
+			}
+		}
 	}
 
 	public function setLimits($limits) {

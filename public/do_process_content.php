@@ -71,12 +71,21 @@ switch ($accion) {
 				elseif ($fieldType === 'file' ) {
 					$normalizedvalue = [
 						'value' => $fields[$key]['value'],
-						'original_name' => $_FILES['field']['name'][$key]['file'],
-						'tmp_name' => $_FILES['field']['tmp_name'][$key]['file'],
-						'type' => $_FILES['field']['type'][$key]['file'],
-						'size' => $_FILES['field']['size'][$key]['file'],
+						'original_name' => $fields[$key]['original_name'],
+						'tmp_name' => '',
+						'type' => $fields[$key]['type'],
+						'size' => $fields[$key]['size'],
+						'alt' => $fields[$key]['alt'],
 						'delete' => isset($fields[$key]['delete'])
 					];
+					// If get a new upload file
+					if ($_FILES['field']['error'][$key]['file'] === UPLOAD_ERR_OK) {
+						$normalizedvalue['original_name'] = $_FILES['field']['name'][$key]['file'];
+						$normalizedvalue['tmp_name'] = $_FILES['field']['tmp_name'][$key]['file'];
+						$finfo = new \finfo(FILEINFO_MIME_TYPE);
+						$normalizedvalue['type'] = $finfo->file($_FILES['field']['tmp_name'][$key]['file']);
+						$normalizedvalue['size'] = $_FILES['field']['size'][$key]['file'];
+					}
 				}
 				else {
 					$normalizedvalue = $formater->decode($fields[$key]['value'], $fieldType, $formater::FORMAT_EDITOR);

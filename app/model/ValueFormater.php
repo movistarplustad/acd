@@ -32,6 +32,7 @@ class ValueFormater
 		$formater[self::TYPE_DATE_RANGE][self::FORMAT_EDITOR] = function ($aValue) {
 			// Empty values return empty array
 			if (is_array($aValue)){
+				$result = [];
 				foreach ($aValue as $value) {
 					if($value) {
 						$valueDecode = \DateTime::createFromFormat('Y-m-d', $value);
@@ -57,6 +58,7 @@ class ValueFormater
 		};
 		$formater[self::TYPE_DATE_TIME_RANGE][self::FORMAT_EDITOR] = function ($aValue) {
 			if (is_array($aValue)){
+				$result = [];
 				foreach ($aValue as $value) {
 					if($value) {
 						$valueDecode = \DateTime::createFromFormat('Y-m-d*H:i:s*', $value);
@@ -97,6 +99,7 @@ class ValueFormater
 				return date('Y-m-d', $value);
 			};
 			$formater[self::TYPE_DATE_RANGE][self::FORMAT_EDITOR] = function ($aValue) {
+				$result = [];
 				foreach ($aValue as $value) {
 					if($value) {
 						$result[] = date('Y-m-d', $value);

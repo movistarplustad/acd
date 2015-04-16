@@ -241,6 +241,10 @@ h2 .structure_name {
 	width: 70%;
 	height: 10em;
 }
+.field.preview {
+	max-width: 10em;
+	max-height: 10em;
+}
 input[readonly] {
 	color: #999;
 }
