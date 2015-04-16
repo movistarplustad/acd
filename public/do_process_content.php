@@ -71,13 +71,14 @@ switch ($accion) {
 				elseif ($fieldType === 'file' ) {
 					$normalizedvalue = [
 						'value' => $fields[$key]['value'],
-						'original_name' => $fields[$key]['original_name'],
 						'tmp_name' => '',
-						'type' => $fields[$key]['type'],
-						'size' => $fields[$key]['size'],
 						'alt' => $fields[$key]['alt'],
 						'delete' => isset($fields[$key]['delete'])
 					];
+					// Optional info
+					@$normalizedvalue['original_name'] = $fields[$key]['original_name'] ?: '';
+					@$normalizedvalue['type'] = $fields[$key]['type'] ?: '';
+					@$normalizedvalue['size'] = $fields[$key]['size'] ?: '';
 					// If get a new upload file
 					if ($_FILES['field']['error'][$key]['file'] === UPLOAD_ERR_OK) {
 						$normalizedvalue['original_name'] = $_FILES['field']['name'][$key]['file'];
