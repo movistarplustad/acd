@@ -234,7 +234,9 @@ h2 .structure_name {
 .fields li .button {
 	font-size: 0.75em;
 }
-.field.text {
+.field.text ,
+.field.link_href,
+.field.link_description{
 	width: 70%;
 }
 .field.textarea {
