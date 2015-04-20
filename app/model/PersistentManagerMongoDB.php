@@ -62,7 +62,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$bChildsRelated = false;
 		$oIdChildsRelated = [];
 		foreach ($structureDo->getFields() as $field) {
-			$key = $field->getName();
+			$key = $field->getId();
 			$value = $insert['data'][$key];
 			switch ($field->getType()) {
 				case $field::TYPE_CONTENT:
@@ -243,7 +243,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 	*/
 	private function normalizeDocument($document) {
-		//d($document);
 		$document['id'] = (string) $document['_id'];
 
 		foreach ($document['data'] as $key => $value) {

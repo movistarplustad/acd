@@ -14,6 +14,7 @@ var editor = {
 
 		/* Prevent accidental  delete*/
 		editor.$iDelete.bind("click", editor.confirmDelete);
+		$( ".fields .items" ).sortable();
 
 		/* Sortable collection fields */
 		$( ".collection" ).sortable({

@@ -160,8 +160,8 @@ class FieldDo
 	}
 	public function loadData($id, $value, $bOnlyValue) {
 		//d(debug_backtrace());
-		$this->setId($id);
-		$this->setName($id);
+		//$this->setId($id);
+		//$this->setName($id);
 
 		if ($bOnlyValue) {
 			if (isset($value['ref'])) {

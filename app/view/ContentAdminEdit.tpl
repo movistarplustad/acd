@@ -1,8 +1,10 @@
-<main>
+<main id="manageStructure">
 	<h2>Edit structure <span class="structure_name"><?=htmlspecialchars($structureName)?></span></h2>
 	<p class="result"><?=$resultDesc?></p>
 	<form action="do_process_structure.php" method="post">
-		<input type="hidden" name="id" value="<?=htmlspecialchars($structureId)?>"/>
+		<div>
+			<label for="idStructure">Id</label>: <input type="text" name="id" id="idStructure" value="<?=htmlspecialchars($structureId)?>" readonly="readonly"/>
+		</div>
 		<div>
 			<label for="name">Name</label>: <input type="text" name="name" id="name" value="<?=htmlspecialchars($structureName)?>" required="required"/>
 		</div>
@@ -23,20 +25,26 @@
 			$structure_fields = '';
 			$n = 0;
 			foreach ($fields as $field) {
-				$structure_fields .= '<li>
-					<input type="hidden" name="field['.$n.'][id]" value="'.htmlspecialchars($field->getId()).'"/>
-					<input type="text" name="field['.$n.'][name]" value="'.htmlspecialchars($field->getName()).'" id="field_'.$n.'"/>
-					<input type="hidden" name="field['.$n.'][type]" value="'.htmlspecialchars($field->getType()).'"/>
-					<label for="field_'.$n.'">'.htmlspecialchars($fieldTypes[$field->getType()]).'</label>
-					<input type="checkbox" name="field['.$n.'][delete]" value="1" id="delete_field_'.$n.'"/>
-					<label for="delete_field_'.$n.'">Delete</label>
+				$structure_fields .= '<li class="field">
+					<label for="field_'.$n.'_id">Id</label>:
+					<input type="text" name="field['.$n.'][id]" id="field_'.$n.'_name" value="'.htmlspecialchars($field->getId()).'"/>
+					<div>
+						<label for="field_'.$n.'_name">Description</label>:
+						<input type="text" name="field['.$n.'][name]" id="field_'.$n.'_name" value="'.htmlspecialchars($field->getName()).'" id="field_'.$n.'"/>
+						<input type="hidden" name="field['.$n.'][type]" value="'.htmlspecialchars($field->getType()).'"/>
+						<label for="field_'.$n.'">'.htmlspecialchars($fieldTypes[$field->getType()]).'</label>
+					</div>
+					<div class="delete">
+						<label for="delete_field_'.$n.'">Delete</label>
+						<input type="checkbox" name="field['.$n.'][delete]" value="1" id="delete_field_'.$n.'"/>
+					</div>
 					</li>';
 				$n++;
 			}
 			?>
-			<fieldset>
+			<fieldset class="fields">
 				<legend>Fields</legend>
-				<ul><?=$structure_fields?></ul>
+				<ul class="items"><?=$structure_fields?></ul>
 			</fieldset>
 		</div>
 		<div>

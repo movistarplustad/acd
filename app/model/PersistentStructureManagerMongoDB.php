@@ -63,6 +63,7 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 		$mongoCollection->remove(array()); 
 		foreach ($structuresDo as $structure) {
 			$id = $structure->getId();
+			dd($structure);
 			$insert = $structure->tokenizeData()[$id];
 			$insert['_id'] = $id;
 			//d($insert);

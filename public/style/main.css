@@ -227,6 +227,17 @@ h2 .structure_name {
 	padding: 0;
 }
 
+/* Edit structures */
+#manageStructure .fields .field {
+	margin-bottom: 0.5em;
+}
+#manageStructure .fields .field:hover {
+	background-color: #f9f9f9;
+}
+#manageStructure .field .delete {
+	text-align: right;
+}
+
 /* Field controls */
 .fields li {
 	line-height: 2.5em;
@@ -261,7 +272,7 @@ input[readonly] {
 	padding: 0 0 0 1em;
 	margin: 0;
 	list-style: none;
-	background-position: left center;
+	background-position: left 0.5em;
 	background-repeat: no-repeat;
 	cursor: move;
 }

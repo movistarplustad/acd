@@ -23,6 +23,7 @@ class Field extends Template {
 	}
 	public function setField($field) {
 		$this->field = $field;
+		$this->__set('fieldId', $field->getId());
 		$this->__set('fieldName', $field->getName());
 		$this->__set('fieldValue', \Acd\Model\ValueFormater::encode($field->getValue(), $field->getType(), \Acd\Model\ValueFormater::FORMAT_EDITOR)); // Antes $field->getValue());
 		//$ref = $field->getRef();

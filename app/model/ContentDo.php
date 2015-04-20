@@ -97,7 +97,7 @@ class ContentDo
 	public function getData($key = null) {
 		$data = array();
 		foreach ($this->getFields() as $field) {
-			$data[$field->getName()] = $field->getValue();
+			$data[$field->getId()] = $field->getValue();
 		}
 
 		return $data;
@@ -156,7 +156,7 @@ class ContentDo
 					$value = $field->getValue();
 					break;
 			}
-			$aFieldsData[$field->getName()] = $value;
+			$aFieldsData[$field->getId()] = $value;
 		}
 
 		return  array(

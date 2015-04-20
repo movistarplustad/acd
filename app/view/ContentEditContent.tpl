@@ -36,7 +36,7 @@
 			$structure_fields = '';
 			$n = 0;
 			foreach ($fields as $field) {
-				$idField = $field->getName();
+				$idField = $field->getId();
 				try {
 					$fieldFromContent = $content->getFields()->get($idField);
 					//+d($fieldFromContent->tokenizeData()[$idField]);
