@@ -15,7 +15,7 @@ if ($idParent) {
 	Alt <input type="text" name="field[<?=$id?>][alt]" value="<?=htmlspecialchars($fieldValue['alt'])?>"/>
 </div>
 <input type="file" name="field[<?=$id?>][file]" class="field file" id="field_<?=$id?>"/>
-<input type="checkbox" name="field[<?=$id?>][delete]" value="1" id="field_<?=$id?>_delete"/> <label for="field_<?=$id?>_delete">Delete:</label>
+<input type="checkbox" name="field[<?=$id?>][delete]" value="1" id="field_<?=$id?>_delete"/> <label for="field_<?=$id?>_delete">Delete</label>
 <?php
 	}
 	else {

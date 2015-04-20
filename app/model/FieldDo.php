@@ -19,6 +19,7 @@ class FieldDo
 	const TYPE_COLLECTION = 'collection';
 	const TYPE_CONTENT = 'content';
 	const TYPE_FILE = 'file';
+	const TYPE_LINK = 'link';
 	// const TYPE_TAGS = 'tags'; // TODO do in future
 
 	private $id;
@@ -44,7 +45,8 @@ class FieldDo
 			self::TYPE_DATE_TIME_RANGE => 'Range of dates with time',
 			self::TYPE_CONTENT => 'Reference to other content',
 			self::TYPE_COLLECTION => 'Collection of other contents',
-			self::TYPE_FILE => 'File upload'
+			self::TYPE_FILE => 'File upload',
+			self::TYPE_LINK => 'Link'
 		);
 	}
 

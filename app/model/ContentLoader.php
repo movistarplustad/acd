@@ -88,8 +88,8 @@ class ContentLoader extends StructureDo
 			if ($field->getType() === $field::TYPE_FILE){
 				$uploadData = $field->getValue();
 				$fieldId = $field->getId();
-				$fileName = md5($contentId);
-				$relativePath = urlencode($structureId ).'/'.urlencode($fieldId).'/'.substr($fileName, 0, 3);
+				$fileName = md5(urlencode($structureId ).'/'.urlencode($fieldId).'/'.$contentId);
+				$relativePath = substr($fileName, 0, 3);
 				$destinationPath = \Acd\conf::$DATA_CONTENT_PATH.'/'.$relativePath;
 				if($uploadData['delete']) {
 					if (is_writable($destinationPath.'/'.$fileName)){
@@ -110,7 +110,7 @@ class ContentLoader extends StructureDo
 						mkdir($destinationPath, 0755, true);
 					}
 					move_uploaded_file($uploadData['tmp_name'], $destinationPath.'/'.$fileName);
-					$uploadData['value'] = $relativePath.'/'.$fileName;
+					$uploadData['value'] = $fileName;
 				}
 				unset($uploadData['tmp_name']);
 				unset($uploadData['delete']);
@@ -137,8 +137,8 @@ class ContentLoader extends StructureDo
 			if ($field->getType() === $field::TYPE_FILE){
 				// TODO unify with saveUpload
 				$fieldId = $field->getId();
-				$fileName = md5($contentId);
-				$relativePath = urlencode($structureId ).'/'.urlencode($fieldId).'/'.substr($fileName, 0, 3);
+				$fileName = md5(urlencode($structureId ).'/'.urlencode($fieldId).'/'.$contentId);
+				$relativePath = substr($fileName, 0, 3);
 				$destinationPath = \Acd\conf::$DATA_CONTENT_PATH.'/'.$relativePath;
 				if (is_writable($destinationPath.'/'.$fileName)){
 					unlink ($destinationPath.'/'.$fileName);
