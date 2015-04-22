@@ -25,14 +25,16 @@
 			$structure_fields = '';
 			$n = 0;
 			foreach ($fields as $field) {
+				$lockId = $field->getId() === '__NEW' ? '' : ' readonly="readonly"';
 				$structure_fields .= '<li class="field">
 					<label for="field_'.$n.'_id">Id</label>:
-					<input type="text" name="field['.$n.'][id]" id="field_'.$n.'_name" value="'.htmlspecialchars($field->getId()).'"/>
+					<input type="text" name="field['.$n.'][id]" id="field_'.$n.'_name" value="'.htmlspecialchars($field->getId()).'"'.$lockId.'/>
+					<label for="field_'.$n.'_type">'.htmlspecialchars($fieldTypes[$field->getType()]).'</label>
 					<div>
 						<label for="field_'.$n.'_name">Description</label>:
 						<input type="text" name="field['.$n.'][name]" id="field_'.$n.'_name" value="'.htmlspecialchars($field->getName()).'" id="field_'.$n.'"/>
 						<input type="hidden" name="field['.$n.'][type]" value="'.htmlspecialchars($field->getType()).'"/>
-						<label for="field_'.$n.'">'.htmlspecialchars($fieldTypes[$field->getType()]).'</label>
+						
 					</div>
 					<div class="delete">
 						<label for="delete_field_'.$n.'">Delete</label>
