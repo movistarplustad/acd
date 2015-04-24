@@ -25,10 +25,10 @@
 			$structure_fields = '';
 			$n = 0;
 			foreach ($fields as $field) {
-				$lockId = $field->getId() === '__NEW' ? '' : ' readonly="readonly"';
+				$lockId = ($field->getId() === '' || $field->getId() === $field::EMPTY_ID) ? '' : ' readonly="readonly"';
 				$structure_fields .= '<li class="field">
 					<label for="field_'.$n.'_id">Id</label>:
-					<input type="text" name="field['.$n.'][id]" id="field_'.$n.'_name" value="'.htmlspecialchars($field->getId()).'"'.$lockId.'/>
+					<input type="text" name="field['.$n.'][id]" id="field_'.$n.'_name" value="'.htmlspecialchars($field->getId()).'"'.$lockId.' required="required" placeholder="Enter the field id"/>
 					<label for="field_'.$n.'_type">'.htmlspecialchars($fieldTypes[$field->getType()]).'</label>
 					<div>
 						<label for="field_'.$n.'_name">Description</label>:

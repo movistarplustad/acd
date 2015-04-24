@@ -10,6 +10,7 @@ class ValueFormater
 	const TYPE_DATE_RANGE = 'date_range';
 	const TYPE_DATE_TIME_RANGE = 'date_time_range';
 	const TYPE_TAGS = 'tags';
+	const TYPE_BOOLEAN = 'boolean';
 
 	// Formats to getting and setting values
 	const FORMAT_INTERNAL = 0;
@@ -18,6 +19,7 @@ class ValueFormater
 	public static function decode($value, $type, $format) {
 		//throw new StorageKeyInvalidException("Invalid format type $format.");
 
+		// Array of procesing functions
 		$formater[self::TYPE_DATE][self::FORMAT_EDITOR] = function ($value) {
 			// Empty values return empty string
 			if ($value) {
@@ -73,7 +75,6 @@ class ValueFormater
 			return $result;
 		};
 		$formater[self::TYPE_TAGS][self::FORMAT_EDITOR] = function ($value) {
-			
 			if($value) {
 				$value = trim($value);
 				$value = preg_replace('/\s+/', ' ', $value);
@@ -82,6 +83,9 @@ class ValueFormater
 			else {
 				return array();
 			}
+		};
+		$formater[self::TYPE_BOOLEAN][self::FORMAT_EDITOR] = function ($value) {
+			return $value == 1;
 		};
 
 
@@ -123,6 +127,9 @@ class ValueFormater
 			};
 			$formater[self::TYPE_TAGS][self::FORMAT_EDITOR] = function ($value) {
 				return implode(' ', $value);
+			};
+			$formater[self::TYPE_BOOLEAN][self::FORMAT_EDITOR] = function ($value) {
+				return $value ? ' checked="checked"' : '';
 			};
 
 			if(isset($formater[$type][$format])) {

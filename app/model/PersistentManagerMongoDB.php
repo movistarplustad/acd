@@ -330,6 +330,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$byStructureQuery = array('id_structure' => $structureDo->getId());
 
 		$cursor = $mongoCollection->find($byStructureQuery);
+		$cursor->sort(array( '_id' => -1));
 		$result = new ContentsDo();
 		foreach ($cursor as $documentFound) {
 			$documentFound = $this->normalizeDocument($documentFound);

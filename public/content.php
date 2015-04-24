@@ -37,12 +37,14 @@ switch ($action) {
 	case 'delete':
 	case 'list_contents':
 		$id = $_GET['id'];
+		@$titleSearch = $_GET['s'];
 		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('backContent');
 
 		$contentOu = new View\ContentEditListContent();
 		$contentOu->setId($id);
+		$contentOu->setTitleSeach($titleSearch);
 		$contentOu->load();
 
 		$contentLoader = new Model\ContentLoader();

@@ -90,6 +90,7 @@ switch ($accion) {
 				}
 				else {
 					$normalizedvalue = $formater->decode($fields[$key]['value'], $fieldType, $formater::FORMAT_EDITOR);
+					//d($key, $normalizedvalue, $fieldType);
 				}
 				$modified_content->setFieldValue($fieldId, $normalizedvalue);
 			}

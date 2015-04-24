@@ -263,7 +263,7 @@ input[readonly] {
 }
 /* Collection */
 .collection li {
-
+	list-style: inside decimal;
 }
 .ui-sortable {
 	padding: 0;
@@ -273,7 +273,6 @@ input[readonly] {
 	background-image: url(draggable.png);
 	padding: 0 0 0 1em;
 	margin: 0;
-	list-style: none;
 	background-position: left 0.5em;
 	background-repeat: no-repeat;
 	cursor: move;
