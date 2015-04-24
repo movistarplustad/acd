@@ -280,4 +280,5 @@ input[readonly] {
 .ui-sortable li.find {
 	background-image: none;
 	cursor: auto;
+	list-style-type: none;
 }

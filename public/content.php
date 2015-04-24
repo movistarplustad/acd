@@ -49,7 +49,15 @@ switch ($action) {
 
 		$contentLoader = new Model\ContentLoader();
 		$contentLoader->setId($id);
-		$contents = $contentLoader->loadContents('all');
+		if ($titleSearch) {
+			$whereCondition = [];
+			$whereCondition['title'] = $titleSearch;
+			$whereCondition['idStructure'] = $id;
+			$contents = $contentLoader->loadContents('editorSearch', $whereCondition);
+		}
+		else {
+			$contents = $contentLoader->loadContents('all');
+		}
 		$contentOu->setContents($contents);
 
 		$skeletonOu = new View\BaseSkeleton();

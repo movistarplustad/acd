@@ -362,6 +362,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		}
 		$mongoCollection = $this->db->selectCollection('content');
 		$cursor = $mongoCollection->find($filter);
+		$cursor->sort(array( '_id' => -1));
 		$result = new ContentsDo();
 		foreach ($cursor as $documentFound) {
 			$documentFound = $this->normalizeDocument($documentFound);
