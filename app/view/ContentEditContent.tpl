@@ -14,6 +14,16 @@
 	<?php
 		}
 	?>
+	<?php
+		if(isset($jsonSummary)) {
+	?>
+		<section class="contentSummary">
+			<h2>Summary</h2>
+			<pre><?=$jsonSummary?></pre>
+		</section>
+	<?php
+		}
+	?>
 	<p class="result"><?=$resultDesc?></p>
 	<form action="do_process_content.php" method="post" enctype="multipart/form-data">
 		<fieldset class="internal">
@@ -67,5 +77,6 @@
 		<?php
 			}
 		?>
+		<input type="submit" name="a" value="summary" class="button summary"/>
 	</form>
 </main>

@@ -73,7 +73,7 @@
 	<article class="dev_sample">
 		<h1>Examples for developer</h1>		
 		<pre>
-			$contentLoader = new \ACD\Model\ContentLoader();
+			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
 			// Sample #1 by id, only content without related content
 			$plainContent = $contentLoader->loadContents('id', $idContent);

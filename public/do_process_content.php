@@ -114,6 +114,9 @@ switch ($accion) {
 		}
 
 		break;
+	case 'summary':
+		$returnUrl = 'content.php?a=summary&id='.urlencode($id).'&idt='.urlencode($idStructure);
+		break;
 	default:
 		$returnUrl = '404.html';
 		break;

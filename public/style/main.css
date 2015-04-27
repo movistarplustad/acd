@@ -128,6 +128,8 @@ a:active {
 	border-color: #E3E3E3 #E3E3E3 #C2C2C2;
 	padding: 0.5em 0.5em 0.5em 1.8em;
 	cursor: pointer;
+	text-decoration: none;
+	font-size: 1em;
 }
 .button.edit {
 	background-image: url(ic_mode_edit_24px.svg);
@@ -149,6 +151,10 @@ a:active {
 }
 .button.clear {
 	background-image: url(ic_clear_24px.svg);
+}
+.button.summary {
+	background-image: url(ic_dvr_24px.svg);
+	margin-left: 1em;
 }
 
 #structures_list .structure {
@@ -281,4 +287,13 @@ input[readonly] {
 	background-image: none;
 	cursor: auto;
 	list-style-type: none;
+}
+.contentSummary {
+	margin: 0 1em;
+	background-color: #fff;
+	border: 1px solid #999;
+}
+.contentSummary h2 {
+	color: #424242;
+	text-align: left;
 }

@@ -32,6 +32,9 @@ class ContentEditContent extends Template {
 	public function setResultDesc($resultDesc) {
 		$this->__set('resultDesc', $resultDesc);
 	}
+	public function setSummary($jsonSummary) {
+		$this->__set('jsonSummary', $jsonSummary);
+	}
 	public function render($tpl = '') {
 		$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentEditContent.tpl';
 		return parent::render($tpl);

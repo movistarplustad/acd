@@ -104,6 +104,7 @@ switch ($action) {
 		break;
 	case 'edit':
 	case 'clone':
+	case 'summary':
 		$bResult = isset($_GET['r']) && $_GET['r'] == 'ok' ? true : false;
 		$id = $_GET['id'];
 		$idStructureType = $_GET['idt'];
@@ -193,6 +194,14 @@ switch ($action) {
 		$skeletonOu->setBodyClass('editContent');
 		$skeletonOu->setHeadTitle('Manage content');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
+
+		if ($action == 'summary') {
+			$summaryController = new Controller\Summary();
+			$summaryController->setIdContent($id);
+			$summaryController->setIdStructure($idStructureType);
+			$summaryController->load();
+			$contentOu->setSummary($summaryController->render());
+		}
 
 		if ($bResult) {
 			$contentOu->setResultDesc('Done');
