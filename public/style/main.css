@@ -131,6 +131,9 @@ a:active {
 	text-decoration: none;
 	font-size: 1em;
 }
+.button:hover {
+	border-color: #E3E3E3 #E3E3E3 #929292;
+}
 .button.edit {
 	background-image: url(ic_mode_edit_24px.svg);
 }
@@ -236,6 +239,7 @@ h2 .structure_name {
 /* Edit structures */
 #manageStructure .fields .field {
 	margin-bottom: 0.5em;
+	list-style-type: none;
 }
 #manageStructure .fields .field:hover {
 	background-color: #f9f9f9;
@@ -296,4 +300,7 @@ input[readonly] {
 .contentSummary h2 {
 	color: #424242;
 	text-align: left;
+}
+.actions {
+	margin: 0.5em 0 1em 0.5em;
 }

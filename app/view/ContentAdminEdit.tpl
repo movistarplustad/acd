@@ -2,24 +2,27 @@
 	<h2>Edit structure <span class="structure_name"><?=htmlspecialchars($structureName)?></span></h2>
 	<p class="result"><?=$resultDesc?></p>
 	<form action="do_process_structure.php" method="post">
-		<div>
-			<label for="idStructure">Id</label>: <input type="text" name="id" id="idStructure" value="<?=htmlspecialchars($structureId)?>" readonly="readonly"/>
-		</div>
-		<div>
-			<label for="name">Name</label>: <input type="text" name="name" id="name" value="<?=htmlspecialchars($structureName)?>" required="required"/>
-		</div>
-		<div>
-			<?php
-			$options = '';
-			foreach ($storageTypes as $key => $value) {
-				$selected = $storage === $key ? ' selected="selected"' : '';
-				$disabled = $value['disabled'] ? ' disabled="disabled"' : '';
-				$options .= '<option value="'.htmlspecialchars($key).'"'.$selected.$disabled.'>'.htmlspecialchars($value['name']).'</option>';
-				
-			}
-			?>
-			<label for="storage">Storage type</label>: <select name="storage" id="storage"><?=$options?></select>
-		</div>
+		<fieldset class="common">
+			<legend>Common</legend>
+			<div>
+				<label for="idStructure">Id</label>: <input type="text" name="id" id="idStructure" value="<?=htmlspecialchars($structureId)?>" readonly="readonly"/>
+			</div>
+			<div>
+				<label for="name">Name</label>: <input type="text" name="name" id="name" value="<?=htmlspecialchars($structureName)?>" required="required"/>
+			</div>
+			<div>
+				<?php
+				$options = '';
+				foreach ($storageTypes as $key => $value) {
+					$selected = $storage === $key ? ' selected="selected"' : '';
+					$disabled = $value['disabled'] ? ' disabled="disabled"' : '';
+					$options .= '<option value="'.htmlspecialchars($key).'"'.$selected.$disabled.'>'.htmlspecialchars($value['name']).'</option>';
+					
+				}
+				?>
+				<label for="storage">Storage type</label>: <select name="storage" id="storage"><?=$options?></select>
+			</div>
+		</fieldset>
 		<div>
 			<?php
 			$structure_fields = '';
@@ -65,8 +68,10 @@
 				<div><input type="submit" name="accion" value="add" class="button add"/></div>
 			</fieldset>
 		</div>
-		<input type="hidden" name="a" value="<?=$actionValue?>"/>
-		<input type="submit" name="accion" value="save" class="button publish"/>
+		<div class="actions">
+			<input type="hidden" name="a" value="<?=$actionValue?>"/>
+			<input type="submit" name="accion" value="save" class="button publish"/>
+		</div>
 	</form>
 
 
@@ -85,7 +90,7 @@
 <?php
 				foreach ($fields as $field) {
 ?>
-			echo $plainContent->getFields()->getValue('<?=htmlspecialchars($field->getName())?>');
+			echo $plainContent->getFields()->getValue('<?=htmlspecialchars($field->getId())?>');
 <?php
 				}
 ?>

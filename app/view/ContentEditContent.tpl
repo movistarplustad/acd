@@ -68,15 +68,17 @@
 				<ul class="fields"><?=$structure_fields?></ul>
 			</fieldset>
 		</div>
-		<input type="submit" name="a" value="save" class="button publish"/>
-		<?php
-			if($content->getId()) {
-		?>
-			<input type="submit" name="a" value="clone" class="button clone"/>
-			<input type="submit" name="a" value="delete" class="button delete"<?=$deleteDisabled?>/>
-		<?php
-			}
-		?>
-		<input type="submit" name="a" value="summary" class="button summary"/>
+		<div class="actions">
+			<input type="submit" name="a" value="save" class="button publish"/>
+			<?php
+				if($content->getId()) {
+			?>
+				<input type="submit" name="a" value="clone" class="button clone"/>
+				<input type="submit" name="a" value="delete" class="button delete"<?=$deleteDisabled?>/>
+			<?php
+				}
+			?>
+			<input type="submit" name="a" value="summary" class="button summary"/>
+		</div>
 	</form>
 </main>
