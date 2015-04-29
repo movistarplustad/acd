@@ -303,14 +303,23 @@ class PersistentManagerMongoDB implements iPersistentManager
 						// Has relation info?
 						if($field->getValue() && $field->getValue()['id_structure']) {
 							$structureTmp = $this->getStructure($field->getValue()['id_structure']);
-							$field->setValue($this->loadIdDepth ($structureTmp, $field->getValue()['ref'], $depth));
+							$contentsTemp = $this->loadIdDepth ($structureTmp, $field->getValue()['ref'], $depth);
+							if ($contentsTemp) {
+								$field->setValue($contentsTemp->one());
+							}
+						}
+						else {
+							$field->setValue(null);
 						}
 						break;
 					case 'collection' :
-						$newVal = [];
+						$newVal = new ContentsDo();
 						foreach ($field->getValue() as $itemCollection) {
 							$structureTmp = $this->getStructure($itemCollection['id_structure']);
-							$newVal[] = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth);
+							$contentsTemp = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth);
+							if ($contentsTemp) {
+								$newVal->add($contentsTemp->one());
+							}
 						}
 
 						$field->setValue($newVal);

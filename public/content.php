@@ -3,6 +3,18 @@ namespace Acd;
 
 require ('../autoload.php');
 session_start();
+function loadNewRef($idRef, $idStructure) {
+	if (!$idRef || !$idStructure) {
+		return null;
+	}
+	$contentLoader = new Model\ContentLoader();
+	$contentLoader->setId($idStructure);
+	$content = $contentLoader->loadContents('id', $idRef);
+	//$contents = new Model\ContentsDo();
+	//$contents->add($content);
+
+	return $content;
+}
 $action = isset($_GET['a']) ? $_GET['a'] : 'list_structures';
 if (!Model\Auth::isLoged()) {
 	$action = 'login';
@@ -141,27 +153,22 @@ switch ($action) {
 			$modifiedIdStructure = $_GET['reftm']; //''enlace';
 			$modifiedFieldPosition = isset($_GET['posm']) ? $_GET['posm'] : null;
 			try {
+				//+d($content->getFields());
 				$modifiedField = $content->getFields()->get($modifiedFieldName);
-				//d($modifiedField->getType());
 				switch ($modifiedField->getType()) {
 					case Model\FieldDo::TYPE_CONTENT:
-						$newRef = [
-							'ref'=> $modifiedRef,
-							'id_structure' => $modifiedIdStructure
-						];
+						$newRef = loadNewRef($modifiedRef, $modifiedIdStructure);
 						break;
 					case Model\FieldDo::TYPE_COLLECTION:
-						$newRef = $modifiedField->getValue();
 
 						/* Modify or delete item */
 						if ($modifiedRef) {
-							$newRef[$modifiedFieldPosition] = [
-								'ref'=> $modifiedRef,
-								'id_structure' => $modifiedIdStructure
-							];
+							$newRef = $modifiedField->getValue();
+							$newRef->add(loadNewRef($modifiedRef, $modifiedIdStructure));
 						}
 						else {
-							unset ($newRef[$modifiedFieldPosition]);
+							$newRef = $modifiedField->getValue();
+							$newRef->remove($modifiedFieldPosition);
 						}
 
 						break;
@@ -170,7 +177,7 @@ switch ($action) {
 						break;
 				} 
 				//d($content);
-				//d($modifiedFieldName, $val);
+				//d($modifiedFieldName, $newRef);
 				$content->setFieldValue($modifiedFieldName, $newRef);
 				//d($content);
 
@@ -181,8 +188,7 @@ switch ($action) {
 				$bResult = false;
 			}
 		}
-//dd($content->getFields()->get('Fotos')->getValue()); // Colección
-//dd($content->getFields()->get('enlace')->getRef()); // Elemento simple 
+
 		if ($action == 'clone') {
 			$content->setId(null);
 			$content->setTitle('[copy] '.$content->getTitle());

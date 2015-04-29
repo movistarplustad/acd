@@ -2,17 +2,23 @@
 <?php
 //	@$fieldRef['ref']= $fieldRef['ref'] ?: ''; // TODO, porner el valor por defecto mejor  a nivel de clase
 //	@$fieldRef['id_structure']= $fieldRef['id_structure'] ?: ''; 
-$fieldRef = $fieldRef->one();
-$idContent = $fieldRef->getId();
-$idStructure = $fieldRef->getIdStructure();
-$title = $fieldRef->getTitle();
+if ($fieldRef) {
+	$idContent = $fieldRef->getId();
+	$idStructure = $fieldRef->getIdStructure();
+	$title = $fieldRef->getTitle();
+}
+else {
+	$idContent = '';
+	$idStructure = '';
+	$title = '';
+}
 ?>
 <input type="hidden" name="field[<?=$id?>][id]" value="<?=htmlspecialchars($fieldId)?>"/>
 <input type="hidden" name="field[<?=$id?>][name]" value="<?=htmlspecialchars($fieldName)?>"/>
 <label for="field_<?=$id?>"><?=htmlspecialchars($fieldName)?></label>
-<input type="text" name="field[<?=$id?>][value]" value="<?=htmlspecialchars($idContent)?>" id="field_<?=$id?>" readonly="readonly"/>
+<input type="hidden" name="field[<?=$id?>][value]" value="<?=htmlspecialchars($idContent)?>" id="field_<?=$id?>"/>
 <input type="hidden" name="field[<?=$id?>][type]" value="<?=htmlspecialchars($idStructure)?>"/>
-<input type="text" name="field[<?=$id?>][title][]" value="<?=htmlspecialchars($title)?>" disabled="disabled" class="title"/>
+<input type="text" name="field[<?=$id?>][title][]" value="<?=htmlspecialchars($title)?>" disabled="disabled" class="field relationTitle"/>
 <?php
 if ($idContent) {
 ?>

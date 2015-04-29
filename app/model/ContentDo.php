@@ -119,6 +119,9 @@ class ContentDo
 		$this->setIdStructure($structure->getId());
 		$this->setFields($structure->getFields());
 	}
+	private function isFilledRef($value) {
+		return (isset($value[0]['ref']) && $value[0]['ref']);
+	}
 	public function load($rawData, $structure = null) {
 		$this->setId($rawData['id']);
 		$this->setTitle($rawData['title']);
@@ -134,7 +137,9 @@ class ContentDo
 				switch ($this->getFields()->get($key)->getType()) {
 					case 'content':
 					case 'collection':
-						$this->getFields()->setRef($key, $value);
+						if ($this->isFilledRef($value)) { // Non set emptys references
+							$this->getFields()->setRef($key, $value);
+						}
 						break;
 				};
 			}

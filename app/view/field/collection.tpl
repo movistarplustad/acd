@@ -8,16 +8,15 @@
 	if ($fieldRef) { // TODO hacer que en el futuro fieldRef sea un array vacío
 		$pos = 0;
 		foreach ($fieldRef as $fieldRefItem) {
-			$fieldRefItem = $fieldRefItem->one();
 			$idContent = $fieldRefItem->getId();
 			$idStructure = $fieldRefItem->getIdStructure();
 			$title = $fieldRefItem->getTitle();
 			//$idItem = $id.'_'.$fieldRefItem['id_structure'];
 ?>
 		<li>
-			<input type="text" name="field[<?=$id?>][value][]" value="<?=htmlspecialchars($idContent)?>" readonly="readonly"/>
+			<input type="hidden" name="field[<?=$id?>][value][]" value="<?=htmlspecialchars($idContent)?>"/>
 			<input type="hidden" name="field[<?=$id?>][type][]" value="<?=htmlspecialchars($idStructure)?>" />
-			<input type="text" name="field[<?=$id?>][title][]" value="<?=htmlspecialchars($title)?>" disabled="disabled" class="title"/>
+			<input type="text" name="field[<?=$id?>][title][]" value="<?=htmlspecialchars($title)?>" disabled="disabled" class="field relationTitle"/>
 			<a href="content.php?a=edit&amp;id=<?=htmlspecialchars($idContent)?>&amp;idt=<?=htmlspecialchars($idStructure)?>&amp;idp=<?=htmlspecialchars($idParent)?>&amp;idtp=<?=htmlspecialchars($idStructureParent)?>" class="button edit">Edit</a>
 			<a href="content.php?a=edit&amp;id=<?=urlencode($idParent)?>&amp;idt=<?=urlencode($idStructureParent)?>&amp;idm=<?=urlencode($fieldId)?>&amp;refm=&amp;reftm=&amp;posm=<?=$pos?>" class="button clear">Clear</a>
 		</li>
