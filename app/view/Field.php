@@ -31,9 +31,9 @@ class Field extends Template {
 		$ref = $field->getValue();
 		//d($field->getValue());
 		if($field->getType() === 'content' && $ref) {
-			d($field->getType());
+			//d($field->getType());
 			$id = $field->getRef()['ref'];
-			d($id,$field->getValue()->get($id)->getTitle(), $field->getRef());
+			//d($id,$field->getValue()->get($id)->getTitle(), $field->getRef());
 		}
 
 		//$ref = is_string($ref) ? $ref : '';

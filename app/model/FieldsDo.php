@@ -33,6 +33,9 @@ class FieldsDo extends Collection
 	public function getValue($key) {
 		return $this->get($key)->getValue();
 	}
+	public function getType($key) {
+		return $this->get($key)->getType();
+	}
 	public function setRef($key, $value) {
 		if ($this->hasKey($key)) {
 			$this->get($key)->setRef($value);
