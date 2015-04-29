@@ -5,33 +5,28 @@ class PersistentStorageQueryTypeNotImplemented extends \Exception {} // TODO mov
 class PersistentManagerMongoDBException extends \exception {} // TODO Unificar
 class PersistentManagerMongoDB implements iPersistentManager
 {
+	private $db;
 	const STRUCTURE_TYPE_COLLECTION = '_collection';
 	private $structuresCache;
 	public function initialize($structureDo) {
-		$mongo = new \MongoClient();
-		$db = $mongo->acd;
-		$db->createCollection('content', false);
+		$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
+		$this->db = $mongo->acd;
+		//$db->createCollection('content', false);
 	}
 	public function isInitialized($structureDo) {
-		try {
-			$mongo = new \MongoClient();
-			$db = $mongo->acd;
-			//echo "isInitialized";
-
-			return true;
-		}
-		catch ( \Exception $e ) {
-			return false;
-		}
+		return isset($this->db);
 	}
 	public function load($structureDo, $query) {
-		if ($this->isInitialized($structureDo)) {
+		//if ($this->isInitialized($structureDo)) {
 			switch ($query->getType()) {
 				case 'id':
 					return $this->loadById($structureDo, $query->getCondition());
 					break;
 				case 'id-deep':
 					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth());
+					break;
+				case 'tag-one-deep': // First element matching with tag
+					return $this->loadTagOneDepth($structureDo, $query->getCondition('tags'), $query->getDepth());
 					break;
 				case 'all':
 					return $this->loadAll($structureDo, $query);
@@ -46,11 +41,11 @@ class PersistentManagerMongoDB implements iPersistentManager
 					throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
 					break;
 			}
-		}
-		else {
-			// Structure empty
-			return new Collection();
-		}
+		//}
+		//else {
+		//	// Structure empty
+		//	return new Collection();
+		//}
 	}
 	public function save($structureDo, $contentDo) {
 		//dd($contentDo);
@@ -59,10 +54,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		}
 		// TODO	 revisar
 		$aIdChildsRelated = []; // Store all related content id
-		$mongo = new \MongoClient();
-		$db = $mongo->acd;
-		//$mongoCollection = $db->selectCollection($structureDo->getId());
-		$mongoCollection = $db->selectCollection('content');
+		$mongoCollection = $this->db->selectCollection('content');
 		$insert = $contentDo->tokenizeData();
 		$insert['id_structure'] = $structureDo->getId();
 		// Replace relations by MongoDBRefs
@@ -70,7 +62,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$bChildsRelated = false;
 		$oIdChildsRelated = [];
 		foreach ($structureDo->getFields() as $field) {
-			$key = $field->getName();
+			$key = $field->getId();
 			$value = $insert['data'][$key];
 			switch ($field->getType()) {
 				case $field::TYPE_CONTENT:
@@ -119,7 +111,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$oId = new \MongoId($insert['_id']);
 		}
 		if($bChildsRelated) {
-			$this->updateRelations($db, \MongoDBRef::create('content', $oId), $oIdChildsRelated);
+			$this->updateRelations($this->db, \MongoDBRef::create('content', $oId), $oIdChildsRelated);
 		}
 
 		return $contentDo;
@@ -140,34 +132,34 @@ class PersistentManagerMongoDB implements iPersistentManager
 	}
 
 	public function delete($structureDo, $idContent) {
-		if ($this->isInitialized($structureDo)) {
-			// TODO revisar
-			// It is not allowed to delete a content with relations, beacause break integrity
-			$query = new Query();
-			$query->setType('countParents');
-			$query->setCondition($idContent);
-			$numRelations = $this->countParents($structureDo, $query);
-			if ($numRelations > 0) {
-				throw new PersistentManagerMongoDBException("Delete failed, the content has $numRelations relationships", self::DELETE_FAILED);
-			}
-			else {
-				$mongo = new \MongoClient();
-				$db = $mongo->acd;
-				$mongoCollection = $db->selectCollection('content');
-				$oId = new \MongoId($idContent);
-				$mongoCollection->remove(array('_id' => $oId));
-			}
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+		// TODO revisar
+		// It is not allowed to delete a content with relations, beacause break integrity
+		$query = new Query();
+		$query->setType('countParents');
+		$query->setCondition($idContent);
+		$numRelations = $this->countParents($structureDo, $query);
+		if ($numRelations > 0) {
+			throw new PersistentManagerMongoDBException("Delete failed, the content has $numRelations relationships", self::DELETE_FAILED);
+		}
+		else {
+			$mongoCollection = $this->db->selectCollection('content');
+			$oId = new \MongoId($idContent);
+			$mongoCollection->remove(array('_id' => $oId));
 		}
 
-		$this->updateRelations($db,  \MongoDBRef::create('content', $oId), array());
+		$this->updateRelations($this->db,  \MongoDBRef::create('content', $oId), array());
 	}
 
 	private function loadById($structureDo, $id) {
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
 		//$id = $query->getCondition();
 		// TODO revisar
-		$mongo = new \MongoClient();
-		$db = $mongo->acd;
-		$mongoCollection = $db->selectCollection('content');
+		$mongoCollection = $this->db->selectCollection('content');
 		try {
 			$oId = new \MongoId($id);
 		}
@@ -181,14 +173,16 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$contentFound->load($documentFound, $structureDo);
 			//+d($documentFound);
 			//+d($contentFound);
-			$result = new ContentsDo();
-			$result->add($contentFound, $id);
+			//$result = new ContentsDo();
+			//$result->add($contentFound, $id);
 		}
 		catch( \Exception $e ) {
-			$result = null;
+			//$result = null;
+			$contentFound = null;
 		}
 
-		return $result;
+		//return $result;
+		return $contentFound;
 	}
 
 	// Transform a mongodb document to normalized document (aseptic persistent storage)
@@ -249,7 +243,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 	*/
 	private function normalizeDocument($document) {
-		//d($document);
 		$document['id'] = (string) $document['_id'];
 
 		foreach ($document['data'] as $key => $value) {
@@ -284,10 +277,24 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		return $this->structuresCache[$id];
 	}
+	private function loadTagOneDepth ($structureDo, $tags, $depth) {
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+		$mongoCollection = $this->db->selectCollection('content');
+		// db.content.find({"tags":{ $in : ["portadacine"]}, "id_structure" : "padre"}).pretty()
+		$documentFound = $mongoCollection->findOne(array('tags' => array('$in' => $tags), 'id_structure' => $structureDo->getId()));
+		if ($documentFound) {
+			return $this->loadIdDepth ($structureDo, (string) $documentFound['_id'], $depth);
+		}
+		else {
+			return null;
+		}
+	}
 	private function loadIdDepth ($structureDo, $idContent, $depth) {
 		if ($depth > 0) {
 			$depth--;
-			$content = $this->loadById($structureDo, $idContent)->get($idContent);
+			$content = $this->loadById($structureDo, $idContent);
 			$fields = $content->getFields();
 			// Walk fields and fill their values
 			foreach ($fields as $field) {
@@ -317,12 +324,14 @@ class PersistentManagerMongoDB implements iPersistentManager
 	}
 
 	private function loadAll($structureDo, $query) {
-		$mongo = new \MongoClient();
-		$db = $mongo->acd;
-		$mongoCollection = $db->selectCollection('content');
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+		$mongoCollection = $this->db->selectCollection('content');
 		$byStructureQuery = array('id_structure' => $structureDo->getId());
 
 		$cursor = $mongoCollection->find($byStructureQuery);
+		$cursor->sort(array( '_id' => -1));
 		$result = new ContentsDo();
 		foreach ($cursor as $documentFound) {
 			$documentFound = $this->normalizeDocument($documentFound);
@@ -349,10 +358,12 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$filter['id_structure'] = $query->getCondition()['idStructure'];
 		}
 
-		$mongo = new \MongoClient();
-		$db = $mongo->acd;
-		$mongoCollection = $db->selectCollection('content');
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+		$mongoCollection = $this->db->selectCollection('content');
 		$cursor = $mongoCollection->find($filter);
+		$cursor->sort(array( '_id' => -1));
 		$result = new ContentsDo();
 		foreach ($cursor as $documentFound) {
 			$documentFound = $this->normalizeDocument($documentFound);
@@ -367,9 +378,10 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$id = $query->getCondition();
 		$filter = ['child' => \MongoDBRef::create('content', new \MongoId($id))];
 
-		$mongo = new \MongoClient();
-		$db = $mongo->acd;
-		$mongoCollection = $db->selectCollection('relation');
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+		$mongoCollection = $this->db->selectCollection('relation');
 		$cursor = $mongoCollection->find($filter);
 
 		return $cursor->count();

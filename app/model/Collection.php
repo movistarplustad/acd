@@ -57,7 +57,7 @@ class Collection implements \IteratorAggregate
 		}
 	}
 
-	public function getFirst() {
+	public function one() {
 		reset($this->elements);
 		return current($this->elements);
 	}

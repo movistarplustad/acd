@@ -18,6 +18,9 @@ class FieldDo
 	const TYPE_DATE_TIME_RANGE = 'date_time_range';
 	const TYPE_COLLECTION = 'collection';
 	const TYPE_CONTENT = 'content';
+	const TYPE_FILE = 'file';
+	const TYPE_LINK = 'link';
+	// const TYPE_TAGS = 'tags'; // TODO do in future
 
 	private $id;
 	private $type;
@@ -41,7 +44,9 @@ class FieldDo
 			self::TYPE_DATE_RANGE => 'Range of dates',
 			self::TYPE_DATE_TIME_RANGE => 'Range of dates with time',
 			self::TYPE_CONTENT => 'Reference to other content',
-			self::TYPE_COLLECTION => 'Collection of other contents'
+			self::TYPE_COLLECTION => 'Collection of other contents',
+			self::TYPE_FILE => 'File upload',
+			self::TYPE_LINK => 'Link'
 		);
 	}
 
@@ -157,8 +162,8 @@ class FieldDo
 	}
 	public function loadData($id, $value, $bOnlyValue) {
 		//d(debug_backtrace());
-		$this->setId($id);
-		$this->setName($id);
+		//$this->setId($id);
+		//$this->setName($id);
 
 		if ($bOnlyValue) {
 			if (isset($value['ref'])) {

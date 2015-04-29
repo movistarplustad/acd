@@ -31,3 +31,12 @@ Se dispondrá de un API de consulta y modificación de los datos almacenados tra
 
 * Repo owner or admin
 * Other community or team contact
+
+### LICENSE ###
+Autogestor de contenidos dinámicos (ACD) files
+
+ACD by stripTM All code is under GPL3: 
+http://www.gnu.org/licenses/gpl-3.0.html
+
+The images are under Creative Commons BY-SA 3.0:
+http://creativecommons.org/licenses/by-sa/3.0/deed.es

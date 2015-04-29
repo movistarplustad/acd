@@ -1,15 +1,13 @@
 <?php
 namespace Acd;
 //Ficheros
-define('DIR_BASE', dirname(__FILE__));
-define('DIR_DATA', DIR_BASE.'/data');
-define('DIR_TEST', DIR_BASE.'/test');
-define('DIR_TEMPLATES', DIR_BASE.'/app/view');
+define(__NAMESPACE__ .'\DIR_BASE', dirname(__FILE__));
 
 class conf {
 	public static $DIR_TEMPLATES;
 	public static $DATA_PATH;
 	public static $DATA_DIR_PATH;
+	public static $DATA_CONTENT_PATH;
 	public static $STORAGE_TYPES;
 	public static $STORAGE_TYPE_TEXTPLAIN;
 	public static $STORAGE_TYPE_MONGODB;
@@ -27,10 +25,12 @@ class conf {
 	public static $MYSQL_USER;
 	public static $MYSQL_PASSWORD;
 	public static $MYSQL_SCHEMA;
+	public static $MONGODB_SERVER;
 }
 conf::$DIR_TEMPLATES = DIR_BASE.'/app/view';
-conf::$DATA_PATH = DIR_DATA.'/structures.json';
-conf::$DATA_DIR_PATH = DIR_DATA.'/structures';
+conf::$DATA_PATH = '/mnt/contenido/acd/structures.json';
+conf::$DATA_DIR_PATH = '/mnt/contenido/acd/structures';
+conf::$DATA_CONTENT_PATH = '/mnt/contenido/acd/contents';
 conf::$STORAGE_TYPE_TEXTPLAIN  = 'text/plain';
 conf::$STORAGE_TYPE_MONGODB  = 'mongodb';
 conf::$STORAGE_TYPE_MYSQL  = 'mysql';
@@ -38,7 +38,7 @@ conf::$STORAGE_TYPES = [
 		conf::$STORAGE_TYPE_TEXTPLAIN => 
 			[
 				'name' => 'text/plain',
-				'disabled' => false
+				'disabled' => true
 			],
 		conf::$STORAGE_TYPE_MONGODB =>
 			[
@@ -48,16 +48,16 @@ conf::$STORAGE_TYPES = [
 		conf::$STORAGE_TYPE_MYSQL =>
 			[
 				'name' => 'MySql',
-				'disabled' => false
+				'disabled' => true
 			]
 	];
 conf::$DEFAULT_STORAGE = conf::$STORAGE_TYPE_MONGODB;
 
-conf::$PERMISSION_PATH = DIR_DATA.'/permission.json';
+conf::$PERMISSION_PATH = '/mnt/contenido/acd/permission.json';
 conf::$USE_AUTHENTICATION = true;
 conf::$AUTH_PERSITENT_EXPIRATION_TIME = 31536000; // 1 year
-conf::$PATH_AUTH_CREDENTIALS_FILE = DIR_DATA.'/auth.json';
-conf::$PATH_AUTH_PREMANENT_LOGIN_DIR = DIR_DATA.'/auth_permanent_login';
+conf::$PATH_AUTH_CREDENTIALS_FILE = '/mnt/contenido/acd/auth.json';
+conf::$PATH_AUTH_PREMANENT_LOGIN_DIR = '/mnt/contenido/acd/auth_permanent_login';
 
 conf::$ROL_DEVELOPER = 'developer';
 conf::$ROL_EDITOR = 'editor';
@@ -67,6 +67,12 @@ conf::$MYSQL_USER = 'usuarioweb';
 conf::$MYSQL_PASSWORD = 'strip';
 conf::$MYSQL_SCHEMA = 'acd';
 
+conf::$MONGODB_SERVER = 'mongodb://plusdbspol01.prisadigital.int:27017,plusdbspol02.prisadigital.int:27017,plusdbspol03.prisadigital.int:27017/?replicaSet=ReplicaPlusProduccion';
+
+// Developer / local / personal  configuration
+if (file_exists(DIR_BASE.'/conf.devel.php')) {
+	require DIR_BASE.'/conf.devel.php';
+}
 /* Debug */
 if (file_exists(DIR_BASE.'/../tools/kint/Kint.class.php')) {
 	require DIR_BASE.'/../tools/kint/Kint.class.php';

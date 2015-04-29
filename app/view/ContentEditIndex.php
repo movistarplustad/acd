@@ -1,6 +1,5 @@
 <?php
 namespace Acd\View;
-//require_once (DIR_BASE.'/app/view/Template.php');
 // Output
 class ContentEditIndex extends Template {
 	public function __construct() {
@@ -13,7 +12,7 @@ class ContentEditIndex extends Template {
 	}
 
 	public function render($tpl = '') {
-		$tpl = DIR_TEMPLATES.'/ContentEditIndex.tpl';
+		$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentEditIndex.tpl';
 		return parent::render($tpl);
 	}
 }

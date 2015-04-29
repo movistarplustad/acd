@@ -37,17 +37,27 @@ switch ($action) {
 	case 'delete':
 	case 'list_contents':
 		$id = $_GET['id'];
+		@$titleSearch = $_GET['s'];
 		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('backContent');
 
 		$contentOu = new View\ContentEditListContent();
 		$contentOu->setId($id);
+		$contentOu->setTitleSeach($titleSearch);
 		$contentOu->load();
 
 		$contentLoader = new Model\ContentLoader();
 		$contentLoader->setId($id);
-		$contents = $contentLoader->loadContents('all');
+		if ($titleSearch) {
+			$whereCondition = [];
+			$whereCondition['title'] = $titleSearch;
+			$whereCondition['idStructure'] = $id;
+			$contents = $contentLoader->loadContents('editorSearch', $whereCondition);
+		}
+		else {
+			$contents = $contentLoader->loadContents('all');
+		}
 		$contentOu->setContents($contents);
 
 		$skeletonOu = new View\BaseSkeleton();
@@ -84,6 +94,7 @@ switch ($action) {
 		$content->setIdStructure($idStructureType);
 		$contentOu->setContent($content);
 		$contentOu->newContent(true);
+		$contentOu->setUserRol($_SESSION['rol']);
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
@@ -93,6 +104,7 @@ switch ($action) {
 		break;
 	case 'edit':
 	case 'clone':
+	case 'summary':
 		$bResult = isset($_GET['r']) && $_GET['r'] == 'ok' ? true : false;
 		$id = $_GET['id'];
 		$idStructureType = $_GET['idt'];
@@ -117,8 +129,8 @@ switch ($action) {
 
 		$contentLoader = new Model\ContentLoader();
 		$contentLoader->setId($idStructureType);
-		$contents = $contentLoader->loadContents('id+countParents', $id);
-		$content = $contents->get($id); // TODO cambiar por next / first...
+		$content = $contentLoader->loadContents('id+countParents', $id);
+		//$content = $contents->get($id); // TODO cambiar por next / first...
 		//dd($contentLoader->getFields(),$structure, $content);
 
 		// Modify relations or collection of relations
@@ -176,11 +188,20 @@ switch ($action) {
 			$content->setTitle('[copy] '.$content->getTitle());
 		}
 		$contentOu->setContent($content);
+		$contentOu->setUserRol($_SESSION['rol']);
 		
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
 		$skeletonOu->setHeadTitle('Manage content');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
+
+		if ($action == 'summary') {
+			$summaryController = new Controller\Summary();
+			$summaryController->setIdContent($id);
+			$summaryController->setIdStructure($idStructureType);
+			$summaryController->load();
+			$contentOu->setSummary($summaryController->render());
+		}
 
 		if ($bResult) {
 			$contentOu->setResultDesc('Done');

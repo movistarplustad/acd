@@ -2,11 +2,13 @@
 namespace Acd\Model;
 
 class ContentKeyInvalidException extends \exception {}
+class ContentDoException extends \exception {}
 class ContentDo
 {
 	private $id;
 	private $idStructure;
 	private $title;
+	private $tags;
 	//private $data; /* Array key/value of variable fields */
 	private $fields;
 	private $parent; /* ContentDo Relation in complex structures */
@@ -15,6 +17,7 @@ class ContentDo
 	public function __construct() {
 		$this->id = null;
 		$this->idStructure = null;
+		$this->tags = array();
 		$this->fields = new FieldsDo();
 		$this->parent = null;
 	}
@@ -37,6 +40,17 @@ class ContentDo
 	public function getTitle() {
 		return $this->title;
 	}
+	public function setTags($tags) {
+		if (is_array($tags)) {
+			$this->tags = $tags;
+		}
+		else {
+			throw new ContentDoException("Input data should be an array", 1);
+		}
+	}
+	public function getTags() {
+		return $this->tags;
+	}
 	public function addField($field) {
 		$this->getFields()->add($field);
 	}
@@ -46,6 +60,13 @@ class ContentDo
 	private function setFields($fields) {
 		foreach ($fields as $field) {
 			$this->fields->add(clone $field);
+		}
+	}
+	public function getFieldType($fieldName) {
+		try {
+			return $this->getFields()->getType($fieldName);
+		} catch (KeyInvalidException $e) {
+			return '';
 		}
 	}
 	public function getFieldValue($fieldName) {
@@ -76,7 +97,7 @@ class ContentDo
 	public function getData($key = null) {
 		$data = array();
 		foreach ($this->getFields() as $field) {
-			$data[$field->getName()] = $field->getValue();
+			$data[$field->getId()] = $field->getValue();
 		}
 
 		return $data;
@@ -94,13 +115,15 @@ class ContentDo
 		return $this->countParents;
 	}
 	// With the data structure, build the skeleton of content
-	private function buildSkeleton($structure) {
+	public function buildSkeleton($structure) {
 		$this->setIdStructure($structure->getId());
 		$this->setFields($structure->getFields());
 	}
 	public function load($rawData, $structure = null) {
 		$this->setId($rawData['id']);
 		$this->setTitle($rawData['title']);
+		@$tags = $rawData['tags'] ?: [];
+		$this->setTags($tags);
 		if($structure !== null) {
 			$this->buildSkeleton($structure);
 		}
@@ -139,12 +162,14 @@ class ContentDo
 					$value = $field->getValue();
 					break;
 			}
-			$aFieldsData[$field->getName()] = $value;
+			$aFieldsData[$field->getId()] = $value;
 		}
 
 		return  array(
 			'id' => $this->getId(),
+			'id_structure' => $this->getIdStructure(),
 			'title' => $this->getTitle(),
+			'tags' => $this->getTags(),
 			'data' => $aFieldsData
 		);
 	}

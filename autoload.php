@@ -7,7 +7,9 @@ spl_autoload_register(function ($className)
 	// replace to obtain __DIR__/app/namespace/classname.php path
 	$aPath = explode('\\', $className);
 	$aPath[0] = 'app';
-	$aPath[1] = strtolower($aPath[1]);
+	if (isset($aPath[1] )){
+		$aPath[1] = strtolower($aPath[1]);
+	}
 
 	// get full name of file containing the required class
 	$file = __DIR__.'/'.implode('/', $aPath).'.php';

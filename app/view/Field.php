@@ -24,10 +24,11 @@ class Field extends Template {
 	}
 	public function setField($field) {
 		$this->field = $field;
+		$this->__set('fieldId', $field->getId());
 		$this->__set('fieldName', $field->getName());
-		$this->__set('fieldValue', $field->getValue());
-		$ref = $field->getRef();
-		//$ref = $field->getValue();
+		$this->__set('fieldValue', \Acd\Model\ValueFormater::encode($field->getValue(), $field->getType(), \Acd\Model\ValueFormater::FORMAT_EDITOR)); // Antes $field->getValue());
+		//$ref = $field->getRef();
+		$ref = $field->getValue();
 		//d($field->getValue());
 		if($field->getType() === 'content' && $ref) {
 			d($field->getType());
@@ -65,7 +66,7 @@ class Field extends Template {
 	private function getFormTemplate() {
 		$type = $this->field->getType();
 		if (array_key_exists($type, $this->field->getAvailableTypes())) {
-			$tpl = DIR_TEMPLATES."/field/$type.tpl";
+			$tpl = \Acd\conf::$DIR_TEMPLATES."/field/$type.tpl";
 			//d($tpl);
 			return $tpl;
 		}

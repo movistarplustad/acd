@@ -1,6 +1,5 @@
 <?php
 namespace Acd\View;
-require_once (DIR_BASE.'/app/view/Template.php');
 // Output
 class BaseSkeleton extends \Acd\View\Template {
 	public function __construct() {

@@ -1,6 +1,5 @@
 <?php
 namespace Acd\View;
-//require_once (DIR_BASE.'/app/view/Template.php');
 // Output
 class ContentEditContent extends Template {
 	public function __construct() {
@@ -21,6 +20,11 @@ class ContentEditContent extends Template {
 	}
 	public function setContent($content) {
 		$this->__set('content', $content);
+		$this->__set('contentTitle', \Acd\Model\ValueFormater::encode($content->getTitle(), \Acd\Model\ValueFormater::TYPE_TEXT_SIMPLE, \Acd\Model\ValueFormater::FORMAT_EDITOR));
+		$this->__set('contentTags', \Acd\Model\ValueFormater::encode($content->getTags(), \Acd\Model\ValueFormater::TYPE_TAGS, \Acd\Model\ValueFormater::FORMAT_EDITOR));
+	}
+	public function setUserRol($rol) {
+		$this->__set('userRol', $rol === \Acd\conf::$ROL_DEVELOPER ? '' : ' readonly="readonly"');
 	}
 	public function newContent($bnewContent) {
 		$this->__set('bNew', true);
@@ -28,8 +32,11 @@ class ContentEditContent extends Template {
 	public function setResultDesc($resultDesc) {
 		$this->__set('resultDesc', $resultDesc);
 	}
+	public function setSummary($jsonSummary) {
+		$this->__set('jsonSummary', $jsonSummary);
+	}
 	public function render($tpl = '') {
-		$tpl = DIR_TEMPLATES.'/ContentEditContent.tpl';
+		$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentEditContent.tpl';
 		return parent::render($tpl);
 	}
 }

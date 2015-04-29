@@ -8,7 +8,7 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 	private $db;
 	public function initialize() {
 		try {
-			$this->mongo = new \MongoClient();
+			$this->mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
 			$this->db = $this->mongo->acd;
 			return true;
 		}
@@ -33,6 +33,7 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 		$byStructureQuery = array();
 
 		$cursor = $mongoCollection->find($byStructureQuery);
+		$cursor->sort(array( '_id' => 1));
 		$result = [];
 		foreach ($cursor as $documentFound) {
 			$id = $documentFound['_id'];
@@ -63,6 +64,7 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 		$mongoCollection->remove(array()); 
 		foreach ($structuresDo as $structure) {
 			$id = $structure->getId();
+			//dd($structure);
 			$insert = $structure->tokenizeData()[$id];
 			$insert['_id'] = $id;
 			//d($insert);

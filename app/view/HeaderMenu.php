@@ -1,6 +1,5 @@
 <?php
 namespace Acd\View;
-require_once (DIR_BASE.'/app/view/Template.php');
 // Output
 class HeaderMenu extends \Acd\View\Template {
 	protected $type;
@@ -12,6 +11,6 @@ class HeaderMenu extends \Acd\View\Template {
 		$this->url = $url;
 	}
 	public function render($tpl = '') {
-		return parent::render(DIR_TEMPLATES.'/HeaderMenu.tpl');
+		return parent::render(\Acd\conf::$DIR_TEMPLATES.'/HeaderMenu.tpl');
 	}
 }

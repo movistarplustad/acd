@@ -7,7 +7,7 @@
 		<input type="hidden" name="f" value="<?=htmlspecialchars($idField)?>"/>
 		<label for="title">Title:</label><input type="search" name="s" id="title" value="<?=htmlspecialchars($titleSearch)?>" />
 		<label for="idt">Structure type:</label>
-			<select name="idt" id="idt">
+			<select name="idt" id="idt" required="required">
 				<option></option>
 			<?php
 				foreach ($structures as $estructure) {

@@ -70,6 +70,9 @@ h1::after {
 #wrapper > main {
 	order: 1;
 }
+#wrapper > main {
+	min-width: 80%;
+}
 #wrapper,
 #wrapper > aside,
 #wrapper > main {
@@ -125,6 +128,11 @@ a:active {
 	border-color: #E3E3E3 #E3E3E3 #C2C2C2;
 	padding: 0.5em 0.5em 0.5em 1.8em;
 	cursor: pointer;
+	text-decoration: none;
+	font-size: 1em;
+}
+.button:hover {
+	border-color: #E3E3E3 #E3E3E3 #929292;
 }
 .button.edit {
 	background-image: url(ic_mode_edit_24px.svg);
@@ -146,6 +154,10 @@ a:active {
 }
 .button.clear {
 	background-image: url(ic_clear_24px.svg);
+}
+.button.summary {
+	background-image: url(ic_dvr_24px.svg);
+	margin-left: 1em;
 }
 
 #structures_list .structure {
@@ -193,7 +205,6 @@ a:active {
 	padding: 0 0 0.5em 0;
 }
 .form_login .text label {
-
 	margin-right: 0.5em;
 	padding-top: 0.2em;
 	text-align: right;
@@ -212,6 +223,31 @@ h2 .structure_name {
 	font-style: italic;
 }
 
+/* Internal content data */
+.internal {
+	border: 0;
+}
+.internal legend {
+	display: none;
+}
+.internal  ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+/* Edit structures */
+#manageStructure .fields .field {
+	margin-bottom: 0.5em;
+	list-style-type: none;
+}
+#manageStructure .fields .field:hover {
+	background-color: #f9f9f9;
+}
+#manageStructure .field .delete {
+	text-align: right;
+}
+
 /* Field controls */
 .fields li {
 	line-height: 2.5em;
@@ -219,6 +255,52 @@ h2 .structure_name {
 .fields li .button {
 	font-size: 0.75em;
 }
+.field.text ,
+.field.link_href,
+.field.link_description{
+	width: 70%;
+}
+.field.textarea {
+	width: 70%;
+	height: 10em;
+}
+.field.preview {
+	max-width: 10em;
+	max-height: 10em;
+}
 input[readonly] {
 	color: #999;
+}
+/* Collection */
+.collection li {
+	list-style: inside decimal;
+}
+.ui-sortable {
+	padding: 0;
+	margin: 0;
+}
+.ui-sortable li {
+	background-image: url(draggable.png);
+	padding: 0 0 0 1em;
+	margin: 0;
+	background-position: left 0.5em;
+	background-repeat: no-repeat;
+	cursor: move;
+}
+.ui-sortable li.find {
+	background-image: none;
+	cursor: auto;
+	list-style-type: none;
+}
+.contentSummary {
+	margin: 0 1em;
+	background-color: #fff;
+	border: 1px solid #999;
+}
+.contentSummary h2 {
+	color: #424242;
+	text-align: left;
+}
+.actions {
+	margin: 0.5em 0 1em 0.5em;
 }
