@@ -26,7 +26,8 @@ class PersistentManagerMongoDB implements iPersistentManager
 					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth());
 					break;
 				case 'tag-one-deep': // First element matching with tag
-					return $this->loadTagOneDepth($structureDo, $query->getCondition('tags'), $query->getDepth());
+					$contentsTemp = $this->loadTagOneDepth($structureDo, $query->getCondition('tags'), $query->getDepth());
+					return $contentsTemp->one();
 					break;
 				case 'all':
 					return $this->loadAll($structureDo, $query);
