@@ -7,7 +7,7 @@ class PersistentManagerMySql implements iPersistentManager
 {
 	private $mysqli;
 	public function initialize($structureDo) {
-		//Datos de global.php
+		//Data from global.php
 		$dbHost = \Acd\conf::$MYSQL_SERVER;
 		$dbUser = \Acd\conf::$MYSQL_USER;
 		$dbPassword = \Acd\conf::$MYSQL_PASSWORD;
@@ -84,6 +84,8 @@ class PersistentManagerMySql implements iPersistentManager
 			}
 			$contentDo->setId($this->mysqli->insert_id);
 		}
+		
+		$this->updateTags($contentDo->getId(), $contentDo->getTags());
 
 		$bChildsRelated = false;
 		$oIdChildsRelated = [];
@@ -117,6 +119,22 @@ class PersistentManagerMySql implements iPersistentManager
 		}
 
 		return $contentDo;
+	}
+
+	private function updateTags($idContent, $aTags) {
+		// emptying old tags & add news
+		$id = $this->mysqli->real_escape_string($idContent);
+		$select = "DELETE FROM content_tag WHERE id = $id";
+		if ($this->mysqli->query($select) !== true) {
+			throw new PersistentManagerMySqlException("Delete content tags failed", self::DELETE_FAILED);
+		}
+		foreach ($aTags as $tag) {
+			$tag = $this->mysqli->real_escape_string($tag);
+			$select = "INSERT INTO content_tag (id, tag) VALUES ($id, '$tag')";
+			if ($this->mysqli->query($select) !== true) {
+				throw new PersistentManagerMySqlException("Insert failed when save content tags", self::INSERT_FAILED);
+			}
+		}
 	}
 
 	private function updateRelations($parent, $children) {
@@ -154,6 +172,7 @@ class PersistentManagerMySql implements iPersistentManager
 		elseif ($this->mysqli->query($select) !== true) {
 			throw new PersistentManagerMySqlException("Delete failed", self::DELETE_FAILED);
 		}
+		$this->updateTags($id, array());
 	}
 
 	private function loadById($structureDo, $id) {
@@ -172,6 +191,16 @@ class PersistentManagerMySql implements iPersistentManager
 					$documentFound['id'] = $obj->id;
 					$documentFound['title'] = $obj->title;
 					$documentFound['data'] = unserialize($obj->data);
+
+					// Tags
+					$select = "SELECT id, tag FROM content_tag WHERE id = '$id'";
+					if ($dbResult = $this->mysqli->query($select)) {
+						$aTags = [];
+						while($objTag = $dbResult->fetch_object()){
+							$aTags[] = $objTag->tag;
+						}
+						$documentFound['tags'] = $aTags;
+					}
 
 					$contentFound = new ContentDo();
 					$contentFound->load($documentFound, $structureDo);
@@ -202,7 +231,8 @@ class PersistentManagerMySql implements iPersistentManager
 	private function loadIdDepth ($structureDo, $idContent, $depth) {
 		if ($depth > 0) {
 			$depth--;
-			$content = $this->loadById($structureDo, $idContent)->get($idContent);
+			//$content = $this->loadById($structureDo, $idContent)->get($idContent);
+			$content = $this->loadById($structureDo, $idContent);
 			$fields = $content->getFields();
 			// Walk fields and fill their values
 			foreach ($fields as $field) {

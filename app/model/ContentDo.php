@@ -5,9 +5,12 @@ class ContentKeyInvalidException extends \exception {}
 class ContentDoException extends \exception {}
 class ContentDo
 {
+	const SPIRY_DATE_START = 'start';
+	const SPIRY_DATE_END = 'end';
 	private $id;
 	private $idStructure;
 	private $title;
+	private $expiryDate;
 	private $tags;
 	//private $data; /* Array key/value of variable fields */
 	private $fields;
@@ -17,6 +20,9 @@ class ContentDo
 	public function __construct() {
 		$this->id = null;
 		$this->idStructure = null;
+		$this->expiryDate = array(
+			ContentDo::SPIRY_DATE_START => null,
+			ContentDo::SPIRY_DATE_END => null);
 		$this->tags = array();
 		$this->fields = new FieldsDo();
 		$this->parent = null;
@@ -39,6 +45,22 @@ class ContentDo
 	}
 	public function getTitle() {
 		return $this->title;
+	}
+	private function checkExpirityAttribute($attributeName) {
+		return ($attributeName === ContentDo::SPIRY_DATE_START || $attributeName === ContentDo::SPIRY_DATE_END);
+	}
+	public function setExpiryDate($attributeName, $value) {
+		// $attributeName acepted SPIRY_DATE_START | SPIRY_DATE_END
+		d("hola");
+		if($this->checkExpirityAttribute($attributeName)) {
+			$this->expiryDate[$attributeName] = $value;
+		}
+		else {
+			throw new ContentKeyInvalidException("Expirity attribute [$attributeName] not valid", 1);
+		}
+	}
+	public function getExpiryDate($attributeName) {
+		return $this->expiryDate[$attributeName];
 	}
 	public function setTags($tags) {
 		if (is_array($tags)) {

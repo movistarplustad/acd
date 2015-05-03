@@ -20,7 +20,7 @@
 					
 				}
 				?>
-				<label for="storage">Storage type</label>: <select name="storage" id="storage"><?=$options?></select>
+				<label for="storage">Storage type</label>: <select name="storage" id="storage" required="required"><?=$options?></select>
 			</div>
 		</fieldset>
 		<div>

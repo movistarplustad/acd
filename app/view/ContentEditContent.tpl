@@ -34,12 +34,12 @@
 				<li>
 					<label for="title">Title</label>: <input type="text" name="title" id="title" value="<?=htmlspecialchars($contentTitle)?>" required="required" class="field text"/>
 				</li>
-				<!--
-				<li><label for="expiryStart">Expiry date</label>:  <input type="text" name="expiryStart" id="expiryStart" value="<?=htmlspecialchars('expiryStart')?>" class="range start"/>
+				<li>
+				<?=htmlspecialchars($content->getExpiryDate(\Acd\Model\contentDO::SPIRY_DATE_START))?>
+				<label for="expiryStart">Expiry date</label>:  <input type="datetime" name="expiryStart" id="expiryStart" value="<?=htmlspecialchars($content->getExpiryDate(\Acd\Model\contentDO::SPIRY_DATE_START))?>" class="range start"/>
 					-
-					<input type="text" name="expiryEnd" id="expiryEnd" value="<?=htmlspecialchars('expiryEnd')?>" class="range end"/>
+					<input type="datetime" name="expiryEnd" id="expiryEnd" value="<?=htmlspecialchars($content->getExpiryDate(\Acd\Model\contentDO::SPIRY_DATE_END))?>" class="range end"/>
 				</li>
-				-->
 				<li>
 					<label for="tags">Tags</label>: <input type="text" name="tags" id="tags" value="<?=htmlspecialchars($contentTags)?>"<?=$userRol?>/>
 				</li>
