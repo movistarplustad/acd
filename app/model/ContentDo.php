@@ -62,13 +62,20 @@ class ContentDo
 		else {
 			if ($this->checkExpirityAttribute($attributeName)) {
 //				d($this->periodOfValidity[$attributeName], INF, -INF);
-				return $this->periodOfValidity[$attributeName];
+				return isset($this->periodOfValidity[$attributeName]) ? $this->periodOfValidity[$attributeName] : null;
 			}
 			else {
 				throw new ContentDoException("Unknown period of validity attibute [$attributeName]", 1);
 				
 			}
 		}
+	}
+	public function checkValidityDate($date) {
+		$inDate = true;
+		if ($date) {
+			$inDate = ($this->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_START)) <= $date && ($date  <= $this->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_END));
+		}
+		return $inDate;
 	}
 	public function setTags($tags) {
 		if (is_array($tags)) {
