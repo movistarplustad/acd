@@ -16,6 +16,9 @@ class ValueFormater
 	const FORMAT_INTERNAL = 0;
 	const FORMAT_EDITOR = 1;
 
+	const PERIOD_OF_VALIDITY_START = 'start';
+	const PERIOD_OF_VALIDITY_END = 'end';
+
 	public static function decode($value, $type, $format) {
 		//throw new StorageKeyInvalidException("Invalid format type $format.");
 
@@ -33,20 +36,20 @@ class ValueFormater
 		};
 		$formater[self::TYPE_DATE_RANGE][self::FORMAT_EDITOR] = function ($aValue) {
 			// Empty values return empty array
+			$result = [
+				ValueFormater::PERIOD_OF_VALIDITY_START => -INF,
+				ValueFormater::PERIOD_OF_VALIDITY_END => INF,
+			];
 			if (is_array($aValue)){
-				$result = [];
-				foreach ($aValue as $value) {
+				foreach ($aValue as $attributeName => $value) {
 					if($value) {
 						$valueDecode = \DateTime::createFromFormat('Y-m-d', $value);
 						$valueDecode->setTime(0, 0, 0); 
-						$result[] = $valueDecode->getTimeStamp();
+						$result[$attributeName] = $valueDecode->getTimeStamp();
 					}
 				}
 			}
-			else {
-				$result = [];
-			}
-			$result = array_pad($result, 2, '');
+			//$result = array_pad($result, 2, '');
 			return $result;
 		};
 		$formater[self::TYPE_DATE_TIME][self::FORMAT_EDITOR] = function ($value) {
@@ -59,19 +62,21 @@ class ValueFormater
 			}
 		};
 		$formater[self::TYPE_DATE_TIME_RANGE][self::FORMAT_EDITOR] = function ($aValue) {
+			$result = [
+				ValueFormater::PERIOD_OF_VALIDITY_START => -INF,
+				ValueFormater::PERIOD_OF_VALIDITY_END => INF,
+			];
+
+//d($aValue, debug_backtrace());
 			if (is_array($aValue)){
-				$result = [];
-				foreach ($aValue as $value) {
+				foreach ($aValue as $attributeName => $value) {
 					if($value) {
 						$valueDecode = \DateTime::createFromFormat('Y-m-d*H:i:s*', $value);
-						$result[] = $valueDecode->getTimeStamp();
+						$result[$attributeName] = $valueDecode->getTimeStamp();
 					}
 				}
 			}
-			else {
-				$result = [];
-			}
-			$result = array_pad($result, 2, '');
+			//$result = array_pad($result, 2, '');
 			return $result;
 		};
 		$formater[self::TYPE_TAGS][self::FORMAT_EDITOR] = function ($value) {
@@ -103,26 +108,32 @@ class ValueFormater
 				return date('Y-m-d', $value);
 			};
 			$formater[self::TYPE_DATE_RANGE][self::FORMAT_EDITOR] = function ($aValue) {
-				$result = [];
-				foreach ($aValue as $value) {
-					if($value) {
-						$result[] = date('Y-m-d', $value);
+				$result = [
+					ValueFormater::PERIOD_OF_VALIDITY_START => '',
+					ValueFormater::PERIOD_OF_VALIDITY_END => '',
+				];
+				foreach ($aValue as $attributeName => $value) {
+					if($value && is_finite($value)) {
+						$result[$attributeName] = date('Y-m-d', $value);
 					}
 				}
-				$result = array_pad($result, 2, '');
+				//$result = array_pad($result, 2, '');
 				return $result;
 			};
 			$formater[self::TYPE_DATE_TIME][self::FORMAT_EDITOR] = function ($value) {
 				return date('Y-m-d\TH:i:s\Z', $value);
 			};
 			$formater[self::TYPE_DATE_TIME_RANGE][self::FORMAT_EDITOR] = function ($aValue) {
-				$result = [];
-				foreach ($aValue as $value) {
-					if($value) {
-						$result[] = date('Y-m-d\TH:i:s\Z', $value);
+				$result = [
+					ValueFormater::PERIOD_OF_VALIDITY_START => '',
+					ValueFormater::PERIOD_OF_VALIDITY_END => '',
+				];
+				foreach ($aValue as $attributeName => $value) {
+					if($value && is_finite($value)) {
+						$result[$attributeName] = date('Y-m-d\TH:i:s\Z', $value);
 					}
 				}
-				$result = array_pad($result, 2, '');
+				//$result = array_pad($result, 2, '');
 				return $result;
 			};
 			$formater[self::TYPE_TAGS][self::FORMAT_EDITOR] = function ($value) {

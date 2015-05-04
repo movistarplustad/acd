@@ -35,10 +35,12 @@
 					<label for="title">Title</label>: <input type="text" name="title" id="title" value="<?=htmlspecialchars($contentTitle)?>" required="required" class="field text"/>
 				</li>
 				<li>
-				<?=htmlspecialchars($content->getExpiryDate(\Acd\Model\contentDO::SPIRY_DATE_START))?>
-				<label for="expiryStart">Expiry date</label>:  <input type="datetime" name="expiryStart" id="expiryStart" value="<?=htmlspecialchars($content->getExpiryDate(\Acd\Model\contentDO::SPIRY_DATE_START))?>" class="range start"/>
+				<?php
+					$periodOfValidity = \Acd\Model\ValueFormater::encode($content->getPeriodOfValidity(), \Acd\Model\ValueFormater::TYPE_DATE_TIME_RANGE, \Acd\Model\ValueFormater::FORMAT_EDITOR );
+				?>
+				<label for="validityPeriodStart">Period of validity</label>:  <input type="datetime" name="validityPeriod[start]" id="validityPeriodStart" value="<?=htmlspecialchars($periodOfValidity[\Acd\Model\contentDO::PERIOD_OF_VALIDITY_START])?>" class="range start"/>
 					-
-					<input type="datetime" name="expiryEnd" id="expiryEnd" value="<?=htmlspecialchars($content->getExpiryDate(\Acd\Model\contentDO::SPIRY_DATE_END))?>" class="range end"/>
+					<input type="datetime" name="validityPeriod[end]" id="validityPeriodEnd" value="<?=htmlspecialchars($periodOfValidity[\Acd\Model\contentDO::PERIOD_OF_VALIDITY_END])?>" class="range end"/>
 				</li>
 				<li>
 					<label for="tags">Tags</label>: <input type="text" name="tags" id="tags" value="<?=htmlspecialchars($contentTags)?>"<?=$userRol?>/>

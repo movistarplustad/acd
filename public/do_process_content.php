@@ -10,7 +10,13 @@ if ($accion == 'save' && $id == '') {
 }
 $idStructure = $_POST['ids'];
 $title = isset($_POST['title']) ? $_POST['title'] : null;
-$tags = isset($_POST['tags']) ? \Acd\Model\ValueFormater::decode($_POST['tags'] , \Acd\Model\ValueFormater::TYPE_TAGS, \Acd\Model\ValueFormater::FORMAT_EDITOR): array();
+$periodOfValidity = array(
+	\Acd\Model\ContentDo::PERIOD_OF_VALIDITY_START => isset($_POST['validityPeriod']['start']) ? $_POST['validityPeriod']['start'] : null,
+	\Acd\Model\ContentDo::PERIOD_OF_VALIDITY_END => isset($_POST['validityPeriod']['end']) ? $_POST['validityPeriod']['end'] : null
+);
+$periodOfValidity = \Acd\Model\ValueFormater::decode($periodOfValidity , \Acd\Model\ValueFormater::TYPE_DATE_TIME_RANGE, \Acd\Model\ValueFormater::FORMAT_EDITOR);
+
+$tags = isset($_POST['tags']) ? \Acd\Model\ValueFormater::decode($_POST['tags'] , \Acd\Model\ValueFormater::TYPE_TAGS, \Acd\Model\ValueFormater::FORMAT_EDITOR) : array();
 $fields = isset($_POST['field']) ? $_POST['field'] : array();
 
 $contentLoader = new \ACD\Model\ContentLoader();
@@ -43,6 +49,7 @@ switch ($accion) {
 	case 'new':
 	case 'save':
 			$modified_content->setTitle($title);
+			$modified_content->setPeriodOfValidity($periodOfValidity);
 			$modified_content->setTags($tags);
 			$numFields = count($fields);
 			$formater = new Model\ValueFormater();

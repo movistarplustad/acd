@@ -5,12 +5,13 @@ class ContentKeyInvalidException extends \exception {}
 class ContentDoException extends \exception {}
 class ContentDo
 {
-	const SPIRY_DATE_START = 'start';
-	const SPIRY_DATE_END = 'end';
+	const PERIOD_OF_VALIDITY_START = 'start';
+	const PERIOD_OF_VALIDITY_END = 'end';
+	const PERIOD_OF_VALIDITY_RAW = 'raw'; // For tokenize
 	private $id;
 	private $idStructure;
 	private $title;
-	private $expiryDate;
+	private $periodOfValidity;
 	private $tags;
 	//private $data; /* Array key/value of variable fields */
 	private $fields;
@@ -20,9 +21,9 @@ class ContentDo
 	public function __construct() {
 		$this->id = null;
 		$this->idStructure = null;
-		$this->expiryDate = array(
-			ContentDo::SPIRY_DATE_START => null,
-			ContentDo::SPIRY_DATE_END => null);
+		$this->periodOfValidity = array(
+			ContentDo::PERIOD_OF_VALIDITY_START => null,
+			ContentDo::PERIOD_OF_VALIDITY_END => null);
 		$this->tags = array();
 		$this->fields = new FieldsDo();
 		$this->parent = null;
@@ -47,20 +48,27 @@ class ContentDo
 		return $this->title;
 	}
 	private function checkExpirityAttribute($attributeName) {
-		return ($attributeName === ContentDo::SPIRY_DATE_START || $attributeName === ContentDo::SPIRY_DATE_END);
+		return ($attributeName === ContentDo::PERIOD_OF_VALIDITY_START || $attributeName === ContentDo::PERIOD_OF_VALIDITY_END);
 	}
-	public function setExpiryDate($attributeName, $value) {
-		// $attributeName acepted SPIRY_DATE_START | SPIRY_DATE_END
-		d("hola");
-		if($this->checkExpirityAttribute($attributeName)) {
-			$this->expiryDate[$attributeName] = $value;
+	public function setPeriodOfValidity($periodOfValidity) {
+		// $attributeName acepted PERIOD_OF_VALIDITY_START | PERIOD_OF_VALIDITY_END
+		$this->periodOfValidity= $periodOfValidity;
+	}
+	public function getPeriodOfValidity($attributeName = ContentDo::PERIOD_OF_VALIDITY_RAW) {
+		// TODO. Future period_of_validity class
+		if ($attributeName ===  ContentDo::PERIOD_OF_VALIDITY_RAW) {
+			return $this->periodOfValidity;
 		}
 		else {
-			throw new ContentKeyInvalidException("Expirity attribute [$attributeName] not valid", 1);
+			if ($this->checkExpirityAttribute($attributeName)) {
+//				d($this->periodOfValidity[$attributeName], INF, -INF);
+				return $this->periodOfValidity[$attributeName];
+			}
+			else {
+				throw new ContentDoException("Unknown period of validity attibute [$attributeName]", 1);
+				
+			}
 		}
-	}
-	public function getExpiryDate($attributeName) {
-		return $this->expiryDate[$attributeName];
 	}
 	public function setTags($tags) {
 		if (is_array($tags)) {
@@ -147,6 +155,8 @@ class ContentDo
 	public function load($rawData, $structure = null) {
 		$this->setId($rawData['id']);
 		$this->setTitle($rawData['title']);
+		@$periodOfValidity = $rawData['period_of_validity'] ?: [];
+		$this->setPeriodOfValidity($periodOfValidity);
 		@$tags = $rawData['tags'] ?: [];
 		$this->setTags($tags);
 		if($structure !== null) {
@@ -196,6 +206,7 @@ class ContentDo
 			'id' => $this->getId(),
 			'id_structure' => $this->getIdStructure(),
 			'title' => $this->getTitle(),
+			'period_of_validity' => $this->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_RAW),
 			'tags' => $this->getTags(),
 			'data' => $aFieldsData
 		);
