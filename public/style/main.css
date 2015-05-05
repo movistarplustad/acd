@@ -159,6 +159,9 @@ a:active {
 	background-image: url(ic_dvr_24px.svg);
 	margin-left: 1em;
 }
+.button.content {
+	background-image: url(ic_receipt_24px.svg);
+}
 
 #structures_list .structure {
 	padding: 0.5em 0;

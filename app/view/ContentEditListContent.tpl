@@ -4,7 +4,7 @@
 		<input type="hidden" name="id" value="<?=htmlspecialchars($structure->getId())?>"/>
 		<input type="hidden" name="a" value="list_contents"/>
 		<label for="title">Title:</label><input type="search" name="s" id="title" value="<?=htmlspecialchars($titleSearch)?>" />
-		<input type="submit" name="action" value="search"/>
+		<input type="submit" name="action" value="search" class="button search" />
 	</form>
 	<p class="result"><?=$resultDesc?></p>
 	<ol id="structures_list">
