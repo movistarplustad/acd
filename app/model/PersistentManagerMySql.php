@@ -38,7 +38,7 @@ class PersistentManagerMySql implements iPersistentManager
 				return $this->loadById($structureDo, $query->getCondition());
 				break;
 				case 'id-deep':
-					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth());
+					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $query->getCondition('validity-date'));
 					break;
 			case 'all':
 				return $this->loadAll($structureDo, $query);
@@ -65,9 +65,28 @@ class PersistentManagerMySql implements iPersistentManager
 			// Update
 			$id = $this->mysqli->real_escape_string($contentDo->getId());
 			$title = $this->mysqli->real_escape_string($contentDo->getTitle());
+
+			$dummyDate = $contentDo->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_START);
+			if (is_finite($dummyDate)) {
+				$dummyDate = "FROM_UNIXTIME($dummyDate)";
+			}
+			else {
+				$dummyDate = 'null';
+			}
+			$period_of_validity_start = $this->mysqli->real_escape_string($dummyDate);
+
+			$dummyDate = $contentDo->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_END);
+			if (is_finite($dummyDate)) {
+				$dummyDate = "FROM_UNIXTIME($dummyDate)";
+			}
+			else {
+				$dummyDate = 'null';
+			}
+			$period_of_validity_end = $this->mysqli->real_escape_string($dummyDate);
+
 			$data = $this->mysqli->real_escape_string(serialize($contentDo->getData()));
 			// Log, timestamp for last save / update operation
-			$select = "UPDATE content SET title = '$title', data ='$data', save_ts = CURRENT_TIMESTAMP WHERE id = '$id'";
+			$select = "UPDATE content SET title = '$title', period_of_validity_start = $period_of_validity_start, period_of_validity_end = $period_of_validity_end, data ='$data', save_ts = CURRENT_TIMESTAMP WHERE id = '$id'";
 			if ($this->mysqli->query($select) !== true) {
 				throw new PersistentManagerMySqlException("Update failed when save document", self::UPDATE_FAILED);
 			}
@@ -75,10 +94,30 @@ class PersistentManagerMySql implements iPersistentManager
 		else {
 			// Insert
 			$title = $this->mysqli->real_escape_string($contentDo->getTitle());
+
+
+			$dummyDate = $contentDo->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_START);
+			if (is_finite($dummyDate)) {
+				$dummyDate = "FROM_UNIXTIME($dummyDate)";
+			}
+			else {
+				$dummyDate = 'null';
+			}
+			$period_of_validity_start = $this->mysqli->real_escape_string($dummyDate);
+
+			$dummyDate = $contentDo->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_END);
+			if (is_finite($dummyDate)) {
+				$dummyDate = "FROM_UNIXTIME($dummyDate)";
+			}
+			else {
+				$dummyDate = 'null';
+			}
+			$period_of_validity_end = $this->mysqli->real_escape_string($dummyDate);
+
 			$data = $this->mysqli->real_escape_string(serialize($contentDo->getData()));
 			$idStructure = $this->mysqli->real_escape_string($structureDo->getId());
 			// Log, timestamp for last save / update operation
-			$select = "INSERT INTO content (title, data, id_structure, save_ts) VALUES ('$title', '$data', '$idStructure', CURRENT_TIMESTAMP)";
+			$select = "INSERT INTO content (title, period_of_validity_start, period_of_validity_end, data, id_structure, save_ts) VALUES ('$title', $period_of_validity_start, $period_of_validity_end, '$data', '$idStructure', CURRENT_TIMESTAMP)";
 			if ($this->mysqli->query($select) !== true) {
 				throw new PersistentManagerMySqlException("Insert failed when save document", self::INSERT_FAILED);
 			}
@@ -183,13 +222,15 @@ class PersistentManagerMySql implements iPersistentManager
 		$contentFound = null;
 		try {
 			$id = $this->mysqli->real_escape_string($id);
-			$select = "SELECT id, title, data FROM content WHERE id = '$id'";
+			$select = "SELECT id, title, UNIX_TIMESTAMP(period_of_validity_start) as period_of_validity_start, UNIX_TIMESTAMP(period_of_validity_end) as period_of_validity_end, data FROM content WHERE id = '$id'";
 			if ($dbResult = $this->mysqli->query($select)) {
 				//$result = new ContentsDo();
 				while($obj = $dbResult->fetch_object()){
 					$documentFound = array();
 					$documentFound['id'] = $obj->id;
 					$documentFound['title'] = $obj->title;
+					$documentFound['period_of_validity']['start'] = is_null($obj->period_of_validity_start) ? -INF : $obj->period_of_validity_start;
+					$documentFound['period_of_validity']['end'] = is_null($obj->period_of_validity_end) ? INF : $obj->period_of_validity_end;
 					$documentFound['data'] = unserialize($obj->data);
 
 					// Tags
@@ -228,11 +269,16 @@ class PersistentManagerMySql implements iPersistentManager
 
 		return $this->structuresCache[$id];
 	}
-	private function loadIdDepth ($structureDo, $idContent, $depth) {
+	private function loadIdDepth ($structureDo, $idContent, $depth, $validityDate = null) {
 		if ($depth > 0) {
 			$depth--;
 			//$content = $this->loadById($structureDo, $idContent)->get($idContent);
 			$content = $this->loadById($structureDo, $idContent);
+			$isValid = $content->checkValidityDate($validityDate);
+			// TODO Organize code
+			if (!$isValid) return null;
+			// else
+
 			$fields = $content->getFields();
 			// Walk fields and fill their values
 			foreach ($fields as $field) {
@@ -241,7 +287,7 @@ class PersistentManagerMySql implements iPersistentManager
 						// Has relation info?
 						if($field->getValue() && $field->getValue()['id_structure']) {
 							$structureTmp = $this->getStructure($field->getValue()['id_structure']);
-							$contentsTemp = $this->loadIdDepth ($structureTmp, $field->getValue()['ref'], $depth);
+							$contentsTemp = $this->loadIdDepth ($structureTmp, $field->getValue()['ref'], $depth, $validityDate);
 							if ($contentsTemp) {
 								$field->setValue($contentsTemp->one());
 							}
@@ -251,7 +297,7 @@ class PersistentManagerMySql implements iPersistentManager
 						$newVal = new ContentsDo();
 						foreach ($field->getValue() as $itemCollection) {
 							$structureTmp = $this->getStructure($itemCollection['id_structure']);
-							$contentsTemp = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth);
+							$contentsTemp = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth, $validityDate);
 							if ($contentsTemp) {
 								$newVal->add($contentsTemp->one());
 							}

@@ -86,6 +86,8 @@
 			$contentWithLevelOfDepth = $contentLoader->loadContents('id-deep', ['id' => $idContent, 'depth' => 5]);
 			// Sample #3 by any match tag, with n related levels
 			$contentByTagWithLevelOfDepth = $contentLoader->loadContents('tag-one-deep', ['tags' => ['portadacine', 'otros'], 'depth' => 2]);
+			// Sample #4 by any match tag, with n related levels and only content
+			$contentByTagWithLevelOfDepth = $contentLoader->loadContents('tag-one-deep', ['tags' => ['portadacine', 'otros'], 'depth' => 2, 'validity-date' => time()]);
 			// Value of field
 <?php
 				foreach ($fields as $field) {

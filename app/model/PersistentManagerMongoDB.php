@@ -299,6 +299,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$isValid = $content->checkValidityDate($validityDate);
 			// TODO Organize code
 			if (!$isValid) return null;
+			// else
 
 			$fields = $content->getFields();
 			// Walk fields and fill their values

@@ -56,6 +56,8 @@ CREATE SCHEMA `acd` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci ;
 CREATE TABLE `acd`.`content` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(256) NULL,
+  `period_of_validity_start` TIMESTAMP NULL,
+  `period_of_validity_end` TIMESTAMP NULL,
   `data` BLOB NULL,
   `id_structure` VARCHAR(256) NULL,
   `save_ts` TIMESTAMP NOT NULL,
@@ -80,3 +82,10 @@ CREATE TABLE `acd`.`content_tag` (
 		`id` INT NOT NULL,
 		`tag` VARCHAR(128) NOT NULL,
 		PRIMARY KEY (`id`, `tag`));
+
+
+// Ampliación vigencias
+ALTER TABLE `acd`.`content` 
+ADD COLUMN `period_of_validity_start` TIMESTAMP NULL AFTER `title`,
+ADD COLUMN `period_of_validity_end` TIMESTAMP NULL AFTER `period_of_validity_start`;
+
