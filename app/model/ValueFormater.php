@@ -15,6 +15,7 @@ class ValueFormater
 	// Formats to getting and setting values
 	const FORMAT_INTERNAL = 0;
 	const FORMAT_EDITOR = 1;
+	const FORMAT_HUMAN = 2;
 
 	const PERIOD_OF_VALIDITY_START = 'start';
 	const PERIOD_OF_VALIDITY_END = 'end';
@@ -141,6 +142,19 @@ class ValueFormater
 			};
 			$formater[self::TYPE_BOOLEAN][self::FORMAT_EDITOR] = function ($value) {
 				return $value ? ' checked="checked"' : '';
+			};
+			$formater[self::TYPE_DATE_RANGE][self::FORMAT_HUMAN] = function ($aValue) {
+				$result = [
+					ValueFormater::PERIOD_OF_VALIDITY_START => '∞',
+					ValueFormater::PERIOD_OF_VALIDITY_END => '∞',
+				];
+				foreach ($aValue as $attributeName => $value) {
+					if($value && is_finite($value)) {
+						$result[$attributeName] = date('j M', $value);
+					}
+				}
+				//$result = array_pad($result, 2, '');
+				return implode(' - ', $result);
 			};
 
 			if(isset($formater[$type][$format])) {

@@ -32,3 +32,4 @@ if ($idParent) {
 <?php
 }
 ?>
+<span class="periodValidity" title="Period of validity"><?=\Acd\Model\ValueFormater::encode($fieldRef->getPeriodOfValidity(), \Acd\Model\ValueFormater::TYPE_DATE_RANGE, \Acd\Model\ValueFormater::FORMAT_HUMAN)?></span>

@@ -298,6 +298,9 @@ input[readonly] {
 	cursor: auto;
 	list-style-type: none;
 }
+.periodValidity {
+	font-size: 0.6em;
+}
 .contentSummary {
 	margin: 0 1em;
 	background-color: #fff;
