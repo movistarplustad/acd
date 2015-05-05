@@ -7,7 +7,8 @@ class ContentDo
 {
 	const PERIOD_OF_VALIDITY_START = 'start';
 	const PERIOD_OF_VALIDITY_END = 'end';
-	const PERIOD_OF_VALIDITY_RAW = 'raw'; // For tokenize
+	const PERIOD_OF_VALIDITY_RAW = 'raw'; 
+	const PERIOD_OF_VALIDITY_TOKENIZE = 'tokenize'; // For tokenize
 	private $id;
 	private $idStructure;
 	private $title;
@@ -22,8 +23,8 @@ class ContentDo
 		$this->id = null;
 		$this->idStructure = null;
 		$this->periodOfValidity = array(
-			ContentDo::PERIOD_OF_VALIDITY_START => null,
-			ContentDo::PERIOD_OF_VALIDITY_END => null);
+			ContentDo::PERIOD_OF_VALIDITY_START => -INF,
+			ContentDo::PERIOD_OF_VALIDITY_END => INF);
 		$this->tags = array();
 		$this->fields = new FieldsDo();
 		$this->parent = null;
@@ -56,24 +57,35 @@ class ContentDo
 	}
 	public function getPeriodOfValidity($attributeName = ContentDo::PERIOD_OF_VALIDITY_RAW) {
 		// TODO. Future period_of_validity class
-		if ($attributeName ===  ContentDo::PERIOD_OF_VALIDITY_RAW) {
-			return $this->periodOfValidity;
-		}
-		else {
-			if ($this->checkExpirityAttribute($attributeName)) {
-//				d($this->periodOfValidity[$attributeName], INF, -INF);
-				return isset($this->periodOfValidity[$attributeName]) ? $this->periodOfValidity[$attributeName] : null;
-			}
-			else {
-				throw new ContentDoException("Unknown period of validity attibute [$attributeName]", 1);
-				
-			}
+		switch ($attributeName) {
+			case ContentDo::PERIOD_OF_VALIDITY_RAW:
+				return $this->periodOfValidity;
+				break;
+			case ContentDo::PERIOD_OF_VALIDITY_TOKENIZE:
+				// Purge infinite values, transform to empty string (infinite values not accepted y json grammar)
+				$periodOfValidityTmp = [];
+				foreach ($this->periodOfValidity as $key => $value) {
+					$periodOfValidityTmp[$key] = is_finite((double) $value) ? $value : '';
+				}
+
+				return $periodOfValidityTmp;
+				break;
+			default:
+				if ($this->checkExpirityAttribute($attributeName)) {
+					return isset($this->periodOfValidity[$attributeName]) ? $this->periodOfValidity[$attributeName] : null;
+				}
+				else {
+					throw new ContentDoException("Unknown period of validity attibute [$attributeName]", 1);
+				}
+				break;
 		}
 	}
 	public function checkValidityDate($date) {
 		$inDate = true;
+		$start = $this->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_START) ? $this->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_START) : -INF;
+		$end = $this->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_END) ? $this->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_END) : INF;
 		if ($date) {
-			$inDate = ($this->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_START)) <= $date && ($date  <= $this->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_END));
+			$inDate = ($start  <= $date) && ($date  <= $end);
 		}
 		return $inDate;
 	}
@@ -213,7 +225,7 @@ class ContentDo
 			'id' => $this->getId(),
 			'id_structure' => $this->getIdStructure(),
 			'title' => $this->getTitle(),
-			'period_of_validity' => $this->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_RAW),
+			'period_of_validity' => $this->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_TOKENIZE),
 			'tags' => $this->getTags(),
 			'data' => $aFieldsData
 		);
