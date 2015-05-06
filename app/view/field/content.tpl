@@ -6,11 +6,13 @@ if ($fieldRef) {
 	$idContent = $fieldRef->getId();
 	$idStructure = $fieldRef->getIdStructure();
 	$title = $fieldRef->getTitle();
+	$validityDate = \Acd\Model\ValueFormater::encode($fieldRef->getPeriodOfValidity(), \Acd\Model\ValueFormater::TYPE_DATE_RANGE, \Acd\Model\ValueFormater::FORMAT_HUMAN);
 }
 else {
 	$idContent = '';
 	$idStructure = '';
 	$title = '';
+	$validityDate = '';
 }
 ?>
 <input type="hidden" name="field[<?=$id?>][id]" value="<?=htmlspecialchars($fieldId)?>"/>
@@ -31,5 +33,9 @@ if ($idParent) {
 <a href="content_rel.php?a=select_type&amp;idp=<?=urlencode($idParent)?>&amp;idtp=<?=urlencode($idStructureParent)?>&amp;f=<?=urlencode($fieldId)?>&amp;idt=<?=urlencode($idStructure)?>" class="button search">Find</a>
 <?php
 }
+if ($validityDate) {
 ?>
-<span class="periodValidity" title="Period of validity"><?=\Acd\Model\ValueFormater::encode($fieldRef->getPeriodOfValidity(), \Acd\Model\ValueFormater::TYPE_DATE_RANGE, \Acd\Model\ValueFormater::FORMAT_HUMAN)?></span>
+<span class="periodValidity" title="Period of validity"><?=$validityDate?></span>
+<?php
+}
+?>
