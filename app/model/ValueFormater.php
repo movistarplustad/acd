@@ -148,13 +148,15 @@ class ValueFormater
 					ValueFormater::PERIOD_OF_VALIDITY_START => '∞',
 					ValueFormater::PERIOD_OF_VALIDITY_END => '∞',
 				];
+				$bModified = false;
 				foreach ($aValue as $attributeName => $value) {
 					if($value && is_finite($value)) {
-						$result[$attributeName] = date('j M', $value);
+						$result[$attributeName] = date('j M G:i\h', $value);
+						$bModified = true;
 					}
 				}
 				//$result = array_pad($result, 2, '');
-				return implode(' - ', $result);
+				return $bModified ? implode(' - ', $result) : '';
 			};
 
 			if(isset($formater[$type][$format])) {
