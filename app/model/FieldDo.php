@@ -8,6 +8,7 @@ class FieldDo
 
 	const TYPE_TEXT_SIMPLE = 'text_simple';
 	const TYPE_TEXT_MULTILINE = 'text_multiline';
+	const TYPE_RICH_TEXT = 'rich_text';
 	const TYPE_INTEGER = 'integer';
 	const TYPE_FLOAT = 'float';
 	const TYPE_RANGE = 'range';
@@ -35,6 +36,7 @@ class FieldDo
 		return array(
 			self::TYPE_TEXT_SIMPLE => 'Simple text',
 			self::TYPE_TEXT_MULTILINE => 'Multiline text area',
+			self::TYPE_RICH_TEXT => 'Rich text area',
 			self::TYPE_INTEGER => 'Integer number',
 			self::TYPE_FLOAT => 'Decimal number',
 			self::TYPE_RANGE => 'Range',

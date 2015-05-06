@@ -266,7 +266,8 @@ option[disabled] {
 .field.link_description{
 	width: 70%;
 }
-.field.textarea {
+.field.textarea,
+.field.richtext {
 	width: 70%;
 	height: 10em;
 }
