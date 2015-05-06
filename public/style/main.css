@@ -268,7 +268,7 @@ option[disabled] {
 }
 .field.textarea,
 .field.richtext {
-	width: 70%;
+	width: 99%;
 	height: 10em;
 }
 .field.preview {

@@ -89,3 +89,46 @@ ALTER TABLE `acd`.`content`
 ADD COLUMN `period_of_validity_start` TIMESTAMP NULL AFTER `title`,
 ADD COLUMN `period_of_validity_end` TIMESTAMP NULL AFTER `period_of_validity_start`;
 
+WYSIWYG editor
+http://ckeditor.com/builder
+Selected plugins
+
+    Optional pluginEditor Resize
+    Optional pluginFormat
+    Optional pluginPaste As Plain Text
+    Optional pluginPaste from Word
+    Plugin included in presetAbout CKEditor
+    Plugin included in presetBasic Styles
+    Plugin included in presetClipboard
+    required by: Paste from Word, Paste As Plain Text
+    Plugin included in presetEditor Toolbar
+    Plugin included in presetEnter Key
+    Plugin included in presetEscape HTML Entities
+    Plugin included in presetFloating Space
+    Plugin included in presetIFrame Editing Area
+    Plugin included in presetIndent List
+    required by: List
+    Plugin included in presetLink
+    Plugin included in presetList
+    Plugin included in presetUndo
+    Plugin is required by other pluginsDialog
+    required by: About CKEditor, Clipboard, Link
+    Plugin is required by other pluginsDialog User Interface
+    required by: Dialog
+    Plugin is required by other pluginsFake Objects
+    required by: Link
+    Optional pluginFloating Panel
+    required by: Rich Combo
+    Plugin is required by other pluginsIndent / Outdent
+    required by: Indent List
+    Optional pluginList Block
+    required by: Rich Combo
+    Optional pluginPanel
+    required by: Floating Panel, List Block
+    Optional pluginRich Combo
+    required by: Format
+    Plugin is required by other pluginsUI Button
+    required by: Rich Combo, Editor Toolbar
+
+    Skin
+    Minimalist

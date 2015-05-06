@@ -84,6 +84,9 @@ var editor = {
 				});
 		}
 
+		/* Textarea WYSIWYG  */
+		CKEDITOR.replaceAll("richtext");
+
 	},
 	confirmDelete : function(e) {
 		var bDelete = window.confirm("remove permanently this element?");

@@ -24,6 +24,7 @@
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/datetimepicker/jquery.datetimepicker.js"></script>
+<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>
