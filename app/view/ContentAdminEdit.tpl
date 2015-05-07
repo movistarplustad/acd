@@ -78,17 +78,27 @@
 	<article class="dev_sample">
 		<h1>Examples for developer</h1>		
 		<pre>
+			// Sample #1 by id, only content without related content
 			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
-			// Sample #1 by id, only content without related content
 			$plainContent = $contentLoader->loadContents('id', $idContent);
+
 			// Sample #2 by id, with n related levels
+			$contentLoader = new \Acd\Model\ContentLoader();
+			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
 			$contentWithLevelOfDepth = $contentLoader->loadContents('id-deep', ['id' => $idContent, 'depth' => 5]);
+
 			// Sample #3 by any match tag, with n related levels
+			$contentLoader = new \Acd\Model\ContentLoader();
+			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
 			$contentByTagWithLevelOfDepth = $contentLoader->loadContents('tag-one-deep', ['tags' => ['portadacine', 'otros'], 'depth' => 2]);
+
 			// Sample #4 by any match tag, with n related levels and only content
+			$contentLoader = new \Acd\Model\ContentLoader();
+			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
 			$contentByTagWithLevelOfDepth = $contentLoader->loadContents('tag-one-deep', ['tags' => ['portadacine', 'otros'], 'depth' => 2, 'validity-date' => time()]);
-			// Value of field
+
+			// And get values of fields
 <?php
 				foreach ($fields as $field) {
 ?>

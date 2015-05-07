@@ -7,6 +7,7 @@
 	
 	<link rel="stylesheet" type="text/css" href="js/jquery-ui/jquery-ui.min.css"/>
 	<link rel="stylesheet" type="text/css" href="js/datetimepicker/jquery.datetimepicker.css"/>
+	<link rel="stylesheet" type="text/css" href="js/tag-it/jquery.tagit.css"/>
 	<link rel="stylesheet" type="text/css" href="style/main.css"/>
 	<link href="style/icon_16.png" rel="icon" />
 	<link href="style/icon_128.png" sizes="128x128" rel="icon" />
@@ -25,6 +26,7 @@
 <script type="text/javascript" src="js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/datetimepicker/jquery.datetimepicker.js"></script>
 <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="js/tag-it/tag-it.min.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>

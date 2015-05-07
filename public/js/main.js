@@ -87,6 +87,20 @@ var editor = {
 		/* Textarea WYSIWYG  */
 		CKEDITOR.replaceAll("richtext");
 
+		/* Tags */
+		$(".tags")
+			.filter(function() {
+				if(typeof $(this).attr("readonly") === "undefined") {
+					$(this).tagit();
+				}
+				else {
+				$(this).tagit({
+						readOnly: true
+					});
+				}
+			});
+
+
 	},
 	confirmDelete : function(e) {
 		var bDelete = window.confirm("remove permanently this element?");

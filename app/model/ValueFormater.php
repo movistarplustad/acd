@@ -84,7 +84,7 @@ class ValueFormater
 			if($value) {
 				$value = trim($value);
 				$value = preg_replace('/\s+/', ' ', $value);
-				return explode(' ', $value);
+				return explode(',', $value);
 			}
 			else {
 				return array();
@@ -138,7 +138,7 @@ class ValueFormater
 				return $result;
 			};
 			$formater[self::TYPE_TAGS][self::FORMAT_EDITOR] = function ($value) {
-				return implode(' ', $value);
+				return implode(',', $value);
 			};
 			$formater[self::TYPE_BOOLEAN][self::FORMAT_EDITOR] = function ($value) {
 				return $value ? ' checked="checked"' : '';

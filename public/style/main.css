@@ -271,6 +271,18 @@ option[disabled] {
 	width: 99%;
 	height: 10em;
 }
+label.for-tag {
+	float: left;
+}
+.tagit.ui-corner-all {
+	float: left;
+	width: 70%;
+}
+.tagit-choice,
+.tagit-new {
+	font-family: inherit;
+	font-size: 0.8em;
+}
 .field.preview {
 	max-width: 10em;
 	max-height: 10em;
