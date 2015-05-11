@@ -37,7 +37,11 @@ if($bMongoDB){
 	echo "Creating indexed in content collection\n";
 	$mongoCollection = $db->selectCollection('content');
 	$mongoCollection->createIndex (['id_structure' => 1, 'tags' => 1]);
+	// Content and alias_id
+	$mongoCollection->createIndex (['id_structure' => 1, 'alias_id' => 1]);
 	var_dump($mongoCollection->getIndexInfo());
+
+
 }
 
 if($bMySql) {

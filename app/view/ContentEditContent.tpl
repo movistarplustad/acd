@@ -43,6 +43,9 @@
 					<input type="datetime" name="validityPeriod[end]" id="validityPeriodEnd" value="<?=htmlspecialchars($periodOfValidity[\Acd\Model\contentDO::PERIOD_OF_VALIDITY_END])?>" class="range end"/>
 				</li>
 				<li>
+					<label for="aliasId">Alias-id.: </label> <input type="text" name="aliasId" id="aliasId" value="<?=htmlspecialchars($aliasId)?>" class="field text"<?=$userRol?>/>
+				</li>
+				<li>
 					<label for="tags" class="for-tag">Tags: </label> <input type="text" name="tags" id="tags" value="<?=htmlspecialchars($contentTags)?>" class="field tags"<?=$userRol?>/>
 				</li>
 			</ul>

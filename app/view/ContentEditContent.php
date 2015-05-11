@@ -21,6 +21,7 @@ class ContentEditContent extends Template {
 	public function setContent($content) {
 		$this->__set('content', $content);
 		$this->__set('contentTitle', \Acd\Model\ValueFormater::encode($content->getTitle(), \Acd\Model\ValueFormater::TYPE_TEXT_SIMPLE, \Acd\Model\ValueFormater::FORMAT_EDITOR));
+		$this->__set('aliasId', \Acd\Model\ValueFormater::encode($content->getAliasId(), \Acd\Model\ValueFormater::TYPE_TEXT_SIMPLE, \Acd\Model\ValueFormater::FORMAT_EDITOR));
 		$this->__set('contentTags', \Acd\Model\ValueFormater::encode($content->getTags(), \Acd\Model\ValueFormater::TYPE_TAGS, \Acd\Model\ValueFormater::FORMAT_EDITOR));
 	}
 	public function setUserRol($rol) {

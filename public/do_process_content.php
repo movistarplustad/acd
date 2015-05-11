@@ -16,6 +16,7 @@ $periodOfValidity = array(
 );
 $periodOfValidity = \Acd\Model\ValueFormater::decode($periodOfValidity , \Acd\Model\ValueFormater::TYPE_DATE_TIME_RANGE, \Acd\Model\ValueFormater::FORMAT_EDITOR);
 
+$aliasId =isset($_POST['aliasId']) ? $_POST['aliasId'] : null;
 $tags = isset($_POST['tags']) ? \Acd\Model\ValueFormater::decode($_POST['tags'] , \Acd\Model\ValueFormater::TYPE_TAGS, \Acd\Model\ValueFormater::FORMAT_EDITOR) : array();
 $fields = isset($_POST['field']) ? $_POST['field'] : array();
 
@@ -50,6 +51,7 @@ switch ($accion) {
 	case 'save':
 			$modified_content->setTitle($title);
 			$modified_content->setPeriodOfValidity($periodOfValidity);
+			$modified_content->setAliasId($aliasId);
 			$modified_content->setTags($tags);
 			$numFields = count($fields);
 			$formater = new Model\ValueFormater();

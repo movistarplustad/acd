@@ -13,6 +13,7 @@ class ContentDo
 	private $idStructure;
 	private $title;
 	private $periodOfValidity;
+	private $aliasId;
 	private $tags;
 	//private $data; /* Array key/value of variable fields */
 	private $fields;
@@ -25,6 +26,7 @@ class ContentDo
 		$this->periodOfValidity = array(
 			ContentDo::PERIOD_OF_VALIDITY_START => -INF,
 			ContentDo::PERIOD_OF_VALIDITY_END => INF);
+		$this->aliasId = null;
 		$this->tags = array();
 		$this->fields = new FieldsDo();
 		$this->parent = null;
@@ -88,6 +90,12 @@ class ContentDo
 			$inDate = ($start  <= $date) && ($date  <= $end);
 		}
 		return $inDate;
+	}
+	public function setAliasId($aliasId) {
+		$this->aliasId = $aliasId;
+	}
+	public function getAliasId() {
+		return $this->aliasId;
 	}
 	public function setTags($tags) {
 		if (is_array($tags)) {
@@ -176,6 +184,8 @@ class ContentDo
 		$this->setTitle($rawData['title']);
 		@$periodOfValidity = $rawData['period_of_validity'] ?: [];
 		$this->setPeriodOfValidity($periodOfValidity);
+		@$aliasId = $rawData['alias_id'];
+		$this->setAliasId($aliasId);
 		@$tags = $rawData['tags'] ?: [];
 		$this->setTags($tags);
 		if($structure !== null) {
@@ -226,6 +236,7 @@ class ContentDo
 			'id_structure' => $this->getIdStructure(),
 			'title' => $this->getTitle(),
 			'period_of_validity' => $this->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_TOKENIZE),
+			'alias_id' => $this->getAliasId(),
 			'tags' => $this->getTags(),
 			'data' => $aFieldsData
 		);
