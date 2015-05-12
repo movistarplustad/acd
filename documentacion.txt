@@ -55,9 +55,10 @@ CREATE SCHEMA `acd` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci ;
 
 CREATE TABLE `acd`.`content` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `title` VARCHAR(256) NULL,
+  `title` VARCHAR(256) NOT NULL,
   `period_of_validity_start` TIMESTAMP NULL,
   `period_of_validity_end` TIMESTAMP NULL,
+  `alias_id` VARCHAR(256) NULL,
   `data` BLOB NULL,
   `id_structure` VARCHAR(256) NULL,
   `save_ts` TIMESTAMP NOT NULL,

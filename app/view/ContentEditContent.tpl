@@ -3,6 +3,7 @@
 		? 'New content'
 		: 'Edit content <spam class="structure_name">'.htmlspecialchars($structure->getName()).'</spam>';
 	$relationCount = $content->getCountParents();
+	$aliasIdCount = $content->getCountAliasId();
 	$deleteDisabled = $relationCount > 0 ? ' disabled="disabled"' : '';
 ?>
 <main>
@@ -43,7 +44,14 @@
 					<input type="datetime" name="validityPeriod[end]" id="validityPeriodEnd" value="<?=htmlspecialchars($periodOfValidity[\Acd\Model\contentDO::PERIOD_OF_VALIDITY_END])?>" class="range end"/>
 				</li>
 				<li>
-					<label for="aliasId">Alias-id.: </label> <input type="text" name="aliasId" id="aliasId" value="<?=htmlspecialchars($aliasId)?>" class="field text"<?=$userRol?>/>
+					<?php
+						if($aliasIdCount > 1) {
+					?>
+						<p class="warning"><strong>Warning</strong> alias-id. repeat at <?=$aliasIdCount?> times.</p>
+					<?php
+						}
+					?>
+					<label for="aliasId">Alias-id.: </label> <input type="text" name="aliasId" id="aliasId" value="<?=htmlspecialchars($aliasId)?>" class="field text"/>
 				</li>
 				<li>
 					<label for="tags" class="for-tag">Tags: </label> <input type="text" name="tags" id="tags" value="<?=htmlspecialchars($contentTags)?>" class="field tags"<?=$userRol?>/>

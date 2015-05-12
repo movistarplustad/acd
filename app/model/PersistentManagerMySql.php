@@ -48,6 +48,9 @@ class PersistentManagerMySql implements iPersistentManager
 				case 'countParents':
 					return $this->countParents($structureDo, $query);
 					break;
+				case 'count-alias-id':
+					return $this->countAliasId($structureDo, $query);
+					break;
 			default:
 				throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
 				break;
@@ -65,6 +68,7 @@ class PersistentManagerMySql implements iPersistentManager
 			// Update
 			$id = $this->mysqli->real_escape_string($contentDo->getId());
 			$title = $this->mysqli->real_escape_string($contentDo->getTitle());
+			$alias_id = $this->mysqli->real_escape_string($contentDo->getAliasId());
 
 			$dummyDate = $contentDo->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_START);
 			if (is_finite($dummyDate)) {
@@ -86,7 +90,7 @@ class PersistentManagerMySql implements iPersistentManager
 
 			$data = $this->mysqli->real_escape_string(serialize($contentDo->getData()));
 			// Log, timestamp for last save / update operation
-			$select = "UPDATE content SET title = '$title', period_of_validity_start = $period_of_validity_start, period_of_validity_end = $period_of_validity_end, data ='$data', save_ts = CURRENT_TIMESTAMP WHERE id = '$id'";
+			$select = "UPDATE content SET title = '$title', period_of_validity_start = $period_of_validity_start, period_of_validity_end = $period_of_validity_end,  alias_id = '$alias_id', data ='$data', save_ts = CURRENT_TIMESTAMP WHERE id = '$id'";
 			if ($this->mysqli->query($select) !== true) {
 				throw new PersistentManagerMySqlException("Update failed when save document", self::UPDATE_FAILED);
 			}
@@ -94,6 +98,7 @@ class PersistentManagerMySql implements iPersistentManager
 		else {
 			// Insert
 			$title = $this->mysqli->real_escape_string($contentDo->getTitle());
+			$alias_id = $this->mysqli->real_escape_string($contentDo->getAliasId());
 
 
 			$dummyDate = $contentDo->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_START);
@@ -117,7 +122,7 @@ class PersistentManagerMySql implements iPersistentManager
 			$data = $this->mysqli->real_escape_string(serialize($contentDo->getData()));
 			$idStructure = $this->mysqli->real_escape_string($structureDo->getId());
 			// Log, timestamp for last save / update operation
-			$select = "INSERT INTO content (title, period_of_validity_start, period_of_validity_end, data, id_structure, save_ts) VALUES ('$title', $period_of_validity_start, $period_of_validity_end, '$data', '$idStructure', CURRENT_TIMESTAMP)";
+			$select = "INSERT INTO content (title, period_of_validity_start, period_of_validity_end, alias_id, data, id_structure, save_ts) VALUES ('$title', $period_of_validity_start, $period_of_validity_end, '$alias_id', '$data', '$idStructure', CURRENT_TIMESTAMP)";
 			if ($this->mysqli->query($select) !== true) {
 				throw new PersistentManagerMySqlException("Insert failed when save document", self::INSERT_FAILED);
 			}
@@ -222,7 +227,7 @@ class PersistentManagerMySql implements iPersistentManager
 		$contentFound = null;
 		try {
 			$id = $this->mysqli->real_escape_string($id);
-			$select = "SELECT id, title, UNIX_TIMESTAMP(period_of_validity_start) as period_of_validity_start, UNIX_TIMESTAMP(period_of_validity_end) as period_of_validity_end, data FROM content WHERE id = '$id'";
+			$select = "SELECT id, title, UNIX_TIMESTAMP(period_of_validity_start) as period_of_validity_start, UNIX_TIMESTAMP(period_of_validity_end) as period_of_validity_end, alias_id, data FROM content WHERE id = '$id'";
 			if ($dbResult = $this->mysqli->query($select)) {
 				//$result = new ContentsDo();
 				while($obj = $dbResult->fetch_object()){
@@ -231,6 +236,7 @@ class PersistentManagerMySql implements iPersistentManager
 					$documentFound['title'] = $obj->title;
 					$documentFound['period_of_validity']['start'] = is_null($obj->period_of_validity_start) ? -INF : $obj->period_of_validity_start;
 					$documentFound['period_of_validity']['end'] = is_null($obj->period_of_validity_end) ? INF : $obj->period_of_validity_end;
+					$documentFound['alias_id'] = $obj->alias_id;
 					$documentFound['data'] = unserialize($obj->data);
 
 					// Tags
@@ -397,5 +403,24 @@ class PersistentManagerMySql implements iPersistentManager
 		}
 
 		return $total;
+	}
+	private function countAliasId($structureDo, $query) {
+		//SELECT count(*) FROM content WHERE alias_id = '$aliasId'
+		if($query->getCondition('alias_id')) {
+			$aliasId = $this->mysqli->real_escape_string($query->getCondition('alias_id'));
+			$select = "SELECT count(*) as total FROM content WHERE alias_id = '$aliasId'";
+			$total = 0;
+
+			if ($dbResult = $this->mysqli->query($select)) {
+				while($obj = $dbResult->fetch_object()){
+					$total = $obj->total;
+				}
+			}
+
+			return $total;
+		}
+		else {
+			return 0;
+		}
 	}
 }

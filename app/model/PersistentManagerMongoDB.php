@@ -25,6 +25,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 				case 'id-deep':
 					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $query->getCondition('validity-date'));
 					break;
+				case 'alias-id-deep':
+					return $this->loadAliasIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $query->getCondition('validity-date'));
+					break;
 				case 'tag-one-deep': // First element matching with tag
 					$contentsTemp = $this->loadTagOneDepth($structureDo, $query->getCondition('tags'), $query->getDepth(), $query->getCondition('validity-date'));
 					return is_null($contentsTemp) ? null : $contentsTemp->one();
@@ -37,6 +40,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 					break;
 				case 'countParents':
 					return $this->countParents($structureDo, $query);
+					break;
+				case 'count-alias-id':
+					return $this->countAliasId($structureDo, $query);
 					break;
 				default:
 					throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
@@ -278,7 +284,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		return $this->structuresCache[$id];
 	}
-	private function loadTagOneDepth ($structureDo, $tags, $depth, $validityDate = null) {
+	private function loadTagOneDepth($structureDo, $tags, $depth, $validityDate = null) {
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
@@ -292,7 +298,20 @@ class PersistentManagerMongoDB implements iPersistentManager
 			return null;
 		}
 	}
-	private function loadIdDepth ($structureDo, $idContent, $depth, $validityDate = null) {
+	private function loadAliasIdDepth($structureDo, $idContent, $depth, $validityDate = null) {
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+		$mongoCollection = $this->db->selectCollection('content');
+		$documentFound = $mongoCollection->findOne(array("alias_id" => $idContent, 'id_structure' => $structureDo->getId()), array("_id" => true));
+		if ($documentFound) {
+			return $this->loadIdDepth ($structureDo, (string) $documentFound['_id'], $depth, $validityDate);
+		}
+		else {
+			return null;
+		}
+	}
+	private function loadIdDepth($structureDo, $idContent, $depth, $validityDate = null) {
 		if ($depth > 0) {
 			$depth--;
 			$content = $this->loadById($structureDo, $idContent);
@@ -401,5 +420,20 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		return $cursor->count();
 		// db.relation.find({"child" : DBRef("content", ObjectId("5510618a06b13a931ca41c07"))}).pretty()
+	}
+	private function countAliasId($structureDo, $query) {
+		// Exclude alias_id === ''
+		if($query->getCondition('alias_id')) {
+			if (!$this->isInitialized($structureDo)) {
+				$this->initialize($structureDo);
+			}
+			$mongoCollection = $this->db->selectCollection('content');
+			$cursor = $mongoCollection->find($query->getCondition());
+
+			return $cursor->count();
+		}
+		else {
+			return 0;
+		}
 	}
 }

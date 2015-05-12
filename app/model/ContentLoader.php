@@ -55,9 +55,12 @@ class ContentLoader extends StructureDo
 				$contents = $this->loadContents('id-deep', ['id' => $params, 'depth' => 2]);
 				$content = $contents->one();
 
-				// Set the relations number to content, and content is contents->get($id)
-				//$content->get($params)->setCountParents($this->loadContents('countParents', $params));
-				$content->setCountParents($this->loadContents('countParents', $params));
+				if($content) {
+					// Set the relations number to content, and content is contents->get($id)
+					//$content->get($params)->setCountParents($this->loadContents('countParents', $params));
+					$content->setCountParents($this->loadContents('countParents', $params));
+					$content->setCountAliasId($this->loadContents('count-alias-id', ['alias_id' => $content->getAliasId()]));
+				}
 
 				return $content;
 			break;

@@ -18,7 +18,8 @@ class ContentDo
 	//private $data; /* Array key/value of variable fields */
 	private $fields;
 	private $parent; /* ContentDo Relation in complex structures */
-	private $countParents; /* Number of parent, used in conten editor for info */
+	private $countParents; /* Number of parent, used in content editor for info */
+	private $countAliasId; /* Number aliad_id in all contents, used in content editor for info */
 
 	public function __construct() {
 		$this->id = null;
@@ -171,6 +172,13 @@ class ContentDo
 	public function getCountParents() {
 		return $this->countParents;
 	}
+	public function setCountAliasId($countAliasId) {
+		$this->countAliasId = $countAliasId;
+	}
+	public function getCountAliasId() {
+		return $this->countAliasId;
+	}
+
 	// With the data structure, build the skeleton of content
 	public function buildSkeleton($structure) {
 		$this->setIdStructure($structure->getId());
