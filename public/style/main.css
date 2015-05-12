@@ -238,10 +238,35 @@ h2 .structure_name {
 	margin: 0;
 	padding: 0;
 }
+.internal  .item {
+	margin: 0 0 0.2em 0;
+	clear: both;
+}
+.internal .item label {
+	/*
+	width: 15%;
+	float: left;
+	clear: both;
+	text-align: right;
+	*/
+}
 option[disabled] {
 	color: #999;
 }
 
+/* Messages */
+.result,
+.warning {
+	padding: 0 0 0.2em 1.5em;
+	background-position: left 0;
+	background-repeat: no-repeat;
+}
+.result {
+	background-image: url(ic_done_24px.svg);
+}
+.warning {
+	background-image: url(ic_announcement_24px.svg);
+}
 /* Edit structures */
 #manageStructure .fields .field {
 	margin-bottom: 0.5em;
@@ -263,7 +288,8 @@ option[disabled] {
 }
 .field.text ,
 .field.link_href,
-.field.link_description{
+.field.link_description,
+.field.aliasId{
 	width: 70%;
 }
 .field.textarea,
@@ -321,10 +347,16 @@ input[readonly] {
 	margin: 0 1em;
 	background-color: #fff;
 	border: 1px solid #999;
+	position: relative;
 }
 .contentSummary h2 {
 	color: #424242;
 	text-align: left;
+}
+.contentSummary .close {
+	position: absolute;
+	top: 1em;
+	right: 1em;
 }
 .actions {
 	margin: 0.5em 0 1em 0.5em;

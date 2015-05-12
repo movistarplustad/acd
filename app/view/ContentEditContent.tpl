@@ -8,18 +8,13 @@
 ?>
 <main>
 	<h2><?=$title?></h2>
-	<?php
-		if($content->getCountParents() !== null) {
-	?>
-		<p>#Relations: <?=$relationCount?></p>
-	<?php
-		}
-	?>
+
 	<?php
 		if(isset($jsonSummary)) {
 	?>
 		<section class="contentSummary">
 			<h2>Summary</h2>
+			<a href="?a=edit&amp;id=<?=htmlspecialchars($content->getId())?>&amp;idt=<?=htmlspecialchars($content->getIdStructure())?>" class="close">Close</a>
 			<pre><?=$jsonSummary?></pre>
 		</section>
 	<?php
@@ -32,18 +27,18 @@
 			<input type="hidden" name="id" value="<?=htmlspecialchars($content->getId())?>"/>
 			<input type="hidden" name="ids" value="<?=htmlspecialchars($content->getIdStructure())?>"/>
 			<ul>
-				<li>
-					<label for="title">Title</label>: <input type="text" name="title" id="title" value="<?=htmlspecialchars($contentTitle)?>" required="required" class="field text"/>
+				<li class="item">
+					<label for="title">Title: </label><input type="text" name="title" id="title" value="<?=htmlspecialchars($contentTitle)?>" required="required" class="field text" maxlength="256"/>
 				</li>
-				<li>
+				<li class="item">
 				<?php
 					$periodOfValidity = \Acd\Model\ValueFormater::encode($content->getPeriodOfValidity(), \Acd\Model\ValueFormater::TYPE_DATE_TIME_RANGE, \Acd\Model\ValueFormater::FORMAT_EDITOR );
 				?>
-				<label for="validityPeriodStart">Period of validity</label>:  <input type="datetime" name="validityPeriod[start]" id="validityPeriodStart" value="<?=htmlspecialchars($periodOfValidity[\Acd\Model\contentDO::PERIOD_OF_VALIDITY_START])?>" class="range start"/>
+				<label for="validityPeriodStart">Period of validity: </label><input type="datetime" name="validityPeriod[start]" id="validityPeriodStart" value="<?=htmlspecialchars($periodOfValidity[\Acd\Model\contentDO::PERIOD_OF_VALIDITY_START])?>" class="range start"/>
 					-
 					<input type="datetime" name="validityPeriod[end]" id="validityPeriodEnd" value="<?=htmlspecialchars($periodOfValidity[\Acd\Model\contentDO::PERIOD_OF_VALIDITY_END])?>" class="range end"/>
 				</li>
-				<li>
+				<li class="item">
 					<?php
 						if($aliasIdCount > 1) {
 					?>
@@ -51,11 +46,18 @@
 					<?php
 						}
 					?>
-					<label for="aliasId">Alias-id.: </label> <input type="text" name="aliasId" id="aliasId" value="<?=htmlspecialchars($aliasId)?>" class="field text"/>
+					<label for="aliasId">Alias-id.: </label><input type="text" name="aliasId" id="aliasId" value="<?=htmlspecialchars($aliasId)?>" class="field aliasId" maxlength="256"/>
 				</li>
-				<li>
-					<label for="tags" class="for-tag">Tags: </label> <input type="text" name="tags" id="tags" value="<?=htmlspecialchars($contentTags)?>" class="field tags"<?=$userRol?>/>
+				<li class="item">
+					<label for="tags" class="for-tag">Tags: </label><input type="text" name="tags" id="tags" value="<?=htmlspecialchars($contentTags)?>" class="field tags"<?=$userRol?>/>
 				</li>
+				<?php
+					if($content->getCountParents() !== null) {
+				?>
+					<li class="item"><label>#Relations: </label><?=$relationCount?></li>
+				<?php
+					}
+				?>
 			</ul>
 		</fieldset>
 		<div>

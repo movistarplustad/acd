@@ -38,14 +38,12 @@ var editor = {
 					});
 					if ($input.hasClass("start")){
 						var value = $input.siblings("input[type=date]").val();
-//console.log("max"+value, Date.parseDate(value, "Y-m-d"),"max null");
 						this.setOptions({
 							maxDate: value ? Date.parseDate(value, "Y-m-d").dateFormat("Y/m/d") : false
 						})
 					}
 					if ($input.hasClass("end")){
 						var value = $input.siblings("input[type=date]").val();
-//console.log("min"+value, Date.parseDate(value, "Y-m-d"), "min null");
 						this.setOptions({
 							minDate: value ? Date.parseDate(value, "Y-m-d").dateFormat("Y/m/d") : false
 						})
@@ -67,14 +65,12 @@ var editor = {
 					});
 					if ($input.hasClass("start")){
 						var value = $input.siblings("input[type=date]").val();
-//console.log("max"+value, Date.parseDate(value, "Y-m-d"),"max null");
 						this.setOptions({
 							maxDate: value ? Date.parseDate(value, "Y-m-d").dateFormat("Y/m/d") : false
 						})
 					}
 					if ($input.hasClass("end")){
 						var value = $input.siblings("input[type=date]").val();
-//console.log("min"+value, Date.parseDate(value, "Y-m-d"), "min null");
 						this.setOptions({
 							minDate: value ? Date.parseDate(value, "Y-m-d").dateFormat("Y/m/d") : false
 						})
@@ -99,6 +95,10 @@ var editor = {
 					});
 				}
 			});
+
+		/* Alias Id. */
+		//$(".aliasId").aliasIdFormat();
+		$("input").aliasIdFormat();
 
 
 	},
