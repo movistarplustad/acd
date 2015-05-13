@@ -35,7 +35,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 				case 'all':
 					return $this->loadAll($structureDo, $query);
 					break;
-				case 'editorSearch':
+				case 'editor-search':
 					return $this->loadEditorSearch($structureDo, $query);
 					break;
 				case 'countParents':
@@ -383,10 +383,15 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 	private function loadEditorSearch($structureDo, $query) {
 		//db.content.find({"id_structure": "item_mosaico", "title" : /.*quinto.*/i}).pretty()
+		//db.getCollection('content').find({$or : [{"alias_id" : "dos"}, {"title" : "dos"}, {"tags" : [{$in  : 'dos'}]}], 'id_structure' : 'unimongo'})
 		$filter = array();
+		$stringFilter = array();
 		if(isset($query->getCondition()['title'])) {
 			$search = $query->getCondition()['title'];
-			$filter['title'] = array('$regex' => new \MongoRegex("/^.*$search.*/i"));
+			$stringFilter[] = array('title' => array('$regex' => new \MongoRegex("/^.*$search.*/i")));
+			$stringFilter[] = array('alias_id' => array('$regex' => new \MongoRegex("/^.*$search.*/i")));
+			$stringFilter[] = array('tags' => array('$in' => array($search)));
+			$filter['$or'] = $stringFilter;
 		}
 		if(isset($query->getCondition()['idStructure'])) {
 			$filter['id_structure'] = $query->getCondition()['idStructure'];

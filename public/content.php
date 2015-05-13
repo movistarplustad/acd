@@ -65,7 +65,7 @@ switch ($action) {
 			$whereCondition = [];
 			$whereCondition['title'] = $titleSearch;
 			$whereCondition['idStructure'] = $id;
-			$contents = $contentLoader->loadContents('editorSearch', $whereCondition);
+			$contents = $contentLoader->loadContents('editor-search', $whereCondition);
 		}
 		else {
 			$contents = $contentLoader->loadContents('all');

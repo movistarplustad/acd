@@ -42,7 +42,7 @@ class PersistentManagerMySql implements iPersistentManager
 					break;
 			case 'all':
 				return $this->loadAll($structureDo, $query);
-				case 'editorSearch':
+				case 'editor-search':
 					return $this->loadEditorSearch($structureDo, $query);
 					break;
 				case 'countParents':

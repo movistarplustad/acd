@@ -51,7 +51,7 @@ switch ($action) {
 			if($idStructureTypeSearch) {
 				$whereCondition['idStructure'] = $idStructureTypeSearch;
 			}
-			$matchContents = $contentLoader->loadContents('editorSearch', $whereCondition);
+			$matchContents = $contentLoader->loadContents('editor-search', $whereCondition);
 			//d($matchContents);
 			$contentOu->setResultSearch($matchContents);
 		}
