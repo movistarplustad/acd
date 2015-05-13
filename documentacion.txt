@@ -133,3 +133,11 @@ Selected plugins
 
     Skin
     Minimalist
+
+CREATE USER `usuarioweb`@`localhost` IDENTIFIED BY `strip`;
+GRANT SELECT ON acd.* TO `usuarioweb`@`localhost`;
+GRANT INSERT ON acd.* TO `usuarioweb`@`localhost`;
+GRANT UPDATE ON acd.* TO `usuarioweb`@`localhost`;
+GRANT DELETE ON acd.* TO `usuarioweb`@`localhost`;
+FLUSH PRIVILEGES;
+
