@@ -7,7 +7,7 @@ class Limits
 	private $upper;
 	private $step;
 	private $total; // Total elements previous to apply limits
-	public function __construct($lower = 0, $upper = 6) {
+	public function __construct($lower = 0, $upper = 100) {
 		$this->setLower($lower);
 		$this->setUpper($upper);
 		$this->setStep($upper);

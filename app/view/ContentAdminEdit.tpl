@@ -1,14 +1,14 @@
 <main id="manageStructure">
 	<h2>Edit structure <span class="structure_name"><?=htmlspecialchars($structureName)?></span></h2>
-	<p class="result"><?=$resultDesc?></p>
+	<p class="result <?=$resultCode?>"><?=$resultDesc?></p>
 	<form action="do_process_structure.php" method="post">
 		<fieldset class="common">
 			<legend>Common</legend>
 			<div>
-				<label for="idStructure">Id</label>: <input type="text" name="id" id="idStructure" value="<?=htmlspecialchars($structureId)?>" readonly="readonly"/>
+				<label for="idStructure">Id:&nbsp;</label><input type="text" name="id" id="idStructure" value="<?=htmlspecialchars($structureId)?>" readonly="readonly"/>
 			</div>
 			<div>
-				<label for="name">Name</label>: <input type="text" name="name" id="name" value="<?=htmlspecialchars($structureName)?>" required="required"/>
+				<label for="name">Name:&nbsp;</label><input type="text" name="name" id="name" value="<?=htmlspecialchars($structureName)?>" required="required"/>
 			</div>
 			<div>
 				<?php
@@ -20,7 +20,7 @@
 					
 				}
 				?>
-				<label for="storage">Storage type</label>: <select name="storage" id="storage" required="required"><?=$options?></select>
+				<label for="storage">Storage type:&nbsp;</label><select name="storage" id="storage" required="required"><?=$options?></select>
 			</div>
 		</fieldset>
 		<div>
@@ -30,11 +30,11 @@
 			foreach ($fields as $field) {
 				$lockId = ($field->getId() === '' || $field->getId() === $field::EMPTY_ID) ? '' : ' readonly="readonly"';
 				$structure_fields .= '<li class="field">
-					<label for="field_'.$n.'_id">Id</label>:
+					<label for="field_'.$n.'_id">Id:&nbsp;</label>
 					<input type="text" name="field['.$n.'][id]" id="field_'.$n.'_name" value="'.htmlspecialchars($field->getId()).'"'.$lockId.' required="required" placeholder="Enter the field id"/>
 					<label for="field_'.$n.'_type">'.htmlspecialchars($fieldTypes[$field->getType()]).'</label>
 					<div>
-						<label for="field_'.$n.'_name">Description</label>:
+						<label for="field_'.$n.'_name">Description:&nbsp;</label>
 						<input type="text" name="field['.$n.'][name]" id="field_'.$n.'_name" value="'.htmlspecialchars($field->getName()).'" id="field_'.$n.'"/>
 						<input type="hidden" name="field['.$n.'][type]" value="'.htmlspecialchars($field->getType()).'"/>
 						

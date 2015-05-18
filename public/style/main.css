@@ -226,6 +226,20 @@ h2 .structure_name {
 	font-style: italic;
 }
 
+/* Content list */
+#contents_list  {
+	counter-reset: num-item 0;
+	list-style: none;
+	padding: 0 0 0 1em;
+}
+#contents_list li:before {
+	counter-increment: num-item;
+	content: counter(num-item) ".";
+}
+.pagination {
+	margin: 0 0 0.5em 1em;
+}
+
 /* Internal content data */
 .internal {
 	border: 0;
@@ -257,12 +271,15 @@ option[disabled] {
 /* Messages */
 .result,
 .warning {
-	padding: 0 0 0.2em 1.5em;
+	padding: 0 0 0.2em 2em;
 	background-position: left 0;
 	background-repeat: no-repeat;
 }
-.result {
+.result.ok {
 	background-image: url(ic_done_24px.svg);
+}
+.result.fail {
+	background-image: url(ic_announcement_24px.svg);
 }
 .warning {
 	background-image: url(ic_announcement_24px.svg);
@@ -276,6 +293,16 @@ option[disabled] {
 	background-color: #f9f9f9;
 }
 #manageStructure .field .delete {
+	text-align: right;
+}
+
+.internal .item {
+	min-height: 1.5em;
+}
+.common label,
+.internal label {
+	float: left;
+	width: 10em;
 	text-align: right;
 }
 

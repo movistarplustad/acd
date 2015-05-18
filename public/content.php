@@ -82,7 +82,7 @@ switch ($action) {
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 
 		if ($action == 'delete' && $bResult) {
-			$contentOu->setResultDesc('Done');
+			$contentOu->setResultDesc('Done', 'ok');
 		}
 		break;
 	case 'new':
@@ -188,7 +188,7 @@ switch ($action) {
 				$modifiedField->setDirty(true, $modifiedFieldPosition);
 			}
 			catch(\Exception $e) {
-				$contentOu->setResultDesc("Error, field <em>$modifiedFieldName</em> not found in content");
+				$contentOu->setResultDesc("Error, field <em>$modifiedFieldName</em> not found in content", "fail");
 				$bResult = false;
 			}
 		}
@@ -214,7 +214,7 @@ switch ($action) {
 		}
 
 		if ($bResult) {
-			$contentOu->setResultDesc('Done');
+			$contentOu->setResultDesc('Done', 'ok');
 		}
 		break;
 	default:

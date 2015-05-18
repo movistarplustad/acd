@@ -6,6 +6,7 @@ class ContentAdmin extends \Acd\View\Template
 	protected $actionType;
 	public function __construct() {
 		$this->__set('resultDesc', '');
+		$this->__set('resultCode', '');
 	}
 	public function setActionType($actionType) {
 		$this->actionType = $actionType;
@@ -14,8 +15,9 @@ class ContentAdmin extends \Acd\View\Template
 	public function getActionType() {
 		return $this->actionType;
 	}
-	public function setResultDesc($resultDesc) {
-		$this->__set('resultDesc', $resultDesc);
+	public function setResultDesc($description, $code) {
+		$this->__set('resultDesc', $description);
+		$this->__set('resultCode', $code);
 	}
 	public function setStorageTypes($storageTypes) {
 		$this->__set('storageTypes', $storageTypes);

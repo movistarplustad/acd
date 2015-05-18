@@ -1,6 +1,6 @@
 <main>
 	<h2>Manage structures</h2>
-	<p class="result"><?=$resultDesc?></p>
+	<p class="result <?=$resultCode?>"><?=$resultDesc?></p>
 	<ol id="structures_list">
 	<?php
 		foreach ($structures as $structure) {

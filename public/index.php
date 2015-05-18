@@ -114,13 +114,13 @@ switch ($action) {
 $result = isset($_GET['r']) ? $_GET['r'] : '';
 switch ($result) {
 	case 'ok':
-		$contentOu->setResultDesc('Done');
+		$contentOu->setResultDesc('Done', 'ok');
 		break;
 	case 'ko':
-		$contentOu->setResultDesc('<em>Error</em>, has not been able to process');
+		$contentOu->setResultDesc('<em>Error</em>, has not been able to process', 'fail');
 		break;
 	case 'kologin':
-		$contentOu->setResultDesc('<em>Error</em>, incorrect login or password');
+		$contentOu->setResultDesc('<em>Error</em>, incorrect login or password', 'fail');
 		break;
 }
 $skeletonOu->setContent($contentOu->render());

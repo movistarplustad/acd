@@ -4,6 +4,7 @@ namespace Acd\View;
 class ContentEditContent extends Template {
 	public function __construct() {
 		$this->__set('resultDesc', '');
+		$this->__set('resultCode', '');
 	}	
 
 	// INDEX
@@ -30,8 +31,9 @@ class ContentEditContent extends Template {
 	public function newContent($bnewContent) {
 		$this->__set('bNew', true);
 	}
-	public function setResultDesc($resultDesc) {
-		$this->__set('resultDesc', $resultDesc);
+	public function setResultDesc($description, $code) {
+		$this->__set('resultDesc', $description);
+		$this->__set('resultCode', $code);
 	}
 	public function setSummary($jsonSummary) {
 		$this->__set('jsonSummary', $jsonSummary);

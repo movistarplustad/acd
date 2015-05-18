@@ -2,7 +2,7 @@
 	<h2>Authentication</h2>
 	
 	<form action="do_login.php" method="post" class="form_login">
-		<p class="result"><?=$resultDesc?></p>
+		<p class="result <?=$resultCode?>"><?=$resultDesc?></p>
 		<div class="text">
 			<label for="login">Login</label>
 			<input type="text" name="login" value="<?=htmlspecialchars($login)?>" spellcheck="false" placeholder="e.g. tiranosaurus" id="login"/>

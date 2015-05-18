@@ -1,6 +1,6 @@
 <main>
 	<h2>New structure</h2>
-	<p class="result"><?=$resultDesc?></p>
+	<p class="result <?=$resultCode?>"><?=$resultDesc?></p>
 	<form action="do_process_structure.php" method="post">
 		<div>
 			<label for="id">Id</label>: <input type="text" name="id" id="id" value="" required="required"/>

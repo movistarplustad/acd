@@ -21,6 +21,13 @@ var editor = {
 			items: "li:not(.find)"
 		});
 
+		/* Content list */
+		$("#contents_list")
+			.each(function() {
+				var lowerLimit = $(this).data("lower-limit") || 0;
+				$(this).css("counter-reset", "num-item " + lowerLimit); // Set first position number
+			});
+
 		/* Date fields */
 		/* Polyfill */
 		// 1990-12-31T23:59:60Z

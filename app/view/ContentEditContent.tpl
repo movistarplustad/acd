@@ -20,7 +20,7 @@
 	<?php
 		}
 	?>
-	<p class="result"><?=$resultDesc?></p>
+	<p class="result <?=$resultCode?>"><?=$resultDesc?></p>
 	<form action="do_process_content.php" method="post" enctype="multipart/form-data">
 		<fieldset class="internal">
 			<legend>Internal data</legend>
@@ -28,13 +28,13 @@
 			<input type="hidden" name="ids" value="<?=htmlspecialchars($content->getIdStructure())?>"/>
 			<ul>
 				<li class="item">
-					<label for="title">Title: </label><input type="text" name="title" id="title" value="<?=htmlspecialchars($contentTitle)?>" required="required" class="field text" maxlength="256"/>
+					<label for="title">Title:&nbsp;</label><input type="text" name="title" id="title" value="<?=htmlspecialchars($contentTitle)?>" required="required" class="field text" maxlength="256"/>
 				</li>
 				<li class="item">
 				<?php
 					$periodOfValidity = \Acd\Model\ValueFormater::encode($content->getPeriodOfValidity(), \Acd\Model\ValueFormater::TYPE_DATE_TIME_RANGE, \Acd\Model\ValueFormater::FORMAT_EDITOR );
 				?>
-				<label for="validityPeriodStart">Period of validity: </label><input type="datetime" name="validityPeriod[start]" id="validityPeriodStart" value="<?=htmlspecialchars($periodOfValidity[\Acd\Model\contentDO::PERIOD_OF_VALIDITY_START])?>" class="range start"/>
+				<label for="validityPeriodStart">Period of validity:&nbsp;</label><input type="datetime" name="validityPeriod[start]" id="validityPeriodStart" value="<?=htmlspecialchars($periodOfValidity[\Acd\Model\contentDO::PERIOD_OF_VALIDITY_START])?>" class="range start"/>
 					-
 					<input type="datetime" name="validityPeriod[end]" id="validityPeriodEnd" value="<?=htmlspecialchars($periodOfValidity[\Acd\Model\contentDO::PERIOD_OF_VALIDITY_END])?>" class="range end"/>
 				</li>
@@ -42,19 +42,19 @@
 					<?php
 						if($aliasIdCount > 1) {
 					?>
-						<p class="warning"><strong>Warning</strong> alias-id. repeat at <?=$aliasIdCount?> times.</p>
+						<p class="result warning"><strong>Warning</strong> alias-id. repeat at <?=$aliasIdCount?> times.</p>
 					<?php
 						}
 					?>
-					<label for="aliasId">Alias-id.: </label><input type="text" name="aliasId" id="aliasId" value="<?=htmlspecialchars($aliasId)?>" class="field aliasId" maxlength="256"/>
+					<label for="aliasId">Alias-id.:&nbsp;</label><input type="text" name="aliasId" id="aliasId" value="<?=htmlspecialchars($aliasId)?>" class="field aliasId" maxlength="256"/>
 				</li>
 				<li class="item">
-					<label for="tags" class="for-tag">Tags: </label><input type="text" name="tags" id="tags" value="<?=htmlspecialchars($contentTags)?>" class="field tags"<?=$userRol?>/>
+					<label for="tags" class="for-tag">Tags:&nbsp;</label><input type="text" name="tags" id="tags" value="<?=htmlspecialchars($contentTags)?>" class="field tags"<?=$userRol?>/>
 				</li>
 				<?php
 					if($content->getCountParents() !== null) {
 				?>
-					<li class="item"><label>#Relations: </label><?=$relationCount?></li>
+					<li class="item"><label>#Relations:&nbsp;</label><?=$relationCount?></li>
 				<?php
 					}
 				?>
