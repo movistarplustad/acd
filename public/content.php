@@ -50,6 +50,7 @@ switch ($action) {
 	case 'list_contents':
 		$id = $_GET['id'];
 		@$titleSearch = $_GET['s'];
+		$numPage = isset($_GET['p']) ? (int) $_GET['p'] : 0;
 		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('backContent');
@@ -61,6 +62,9 @@ switch ($action) {
 
 		$contentLoader = new Model\ContentLoader();
 		$contentLoader->setId($id);
+		$limits = $contentLoader->getLimits();
+		$limits->setPage($numPage);
+
 		if ($titleSearch) {
 			$whereCondition = [];
 			$whereCondition['title'] = $titleSearch;

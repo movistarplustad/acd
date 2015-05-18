@@ -364,8 +364,12 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$mongoCollection = $this->db->selectCollection('content');
 		$byStructureQuery = array('id_structure' => $structureDo->getId());
 
+		// Set pagination limits
+		$limits = $query->getLimits();
 		$cursor = $mongoCollection->find($byStructureQuery);
-		$cursor->sort(array( '_id' => -1));
+		$cursor->sort(array( '_id' => -1))
+			->skip($limits->getLower())->limit($limits->getUpper()-$limits->getLower()); // Limits
+		$limits->setTotal($cursor->count());
 		$result = new ContentsDo();
 		foreach ($cursor as $documentFound) {
 			$documentFound = $this->normalizeDocument($documentFound);
@@ -373,10 +377,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$contentFound->load($documentFound, $structureDo);
 			$result->add($contentFound, $documentFound['id']);
 		}
-		//TODO revisar
-		// Purge to limits
-		//$limits = $query->getLimits();
-		//$limits->setTotal(count($aContents));
+		$result->setLimits($limits);
 
 		return $result;
 	}
@@ -400,16 +401,22 @@ class PersistentManagerMongoDB implements iPersistentManager
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
+		// Set pagination limits
+		$limits = $query->getLimits();
 		$mongoCollection = $this->db->selectCollection('content');
 		$cursor = $mongoCollection->find($filter);
-		$cursor->sort(array( '_id' => -1));
+		$cursor->sort(array( '_id' => -1))
+			->skip($limits->getLower())->limit($limits->getUpper()-$limits->getLower()); // Limits
+		$limits->setTotal($cursor->count());
 		$result = new ContentsDo();
+
 		foreach ($cursor as $documentFound) {
 			$documentFound = $this->normalizeDocument($documentFound);
 			$contentFound = new ContentDo();
 			$contentFound->load($documentFound, $structureDo);
 			$result->add($contentFound, $documentFound['id']);
 		}
+		$result->setLimits($limits);
 		return $result;
 	}
 

@@ -26,7 +26,10 @@ class Summary {
 		return $this->contentDo;
 	}
 	public function render() {
-		$json_string = json_encode($this->contentDo->tokenizeData(), JSON_PRETTY_PRINT);
-		return $json_string;
+		// INF, -INF and NaN conversion to json problems
+		//$json_string = json_encode($this->contentDo->tokenizeData(), JSON_PRETTY_PRINT);
+		//return $json_string;
+		$data_string = print_r($this->contentDo->tokenizeData(), true);
+		return $data_string;
 	}
 }
