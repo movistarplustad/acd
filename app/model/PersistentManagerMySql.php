@@ -326,8 +326,14 @@ class PersistentManagerMySql implements iPersistentManager
 		$result = new ContentsDo();
 		/* Select queries return a resultset */
 		$idStructure = $this->mysqli->real_escape_string($structureDo->getId());
-		$limit = $query->getLimits()->getUpper();
-		$select = "SELECT id, title, data FROM content WHERE id_structure = '$idStructure' LIMIT $limit";
+		// Set pagination limits
+		$limits = $query->getLimits();
+		$limitLower = $limits->getLower();
+		$limitUpper = $limits->getUpper();
+		// Set pagination limits
+		$whereCondition = "FROM content WHERE id_structure = '$idStructure'";
+		$select = "SELECT id, title, data $whereCondition LIMIT $limitLower, $limitUpper";
+		$selectCount = "SELECT count(*) as total $whereCondition";
 
 		if ($dbResult = $this->mysqli->query($select)) {
 			while($obj = $dbResult->fetch_object()){
@@ -343,22 +349,28 @@ class PersistentManagerMySql implements iPersistentManager
 			/* free result set */
 			$dbResult->close();
 		}
-		//TODO revisar
-		// Purge to limits
-		//$limits = $query->getLimits();
-		//$limits->setTotal(count($aContents));
-
+		$dbResult = $this->mysqli->query($selectCount);
+		$data = $dbResult->fetch_assoc();
+		$limits->setTotal($data['total']);
+		$result->setLimits($limits);
 
 		return $result;
 	}
 
 	private function loadEditorSearch($structureDo, $query) {
 		// SELECT id, title, data FROM content WHERE id_structure = 'directo' AND title LIKE '%foo%'; 
-		$limit = $query->getLimits()->getUpper();
+		// SELECT distinct c.id as id, title, data FROM content as c, content_tag as ct WHERE 
+		//  title LIKE '%zzz%' OR alias_id LIKE '%zzz%' OR
+		//  ct.tag = 'zzz' AND c.id = ct.id AND c.id_structure = 'una_mysql' LIMIT 0, 20"
+		// Set pagination limits
+		$limits = $query->getLimits();
+		$limitLower = $limits->getLower();
+		$limitUpper = $limits->getUpper();
 		$filter = array();
 		if(isset($query->getCondition()['title'])) {
 			$search = $this->mysqli->real_escape_string($query->getCondition()['title']);
-			$filter['title'] = "title LIKE '%".$search."%'";
+			$filter['title'] = "title LIKE '%".$search."%' OR alias_id LIKE '%".$search."%' OR ct.tag = '$search'";
+			$filter['tags'] = 'c.id = ct.id';
 		}
 		if(isset($query->getCondition()['idStructure'])) {
 			$search = $this->mysqli->real_escape_string($query->getCondition()['idStructure']);
@@ -366,9 +378,11 @@ class PersistentManagerMySql implements iPersistentManager
 		}
 		$where = '';
 		if ($filter) {
-			$where = ' WHERE '.implode(' AND ', $filter);
+			$whereCondition = 'FROM content as c, content_tag as ct WHERE '.implode(' AND ', $filter);
 		}
-		$select = "SELECT id, title, data FROM content $where LIMIT $limit";
+		$select = "SELECT distinct c.id as id, title, data $whereCondition LIMIT $limitLower, $limitUpper";
+
+		$selectCount = "SELECT count(distinct c.id) as total $whereCondition";
 
 		$result = new ContentsDo();
 		if ($dbResult = $this->mysqli->query($select)) {
@@ -385,6 +399,10 @@ class PersistentManagerMySql implements iPersistentManager
 			/* free result set */
 			$dbResult->close();
 		}
+		$dbResult = $this->mysqli->query($selectCount);
+		$data = $dbResult->fetch_assoc();
+		$limits->setTotal($data['total']);
+		$result->setLimits($limits);
 
 		return $result;
 	}

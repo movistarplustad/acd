@@ -42,7 +42,7 @@
 					<?php
 						if($aliasIdCount > 1) {
 					?>
-						<p class="result warning"><strong>Warning</strong> alias-id. repeat at <?=$aliasIdCount?> times.</p>
+						<p class="result warning"><strong>Warning</strong> alias-id. is repeated <?=$aliasIdCount?> times.</p>
 					<?php
 						}
 					?>
