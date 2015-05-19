@@ -70,8 +70,10 @@ conf::$MYSQL_SCHEMA = 'acd';
 conf::$MONGODB_SERVER = 'mongodb://plusdbspol01.prisadigital.int:27017,plusdbspol02.prisadigital.int:27017,plusdbspol03.prisadigital.int:27017/?replicaSet=ReplicaPlusProduccion';
 
 // Developer / local / personal  configuration
-if (file_exists(DIR_BASE.'/conf.devel.php')) {
-	require DIR_BASE.'/conf.devel.php';
+// Default  environment  for develop is 'local', in production environment  conf.devel.php does not exist
+$environment = getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'local';
+if (file_exists(DIR_BASE.'/conf.'.$environment.'.php')) {
+	require DIR_BASE.'/conf.'.$environment.'.php';
 }
 /* Debug */
 if (file_exists(DIR_BASE.'/../tools/kint/Kint.class.php')) {
