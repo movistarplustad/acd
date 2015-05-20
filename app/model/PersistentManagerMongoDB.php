@@ -1,7 +1,6 @@
 <?php
 namespace Acd\Model;
 
-class PersistentStorageQueryTypeNotImplemented extends \Exception {} // TODO mover a sitio común
 class PersistentManagerMongoDBException extends \exception {} // TODO Unificar
 class PersistentManagerMongoDB implements iPersistentManager
 {

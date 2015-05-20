@@ -90,7 +90,14 @@ class FieldDo
 		return $this->name;
 	}
 	public function setValue($value) {
-		$this->value = $value;
+		switch($this->getType()) {
+			case self::TYPE_COLLECTION:
+				$this->value = $value ? $value : []; // Set empty array in collection case
+				break;
+			default:
+				$this->value = $value;
+				break;
+		}
 	}
 	public function getValue() {
 		return $this->value;

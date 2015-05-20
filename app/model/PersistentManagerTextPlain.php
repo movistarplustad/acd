@@ -1,7 +1,6 @@
 <?php
 namespace Acd\Model;
 
-class PersistentStorageQueryTypeNotImplemented extends \exception {} // TODO mover a sitio común
 class PersistentManagerTextPlain implements iPersistentManager
 {
 	private function getStoragePath($structureDo) {

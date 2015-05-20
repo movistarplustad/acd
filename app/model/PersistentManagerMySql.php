@@ -1,7 +1,6 @@
 <?php
 namespace Acd\Model;
 
-class PersistentStorageQueryTypeNotImplemented extends \exception {} // TODO mover a sitio común
 class PersistentManagerMySqlException extends \exception {} // TODO Unificar
 class PersistentManagerMySql implements iPersistentManager
 {
@@ -360,8 +359,8 @@ class PersistentManagerMySql implements iPersistentManager
 	private function loadEditorSearch($structureDo, $query) {
 		// SELECT id, title, data FROM content WHERE id_structure = 'directo' AND title LIKE '%foo%'; 
 		// SELECT distinct c.id as id, title, data FROM content as c, content_tag as ct WHERE 
-		//  title LIKE '%zzz%' OR alias_id LIKE '%zzz%' OR
-		//  ct.tag = 'zzz' AND c.id = ct.id AND c.id_structure = 'una_mysql' LIMIT 0, 20"
+		//  (title LIKE '%zzz%' OR alias_id LIKE '%zzz%' OR
+		//  (ct.tag = 'zzz' AND c.id = ct.id)) AND c.id_structure = 'una_mysql' LIMIT 0, 20"
 		// Set pagination limits
 		$limits = $query->getLimits();
 		$limitLower = $limits->getLower();
@@ -369,8 +368,7 @@ class PersistentManagerMySql implements iPersistentManager
 		$filter = array();
 		if(isset($query->getCondition()['title'])) {
 			$search = $this->mysqli->real_escape_string($query->getCondition()['title']);
-			$filter['title'] = "title LIKE '%".$search."%' OR alias_id LIKE '%".$search."%' OR ct.tag = '$search'";
-			$filter['tags'] = 'c.id = ct.id';
+			$filter['title'] = "(title LIKE '%".$search."%' OR alias_id LIKE '%".$search."%' OR (ct.tag = '$search' AND c.id = ct.id))";
 		}
 		if(isset($query->getCondition()['idStructure'])) {
 			$search = $this->mysqli->real_escape_string($query->getCondition()['idStructure']);

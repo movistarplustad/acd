@@ -5,6 +5,9 @@ acd.sublime-workspace
 # Persisten data
 data/*
 
+# Local configuration
+conf.local.php
+
 # temp files
 *.swp
 
