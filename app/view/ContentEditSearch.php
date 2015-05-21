@@ -3,6 +3,7 @@ namespace Acd\View;
 // Output
 class ContentEditSearch extends Template {
 	public function __construct() {
+		$this->__set('resultCode', '');
 		$this->__set('resultDesc', '');
 		$this->__set('resultSearchContents', null);
 	}	

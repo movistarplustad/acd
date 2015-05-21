@@ -4,6 +4,7 @@ namespace Acd\View;
 class ContentEditIndex extends Template {
 	public function __construct() {
 		$this->__set('resultDesc', '');
+		$this->__set('resultCode', '');
 	}	
 
 	// INDEX
