@@ -93,10 +93,15 @@
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
 			$contentByTagWithLevelOfDepth = $contentLoader->loadContents('tag-one-deep', ['tags' => ['portadacine', 'otros'], 'depth' => 2]);
 
-			// Sample #4 by any match tag, with n related levels and only content
+			// Sample #4 by any match tag, with n related levels and only content in date
 			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
 			$contentByTagWithLevelOfDepth = $contentLoader->loadContents('tag-one-deep', ['tags' => ['portadacine', 'otros'], 'depth' => 2, 'validity-date' => time()]);
+
+			// Sample #5 by alias-id, with n related leveles and only content in date
+			$contentLoader = new \Acd\Model\ContentLoader();
+			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
+			$contents = $contentLoader->loadContents('alias-id-deep', ['id' => $aliasIdContent, 'depth' => 5, 'validity-date' => time()]);
 
 			// And get values of fields
 <?php
@@ -106,6 +111,7 @@
 <?php
 				}
 ?>
+
 			// Manage pure data
 			var_dump($contentWithLevelOfDepth->tokenizeData());
 		</pre>
