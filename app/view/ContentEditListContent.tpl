@@ -1,8 +1,4 @@
-<?php
-$limits = $contents->getLimits();
-$lowerLimit = $limits->getLower();
-$bMorePage = $limits->getUpper() < $limits->getTotal();
-?><main>
+<main>
 	<h2>Manage elements <spam class="structure_name"><?=htmlspecialchars($structure->getName())?></spam></h2>
 	<form action="" method="get">
 		<input type="hidden" name="id" value="<?=htmlspecialchars($structure->getId())?>"/>
@@ -16,20 +12,23 @@ $bMorePage = $limits->getUpper() < $limits->getTotal();
 		foreach ($contents as $content) {
 	?>
 		<li class="content">
-			<a href="?a=edit&amp;id=<?=htmlspecialchars($content->getId())?>&amp;idt=<?=htmlspecialchars($content->getIdStructure())?>"><?=htmlspecialchars($content->getTitle())?></a>
+			<a href="?a=edit&amp;id=<?=urlencode($content->getId())?>&amp;idt=<?=urlencode($content->getIdStructure())?>"><?=htmlspecialchars($content->getTitle())?></a>
 		</li>
 	<?php
 		}
 	?>
 	</ol>
 	<?php
+	$limits = $contents->getLimits();
+	$lowerLimit = $limits->getLower();
+	$bMorePage = $limits->getUpper() < $limits->getTotal();
 	if ($bMorePage) {
 		$nextPage = $limits->getUpper() / $limits->getStep();
 		$totalPages = ceil($limits->getTotal() / $limits->getStep());
 		?>
-		<p class="pagination">[<?=$nextPage?> / <?=$totalPages?>] <a href="?a=list_contents&amp;id=<?=htmlspecialchars($structure->getId())?>&amp;p=<?=$nextPage?>">More…</a></p>
+		<p class="pagination">[<?=$nextPage?> / <?=$totalPages?>] <a href="?a=list_contents&amp;id=<?=urlencode($structure->getId())?>&amp;p=<?=$nextPage?>">More…</a></p>
 		<?php
 	}
 	?>
-	<div id="new_structure"><a href="?a=new&amp;idt=<?=htmlspecialchars($structure->getId())?>" title="New content" class="button new">new content</a></div>
+	<div id="new_structure"><a href="?a=new&amp;idt=<?=urlencode($structure->getId())?>" title="New content" class="button new">new content</a></div>
 </main>

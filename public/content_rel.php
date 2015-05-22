@@ -11,6 +11,7 @@ $idParent = $_GET['idp'];
 $idStructureTypeParent = $_GET['idtp'];
 $idField = $_GET['f'];
 @$positionInField = $_GET['p'];
+$numPage = isset($_GET['p']) ? (int) $_GET['p'] : 0;
 if (!Model\Auth::isLoged()) {
 	$action = 'login';
 }
@@ -51,6 +52,8 @@ switch ($action) {
 			if($idStructureTypeSearch) {
 				$whereCondition['idStructure'] = $idStructureTypeSearch;
 			}
+			$limits = $contentLoader->getLimits();
+			$limits->setPage($numPage);
 			$matchContents = $contentLoader->loadContents('editor-search', $whereCondition);
 			//d($matchContents);
 			$contentOu->setResultSearch($matchContents);

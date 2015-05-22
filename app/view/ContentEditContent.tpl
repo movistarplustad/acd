@@ -14,7 +14,7 @@
 	?>
 		<section class="contentSummary">
 			<h2>Summary</h2>
-			<a href="?a=edit&amp;id=<?=htmlspecialchars($content->getId())?>&amp;idt=<?=htmlspecialchars($content->getIdStructure())?>" class="close">Close</a>
+			<a href="?a=edit&amp;id=<?=urlencode($content->getId())?>&amp;idt=<?=urlencode($content->getIdStructure())?>" class="close">Close</a>
 			<pre><?=$jsonSummary?></pre>
 		</section>
 	<?php

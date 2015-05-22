@@ -6,7 +6,7 @@
 		foreach ($structures as $estructure) {
 	?>
 		<li class="structure">
-			<a href="?a=list_contents&amp;id=<?=htmlspecialchars($estructure->getId())?>"><?=htmlspecialchars($estructure->getName())?></a>
+			<a href="?a=list_contents&amp;id=<?=urlencode($estructure->getId())?>"><?=htmlspecialchars($estructure->getName())?></a>
 		</li>
 	<?php
 		}
