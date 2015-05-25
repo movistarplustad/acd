@@ -141,3 +141,49 @@ GRANT UPDATE ON acd.* TO `usuarioweb`@`localhost`;
 GRANT DELETE ON acd.* TO `usuarioweb`@`localhost`;
 FLUSH PRIVILEGES;
 
+
+Resumen:
+Número total de commits:
+git shortlog -s -n
+   115  Fernando García
+    50  Fernando Garcia Gomez
+    12  Fernando García Gómez
+     8  striptm
+= 185
+
+Líneas de código:
+find . -type f -name '*.php' -exec cat {} \; | sed '/^\s*#/d;/^\s*$/d;/^\s*\/\//d' | wc -l
+4328
+
+find . -type f -name '*.tpl' -exec cat {} \; | sed '/^\s*#/d;/^\s*$/d;/^\s*\/\//d' | wc -l
+590
+
+Js propios 
+131
+
+Css propios
+389
+
+Archivos propios:
+find . -type f -name '*.php'
+67
++2 javascript
++1 css
++29 tpl
+
+-- Diagrama de clases usadas para el spring 2 Editar una estructura de contenidos
+
+De /index.php?a=edit&id=demo nos invoca a la controladora do_process_structure que entra por la rama 'save'
+Verifica que el formulario sea correcto y en ese momento crea un objeto Model\StructureDo
+
+Rellena (set) los valores propios de la estructura y por cada campo que viene del formulario obtiene los datos y los va asignado a un objeto de tipo Model\FieldDo que va añadiendo a la estructura mediante el método $modified_structure->addField($field);
+
+Puede que el campo sea nuevo, en este caso lo prepara y lo inserta igualmente en la estructura.
+
+A la estructura cuando se le invoca el método addField($field) lo que hace es ir manteniendo en uno de sus atributos un objeto de tipo Model/FieldsDo, este objeto hereda de la clase Collection ya que se trata de una colleción de objetos FieldDo.
+
+Cuando ya se tienen todos los datos que provienen del formulario estamos listos para persistirlo, para ello entra en juego un objeto de la clase Model\StructuresDo, esta clase de manera análoga a Fieds es una colección de StructureDo, se le añade la estructura recién creada y se invoca a la persistencia mediante el método StructuresDo::save()
+
+En save lo que se hace es recuperar el objeto DataManager que es el responsable de descubrir para este tipo de estructura cual es tipo de almacenamiento es el que persiste los datos (PersistentStructureManagerMongoDB.php, PersistentStructureManagerMySql.php o PersistentStructureManagerTextPlain.php) cada uno de ellos implementan el método save que lo que hace es los datos queden correctamente almacenados.
+
+Si todo ha ido correctamente devuelve el control a /index.php indicandolo para que la página así lo indique.

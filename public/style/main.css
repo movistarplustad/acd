@@ -164,8 +164,22 @@ a:active {
 }
 
 #structures_list .structure {
-	padding: 0.5em 0;
+	padding: 0.5em 0 0 1em;
 	border-bottom: 1px solid #E9E9E9;
+	line-height: 2.5em;
+	min-height: 2.5em;
+	clear: both;
+}
+#structures_list .structure:hover {
+	background-color: #FFF;
+}
+#structures_list label {
+	width: 20em;
+	float: left;
+}
+#structures_list .tools {
+	float: left;
+	margin: 0 2em 0 0;
 }
 #new_structure {
 	border-top: 1px solid #C2C2C2;
@@ -387,4 +401,25 @@ input[readonly] {
 }
 .actions {
 	margin: 0.5em 0 1em 0.5em;
+}
+
+/* Media Queries */
+@media screen and (max-width: 480px) {
+	#structures_list .structure {
+		list-style: none;
+		padding: 0.5em 0 2em 0;
+		margin: 0 0 2em 0;
+	}
+	#structures_list label {
+		width: 10em;
+	}
+	#structures_list .button {
+		width: 0;
+		height: 2.5em;
+		padding: 0.5em 0em 0.5em 1.8em;
+		margin: 0 0 0 0.5em;
+		display: inline-block;
+		overflow: hidden;
+		float: left;
+	}
 }
