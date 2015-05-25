@@ -314,7 +314,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		if ($depth > 0) {
 			$depth--;
 			$content = $this->loadById($structureDo, $idContent);
-			$isValid = $content->checkValidityDate($validityDate);
+			$isValid = $content && $content->checkValidityDate($validityDate);
 			// TODO Organize code
 			if (!$isValid) return null;
 			// else

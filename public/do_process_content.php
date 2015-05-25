@@ -22,8 +22,7 @@ $fields = isset($_POST['field']) ? $_POST['field'] : array();
 
 $contentLoader = new \ACD\Model\ContentLoader();
 $contentLoader->setId($idStructure);
-//$contents = $contentLoader->loadContents('id', $id);
-$content = $contentLoader->loadContents('id', $id);
+$content = $contentLoader->loadContent('id', $id);
 //TODO Resolver mejor
 
 try {

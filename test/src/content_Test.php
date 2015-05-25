@@ -28,9 +28,9 @@ class content extends \PHPUnit_Framework_TestCase
 	public function testLoadContentById() {
 		$cl = new Model\ContentLoader();
 		$cl->setId('estructura_texto');
-		$colContent = $cl->loadContents('byId', '1');
+		$content = $cl->loadContents('byId', '1');
 		
-		$this->assertEquals('structure foo', $colContent);
+		$this->assertEquals('structure foo', $content); // dara error
 	}
 
 
@@ -76,11 +76,11 @@ class content extends \PHPUnit_Framework_TestCase
 		$content->setId('id-demo');
 		$content->setData('Título', 'El campo Título');
 		$cl->saveContent($content);
-		$colContent = $cl->loadContents('id', 'id-demo');
+		$content = $cl->loadContent('id', 'id-demo');
 
 		$cl->deleteContent('id-demo');
-		$colContent = $cl->loadContents('id', 'id-demo');
+		$content = $cl->loadContent('id', 'id-demo');
 
-		$this->assertNull($colContent);
+		$this->assertNull($content);
 	}
 }

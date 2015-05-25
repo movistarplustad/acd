@@ -2,6 +2,7 @@
 namespace Acd\Model;
 
 class PersistentStorageUnknownInvalidException extends \exception {}
+class ContentLoaderException extends \exception {}
 class ContentLoader extends StructureDo
 {
 	private $bStructureLoaded;
@@ -47,8 +48,8 @@ class ContentLoader extends StructureDo
 			$this->setStructureLoaded($this->loadFromFile());
 		}
 	}
-	// TODO Need loadContent and loadConents?
-	public function loadContents($method, $params = null) {
+	// Aseptic loadContent/loadContents return ContentsDo, ContentDo or null,   loadContent and loadConents resolve this situation
+	private  function _loadContents($method, $params = null) {
 		switch ($method) {
 			case 'id+countParents':
 				//$content = $this->loadContents('id', $params);
@@ -58,8 +59,8 @@ class ContentLoader extends StructureDo
 				if($content) {
 					// Set the relations number to content, and content is contents->get($id)
 					//$content->get($params)->setCountParents($this->loadContents('countParents', $params));
-					$content->setCountParents($this->loadContents('countParents', $params));
-					$content->setCountAliasId($this->loadContents('count-alias-id', ['alias_id' => $content->getAliasId()]));
+					$content->setCountParents($this->_loadContents('countParents', $params));
+					$content->setCountAliasId($this->_loadContents('count-alias-id', ['alias_id' => $content->getAliasId()]));
 				}
 
 				return $content;
@@ -77,6 +78,37 @@ class ContentLoader extends StructureDo
 			break;
 		}
 
+	}
+	// Return always a ContentsDo collection or throw exception
+	public function loadContents($method, $params = null) {
+		$result = $this->_loadContents($method, $params);
+		if (is_object($result) && get_class($result) === 'Acd\Model\ContentDo') {
+			// Add ContentDo to ContentsDo collection
+			$resultContents = new ContentsDo();
+			$resultContents->add($result);
+			return $resultContents;
+		}
+		elseif (is_object($result) && get_class($result) === 'Acd\Model\ContentsDo') {
+			// It's a ContentsDo
+			return $result;
+		}
+		else {
+			// Error is not a ContentDo or ContentsDo
+			throw new ContentLoaderException("Error in loadContents '$method' does not support load return ContentsDo", 1);
+			return $result;
+		}
+	}
+	// Return ContentDo object, other value like number or null
+	public function loadContent($method, $params = null) {
+		$result = $this->_loadContents($method, $params);
+		if (is_object($result) && get_class($result) === 'Acd\Model\ContentsDo') {
+			// Extract first ContentDo from collection
+			return $result->one();
+		}
+		else {
+			// It's a ContentDo or an expected value (number in a count query)
+			return $result;
+		}
 	}
 	public function saveContent($contentDo) {
 		/* Get metainformation */
@@ -130,7 +162,7 @@ class ContentLoader extends StructureDo
 		$this->loadStructure();
 		$persistentManager = $this->getManager();
 
-		$contentDo = $this->loadContents('id', $id);
+		$contentDo = $this->loadContent('id', $id);
 		$this->deleteUpload($contentDo);
 
 		return $persistentManager->delete($this, $id);

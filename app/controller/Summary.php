@@ -21,8 +21,7 @@ class Summary {
 	public function load() {
 		$contentLoader = new \ACD\Model\ContentLoader();
 		$contentLoader->setId($this->getIdStructure());
-		$this->contentDo = $contentLoader->loadContents('id-deep', ['id' => $this->getIdContent(), 'depth' => 20]);
-		$this->contentDo = $this->contentDo->one();
+		$this->contentDo = $contentLoader->loadContent('id-deep', ['id' => $this->getIdContent(), 'depth' => 20]);
 		return $this->contentDo;
 	}
 	public function render() {

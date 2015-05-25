@@ -9,7 +9,7 @@ function loadNewRef($idRef, $idStructure) {
 	}
 	$contentLoader = new Model\ContentLoader();
 	$contentLoader->setId($idStructure);
-	$content = $contentLoader->loadContents('id', $idRef);
+	$content = $contentLoader->loadContent('id', $idRef);
 	//$contents = new Model\ContentsDo();
 	//$contents->add($content);
 
@@ -145,7 +145,7 @@ switch ($action) {
 
 		$contentLoader = new Model\ContentLoader();
 		$contentLoader->setId($idStructureType);
-		$content = $contentLoader->loadContents('id+countParents', $id);
+		$content = $contentLoader->loadContent('id+countParents', $id);
 		//$content = $contents->get($id); // TODO cambiar por next / first...
 		//dd($contentLoader->getFields(),$structure, $content);
 

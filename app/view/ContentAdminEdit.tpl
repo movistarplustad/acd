@@ -78,15 +78,18 @@
 	<article class="dev_sample">
 		<h1>Examples for developer</h1>		
 		<pre>
+			// Can use contentLoader->loadContents(...) to return ContentsDo collection with the 0:n ContentDo matching elements
+			// Can use contentLoader->loadContent(...) to return ContentDo object,  discret content ie. number in count query or null if matching is not done
+
 			// Sample #1 by id, only content without related content
 			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
-			$plainContent = $contentLoader->loadContents('id', $idContent);
+			$plainContent = $contentLoader->loadContent('id', $idContent);
 
 			// Sample #2 by id, with n related levels
 			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
-			$contentWithLevelOfDepth = $contentLoader->loadContents('id-deep', ['id' => $idContent, 'depth' => 5]);
+			$contentWithLevelOfDepth = $contentLoader->loadContent('id-deep', ['id' => $idContent, 'depth' => 5]);
 
 			// Sample #3 by any match tag, with n related levels
 			$contentLoader = new \Acd\Model\ContentLoader();
@@ -101,7 +104,7 @@
 			// Sample #5 by alias-id, with n related leveles and only content in date
 			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
-			$contents = $contentLoader->loadContents('alias-id-deep', ['id' => $aliasIdContent, 'depth' => 5, 'validity-date' => time()]);
+			$contents = $contentLoader->loadContent('alias-id-deep', ['id' => $aliasIdContent, 'depth' => 5, 'validity-date' => time()]);
 
 			// And get values of fields
 <?php
