@@ -94,12 +94,12 @@
 			// Sample #3 by any match tag, with n related levels
 			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
-			$contentByTagWithLevelOfDepth = $contentLoader->loadContents('tag-one-deep', ['tags' => ['portadacine', 'otros'], 'depth' => 2]);
+			$contentByTagWithLevelOfDepth = $contentLoader->loadContent('tag-one-deep', ['tags' => ['portadacine', 'otros'], 'depth' => 2]);
 
 			// Sample #4 by any match tag, with n related levels and only content in date
 			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
-			$contentByTagWithLevelOfDepth = $contentLoader->loadContents('tag-one-deep', ['tags' => ['portadacine', 'otros'], 'depth' => 2, 'validity-date' => time()]);
+			$contentByTagWithLevelOfDepth = $contentLoader->loadContent('tag-one-deep', ['tags' => ['portadacine', 'otros'], 'depth' => 2, 'validity-date' => time()]);
 
 			// Sample #5 by alias-id, with n related leveles and only content in date
 			$contentLoader = new \Acd\Model\ContentLoader();

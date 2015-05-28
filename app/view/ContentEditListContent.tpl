@@ -1,4 +1,8 @@
-<main>
+<?php
+$limits = $contents->getLimits();
+$lowerLimit = $limits->getLower();
+$bMorePage = $limits->getUpper() < $limits->getTotal();
+?><main>
 	<h2>Manage elements <spam class="structure_name"><?=htmlspecialchars($structure->getName())?></spam></h2>
 	<form action="" method="get">
 		<input type="hidden" name="id" value="<?=htmlspecialchars($structure->getId())?>"/>
@@ -19,9 +23,6 @@
 	?>
 	</ol>
 	<?php
-	$limits = $contents->getLimits();
-	$lowerLimit = $limits->getLower();
-	$bMorePage = $limits->getUpper() < $limits->getTotal();
 	if ($bMorePage) {
 		$nextPage = $limits->getUpper() / $limits->getStep();
 		$totalPages = ceil($limits->getTotal() / $limits->getStep());
