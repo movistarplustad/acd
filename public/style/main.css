@@ -364,11 +364,11 @@ input[readonly] {
 .collection li {
 	list-style: inside decimal;
 }
-.ui-sortable {
+.collection.ui-sortable {
 	padding: 0;
 	margin: 0;
 }
-.ui-sortable li {
+.collection.ui-sortable li {
 	background-image: url(draggable.png);
 	padding: 0 0 0 1em;
 	margin: 0;
@@ -376,13 +376,16 @@ input[readonly] {
 	background-repeat: no-repeat;
 	cursor: move;
 }
-.ui-sortable li.find {
+.collection.ui-sortable li.find {
 	background-image: none;
 	cursor: auto;
 	list-style-type: none;
 }
 .periodValidity {
 	font-size: 0.6em;
+}
+.tagit.ui-sortable .tagit-choice {
+	cursor: move;
 }
 .contentSummary {
 	margin: 0 1em;

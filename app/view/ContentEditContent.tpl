@@ -49,7 +49,17 @@
 					<label for="aliasId">Alias-id.:&nbsp;</label><input type="text" name="aliasId" id="aliasId" value="<?=htmlspecialchars($aliasId)?>" class="field aliasId" maxlength="256"/>
 				</li>
 				<li class="item">
-					<label for="tags" class="for-tag">Tags:&nbsp;</label><input type="text" name="tags" id="tags" value="<?=htmlspecialchars($contentTags)?>" class="field tags"<?=$userRol?>/>
+					<label for="tags" class="for-tag">Tags:&nbsp;</label><input type="text" name="tags" id="tags" value="<?=htmlspecialchars($contentTags)?>" class="field tags"<?=$tagsReadonly?>/>
+				</li>
+				<li class="item">
+					<label for="profile" class="for-tag">Profile:&nbsp;</label><input type="text" name="profile" id="profile" value="<?=htmlspecialchars($contentTags)?>" class="field tags sortable" list="profiles"/>
+<datalist id="profiles">
+  <option value="Chrome">
+  <option value="Firefox">
+  <option value="Internet Explorer">
+  <option value="Opera">
+  <option value="Safari">
+</datalist>
 				</li>
 				<?php
 					if($content->getCountParents() !== null) {

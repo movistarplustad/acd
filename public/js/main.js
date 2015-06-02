@@ -93,21 +93,39 @@ var editor = {
 		/* Tags */
 		$(".tags")
 			.filter(function() {
-				if(typeof $(this).attr("readonly") === "undefined") {
-					$(this).tagit();
+				var options = {};
+
+				if(typeof $(this).attr("readonly") !== "undefined") {
+					options.readOnly = true;
 				}
-				else {
-				$(this).tagit({
-						readOnly: true
-					});
+				if(typeof $(this).attr("list") !== "undefined") {
+					var idList = $(this).attr("list");
+					var autocompleteList = $("#"+idList + " option")
+						.map(function(){
+							return $(this).attr("value");
+						}).get();
+					//options.autocomplete: { source: true };
+					options.availableTags = autocompleteList;
 				}
-			});
 
-		/* Alias Id. */
-		//$(".aliasId").aliasIdFormat();
-		$("input").aliasIdFormat();
+				$(this).tagit(options);
 
+				var sortableTags = $(".tags.sortable");
+				$(sortableTags).siblings(".tagit").sortable({
+					stop: function(event,ui) {
+						$(sortableTags).val(
+							$(".tagit-label",$(this))
+								.clone()
+								.text(function(index,text){ return (index == 0) ? text : "," + text; })
+								.text()
+						);
+					}
+		  	      });
 
+			/* Alias Id. */
+			//$(".aliasId").aliasIdFormat();
+			$("input").aliasIdFormat();
+		});
 	},
 	confirmDelete : function(e) {
 		var bDelete = window.confirm("remove permanently this element?");

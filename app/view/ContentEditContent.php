@@ -26,7 +26,7 @@ class ContentEditContent extends Template {
 		$this->__set('contentTags', \Acd\Model\ValueFormater::encode($content->getTags(), \Acd\Model\ValueFormater::TYPE_TAGS, \Acd\Model\ValueFormater::FORMAT_EDITOR));
 	}
 	public function setUserRol($rol) {
-		$this->__set('userRol', $rol === \Acd\conf::$ROL_DEVELOPER ? '' : ' readonly="readonly"');
+		$this->__set('tagsReadonly', $rol === \Acd\conf::$ROL_DEVELOPER ? '' : ' readonly="readonly"');
 	}
 	public function newContent($bnewContent) {
 		$this->__set('bNew', true);
