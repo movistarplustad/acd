@@ -3,4 +3,4 @@
 DIR=`pwd`/`dirname $0`
 cd $DIR
 echo `pwd`
-phpunit --bootstrap ../autoload.php src
+phpunit --bootstrap autoload.php src

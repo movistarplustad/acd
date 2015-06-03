@@ -1,9 +1,10 @@
 <?php
 namespace Acd;
 
-include_once (DIR_BASE.'/app/view/Tools.php');
-\Acd\conf::$PATH_AUTH_CREDENTIALS_FILE = DIR_TEST.'/data/auth.json';
-\Acd\conf::$DIR_TEMPLATES = DIR_TEST.'/data/tools/';
+//include_once (DIR_BASE.'/app/view/Tools.php');
+$DIR_TEST = dirname(__FILE__).'/..';
+\Acd\conf::$PATH_AUTH_CREDENTIALS_FILE = $DIR_TEST.'/data/auth.json';
+\Acd\conf::$DIR_TEMPLATES = $DIR_TEST.'/data/tools/';
 
 class tools_ou_test extends \PHPUnit_Framework_TestCase
 {

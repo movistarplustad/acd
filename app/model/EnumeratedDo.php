@@ -25,5 +25,17 @@ class EnumeratedDo
 	public function setItems($items) {
 		$this->items = $items;
 	}
+	public function load($rawData) {
+		$this->setId($rawData['id']);
+		$this->setItems($rawData['items']);
+	}
+	public function tokenizeData() {
+		$aFieldsData = array(
+			'id' => $this->getId(),
+			'items' => $this->getItems()
+		);
+
+		return $aFieldsData;
+	}
 
 }

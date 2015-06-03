@@ -104,11 +104,15 @@ switch ($action) {
 		$structure = new Model\StructureDo();
 		$structure->setId($idStructureType);
 		$structure->loadFromFile();
+
 		$contentOu->setStructure($structure);
+
+		$enumeratedLoader = new Model\EnumeratedLoader();
+		$profiles = $enumeratedLoader->load('PERFIL');
 
 		$content = new Model\ContentDo();
 		$content->setIdStructure($idStructureType);
-		$contentOu->setContent($content);
+		$contentOu->setContent($content, $profiles);
 		$contentOu->newContent(true);
 		$contentOu->setUserRol($_SESSION['rol']);
 
@@ -142,6 +146,10 @@ switch ($action) {
 		$structure->setId($idStructureType);
 		$structure->loadFromFile();
 		$contentOu->setStructure($structure);
+
+
+		$enumeratedLoader = new Model\EnumeratedLoader();
+		$profiles = $enumeratedLoader->load('PERFIL');
 
 		$contentLoader = new Model\ContentLoader();
 		$contentLoader->setId($idStructureType);
@@ -197,7 +205,7 @@ switch ($action) {
 			$content->setId(null);
 			$content->setTitle('[copy] '.$content->getTitle());
 		}
-		$contentOu->setContent($content);
+		$contentOu->setContent($content, $profiles);
 		$contentOu->setUserRol($_SESSION['rol']);
 		
 		$skeletonOu = new View\BaseSkeleton();

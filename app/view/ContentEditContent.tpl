@@ -54,12 +54,24 @@
 				<li class="item">
 					<label for="profile" class="for-tag">Profile:&nbsp;</label><input type="text" name="profile" id="profile" value="<?=htmlspecialchars($contentTags)?>" class="field tags sortable" list="profiles"/>
 <datalist id="profiles">
-  <option value="Chrome">
-  <option value="Firefox">
-  <option value="Internet Explorer">
-  <option value="Opera">
-  <option value="Safari">
+<?php
+	foreach ($profiles->getItems() as $key => $value) {
+?>
+	<option value="<?=htmlspecialchars($key).'|'.htmlspecialchars($value)?>"></option>
+<?php
+	}
+?>
 </datalist>
+<select multiple="multiple">
+<?php
+	foreach ($profiles->getItems() as $key => $value) {
+?>
+	<option value="<?=htmlspecialchars($key)?>"><?=htmlspecialchars($value)?></option>
+<?php
+	}
+?>
+</select>
+
 				</li>
 				<?php
 					if($content->getCountParents() !== null) {

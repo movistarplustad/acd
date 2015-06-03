@@ -13,4 +13,5 @@ interface iPersistentEnumeratedManager
 	public function initialize(); // Prepare storage to use
 	public function isInitialized(); // Inform if the storage it's ready to use
 	public function load($id);
+	public function save($EnumeratedDo);
 }
