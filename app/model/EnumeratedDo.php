@@ -27,7 +27,7 @@ class EnumeratedDo
 	}
 	public function load($rawData) {
 		$this->setId($rawData['id']);
-		$this->setItems($rawData['items']);
+		$this->setItems(isset($rawData['items']) ? $rawData['items'] : new Collection()) ;
 	}
 	public function tokenizeData() {
 		$aFieldsData = array(
