@@ -125,6 +125,9 @@ var editor = {
 			/* Alias Id. */
 			//$(".aliasId").aliasIdFormat();
 			$("input").aliasIdFormat();
+
+			/* Select multiple */
+			$('.field.select').selectivity();
 		});
 	},
 	confirmDelete : function(e) {

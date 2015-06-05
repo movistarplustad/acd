@@ -30,6 +30,7 @@ class FieldDo
 	private $ref; // For fields that are external content
 	private $refStructure; // Id of type of external content
 	private $instance; // Attributes for the relation width external content, eg. date validation
+	private $options; // key-value of posible options
 	private $bDirty; // Field indicator to store if the value has modified without save
 
 	public static function getAvailableTypes() {
@@ -131,6 +132,12 @@ class FieldDo
 	}
 	public function getInstance() {
 		return $this->instance;
+	}
+	public function setOptions($options) {
+		$this->options = $options;
+	}
+	public function getOptions() {
+		return $this->options ? $this->options : array();
 	}
 	public function setDirty($bDirty, $numItem = 0) {
 		$this->bDirty = (boolean)$bDirty;

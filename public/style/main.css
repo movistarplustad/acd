@@ -387,6 +387,29 @@ input[readonly] {
 .tagit.ui-sortable .tagit-choice {
 	cursor: move;
 }
+.selectivity-multiple-input-container {
+	border: 1px solid #aaa;
+	border-radius: 4px;
+	background-color: #fff;
+	padding: 0;
+	font-size: 0.8em;
+}
+.selectivity-multiple-selected-item {
+	border: 1px solid #D3D3D3;
+	background-color: #eee;
+	padding: 0.2em 0.2em 0.2em 0.5em;
+	color: #555;
+}
+.selectivity-multiple-selected-item-remove {
+	float: right;
+	margin: 0;
+	padding: 0;
+	width: 16px;
+	height: 16px;
+	background-image: url(../js/jquery-ui/images/ui-icons_888888_256x240.png);
+	background-position: -80px -128px;
+	text-align: bottom;
+}
 .contentSummary {
 	margin: 0 1em;
 	background-color: #fff;

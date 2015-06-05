@@ -52,25 +52,15 @@
 					<label for="tags" class="for-tag">Tags:&nbsp;</label><input type="text" name="tags" id="tags" value="<?=htmlspecialchars($contentTags)?>" class="field tags"<?=$tagsReadonly?>/>
 				</li>
 				<li class="item">
-					<label for="profile" class="for-tag">Profile:&nbsp;</label><input type="text" name="profile" id="profile" value="<?=htmlspecialchars($contentTags)?>" class="field tags sortable" list="profiles"/>
-<datalist id="profiles">
-<?php
-	foreach ($profiles->getItems() as $key => $value) {
-?>
-	<option value="<?=htmlspecialchars($key).'|'.htmlspecialchars($value)?>"></option>
-<?php
-	}
-?>
-</datalist>
-<select multiple="multiple">
-<?php
-	foreach ($profiles->getItems() as $key => $value) {
-?>
-	<option value="<?=htmlspecialchars($key)?>"><?=htmlspecialchars($value)?></option>
-<?php
-	}
-?>
-</select>
+					<label for="profile" class="for-tag">Profile:&nbsp;</label><select multiple="multiple" name="profile" id="profile" class="field select">
+						<?php
+							foreach ($profiles->getItems() as $key => $value) {
+						?>
+							<option value="<?=htmlspecialchars($key)?>"><?=htmlspecialchars($value)?></option>
+						<?php
+							}
+						?>
+					</select>
 
 				</li>
 				<?php
