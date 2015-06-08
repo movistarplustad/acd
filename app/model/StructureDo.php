@@ -7,10 +7,12 @@ class StructureDo
 	protected $id;
 	protected $name; /* name, storage */
 	protected $storage;
+	protected $stickyFields; /* Fixed fields of content, meta information as title, tags, validity time... */
 	protected $fields;
 	public function __construct() {
 		$this->id = null;
 		$this->fields = new FieldsDo();
+		// $this->stickyFields initialized in getStickyFields method for performance 
 	}
 	/* Setters and getters attributes */
 	public function setId($id) {
@@ -53,13 +55,29 @@ class StructureDo
 	public function getFields() {
 		return $this->fields;
 	}
+	public function getStickyFields() {
+		if (!isset($this->stickyFields)) {
+			$this->stickyFields = new FieldsDo();
+			$profile = new FieldDo();
+			$profile->setId('profile');
+			$profile->setName('Profile');
+			$profile->setType(fieldDo::TYPE_LIST_MULTIPLE);
+			$profile->getOptions()->setId('PROFILE');
+
+			$this->stickyFields->add($profile);
+		}
+
+		return $this->stickyFields;
+	}
 
 	public function getEnumeratedIds() {
 		// In metadata of contents are "PROFILE" enumerated element and the fields can add their enumerated lists
-		$aEnumeratedIds = ['PROFILE'];
-		foreach ($this->getFields() as $field) {
-			if ($field->getType() === fieldDO::TYPE_LIST_MULTIPLE) {
-				d("TODO, repasar que funcione", $field->getType(), fieldDO::TYPE_LIST_MULTIPLE);
+		$aEnumeratedIds = [];
+		$multiple = new \AppendIterator();
+		$multiple->append($this->getStickyFields()->getIterator());
+		$multiple->append( $this->getFields()->getIterator());
+		foreach ($multiple as $field) {
+			if ($field->getType() === fieldDo::TYPE_LIST_MULTIPLE) {
 				$aEnumeratedIds[] = $field->getOptions()->getId();
 			}
 		}
@@ -107,16 +125,29 @@ class StructureDo
 		if ($document) {
 			$this->load($document);
 			if($bLoadEnumerated) {
-				foreach ($this->getEnumeratedIds() as $idEnumeratedGroup) {
-					# code...
-					$enumeratedDo = $dataManager->loadEnumerated($idEnumeratedGroup);
-					d("asignarlo a los campos", $enumeratedDo);
-				}
+				$this->assignEnumeratedOptionsToFieds($this->getEnumeratedIds());
 			}
 			$bLoaded = true;
 		}
 
 		return $bLoaded;
+	}
+
+	private function assignEnumeratedOptionsToFieds($aEnumeratedIds) {
+		$dataManager = $this->getManager();
+		foreach ($aEnumeratedIds as $idEnumeratedGroup) {
+			$enumeratedDo = $dataManager->loadEnumerated($idEnumeratedGroup);
+
+			$multiple = new \AppendIterator();
+			$multiple->append($this->getStickyFields()->getIterator());
+			$multiple->append( $this->getFields()->getIterator());
+			foreach ($multiple as $field) {
+				if($field->getOptions()->getId() === $idEnumeratedGroup) {
+					$field->setOptions($enumeratedDo);
+				}
+			}
+		}
+
 	}
 
 	/* Serializes */

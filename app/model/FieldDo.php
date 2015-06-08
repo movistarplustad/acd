@@ -136,10 +136,13 @@ class FieldDo
 		return $this->instance;
 	}
 	public function setOptions($options) {
-		$this->options = $options;
+		$this->options = $options; // EnumeratedDo
 	}
 	public function getOptions() {
-		return $this->options ? $this->options : new EnumeratedDo();
+		if (!isset($this->options)) {
+			$this->options = new EnumeratedDo();
+		}
+		return $this->options;
 	}
 	public function setDirty($bDirty, $numItem = 0) {
 		$this->bDirty = (boolean)$bDirty;

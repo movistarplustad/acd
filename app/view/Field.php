@@ -27,6 +27,7 @@ class Field extends Template {
 		$this->field = $field;
 		$this->__set('fieldId', $field->getId());
 		$this->__set('fieldName', $field->getName());
+
 		$this->__set('fieldValue', \Acd\Model\ValueFormater::encode($field->getValue(), $field->getType(), \Acd\Model\ValueFormater::FORMAT_EDITOR)); // Antes $field->getValue());
 		//$ref = $field->getRef();
 		$ref = $field->getValue();
@@ -41,6 +42,7 @@ class Field extends Template {
 		$this->__set('fieldRef', $ref);
 //d($ref);
 		$this->__set('fieldStructureRef', $field->getStructureRef());
+		$this->__set('fieldOptions', $field->getOptions());
 
 		/*
 		switch ($field->getType()) {

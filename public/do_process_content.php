@@ -18,6 +18,7 @@ $periodOfValidity = \Acd\Model\ValueFormater::decode($periodOfValidity , \Acd\Mo
 
 $aliasId =isset($_POST['aliasId']) ? $_POST['aliasId'] : null;
 $tags = isset($_POST['tags']) ? \Acd\Model\ValueFormater::decode($_POST['tags'] , \Acd\Model\ValueFormater::TYPE_TAGS, \Acd\Model\ValueFormater::FORMAT_EDITOR) : array();
+$profile = isset($_POST['profile']) ? \Acd\Model\ValueFormater::decode($_POST['profile'] , \Acd\Model\ValueFormater::TYPE_LIST_MULTIPLE, \Acd\Model\ValueFormater::FORMAT_EDITOR) : array();
 $fields = isset($_POST['field']) ? $_POST['field'] : array();
 
 $contentLoader = new \ACD\Model\ContentLoader();
@@ -52,6 +53,7 @@ switch ($accion) {
 			$modified_content->setPeriodOfValidity($periodOfValidity);
 			$modified_content->setAliasId($aliasId);
 			$modified_content->setTags($tags);
+			$modified_content->setProfile($profile);
 			$numFields = count($fields);
 			$formater = new Model\ValueFormater();
 			foreach ($fields as $key => $data) {

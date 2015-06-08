@@ -11,6 +11,7 @@ class ValueFormater
 	const TYPE_DATE_TIME_RANGE = 'date_time_range';
 	const TYPE_TAGS = 'tags';
 	const TYPE_BOOLEAN = 'boolean';
+	const TYPE_LIST_MULTIPLE = 'list_multiple_options';
 
 	// Formats to getting and setting values
 	const FORMAT_INTERNAL = 0;
@@ -93,7 +94,14 @@ class ValueFormater
 		$formater[self::TYPE_BOOLEAN][self::FORMAT_EDITOR] = function ($value) {
 			return $value == 1;
 		};
-
+		$formater[self::TYPE_LIST_MULTIPLE][self::FORMAT_EDITOR] = function ($value) {
+			if($value) {
+				return $value;
+			}
+			else {
+				return array();
+			}
+		};
 
 		if(isset($formater[$type][$format])) {
 			return $formater[$type][$format]($value);
@@ -103,6 +111,7 @@ class ValueFormater
 		}
 	}
 	public static function encode($value, $type, $format) {
+		//d($type);
 		if($value) {
 			// Empty values return empty string
 			$formater[self::TYPE_DATE][self::FORMAT_EDITOR] = function ($value) {
@@ -157,6 +166,10 @@ class ValueFormater
 				}
 				//$result = array_pad($result, 2, '');
 				return $bModified ? implode(' - ', $result) : '';
+			};
+			$formater[self::TYPE_LIST_MULTIPLE][self::FORMAT_EDITOR] = function ($value) {
+				//return implode(',', $value);
+				return $value;
 			};
 
 			if(isset($formater[$type][$format])) {
