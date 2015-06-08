@@ -23,7 +23,7 @@ class StructuresDo extends Collection
 		}
 	}
 
-	public function loadFromFile($path = null) {
+	public function loadFromFile($options = []) {
 		$dataManager = $this->getManager();
 		$json_a = $dataManager->loadAll();
 		//+d($json_a);

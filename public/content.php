@@ -27,7 +27,7 @@ switch ($action) {
 		break;
 	case 'list_structures': 
 	$structures = new Model\StructuresDo();
-	$structures->loadFromFile(conf::$DATA_PATH);
+	$structures->loadFromFile();
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('menu');
 
@@ -103,15 +103,16 @@ switch ($action) {
 		$contentOu = new View\ContentEditContent();
 		$structure = new Model\StructureDo();
 		$structure->setId($idStructureType);
-		$structure->loadFromFile();
+		$structure->loadFromFile(['loadEnumerated' => true]);
 
 		$contentOu->setStructure($structure);
 
 		$enumeratedLoader = new Model\EnumeratedLoader();
-		$profiles = $enumeratedLoader->load('PERFIL');
+		$profiles = $enumeratedLoader->load('PROFILE');
 
 		$content = new Model\ContentDo();
 		$content->setIdStructure($idStructureType);
+//dd($content->getProfile()->getOptions());
 		$contentOu->setContent($content, $profiles);
 		$contentOu->newContent(true);
 		$contentOu->setUserRol($_SESSION['rol']);
@@ -144,7 +145,7 @@ switch ($action) {
 		$contentOu = new View\ContentEditContent();
 		$structure = new Model\StructureDo();
 		$structure->setId($idStructureType);
-		$structure->loadFromFile();
+		$structure->loadFromFile(['loadEnumerated' => true]);
 		$contentOu->setStructure($structure);
 
 

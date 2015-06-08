@@ -54,6 +54,19 @@ class StructureDo
 		return $this->fields;
 	}
 
+	public function getEnumeratedIds() {
+		// In metadata of contents are "PROFILE" enumerated element and the fields can add their enumerated lists
+		$aEnumeratedIds = ['PROFILE'];
+		foreach ($this->getFields() as $field) {
+			if ($field->getType() === fieldDO::TYPE_LIST_MULTIPLE) {
+				d("TODO, repasar que funcione", $field->getType(), fieldDO::TYPE_LIST_MULTIPLE);
+				$aEnumeratedIds[] = $field->getOptions()->getId();
+			}
+		}
+
+		return $aEnumeratedIds;
+	}
+
 	// TODO Repetido en StructuresDO
 	private function getManager() {
 		switch (\Acd\conf::$DEFAULT_STORAGE) {
@@ -85,12 +98,21 @@ class StructureDo
 		}
 	}
 
-	public function loadFromFile($path = null) {
+	/* TODO: Bad name loadFromFile, change for loadFromPersistentStorage */
+	public function loadFromFile($options = []) {
+		$bLoadEnumerated = isset($options['loadEnumerated']) && $options['loadEnumerated'] === true;
 		$dataManager = $this->getManager();
 		$document = $dataManager->loadById($this->getId());
 		$bLoaded = false;
 		if ($document) {
 			$this->load($document);
+			if($bLoadEnumerated) {
+				foreach ($this->getEnumeratedIds() as $idEnumeratedGroup) {
+					# code...
+					$enumeratedDo = $dataManager->loadEnumerated($idEnumeratedGroup);
+					d("asignarlo a los campos", $enumeratedDo);
+				}
+			}
 			$bLoaded = true;
 		}
 

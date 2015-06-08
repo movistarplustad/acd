@@ -6,6 +6,7 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 {
 	private $mongo;
 	private $db;
+	private $enumeratedManager;
 	public function initialize() {
 		try {
 			$this->mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
@@ -73,6 +74,17 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 		}
 		//db.structure.update({'_id' : 'chat_tienda'},{'_id' : 'chat_tienda',       "name": "Chat de tienda online Mongo", "storage" : "mongodb", 'fieds' : []}, {upsert :true})
 		//$mongoCollection->update(array('_id' => $oId), array('$set' => $insert), array('upsert' => true));
+	}
+	private function getEnumeratedManager() {
+		if (!isset($this->enumeratedManager)) {
+			$this->enumeratedManager = new PersistentEnumeratedManagerMongoDB();
+		}
+
+		return $this->enumeratedManager;
+	}
+	public function loadEnumerated($id) {
+		$enumeratedDataManager = $this->getEnumeratedManager();
+		return $enumeratedDataManager->load($id);
 	}
 }
 /*

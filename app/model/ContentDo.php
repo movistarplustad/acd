@@ -9,12 +9,14 @@ class ContentDo
 	const PERIOD_OF_VALIDITY_END = 'end';
 	const PERIOD_OF_VALIDITY_RAW = 'raw'; 
 	const PERIOD_OF_VALIDITY_TOKENIZE = 'tokenize'; // For tokenize
+	const PROFILE_ENUMERATED_ID = 'PROFILE';
 	private $id;
 	private $idStructure;
 	private $title;
 	private $periodOfValidity;
 	private $aliasId;
 	private $tags;
+	private $profile;
 	//private $data; /* Array key/value of variable fields */
 	private $fields;
 	private $parent; /* ContentDo Relation in complex structures */
@@ -29,6 +31,9 @@ class ContentDo
 			ContentDo::PERIOD_OF_VALIDITY_END => INF);
 		$this->aliasId = null;
 		$this->tags = array();
+		$this->profile = new FieldDo();
+		$this->profile->setType(FieldDo::TYPE_LIST_MULTIPLE);
+		$this->profile->setId(self::PROFILE_ENUMERATED_ID);
 		$this->fields = new FieldsDo();
 		$this->parent = null;
 	}
@@ -105,6 +110,15 @@ class ContentDo
 		else {
 			throw new ContentDoException("Input data should be an array", 1);
 		}
+	}
+	public function setProfile($profile) {
+		$this->profile = $profile;
+	}
+	public function setProfileValues($aProfile) {
+		$this->profile->setOptions($aProfile);
+	}
+	public function getProfile() {
+		return $this->profile;
 	}
 	public function getTags() {
 		return $this->tags;
@@ -196,6 +210,8 @@ class ContentDo
 		$this->setAliasId($aliasId);
 		@$tags = $rawData['tags'] ?: [];
 		$this->setTags($tags);
+		@$profile = $rawData['profile'] ?: [];
+		$this->setProfileValues($profile);
 		if($structure !== null) {
 			$this->buildSkeleton($structure);
 		}

@@ -21,6 +21,7 @@ class FieldDo
 	const TYPE_CONTENT = 'content';
 	const TYPE_FILE = 'file';
 	const TYPE_LINK = 'link';
+	const TYPE_LIST_MULTIPLE = 'list_multiple_options';
 	// const TYPE_TAGS = 'tags'; // TODO do in future
 
 	private $id;
@@ -30,7 +31,7 @@ class FieldDo
 	private $ref; // For fields that are external content
 	private $refStructure; // Id of type of external content
 	private $instance; // Attributes for the relation width external content, eg. date validation
-	private $options; // key-value of posible options
+	private $options; // Enumerated posible options
 	private $bDirty; // Field indicator to store if the value has modified without save
 
 	public static function getAvailableTypes() {
@@ -49,7 +50,8 @@ class FieldDo
 			self::TYPE_CONTENT => 'Reference to other content',
 			self::TYPE_COLLECTION => 'Collection of other contents',
 			self::TYPE_FILE => 'File upload',
-			self::TYPE_LINK => 'Link'
+			self::TYPE_LINK => 'Link',
+			self::TYPE_LIST_MULTIPLE => 'List with zero or more selecting options'
 		);
 	}
 
@@ -137,7 +139,7 @@ class FieldDo
 		$this->options = $options;
 	}
 	public function getOptions() {
-		return $this->options ? $this->options : array();
+		return $this->options ? $this->options : new EnumeratedDo();
 	}
 	public function setDirty($bDirty, $numItem = 0) {
 		$this->bDirty = (boolean)$bDirty;

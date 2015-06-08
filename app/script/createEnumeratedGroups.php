@@ -9,7 +9,7 @@ use Acd\Model\EnumeratedLoader;
 $enumeratedLoader = new EnumeratedLoader();
 
 $enumeratedDo = new EnumeratedDo();
-$enumeratedDo->setId('PERFIL');
+$enumeratedDo->setId('PROFILE');
 $perfiles = array(
 	'LOCALP' => 'Local público',
 	'JAZZ' => 'OTT Jazztel',
@@ -23,5 +23,5 @@ $enumeratedDo->setItems($perfiles);
 $enumeratedLoader->save($enumeratedDo);
 unset($enumeratedDo);
 
-$enumeratedDo = $enumeratedLoader->load('PERFIL');
+$enumeratedDo = $enumeratedLoader->load('PROFILE');
 s($enumeratedDo);

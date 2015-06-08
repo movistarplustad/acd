@@ -64,7 +64,9 @@ class structure extends \PHPUnit_Framework_TestCase
 	public function testLoadFromFile() {
 		$a = new Model\StructureDo();
 		$a->setId('chat_tienda');
-		$a->loadFromFile(DIR_BASE.'/test/data/structures_demo.json');
+		// Formerly loadFromFile(DIR_BASE.'/test/data/structures_demo.json');
+		// TODO: Change to inject dataManager
+		$a->loadFromFile();
 		$this->assertEquals('chat_tienda', $a->getId());
 		$this->assertEquals('Chat de tienda online', $a->getName());
 		$this->assertEquals('mongodb', $a->getStorage());
