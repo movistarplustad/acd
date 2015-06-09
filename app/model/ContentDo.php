@@ -262,7 +262,7 @@ class ContentDo
 			'period_of_validity' => $this->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_TOKENIZE),
 			'alias_id' => $this->getAliasId(),
 			'tags' => $this->getTags(),
-			'profile' => $this->getProfile(),
+			'profile' => $this->getProfile()->getValue(),
 			'data' => $aFieldsData
 		);
 	}

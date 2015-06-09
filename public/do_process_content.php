@@ -53,7 +53,7 @@ switch ($accion) {
 			$modified_content->setPeriodOfValidity($periodOfValidity);
 			$modified_content->setAliasId($aliasId);
 			$modified_content->setTags($tags);
-			$modified_content->setProfile($profile);
+			$modified_content->setProfileValues($profile);
 			$numFields = count($fields);
 			$formater = new Model\ValueFormater();
 			foreach ($fields as $key => $data) {

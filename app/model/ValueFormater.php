@@ -120,9 +120,11 @@ class ValueFormater
 				ValueFormater::PERIOD_OF_VALIDITY_START => '',
 				ValueFormater::PERIOD_OF_VALIDITY_END => '',
 			];
-			foreach ($aValue as $attributeName => $value) {
-				if($value && is_finite($value)) {
-					$result[$attributeName] = date('Y-m-d', $value);
+			if(is_array($aValue)) {
+				foreach ($aValue as $attributeName => $value) {
+					if($value && is_finite($value)) {
+						$result[$attributeName] = date('Y-m-d', $value);
+					}
 				}
 			}
 			//$result = array_pad($result, 2, '');
@@ -136,9 +138,11 @@ class ValueFormater
 				ValueFormater::PERIOD_OF_VALIDITY_START => '',
 				ValueFormater::PERIOD_OF_VALIDITY_END => '',
 			];
-			foreach ($aValue as $attributeName => $value) {
-				if($value && is_finite($value)) {
-					$result[$attributeName] = date('Y-m-d\TH:i:s\Z', $value);
+			if(is_array($aValue)) {
+				foreach ($aValue as $attributeName => $value) {
+					if($value && is_finite($value)) {
+						$result[$attributeName] = date('Y-m-d\TH:i:s\Z', $value);
+					}
 				}
 			}
 			//$result = array_pad($result, 2, '');
@@ -156,10 +160,12 @@ class ValueFormater
 				ValueFormater::PERIOD_OF_VALIDITY_END => '∞',
 			];
 			$bModified = false;
-			foreach ($aValue as $attributeName => $value) {
-				if($value && is_finite($value)) {
-					$result[$attributeName] = date('j M G:i\h', $value);
-					$bModified = true;
+			if(is_array($aValue)) {
+				foreach ($aValue as $attributeName => $value) {
+					if($value && is_finite($value)) {
+						$result[$attributeName] = date('j M G:i\h', $value);
+						$bModified = true;
+					}
 				}
 			}
 			//$result = array_pad($result, 2, '');
