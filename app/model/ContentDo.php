@@ -115,8 +115,7 @@ class ContentDo
 		$this->profile = $profile;
 	}
 	public function setProfileValues($aProfile) {
-		$this->profile->setOptions($aProfile);
-		//$this->profile->setValue($aProfile);
+		$this->profile->setValue($aProfile);
 	}
 	public function getProfile() {
 		return $this->profile;

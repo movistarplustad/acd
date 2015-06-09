@@ -12,7 +12,7 @@ class StructureDo
 	public function __construct() {
 		$this->id = null;
 		$this->fields = new FieldsDo();
-		// $this->stickyFields initialized in getStickyFields method for performance 
+		// $this->stickyFields initialized in getStickyFields method for performance
 	}
 	/* Setters and getters attributes */
 	public function setId($id) {

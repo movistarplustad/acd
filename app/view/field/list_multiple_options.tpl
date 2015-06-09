@@ -1,9 +1,3 @@
-<?php
-	// Parche temporal
-	if (!is_array($fieldValue)) {
-		$fieldValue = [];
-	}
-?>
 <label for="<?=htmlspecialchars($fieldId)?>" class="for-tag"><?=htmlspecialchars($fieldName)?>:&nbsp;</label><select multiple="multiple" name="<?=htmlspecialchars($fieldId)?>" id="<?=htmlspecialchars($fieldId)?>" class="field select">
 	<?php
 		foreach ($fieldOptions->getItems() as $key => $value) {

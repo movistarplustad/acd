@@ -11,15 +11,6 @@ class Field extends Template {
 		$this->__set('resultCode', '');
 	}	
 
-	// INDEX
-	/*
-	public function setId($id) {
-		$this->structure->setId($id);
-	}
-	public function load() {
-		$this->structure->loadFromFile();
-	}
-	*/
 	public function setId($id) {
 		$this->__set('id', $id);
 	}
@@ -31,16 +22,12 @@ class Field extends Template {
 		$this->__set('fieldValue', \Acd\Model\ValueFormater::encode($field->getValue(), $field->getType(), \Acd\Model\ValueFormater::FORMAT_EDITOR)); // Antes $field->getValue());
 		//$ref = $field->getRef();
 		$ref = $field->getValue();
-		//d($field->getValue());
 		if($field->getType() === 'content' && $ref) {
-			//d($field->getType());
 			$id = $field->getRef()['ref'];
-			//d($id,$field->getValue()->get($id)->getTitle(), $field->getRef());
 		}
 
 		//$ref = is_string($ref) ? $ref : '';
 		$this->__set('fieldRef', $ref);
-//d($ref);
 		$this->__set('fieldStructureRef', $field->getStructureRef());
 		$this->__set('fieldOptions', $field->getOptions());
 

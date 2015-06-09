@@ -11,6 +11,7 @@ class ValueFormater
 	const TYPE_DATE_TIME_RANGE = 'date_time_range';
 	const TYPE_TAGS = 'tags';
 	const TYPE_BOOLEAN = 'boolean';
+	const TYPE_LINK = 'link';
 	const TYPE_LIST_MULTIPLE = 'list_multiple_options';
 
 	// Formats to getting and setting values
@@ -69,7 +70,6 @@ class ValueFormater
 				ValueFormater::PERIOD_OF_VALIDITY_END => INF,
 			];
 
-//d($aValue, debug_backtrace());
 			if (is_array($aValue)){
 				foreach ($aValue as $attributeName => $value) {
 					if($value) {
@@ -111,73 +111,76 @@ class ValueFormater
 		}
 	}
 	public static function encode($value, $type, $format) {
-		//d($type);
-		if($value) {
-			// Empty values return empty string
-			$formater[self::TYPE_DATE][self::FORMAT_EDITOR] = function ($value) {
-				return date('Y-m-d', $value);
-			};
-			$formater[self::TYPE_DATE_RANGE][self::FORMAT_EDITOR] = function ($aValue) {
-				$result = [
-					ValueFormater::PERIOD_OF_VALIDITY_START => '',
-					ValueFormater::PERIOD_OF_VALIDITY_END => '',
-				];
-				foreach ($aValue as $attributeName => $value) {
-					if($value && is_finite($value)) {
-						$result[$attributeName] = date('Y-m-d', $value);
-					}
+		// Empty values return empty string
+		$formater[self::TYPE_DATE][self::FORMAT_EDITOR] = function ($value) {
+			return $value ? date('Y-m-d', $value) : '';
+		};
+		$formater[self::TYPE_DATE_RANGE][self::FORMAT_EDITOR] = function ($aValue) {
+			$result = [
+				ValueFormater::PERIOD_OF_VALIDITY_START => '',
+				ValueFormater::PERIOD_OF_VALIDITY_END => '',
+			];
+			foreach ($aValue as $attributeName => $value) {
+				if($value && is_finite($value)) {
+					$result[$attributeName] = date('Y-m-d', $value);
 				}
-				//$result = array_pad($result, 2, '');
-				return $result;
-			};
-			$formater[self::TYPE_DATE_TIME][self::FORMAT_EDITOR] = function ($value) {
-				return date('Y-m-d\TH:i:s\Z', $value);
-			};
-			$formater[self::TYPE_DATE_TIME_RANGE][self::FORMAT_EDITOR] = function ($aValue) {
-				$result = [
-					ValueFormater::PERIOD_OF_VALIDITY_START => '',
-					ValueFormater::PERIOD_OF_VALIDITY_END => '',
-				];
-				foreach ($aValue as $attributeName => $value) {
-					if($value && is_finite($value)) {
-						$result[$attributeName] = date('Y-m-d\TH:i:s\Z', $value);
-					}
+			}
+			//$result = array_pad($result, 2, '');
+			return $result;
+		};
+		$formater[self::TYPE_DATE_TIME][self::FORMAT_EDITOR] = function ($value) {
+			return $value ? date('Y-m-d\TH:i:s\Z', $value) : '';
+		};
+		$formater[self::TYPE_DATE_TIME_RANGE][self::FORMAT_EDITOR] = function ($aValue) {
+			$result = [
+				ValueFormater::PERIOD_OF_VALIDITY_START => '',
+				ValueFormater::PERIOD_OF_VALIDITY_END => '',
+			];
+			foreach ($aValue as $attributeName => $value) {
+				if($value && is_finite($value)) {
+					$result[$attributeName] = date('Y-m-d\TH:i:s\Z', $value);
 				}
-				//$result = array_pad($result, 2, '');
-				return $result;
-			};
-			$formater[self::TYPE_TAGS][self::FORMAT_EDITOR] = function ($value) {
-				return implode(',', $value);
-			};
-			$formater[self::TYPE_BOOLEAN][self::FORMAT_EDITOR] = function ($value) {
-				return $value ? ' checked="checked"' : '';
-			};
-			$formater[self::TYPE_DATE_RANGE][self::FORMAT_HUMAN] = function ($aValue) {
-				$result = [
-					ValueFormater::PERIOD_OF_VALIDITY_START => '∞',
-					ValueFormater::PERIOD_OF_VALIDITY_END => '∞',
-				];
-				$bModified = false;
-				foreach ($aValue as $attributeName => $value) {
-					if($value && is_finite($value)) {
-						$result[$attributeName] = date('j M G:i\h', $value);
-						$bModified = true;
-					}
+			}
+			//$result = array_pad($result, 2, '');
+			return $result;
+		};
+		$formater[self::TYPE_TAGS][self::FORMAT_EDITOR] = function ($value) {
+			return $value ? implode(',', $value) : '';
+		};
+		$formater[self::TYPE_BOOLEAN][self::FORMAT_EDITOR] = function ($value) {
+			return $value ? ' checked="checked"' : '';
+		};
+		$formater[self::TYPE_DATE_RANGE][self::FORMAT_HUMAN] = function ($aValue) {
+			$result = [
+				ValueFormater::PERIOD_OF_VALIDITY_START => '∞',
+				ValueFormater::PERIOD_OF_VALIDITY_END => '∞',
+			];
+			$bModified = false;
+			foreach ($aValue as $attributeName => $value) {
+				if($value && is_finite($value)) {
+					$result[$attributeName] = date('j M G:i\h', $value);
+					$bModified = true;
 				}
-				//$result = array_pad($result, 2, '');
-				return $bModified ? implode(' - ', $result) : '';
-			};
-			$formater[self::TYPE_LIST_MULTIPLE][self::FORMAT_EDITOR] = function ($value) {
-				//return implode(',', $value);
-				return $value;
-			};
+			}
+			//$result = array_pad($result, 2, '');
+			return $bModified ? implode(' - ', $result) : '';
+		};
 
-			if(isset($formater[$type][$format])) {
-				return $formater[$type][$format]($value);
-			}
-			else {
-				return $value;
-			}
+		// Empty values return other content
+		$formater[self::TYPE_LINK][self::FORMAT_EDITOR] = function ($value) {
+			//return implode(',', $value);
+			return $value ? $value : array('href' => '', 'description' => '');
+		};
+		$formater[self::TYPE_LIST_MULTIPLE][self::FORMAT_EDITOR] = function ($value) {
+			//return implode(',', $value);
+			return $value ? $value : array();
+		};
+
+		if(isset($formater[$type][$format])) {
+			return $formater[$type][$format]($value);
+		}
+		else {
+			return $value;
 		}
 	}
 }
