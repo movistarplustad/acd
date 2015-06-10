@@ -27,17 +27,27 @@ class PersistentManagerMySql implements iPersistentManager
 			return false;
 		}
 	}
-
+	private function getFilters($query) {
+		$filters = [];
+		if ($query->getCondition('validity-date')) {
+			$filters['validity-date'] = $query->getCondition('validity-date');
+		}
+		if ($query->getCondition('profile')) {
+			$filters['profile'] = $query->getCondition('profile');
+		}
+		return $filters;
+	}
 	public function load($structureDo, $query) {
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
+		$filters = $this->getFilters($query);
 		switch ($query->getType()) {
 			case 'id':
 				return $this->loadById($structureDo, $query->getCondition());
 				break;
 				case 'id-deep':
-					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $query->getCondition('validity-date'));
+					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $filters);
 					break;
 			case 'all':
 				return $this->loadAll($structureDo, $query);
@@ -274,11 +284,12 @@ class PersistentManagerMySql implements iPersistentManager
 
 		return $this->structuresCache[$id];
 	}
-	private function loadIdDepth ($structureDo, $idContent, $depth, $validityDate = null) {
+	private function loadIdDepth ($structureDo, $idContent, $depth, $filters = []) {
 		if ($depth > 0) {
 			$depth--;
 			//$content = $this->loadById($structureDo, $idContent)->get($idContent);
 			$content = $this->loadById($structureDo, $idContent);
+			@$validityDate = $filters['validityDate'];
 			$isValid = $content && $content->checkValidityDate($validityDate);
 			// TODO Organize code
 			if (!$isValid) return null;
@@ -292,7 +303,7 @@ class PersistentManagerMySql implements iPersistentManager
 						// Has relation info?
 						if($field->getValue() && $field->getValue()['id_structure']) {
 							$structureTmp = $this->getStructure($field->getValue()['id_structure']);
-							$contentsTemp = $this->loadIdDepth ($structureTmp, $field->getValue()['ref'], $depth, $validityDate);
+							$contentsTemp = $this->loadIdDepth ($structureTmp, $field->getValue()['ref'], $depth, $filters);
 							if ($contentsTemp) {
 								$field->setValue($contentsTemp->one());
 							}
@@ -302,7 +313,7 @@ class PersistentManagerMySql implements iPersistentManager
 						$newVal = new ContentsDo();
 						foreach ($field->getValue() as $itemCollection) {
 							$structureTmp = $this->getStructure($itemCollection['id_structure']);
-							$contentsTemp = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth, $validityDate);
+							$contentsTemp = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth, $filters);
 							if ($contentsTemp) {
 								$newVal->add($contentsTemp->one());
 							}

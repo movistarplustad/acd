@@ -15,20 +15,31 @@ class PersistentManagerMongoDB implements iPersistentManager
 	public function isInitialized($structureDo) {
 		return isset($this->db);
 	}
+	private function getFilters($query) {
+		$filters = [];
+		if ($query->getCondition('validity-date')) {
+			$filters['validity-date'] = $query->getCondition('validity-date');
+		}
+		if ($query->getCondition('profile')) {
+			$filters['profile'] = $query->getCondition('profile');
+		}
+		return $filters;
+	}
 	public function load($structureDo, $query) {
+		$filters = $this->getFilters($query);
 		//if ($this->isInitialized($structureDo)) {
 			switch ($query->getType()) {
 				case 'id':
 					return $this->loadById($structureDo, $query->getCondition());
 					break;
 				case 'id-deep':
-					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $query->getCondition('validity-date'));
+					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $filters);
 					break;
 				case 'alias-id-deep':
-					return $this->loadAliasIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $query->getCondition('validity-date'));
+					return $this->loadAliasIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $filters);
 					break;
 				case 'tag-one-deep': // First element matching with tag
-					$contentsTemp = $this->loadTagOneDepth($structureDo, $query->getCondition('tags'), $query->getDepth(), $query->getCondition('validity-date'));
+					$contentsTemp = $this->loadTagOneDepth($structureDo, $query->getCondition('tags'), $query->getDepth(), $filters);
 					return is_null($contentsTemp) ? null : $contentsTemp->one();
 					break;
 				case 'all':
@@ -283,7 +294,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		return $this->structuresCache[$id];
 	}
-	private function loadTagOneDepth($structureDo, $tags, $depth, $validityDate = null) {
+	private function loadTagOneDepth($structureDo, $tags, $depth, $filters = []) {
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
@@ -291,30 +302,33 @@ class PersistentManagerMongoDB implements iPersistentManager
 		// db.content.find({"tags":{ $in : ["portadacine"]}, "id_structure" : "padre"}).pretty()
 		$documentFound = $mongoCollection->findOne(array('tags' => array('$in' => $tags), 'id_structure' => $structureDo->getId()));
 		if ($documentFound) {
-			return $this->loadIdDepth ($structureDo, (string) $documentFound['_id'], $depth, $validityDate);
+			return $this->loadIdDepth ($structureDo, (string) $documentFound['_id'], $depth, $filters);
 		}
 		else {
 			return null;
 		}
 	}
-	private function loadAliasIdDepth($structureDo, $idContent, $depth, $validityDate = null) {
+	private function loadAliasIdDepth($structureDo, $idContent, $depth, $filters = []) {
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
 		$mongoCollection = $this->db->selectCollection('content');
 		$documentFound = $mongoCollection->findOne(array("alias_id" => $idContent, 'id_structure' => $structureDo->getId()), array("_id" => true));
 		if ($documentFound) {
-			return $this->loadIdDepth ($structureDo, (string) $documentFound['_id'], $depth, $validityDate);
+			return $this->loadIdDepth ($structureDo, (string) $documentFound['_id'], $depth, $filters);
 		}
 		else {
 			return null;
 		}
 	}
-	private function loadIdDepth($structureDo, $idContent, $depth, $validityDate = null) {
+	private function loadIdDepth($structureDo, $idContent, $depth, $filters = []) {
 		if ($depth > 0) {
 			$depth--;
 			$content = $this->loadById($structureDo, $idContent);
-			$isValid = $content && $content->checkValidityDate($validityDate);
+
+			@$validityDate = $filters['validityDate'];
+			@$profile =  $filters['profile'];
+			$isValid = $content && $content->checkValidityDate($validityDate) && $content->checkProfile($profile);
 			// TODO Organize code
 			if (!$isValid) return null;
 			// else
@@ -327,7 +341,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 						// Has relation info?
 						if($field->getValue() && $field->getValue()['id_structure']) {
 							$structureTmp = $this->getStructure($field->getValue()['id_structure']);
-							$contentsTemp = $this->loadIdDepth ($structureTmp, $field->getValue()['ref'], $depth, $validityDate);
+							$contentsTemp = $this->loadIdDepth ($structureTmp, $field->getValue()['ref'], $depth, $filters);
 							if ($contentsTemp) {
 								$field->setValue($contentsTemp->one());
 							}
@@ -340,7 +354,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 						$newVal = new ContentsDo();
 						foreach ($field->getValue() as $itemCollection) {
 							$structureTmp = $this->getStructure($itemCollection['id_structure']);
-							$contentsTemp = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth, $validityDate);
+							$contentsTemp = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth, $filters);
 							if ($contentsTemp) {
 								$newVal->add($contentsTemp->one());
 							}

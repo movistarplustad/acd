@@ -104,7 +104,12 @@
 			// Sample #5 by alias-id, with n related leveles and only content in date
 			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
-			$contents = $contentLoader->loadContent('alias-id-deep', ['id' => $aliasIdContent, 'depth' => 5, 'validity-date' => time()]);
+			$content = $contentLoader->loadContent('alias-id-deep', ['id' => $aliasIdContent, 'depth' => 5, 'validity-date' => time()]);
+
+			// Sample #6 by id, with n related levels and only content in date and profile JAZZ
+			$contentLoader = new \Acd\Model\ContentLoader();
+			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
+			$content = $contentLoader->loadContent('id-deep', ['id' => $idContent, 'depth' => 5, 'validity-date' => time(), 'profile' => 'JAZZ']);
 
 			// And get values of fields
 <?php

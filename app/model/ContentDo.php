@@ -97,6 +97,18 @@ class ContentDo
 		}
 		return $inDate;
 	}
+	public function checkProfile($profile) {
+		$profilesContent = $this->getProfile()->getValue();
+		// empty profile or content un-profiled
+		if ($profile == ''  || count($profilesContent ) == 0) {
+			$profileAllowed = true;
+		}
+		else {
+			$profileAllowed = in_array($profile, $this->getProfile()->getValue());
+		}
+
+		return $profileAllowed;
+	}
 	public function setAliasId($aliasId) {
 		$this->aliasId = $aliasId;
 	}
