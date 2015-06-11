@@ -13,20 +13,21 @@ else {
 	}
 	else  {$action = 'ok';}
 }
+$enumeratedController = new Controller\Enumerated();
+$enumeratedController->setId($action);
 
 $skeletonOu = new View\BaseSkeleton();
 $skeletonOu->setBodyClass('enumerated');
 $headerMenuOu = new View\HeaderMenu();
 $headerMenuOu->setType('menu');
 
-$skeletonOu->setHeadTitle('Collection of enumerated values');
+$skeletonOu->setHeadTitle($enumeratedController->getTitle());
 $skeletonOu->setHeaderMenu($headerMenuOu->render());
 
 $toolsOu = new View\Tools();
 $toolsOu->setLogin($_SESSION['login']);
 $toolsOu->setRol($_SESSION['rol']);
 $skeletonOu->setTools($toolsOu->render());
-//$skeletonOu->setContent($contentOu->render());
-$skeletonOu->setContent($action);
+$skeletonOu->setContent($enumeratedController->render());
 
 echo $skeletonOu->render();
