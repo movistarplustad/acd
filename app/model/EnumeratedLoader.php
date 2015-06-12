@@ -24,9 +24,10 @@ class EnumeratedLoader
 		}
 	}
 
-	public function load($id) {
+	public function load($query) {
+		d($query->setCondition('id'));
 		$dataManager = $this->getManager();
-		return $dataManager->load($id);
+		return $dataManager->load($query);
 	}
 
 	public function save($enumeratedDo) {

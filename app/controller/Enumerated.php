@@ -1,5 +1,8 @@
 <?php
 namespace Acd\Controller;
+
+use \Acd\Model\EnumeratedLoader;
+use \Acd\Model\Query;
 // Output
 class Enumerated {
 	private  $id;
@@ -16,7 +19,11 @@ class Enumerated {
 	}
 
 	public function load() {
-		$enumeratedLoader = new \ACD\Model\EnumeratedLoader();
+		$enumeratedLoader = new EnumeratedLoader();
+		$query = new Query();
+		$query->setType('id');
+		$query->setCondition(['id' => 'PROFILE']);
+		d($enumeratedLoader->load($query));
 
 	}
 	public function render() {

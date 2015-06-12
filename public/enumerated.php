@@ -15,6 +15,7 @@ else {
 }
 $enumeratedController = new Controller\Enumerated();
 $enumeratedController->setId($action);
+$enumeratedController->load();
 
 $skeletonOu = new View\BaseSkeleton();
 $skeletonOu->setBodyClass('enumerated');

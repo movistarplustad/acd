@@ -12,6 +12,11 @@
 			<li><a href="index.php" class="no-button edit-structures">Manage structures</a></li>
 			<?php
 				}
+				if ($rol == 'developer') {
+			?>
+			<li><a href="enumerated.php" class="no-button manage-enumerated">Manage enumerated</a></li>
+			<?php
+				}
 				if ($rol == 'developer' || $rol == 'editor') {
 			?>
 			<li><a href="content.php" class="no-button manage-content">Manage content</a></li>
