@@ -11,17 +11,30 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 	public function isInitialized() {
 		return isset($this->db);
 	}
-	public function load($id) {
+	public function load($query) {
 		if (!$this->isInitialized()) {
 			$this->initialize();
 		}
 		$mongoCollection = $this->db->selectCollection('enumerated');
 		try {
-			$documentFound = $mongoCollection->findOne(array("_id" => $id));
-			$documentFound = $this->normalizeDocument($documentFound);
-			$enumeratedFound = new EnumeratedDo();
-			$enumeratedFound->load($documentFound);
+			$id = $query->getCondition('id');
+			$id = null;
+			if ($id) {
+				$documentFound = $mongoCollection->findOne(array("_id" => $id));
+				$documentFound = $this->normalizeDocument($documentFound);
+				$enumeratedFound = new EnumeratedDo();
+				$enumeratedFound->load($documentFound);
+			}
+			else {
+				// All
+				$cursor = $mongoCollection->find(array(), array('_id' => true));
+				foreach ($cursor as $documentFound) {
+					d($documentFound);
+				}
+				$documentFound = $this->normalizeDocument($documentFound);
+				$enumeratedFound = new EnumeratedDo();
 
+			}
 			return $enumeratedFound;
 		}
 		catch( \Exception $e ) {

@@ -11,10 +11,13 @@ else {
 	if ($_SESSION['rol'] == 'editor') {
 		$action = 'unauthorized';
 	}
-	else  {$action = 'ok';}
+	else  {
+		$action = 'ok';
+		$id = 'PROFILE';
+	}
 }
 $enumeratedController = new Controller\Enumerated();
-$enumeratedController->setId($action);
+$enumeratedController->setId($id);
 $enumeratedController->load();
 
 $skeletonOu = new View\BaseSkeleton();
