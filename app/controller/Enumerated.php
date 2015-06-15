@@ -21,8 +21,13 @@ class Enumerated {
 	public function load() {
 		$enumeratedLoader = new EnumeratedLoader();
 		$query = new Query();
-		$query->setType('id');
-		$query->setCondition(['id' => 'PROFILE']);
+		if ($this->getId()) {
+			$query->setType('id');
+			$query->setCondition(['id' => 'PROFILE']);
+		}
+		else {
+			$query->setType('all');
+		}
 		d($enumeratedLoader->load($query));
 
 	}

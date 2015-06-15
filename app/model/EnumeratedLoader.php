@@ -25,7 +25,7 @@ class EnumeratedLoader
 	}
 
 	public function load($query) {
-		d($query, $query->getCondition('id'));
+		d($query, $query->getCondition('id'),$query->getCondition('pun'), $query->getType());
 		$dataManager = $this->getManager();
 		return $dataManager->load($query);
 	}

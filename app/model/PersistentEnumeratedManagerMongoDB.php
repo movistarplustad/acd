@@ -15,26 +15,37 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 		if (!$this->isInitialized()) {
 			$this->initialize();
 		}
+		if($query->getCondition('id')) {
+			return $this->loadById($query);
+		}
+		else {
+			return $this->loadAll($query);
+		}
+	}
+	private function loadById($query) {
 		$mongoCollection = $this->db->selectCollection('enumerated');
 		try {
 			$id = $query->getCondition('id');
 			$id = null;
-			if ($id) {
-				$documentFound = $mongoCollection->findOne(array("_id" => $id));
-				$documentFound = $this->normalizeDocument($documentFound);
-				$enumeratedFound = new EnumeratedDo();
-				$enumeratedFound->load($documentFound);
+			$documentFound = $mongoCollection->findOne(array("_id" => $id));
+			$documentFound = $this->normalizeDocument($documentFound);
+			$enumeratedFound = new EnumeratedDo();
+			$enumeratedFound->load($documentFound);
+			return $enumeratedFound;
+		}
+		catch( \Exception $e ) {
+			return null;
+		}
+	}
+	private function loadAll($query) {
+		$mongoCollection = $this->db->selectCollection('enumerated');
+		try {
+			$cursor = $mongoCollection->find(array(), array('_id' => true));
+			foreach ($cursor as $documentFound) {
+				d($documentFound);
 			}
-			else {
-				// All
-				$cursor = $mongoCollection->find(array(), array('_id' => true));
-				foreach ($cursor as $documentFound) {
-					d($documentFound);
-				}
-				$documentFound = $this->normalizeDocument($documentFound);
-				$enumeratedFound = new EnumeratedDo();
-
-			}
+			$documentFound = $this->normalizeDocument($documentFound);
+			$enumeratedFound = new EnumeratedDo();
 			return $enumeratedFound;
 		}
 		catch( \Exception $e ) {
