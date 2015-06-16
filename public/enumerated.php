@@ -9,11 +9,13 @@ if (!Model\Auth::isLoged()) {
 }
 else {
 	if ($_SESSION['rol'] == 'editor') {
-		$action = 'unauthorized';
+		header('HTTP/1.0 403 Forbidden');
+		echo 'Unauthorized, only admin can show this section.';
+		die();
 	}
 	else  {
 		$action = 'ok';
-		$id = 'PROFILE';
+		@$id = $_GET['id']; //'PROFILE';
 	}
 }
 $enumeratedController = new Controller\Enumerated();
@@ -22,11 +24,9 @@ $enumeratedController->load();
 
 $skeletonOu = new View\BaseSkeleton();
 $skeletonOu->setBodyClass('enumerated');
-$headerMenuOu = new View\HeaderMenu();
-$headerMenuOu->setType('menu');
 
 $skeletonOu->setHeadTitle($enumeratedController->getTitle());
-$skeletonOu->setHeaderMenu($headerMenuOu->render());
+$skeletonOu->setHeaderMenu($enumeratedController->getHeaderMenuOu()->render());
 
 $toolsOu = new View\Tools();
 $toolsOu->setLogin($_SESSION['login']);

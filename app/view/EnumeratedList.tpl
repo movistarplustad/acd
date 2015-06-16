@@ -1,7 +1,12 @@
 <main id="manageStructure">
 	<h2>Enumerated collections</h2>
-	<p class="result <?=$resultCode?>"><?=$resultDesc?></p>
 	<ol id="enumerated_list">
-		<li><a href="?id=bla">PERFIL</a></li>
+		<?php
+			foreach ($enumeratedList as $item) {
+		?>
+			<li><a href="?id=<?=htmlspecialchars($item['id'])?>"><?=htmlspecialchars($item['id'])?></a></li>
+		<?php
+			}
+		?>
 	</ol>
 </main>

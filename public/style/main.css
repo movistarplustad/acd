@@ -88,6 +88,9 @@ h1::after {
 #tools li {
 	padding: 0.7em 0;
 }
+.tools-menu .label {
+	display: none;
+}
 .logout {
 	background-image: url(ic_account_box_24px.svg);
 }
@@ -427,6 +430,17 @@ input[readonly] {
 }
 .actions {
 	margin: 0.5em 0 1em 0.5em;
+}
+
+.result-table {
+	margin: 0 0 0 2em;
+}
+.result-table th {
+	text-align: left;
+}
+.result-table th,
+.result-table td {
+	padding: 0 1em 0 0.5em;
 }
 
 /* Media Queries */

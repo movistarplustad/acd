@@ -26,7 +26,6 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 		$mongoCollection = $this->db->selectCollection('enumerated');
 		try {
 			$id = $query->getCondition('id');
-			$id = null;
 			$documentFound = $mongoCollection->findOne(array("_id" => $id));
 			$documentFound = $this->normalizeDocument($documentFound);
 			$enumeratedFound = new EnumeratedDo();
@@ -41,12 +40,11 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 		$mongoCollection = $this->db->selectCollection('enumerated');
 		try {
 			$cursor = $mongoCollection->find(array(), array('_id' => true));
+			$enumeratedCollectionFound = new Collection();
 			foreach ($cursor as $documentFound) {
-				d($documentFound);
+				$enumeratedCollectionFound->add(array('id' => $documentFound['_id'])); // Now id and name are equeals
 			}
-			$documentFound = $this->normalizeDocument($documentFound);
-			$enumeratedFound = new EnumeratedDo();
-			return $enumeratedFound;
+			return $enumeratedCollectionFound;
 		}
 		catch( \Exception $e ) {
 			return null;
