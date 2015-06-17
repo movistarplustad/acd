@@ -12,6 +12,7 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 		return isset($this->db);
 	}
 	public function load($query) {
+		if(is_object($query)){ //Parche bug
 		if (!$this->isInitialized()) {
 			$this->initialize();
 		}
@@ -20,6 +21,7 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 		}
 		else {
 			return $this->loadAll($query);
+		}
 		}
 	}
 	private function loadById($query) {
