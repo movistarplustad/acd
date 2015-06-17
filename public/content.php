@@ -150,7 +150,10 @@ switch ($action) {
 
 
 		$enumeratedLoader = new Model\EnumeratedLoader();
-		$profiles = $enumeratedLoader->load('PERFIL');
+		$query = new Model\Query();
+		$query->setType('id');
+		$query->setCondition(['id' => 'PERFIL']);
+		$profiles = $enumeratedLoader->load($query);
 
 		$contentLoader = new Model\ContentLoader();
 		$contentLoader->setId($idStructureType);

@@ -135,8 +135,11 @@ class StructureDo
 
 	private function assignEnumeratedOptionsToFieds($aEnumeratedIds) {
 		$dataManager = $this->getManager();
+		$query = new Query();
+		$query->setType('id');
 		foreach ($aEnumeratedIds as $idEnumeratedGroup) {
-			$enumeratedDo = $dataManager->loadEnumerated($idEnumeratedGroup);
+			$query->setCondition(['id' => $this->getId()]);
+			$enumeratedDo = $dataManager->loadEnumerated($query);
 
 			$multiple = new \AppendIterator();
 			$multiple->append($this->getStickyFields()->getIterator());
