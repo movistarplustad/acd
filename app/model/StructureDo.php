@@ -138,7 +138,7 @@ class StructureDo
 		$query = new Query();
 		$query->setType('id');
 		foreach ($aEnumeratedIds as $idEnumeratedGroup) {
-			$query->setCondition(['id' => $this->getId()]);
+			$query->setCondition(['id' => 'PROFILE']);
 			$enumeratedDo = $dataManager->loadEnumerated($query);
 
 			$multiple = new \AppendIterator();

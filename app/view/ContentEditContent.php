@@ -22,7 +22,7 @@ class ContentEditContent extends Template {
 		$this->structure = $structure;
 		$this->__set('structure', $structure);
 	}
-	public function setContent($content, $profiles) {
+	public function setContent($content) {
 		$this->__set('content', $content);
 		$this->__set('contentTitle', \Acd\Model\ValueFormater::encode($content->getTitle(), \Acd\Model\ValueFormater::TYPE_TEXT_SIMPLE, \Acd\Model\ValueFormater::FORMAT_EDITOR));
 		$this->__set('aliasId', \Acd\Model\ValueFormater::encode($content->getAliasId(), \Acd\Model\ValueFormater::TYPE_TEXT_SIMPLE, \Acd\Model\ValueFormater::FORMAT_EDITOR));
