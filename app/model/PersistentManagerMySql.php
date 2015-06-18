@@ -289,7 +289,7 @@ class PersistentManagerMySql implements iPersistentManager
 			$depth--;
 			//$content = $this->loadById($structureDo, $idContent)->get($idContent);
 			$content = $this->loadById($structureDo, $idContent);
-			@$validityDate = $filters['validityDate'];
+			@$validityDate = $filters['validity-date'];
 			$isValid = $content && $content->checkValidityDate($validityDate);
 			// TODO Organize code
 			if (!$isValid) return null;

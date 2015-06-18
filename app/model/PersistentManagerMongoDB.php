@@ -326,7 +326,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$depth--;
 			$content = $this->loadById($structureDo, $idContent);
 
-			@$validityDate = $filters['validityDate'];
+			@$validityDate = $filters['validity-date'];
 			@$profile =  $filters['profile'];
 			$isValid = $content && $content->checkValidityDate($validityDate) && $content->checkProfile($profile);
 			// TODO Organize code
