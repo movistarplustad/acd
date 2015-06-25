@@ -428,8 +428,15 @@ input[readonly] {
 	top: 1em;
 	right: 1em;
 }
+.wrap-actions {
+	margin-bottom: 4em;
+}
 .actions {
 	margin: 0.5em 0 1em 0.5em;
+	position: fixed;
+	bottom: 0;
+	background-color: rgba(127, 127, 127, 0.3);
+	padding: 0.2em;
 }
 
 .result-table {

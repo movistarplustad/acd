@@ -63,7 +63,7 @@
 				?>
 			</ul>
 		</fieldset>
-		<div>
+		<div class="fields">
 			<?php
 			// TODO: ¡¡bastante enrevesado para estar dentro de un tpl!!
 			$fieldOU = new Acd\View\Field();
@@ -93,17 +93,19 @@
 				<ul class="fields"><?=$structure_fields?></ul>
 			</fieldset>
 		</div>
-		<div class="actions">
-			<input type="submit" name="a" value="save" class="button publish"/>
-			<?php
-				if($content->getId()) {
-			?>
-				<input type="submit" name="a" value="clone" class="button clone"/>
-				<input type="submit" name="a" value="delete" class="button delete"<?=$deleteDisabled?>/>
-			<?php
-				}
-			?>
-			<input type="submit" name="a" value="summary" class="button summary"/>
+		<div class="wrap-actions">
+			<div class="actions">
+				<input type="submit" name="a" value="save" class="button publish"/>
+				<?php
+					if($content->getId()) {
+				?>
+					<input type="submit" name="a" value="clone" class="button clone"/>
+					<input type="submit" name="a" value="delete" class="button delete"<?=$deleteDisabled?>/>
+				<?php
+					}
+				?>
+				<input type="submit" name="a" value="summary" class="button summary"/>
+			</div>
 		</div>
 	</form>
 </main>

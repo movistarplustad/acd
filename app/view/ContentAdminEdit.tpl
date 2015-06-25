@@ -52,7 +52,7 @@
 				<ul class="items"><?=$structure_fields?></ul>
 			</fieldset>
 		</div>
-		<div>
+		<div class="fields">
 			<?php
 			$field_types = '';
 			foreach ($fieldTypes as $key => $value) {
@@ -68,9 +68,11 @@
 				<div><input type="submit" name="accion" value="add" class="button add"/></div>
 			</fieldset>
 		</div>
-		<div class="actions">
-			<input type="hidden" name="a" value="<?=$actionValue?>"/>
-			<input type="submit" name="accion" value="save" class="button publish"/>
+		<div class="wrap-actions">
+			<div class="actions">
+				<input type="hidden" name="a" value="<?=$actionValue?>"/>
+				<input type="submit" name="accion" value="save" class="button publish"/>
+			</div>
 		</div>
 	</form>
 
