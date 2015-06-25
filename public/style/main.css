@@ -435,6 +435,7 @@ input[readonly] {
 	margin: 0.5em 0 1em 0.5em;
 	position: fixed;
 	bottom: 0;
+	right: 1em;
 	background-color: rgba(127, 127, 127, 0.3);
 	padding: 0.2em;
 }
