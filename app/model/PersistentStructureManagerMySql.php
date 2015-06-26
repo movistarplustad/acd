@@ -5,6 +5,7 @@ class PersistentStructureManagerMySqlException extends \exception {} // TODO Uni
 class PersistentStructureManagerMySql implements iPersistentStructureManager
 {
 	private $mysqli;
+	const SAVE_FAILED = 1;
 	public function initialize() {
 		//Datos de global.php
 		$dbHost = \Acd\conf::$MYSQL_SERVER;
@@ -14,7 +15,7 @@ class PersistentStructureManagerMySql implements iPersistentStructureManager
 
 		$this->mysqli = new \mysqli($dbHost, $dbUser, $dbPassword, $db);
 		if ($this->mysqli->connect_errno) {
-			throw new PersistentManagerMySqlException("Failed to connect to MySQL: (" . $this->mysqli->connect_errno . ") " . $this->mysqli->connect_error, self::NO_CONNECTION);
+			throw new PersistentStructureManagerMySqlException("Failed to connect to MySQL: (" . $this->mysqli->connect_errno . ") " . $this->mysqli->connect_error, self::NO_CONNECTION);
 		}
 		return true;
 	}
@@ -23,7 +24,7 @@ class PersistentStructureManagerMySql implements iPersistentStructureManager
 			$this->initialize();
 			return true;
 		}
-		catch ( PersistentManagerMySqlException $e ) {
+		catch ( PersistentStructureManagerMySqlException $e ) {
 			return false;
 		}
 	}
@@ -70,7 +71,7 @@ class PersistentStructureManagerMySql implements iPersistentStructureManager
 		// TODO ir más finos en bbdd que borrar todo y volver a guardarlo
 		$select = "DELETE FROM structure";
 		if ($this->mysqli->query($select) !== true) {
-			throw new PersistentManagerMySqlException("Update failed when empty old structures", self::SAVE_FAILED);
+			throw new PersistentStructureManagerMySqlException("Update failed when empty old structures", self::SAVE_FAILED);
 		}
 		foreach ($structuresDo as $structure) {
 			$id = $this->mysqli->real_escape_string($structure->getId());
@@ -83,9 +84,13 @@ class PersistentStructureManagerMySql implements iPersistentStructureManager
 				ON DUPLICATE KEY UPDATE
 				id = '$id', name = '$name', storage = '$storage', fields = '$fields'";
 			if ($this->mysqli->query($select) !== true) {
-				throw new PersistentManagerMySqlException("Update failed when save structure", self::SAVE_FAILED);
+				throw new PersistentStructureManagerMySqlException("Update failed when save structure", self::SAVE_FAILED);
 			}
 		}
 		return;
+	}
+
+	public function loadEnumerated($id) {
+		//throw new PersistentStructureManagerMySqlException("Not implemented", self::SAVE_FAILED);
 	}
 }
