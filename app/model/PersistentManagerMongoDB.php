@@ -54,6 +54,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 				case 'count-alias-id':
 					return $this->countAliasId($structureDo, $query);
 					break;
+				case 'difuse-alias-id':
+					return $this->difuseAliasId($structureDo, $query);
+					break;
 				default:
 					throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
 					break;
@@ -460,5 +463,21 @@ class PersistentManagerMongoDB implements iPersistentManager
 		else {
 			return 0;
 		}
+	}
+	private function difuseAliasId($structureDo, $query) {
+		// Select elements with alias-id start match ie. one match with one/two
+		$foo = [
+			[
+				'idStructure' => 'foo',
+				'idContent' => 'var1',
+				'aliasId' => 'uno'
+			],
+			[
+				'idStructure' => 'foo',
+				'idContent' => 'var2',
+				'aliasId' => 'uno/dos'
+			]
+		];
+		return $foo;
 	}
 }

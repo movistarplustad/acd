@@ -49,8 +49,9 @@ class PersistentManagerMySql implements iPersistentManager
 				case 'id-deep':
 					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $filters);
 					break;
-			case 'all':
-				return $this->loadAll($structureDo, $query);
+				case 'all':
+					return $this->loadAll($structureDo, $query);
+					break;
 				case 'editor-search':
 					return $this->loadEditorSearch($structureDo, $query);
 					break;
@@ -59,6 +60,9 @@ class PersistentManagerMySql implements iPersistentManager
 					break;
 				case 'count-alias-id':
 					return $this->countAliasId($structureDo, $query);
+					break;
+				case 'difuse-alias-id':
+					return $this->difuseAliasId($structureDo, $query);
 					break;
 			default:
 				throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
@@ -449,5 +453,9 @@ class PersistentManagerMySql implements iPersistentManager
 		else {
 			return 0;
 		}
+	}
+	private function difuseAliasId($structureDo, $query) {
+		echo "TODO";
+		return [];
 	}
 }

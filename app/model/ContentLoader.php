@@ -41,6 +41,30 @@ class ContentLoader extends StructureDo
 				break;
 		}
 	}
+	private function getManagers() {
+		// Return all active persistent managers
+		// TODO Unify with getManager -> similar code
+		$persistentManagers = [];
+		foreach (\Acd\conf::$STORAGE_TYPES as $idStorage => $storageType) {
+			if(!$storageType['disabled']) {
+				switch ($idStorage) {
+					case \Acd\conf::$STORAGE_TYPE_TEXTPLAIN:
+						$persistentManagers[] = new PersistentManagerTextPlain();
+						break;
+					case \Acd\conf::$STORAGE_TYPE_MONGODB:
+						$persistentManagers[] = new PersistentManagerMongoDB();
+						break;
+					case \Acd\conf::$STORAGE_TYPE_MYSQL:
+						$persistentManagers[] = new PersistentManagerMySql();
+						break;
+					default:
+						throw new PersistentStorageUnknownInvalidException("Invalid type of persistent storage ".$this->getStorage().".");
+						break;
+				}
+			}
+		}
+		return $persistentManagers;
+	}
 	// Load structure
 	public function loadStructure() {
 		/* Get metainformation */
@@ -48,7 +72,7 @@ class ContentLoader extends StructureDo
 			$this->setStructureLoaded($this->loadFromFile());
 		}
 	}
-	// Aseptic loadContent/loadContents return ContentsDo, ContentDo or null,   loadContent and loadConents resolve this situation
+	// Aseptic loadContent/loadContents return ContentsDo, ContentDo, null, etc loadContent and loadConents resolve this situation
 	private  function _loadContents($method, $params = null) {
 		switch ($method) {
 			case 'id+countParents':
@@ -65,6 +89,27 @@ class ContentLoader extends StructureDo
 
 				return $content;
 			break;
+			case 'difuse-alias-id':
+				d($this->getId());
+				if($this->getId()) {
+					$this->loadStructure();
+					$persistentManagers = [];
+					$persistentManagers[] = $this->getManager();
+				}
+				else {
+					$persistentManagers = $this->getManagers();
+				}
+				$structureDo = null; //!!TODO
+				$query = new Query();
+				$query->setType($method);
+				$query->setCondition($params);
+				$result = [];
+				foreach ($persistentManagers as $persistentManager) {
+					$result += $persistentManager->load($structureDo, $query);
+				}
+				d($result);
+				return $result;
+				break;
 			default:
 				/* Get metainformation */
 				$this->loadStructure();
