@@ -90,7 +90,6 @@ class ContentLoader extends StructureDo
 				return $content;
 			break;
 			case 'difuse-alias-id':
-				d($this->getId());
 				if($this->getId()) {
 					$this->loadStructure();
 					$persistentManagers = [];
@@ -99,15 +98,13 @@ class ContentLoader extends StructureDo
 				else {
 					$persistentManagers = $this->getManagers();
 				}
-				$structureDo = null; //!!TODO
 				$query = new Query();
 				$query->setType($method);
 				$query->setCondition($params);
 				$result = [];
 				foreach ($persistentManagers as $persistentManager) {
-					$result += $persistentManager->load($structureDo, $query);
+					$result += $persistentManager->load($this, $query);
 				}
-				d($result);
 				return $result;
 				break;
 			default:

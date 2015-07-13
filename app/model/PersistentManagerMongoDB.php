@@ -465,19 +465,77 @@ class PersistentManagerMongoDB implements iPersistentManager
 		}
 	}
 	private function difuseAliasId($structureDo, $query) {
+		// return array
+		// [
+		//	[
+		//		'idStructure' => 'foo',
+		//		'idContent' => 'var1',
+		//		'aliasId' => 'uno'
+		//	],
+		//	[
+		//		'idStructure' => 'foo',
+		//		'idContent' => 'var2',
+		//		'aliasId' => 'uno/dos'
+		//	]
+		//];
+
+		// db.content.find({"alias_id" : {$in : ["alias", "alias/dos"]}}, {"_id": true, "id_structure" : true, "alias_id" : true});
+		function getElement($aliasId, $cursor) {
+			$result = null;
+			foreach ($cursor as $document) {
+				if($document['alias_id'] === $aliasId) {
+					$result = [
+						'id' =>  (string) $document['_id'],
+						'id_structure' => $document['id_structure'],
+						'alias_id' => $document['alias_id']
+					];
+					break;
+				}
+			}
+			return $result;
+		}
+
 		// Select elements with alias-id start match ie. one match with one/two
-		$foo = [
-			[
-				'idStructure' => 'foo',
-				'idContent' => 'var1',
-				'aliasId' => 'uno'
-			],
-			[
-				'idStructure' => 'foo',
-				'idContent' => 'var2',
-				'aliasId' => 'uno/dos'
+		$aDirectoryParts = explode('/', $query->getCondition());
+		$aDirectory = [];
+		$directoryTmp = '';
+		$separator = ''; // First time is '' next is '/'
+		foreach ($aDirectoryParts as $directory) {
+			$directoryTmp .= $separator.$directory;
+			$separator = '/';
+			$aDirectory[] = $directoryTmp;
+		}
+		$aDirectory = array_reverse($aDirectory);
+
+		$filter = [
+			'alias_id' => [
+				'$in' => $aDirectory
 			]
 		];
-		return $foo;
+		// Add structureId filter
+		if ($structureDo->getId()) {
+			$filter['id_structure'] = $structureDo->getId();
+		}
+		$fields = [
+			'_id' => true,
+			'id_structure' => true,
+			'alias_id' => true
+		];
+
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+		$mongoCollection = $this->db->selectCollection('content');
+		$cursor = $mongoCollection->find($filter, $fields);
+
+		$result = [];
+		foreach ($aDirectory as $aliasId) {
+			$tmpResult = getElement($aliasId, $cursor);
+			if($tmpResult) {
+				$result[] = $tmpResult;
+			}
+		}
+
+		return $result;
 	}
 }

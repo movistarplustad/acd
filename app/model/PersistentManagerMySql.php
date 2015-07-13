@@ -455,7 +455,7 @@ class PersistentManagerMySql implements iPersistentManager
 		}
 	}
 	private function difuseAliasId($structureDo, $query) {
-		echo "TODO";
+		d("TODO");
 		return [];
 	}
 }
