@@ -103,7 +103,7 @@ class ContentLoader extends StructureDo
 				$query->setCondition($params);
 				$result = [];
 				foreach ($persistentManagers as $persistentManager) {
-					$result += $persistentManager->load($this, $query);
+					$result = array_merge($result, $persistentManager->load($this, $query));
 				}
 				return $result;
 				break;

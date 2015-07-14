@@ -455,8 +455,7 @@ class PersistentManagerMySql implements iPersistentManager
 		}
 	}
 	private function difuseAliasId($structureDo, $query) {
-		d("TODO");
-		// SELECT id, id_structure, alias_id FROM content WHERE alias_id in ('alias/dos', 'alias');
+		// SELECT id, id_structure, alias_id FROM content WHERE alias_id IN ('alias','alias/dos','alias/dos/tres','alias/dos/tres/cuatro') AND id_structure = 'contenido_my sql'  ORDER BY alias_id DESC;
 		// Select elements with alias-id start match ie. one match with one/two
 		$aDirectoryParts = explode('/', $query->getCondition());
 		$aDirectory = [];
@@ -468,14 +467,22 @@ class PersistentManagerMySql implements iPersistentManager
 			$aDirectory[] = $directoryTmp;
 		}
 
-		$filter = "'" . implode("','", $aDirectory). "'";
+		$filter = "IN ('" . implode("','", $aDirectory). "')";
 		if ($structureDo->getId()) {
 			$filter .= " AND id_structure = '".$this->mysqli->real_escape_string($structureDo->getId())."'";
 		}
-		$select = "SELECT id, id_structure, alias_id FROM content WHERE alias_id in ($filter)";
-		d($select);
+		$select = "SELECT id, id_structure, alias_id FROM content WHERE alias_id $filter  ORDER BY alias_id DESC";
+
+		$result = [];
 		if ($dbResult = $this->mysqli->query($select)) {
+			while($obj = $dbResult->fetch_object()){
+				$result[] = [
+					'id' =>  $obj->id,
+					'id_structure' => $obj->id_structure,
+					'alias_id' => $obj->alias_id
+				];
+			}
 		}
-		return [];
+		return $result;
 	}
 }
