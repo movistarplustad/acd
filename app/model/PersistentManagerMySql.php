@@ -456,6 +456,26 @@ class PersistentManagerMySql implements iPersistentManager
 	}
 	private function difuseAliasId($structureDo, $query) {
 		d("TODO");
+		// SELECT id, id_structure, alias_id FROM content WHERE alias_id in ('alias/dos', 'alias');
+		// Select elements with alias-id start match ie. one match with one/two
+		$aDirectoryParts = explode('/', $query->getCondition());
+		$aDirectory = [];
+		$directoryTmp = '';
+		$separator = ''; // First time is '' next is '/'
+		foreach ($aDirectoryParts as $directory) {
+			$directoryTmp .= $separator.$this->mysqli->real_escape_string($directory);
+			$separator = '/';
+			$aDirectory[] = $directoryTmp;
+		}
+
+		$filter = "'" . implode("','", $aDirectory). "'";
+		if ($structureDo->getId()) {
+			$filter .= " AND id_structure = '".$this->mysqli->real_escape_string($structureDo->getId())."'";
+		}
+		$select = "SELECT id, id_structure, alias_id FROM content WHERE alias_id in ($filter)";
+		d($select);
+		if ($dbResult = $this->mysqli->query($select)) {
+		}
 		return [];
 	}
 }

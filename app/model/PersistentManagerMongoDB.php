@@ -480,21 +480,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 		//];
 
 		// db.content.find({"alias_id" : {$in : ["alias", "alias/dos"]}}, {"_id": true, "id_structure" : true, "alias_id" : true});
-		function getElement($aliasId, $cursor) {
-			$result = null;
-			foreach ($cursor as $document) {
-				if($document['alias_id'] === $aliasId) {
-					$result = [
-						'id' =>  (string) $document['_id'],
-						'id_structure' => $document['id_structure'],
-						'alias_id' => $document['alias_id']
-					];
-					break;
-				}
-			}
-			return $result;
-		}
-
 		// Select elements with alias-id start match ie. one match with one/two
 		$aDirectoryParts = explode('/', $query->getCondition());
 		$aDirectory = [];
@@ -505,7 +490,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$separator = '/';
 			$aDirectory[] = $directoryTmp;
 		}
-		$aDirectory = array_reverse($aDirectory);
+		//$aDirectory = array_reverse($aDirectory);
 
 		$filter = [
 			'alias_id' => [
@@ -527,13 +512,15 @@ class PersistentManagerMongoDB implements iPersistentManager
 		}
 		$mongoCollection = $this->db->selectCollection('content');
 		$cursor = $mongoCollection->find($filter, $fields);
+		$cursor->sort(array( 'alias_id' => -1));
 
 		$result = [];
-		foreach ($aDirectory as $aliasId) {
-			$tmpResult = getElement($aliasId, $cursor);
-			if($tmpResult) {
-				$result[] = $tmpResult;
-			}
+		foreach ($cursor as $documentFound) {
+			$result[] = [
+				'id' =>  (string) $documentFound['_id'],
+				'id_structure' => $documentFound['id_structure'],
+				'alias_id' => $documentFound['alias_id']
+			];
 		}
 
 		return $result;

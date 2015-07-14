@@ -113,6 +113,12 @@
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
 			$content = $contentLoader->loadContent('id-deep', ['id' => $idContent, 'depth' => 5, 'validity-date' => time(), 'profile' => 'JAZZ']);
 
+			// Sample #7 difuse search by alias-id, e.g. one/two/three match by one/two/three &amp; one/two &amp; one
+			$aliasId='one/two/three';
+			$contentLoader = new \Acd\Model\ContentLoader();
+			$contentLoader->setId('<?=htmlspecialchars($structureId)?>'); // Optional
+			$matchContents = $contentLoader->loadContent('difuse-alias-id', $aliasId);
+
 			// And get values of fields
 <?php
 				foreach ($fields as $field) {
