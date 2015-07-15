@@ -26,6 +26,7 @@ class conf {
 	public static $MYSQL_PASSWORD;
 	public static $MYSQL_SCHEMA;
 	public static $MONGODB_SERVER;
+	public static $SESSION_GC_MAXLIFETIME;
 }
 conf::$DIR_TEMPLATES = DIR_BASE.'/app/view';
 conf::$DATA_PATH = '/mnt/contenido/acd/structures.json';
@@ -68,6 +69,9 @@ conf::$MYSQL_PASSWORD = 'strip';
 conf::$MYSQL_SCHEMA = 'acd';
 
 conf::$MONGODB_SERVER = 'mongodb://plusdbspol01.prisadigital.int:27017,plusdbspol02.prisadigital.int:27017,plusdbspol03.prisadigital.int:27017/?replicaSet=ReplicaPlusProduccion';
+
+conf::$SESSION_GC_MAXLIFETIME = 14400;
+ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
 
 // Developer / local / personal  configuration
 // Default  environment  for develop is 'local', in production environment  conf.devel.php does not exist

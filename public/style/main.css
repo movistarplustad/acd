@@ -357,6 +357,13 @@ label.for-tag {
 	max-width: 10em;
 	max-height: 10em;
 }
+.file-preview,
+.file-preview a  {
+	color: #8C8C8C;
+}
+.file-preview .size {
+	font-size: 80%;
+}
 .field.relationTitle {
 	width: 30em;
 }
