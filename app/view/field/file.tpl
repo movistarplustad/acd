@@ -49,7 +49,7 @@ if ($idParent) {
 	else {
 ?>
 <div>
-	Alt <input type="text" name="field[<?=$id?>][alt]" value=""/>
+	Description / image alt <input type="text" name="field[<?=$id?>][alt]" value=""/>
 </div>
 <input type="file" name="field[<?=$id?>][file]" class="field file" id="field_<?=$id?>"/>
 <?php
