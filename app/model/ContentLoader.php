@@ -152,6 +152,10 @@ class ContentLoader extends StructureDo
 			return $result;
 		}
 	}
+	public function getFilePath($idFile) {
+		$relativePath = substr($idFile, 0, 3);
+		return \Acd\conf::$DATA_CONTENT_PATH.'/'.$relativePath.'/'.$idFile;
+	}
 	public function saveContent($contentDo) {
 		/* Get metainformation */
 		$this->loadStructure();
@@ -167,14 +171,14 @@ class ContentLoader extends StructureDo
 			if ($field->getType() === $field::TYPE_FILE){
 				$uploadData = $field->getValue();
 				$fieldId = $field->getId();
-				$fileName = md5(urlencode($structureId ).'/'.urlencode($fieldId).'/'.$contentId);
-				$relativePath = substr($fileName, 0, 3);
-				$destinationPath = \Acd\conf::$DATA_CONTENT_PATH.'/'.$relativePath;
+				$idFile = md5(urlencode($structureId ).'/'.urlencode($fieldId).'/'.$contentId);
+				$destinationPath = $this->getFilePath($idFile);
+				$dirPath = dirname($destinationPath);
 				if($uploadData['delete']) {
-					if (is_writable($destinationPath.'/'.$fileName)){
-						unlink ($destinationPath.'/'.$fileName);
-						if (count(scandir($destinationPath)) == 2) {
-							rmdir($destinationPath);
+					if (is_writable($destinationPath)){
+						unlink ($destinationPath);
+						if (count(scandir($dirPath)) == 2) {
+							rmdir($dirPath);
 						}
 						// after the attribute 'delete' is removed
 						$uploadData['alt'] = '';
@@ -185,16 +189,15 @@ class ContentLoader extends StructureDo
 					}
 				}
 				if($uploadData['tmp_name'] && $uploadData['size']) {
-					if (!is_dir($destinationPath)){
-						mkdir($destinationPath, 0755, true);
+					if (!is_dir($dirPath)){
+						mkdir($dirPath, 0755, true);
 					}
-					move_uploaded_file($uploadData['tmp_name'], $destinationPath.'/'.$fileName);
-					$uploadData['value'] = $fileName;
+					move_uploaded_file($uploadData['tmp_name'], $destinationPath);
+					$uploadData['value'] = $idFile;
 				}
 				unset($uploadData['tmp_name']);
 				unset($uploadData['delete']);
 				$field->setValue($uploadData);
-				//d($contentId, $field, $uploadData, $field->getValue());
 			}
 		}
 
@@ -216,13 +219,13 @@ class ContentLoader extends StructureDo
 			if ($field->getType() === $field::TYPE_FILE){
 				// TODO unify with saveUpload
 				$fieldId = $field->getId();
-				$fileName = md5(urlencode($structureId ).'/'.urlencode($fieldId).'/'.$contentId);
-				$relativePath = substr($fileName, 0, 3);
-				$destinationPath = \Acd\conf::$DATA_CONTENT_PATH.'/'.$relativePath;
-				if (is_writable($destinationPath.'/'.$fileName)){
-					unlink ($destinationPath.'/'.$fileName);
-					if (count(scandir($destinationPath)) == 2) {
-						rmdir($destinationPath);
+				$idFile = md5(urlencode($structureId ).'/'.urlencode($fieldId).'/'.$contentId);
+				$destinationPath = $this->getFilePath($idFile);
+				if (is_writable($destinationPath)){
+					unlink ($destinationPath);
+					$dirPath = dirname($destinationPath);
+					if (count(scandir($dirPath)) == 2) {
+						rmdir($dirPath);
 					}
 				}
 			}

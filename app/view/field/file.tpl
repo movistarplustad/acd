@@ -1,8 +1,7 @@
 <?php
 
 	$preview = '';
-	if ($fieldValue['value']) {
-
+	if (isset($fieldValue) && isset($fieldValue['value']) && $fieldValue['value']) {
 		$size = $fieldValue['size'];
 		$unit = null;
 		if( (!$unit && $size >= 1<<30) || $unit == "GB") {
