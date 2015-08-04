@@ -208,14 +208,19 @@ class FieldDo
 	}
 	public function tokenizeData() {
 		$id = $this->getId() ? $this->getId() : self::EMPTY_ID;
-		return array(
-			$id => array(
+		$aStructureData = array(
 				'type' => $this->getType(),
 				'name' => $this->getName(),
 				'value' => $this->getValue(),
 				'ref' => $this->getRef(),
 				'id_structure' => $this->getStructureRef()
-			)
+			);
+		// Field with value from a list of values (enumerated collection)
+		if ($this->getOptions()->getId()) {
+			$aStructureData['id_options'] = $this->getOptions()->getId();
+		}
+		return array(
+			$id => $aStructureData
 		);
 	}
 
