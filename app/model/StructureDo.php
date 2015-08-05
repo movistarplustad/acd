@@ -125,7 +125,7 @@ class StructureDo
 		if ($document) {
 			$this->load($document);
 			if($bLoadEnumerated) {
-				$this->assignEnumeratedOptionsToFieds($this->getEnumeratedIds());
+				$this->assignEnumeratedOptionsToFieds($this->getEnumeratedIds()); // TODO ¿pasar los ids de enumerados?
 			}
 			$bLoaded = true;
 		}
@@ -138,7 +138,7 @@ class StructureDo
 		$query = new Query();
 		$query->setType('id');
 		foreach ($aEnumeratedIds as $idEnumeratedGroup) {
-			$query->setCondition(['id' => 'PROFILE']);
+			$query->setCondition(['id' => $idEnumeratedGroup]);
 			$enumeratedDo = $dataManager->loadEnumerated($query);
 
 			$multiple = new \AppendIterator();

@@ -162,6 +162,11 @@ class FieldDo
 		$this->setid($id);
 		$this->setType($data[$id]['type']);
 		$this->setName($data[$id]['name']);
+		if (isset($data[$id]['id_options']) && $data[$id]['id_options'] != '') {
+			$options =  new EnumeratedDo();
+			$options->setId($data[$id]['id_options']);
+			$this->setOptions($options);
+		}
 	}
 	// Load content
 	private function setValueReference($value) {
