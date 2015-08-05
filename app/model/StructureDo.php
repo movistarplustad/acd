@@ -70,21 +70,6 @@ class StructureDo
 		return $this->stickyFields;
 	}
 
-	public function getEnumeratedIds() {
-		// In metadata of contents are "PROFILE" enumerated element and the fields can add their enumerated lists
-		$aEnumeratedIds = [];
-		$multiple = new \AppendIterator();
-		$multiple->append($this->getStickyFields()->getIterator());
-		$multiple->append( $this->getFields()->getIterator());
-		foreach ($multiple as $field) {
-			if ($field->getType() === fieldDo::TYPE_LIST_MULTIPLE) {
-				$aEnumeratedIds[] = $field->getOptions()->getId();
-			}
-		}
-
-		return $aEnumeratedIds;
-	}
-
 	// TODO Repetido en StructuresDO
 	private function getManager() {
 		switch (\Acd\conf::$DEFAULT_STORAGE) {
@@ -125,7 +110,7 @@ class StructureDo
 		if ($document) {
 			$this->load($document);
 			if($bLoadEnumerated) {
-				$this->assignEnumeratedOptionsToFieds($this->getEnumeratedIds()); // TODO ¿pasar los ids de enumerados?
+				$this->assignEnumeratedOptionsToFieds();
 			}
 			$bLoaded = true;
 		}
@@ -133,24 +118,21 @@ class StructureDo
 		return $bLoaded;
 	}
 
-	private function assignEnumeratedOptionsToFieds($aEnumeratedIds) {
+	private function assignEnumeratedOptionsToFieds() {
 		$dataManager = $this->getManager();
 		$query = new Query();
 		$query->setType('id');
-		foreach ($aEnumeratedIds as $idEnumeratedGroup) {
-			$query->setCondition(['id' => $idEnumeratedGroup]);
-			$enumeratedDo = $dataManager->loadEnumerated($query);
 
-			$multiple = new \AppendIterator();
-			$multiple->append($this->getStickyFields()->getIterator());
-			$multiple->append( $this->getFields()->getIterator());
-			foreach ($multiple as $field) {
-				if($field->getOptions()->getId() === $idEnumeratedGroup) {
-					$field->setOptions($enumeratedDo);
-				}
+		$multiple = new \AppendIterator();
+		$multiple->append($this->getStickyFields()->getIterator());
+		$multiple->append( $this->getFields()->getIterator());
+		foreach ($multiple as $field) {
+			if($field->getOptions()->getId()) {
+				$query->setCondition(['id' => $field->getOptions()->getId()]);
+				$enumeratedDo = $dataManager->loadEnumerated($query);
+				$field->setOptions($enumeratedDo);
 			}
 		}
-
 	}
 
 	/* Serializes */
