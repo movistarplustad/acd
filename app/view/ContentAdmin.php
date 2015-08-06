@@ -46,6 +46,9 @@ class ContentAdmin extends \Acd\View\Template
 	public function setFields($fields){
 		$this->__set('fields', $fields);
 	}
+	public function setEnumeratedList($enumeratedList){
+		$this->__set('enumeratedList', $enumeratedList);
+	}
 	
 	public function render($tpl = '') {
 		switch ($this->getActionType()) {

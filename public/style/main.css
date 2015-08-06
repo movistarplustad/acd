@@ -324,7 +324,7 @@ option[disabled] {
 }
 
 /* Field controls */
-.fields li {
+.fields li label {
 	line-height: 2.5em;
 }
 .fields li .button {

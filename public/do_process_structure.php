@@ -48,6 +48,12 @@ switch ($accion) {
 					$field->setId($newId);
 					$field->setType($fields[$idField]['type']);
 					$field->setName($fields[$idField]['name']);
+
+					if(isset($fields[$idField]['source'])) {
+						$source = new Model\EnumeratedDo();
+						$source->setId($fields[$idField]['source']);
+						$field->setOptions($source);
+					}
 					$modified_structure->addField($field);
 				}
 			}

@@ -55,6 +55,12 @@ switch ($action) {
 			$contentOu->setStorage($estructura->getStorage());
 			$contentOu->setFieldTypes(Model\FieldDo::getAvailableTypes());
 			$contentOu->setFields($estructura->getFields());
+
+			$enumeratedLoader = new Model\EnumeratedLoader();
+			$query = new Model\Query();
+			$query->setType('all');
+			$enumerated = $enumeratedLoader->load($query);
+			$contentOu->setEnumeratedList($enumerated);
 		} catch (\Exception $e) {
 			/* Error, intentando editar una estructura que no existe */
 			$skeletonOu->setBodyClass('error');

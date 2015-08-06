@@ -29,16 +29,31 @@
 			$n = 0;
 			foreach ($fields as $field) {
 				$lockId = ($field->getId() === '' || $field->getId() === $field::EMPTY_ID) ? '' : ' readonly="readonly"';
+				// For enumerated field, select with sources
+				$selectEnumeratedSource = '';
+				if ($field->getType() === $field::TYPE_LIST_MULTIPLE) {
+					$enumeratedSelected = $field->getOptions()->getId();
+					$optionEnumerateSource = '';
+					foreach ($enumeratedList as $item) {
+						$key = $item['id'];
+						$value = $item['id'];
+						$selected = $key === $enumeratedSelected ? ' selected="selected"' : '';
+						$optionEnumerateSource .= '<option value="'.htmlspecialchars($key).'"'.$selected.'>'.htmlspecialchars($value).'</option>';
+					}
+					$selectEnumeratedSource = '<div><label for="field_'.$n.'_source">Source:&nbsp;</label> <select  name="field['.$n.'][source]" id="field_'.$n.'_source" class="source select">'.$optionEnumerateSource.'</select></div>';
+				}
+
 				$structure_fields .= '<li class="field">
 					<label for="field_'.$n.'_id">Id:&nbsp;</label>
-					<input type="text" name="field['.$n.'][id]" id="field_'.$n.'_name" value="'.htmlspecialchars($field->getId()).'"'.$lockId.' required="required" placeholder="Enter the field id"/>
+					<input type="text" name="field['.$n.'][id]" id="field_'.$n.'_id" value="'.htmlspecialchars($field->getId()).'"'.$lockId.' required="required" placeholder="Enter the field id"/>
 					<label for="field_'.$n.'_type">'.htmlspecialchars($fieldTypes[$field->getType()]).'</label>
 					<div>
 						<label for="field_'.$n.'_name">Description:&nbsp;</label>
 						<input type="text" name="field['.$n.'][name]" id="field_'.$n.'_name" value="'.htmlspecialchars($field->getName()).'" id="field_'.$n.'"/>
 						<input type="hidden" name="field['.$n.'][type]" value="'.htmlspecialchars($field->getType()).'"/>
-						
+						'.$field->getType().'
 					</div>
+					'.$selectEnumeratedSource.'
 					<div class="delete">
 						<label for="delete_field_'.$n.'">Delete</label>
 						<input type="checkbox" name="field['.$n.'][delete]" value="1" id="delete_field_'.$n.'"/>

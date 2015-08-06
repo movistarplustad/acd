@@ -61,7 +61,7 @@ class StructureDo
 			$profile = new FieldDo();
 			$profile->setId('profile');
 			$profile->setName('Profile');
-			$profile->setType(fieldDo::TYPE_LIST_MULTIPLE);
+			$profile->setType(fieldDo::TYPE_LIST_MULTIPLE_STICKY);
 			$profile->getOptions()->setId('PROFILE');
 
 			$this->stickyFields->add($profile);
