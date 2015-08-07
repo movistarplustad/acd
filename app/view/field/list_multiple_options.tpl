@@ -2,13 +2,21 @@
 <input type="hidden" name="field[<?=$id?>][name]" value="<?=htmlspecialchars($fieldName)?>"/>
 <label for="<?=htmlspecialchars($fieldId)?>"><?=htmlspecialchars($fieldName)?></label>
 <div class="select-wrap">
+<?php
+	 $itemsInOut = $fieldOptions->detachItems($fieldValue);
+?>
 	<select multiple="multiple" name="field[<?=$id?>][value]" id="field_<?=$id?>" class="field select">
 		<?php
-			foreach ($fieldOptions->getItems() as $key => $value) {
-				$selected = in_array($key, $fieldValue) ? ' selected="selected"' : '';
+			foreach ($itemsInOut['in'] as $key => $value) {
 		?>
-				<option value="<?=htmlspecialchars($key)?>"<?=$selected?>><?=htmlspecialchars($value)?></option>
+			<option value="<?=htmlspecialchars($key)?>" selected="selected"><?=htmlspecialchars($value)?></option>
 		<?php
+			}
+			foreach ($itemsInOut['out'] as $key => $value) {
+		?>
+			<option value="<?=htmlspecialchars($key)?>"><?=htmlspecialchars($value)?></option>
+		<?php
+
 			}
 		?>
 	</select>

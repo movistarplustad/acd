@@ -22,6 +22,16 @@ class EnumeratedDo
 	public function getItems() {
 		return $this->items;
 	}
+	// Split list of items in 2 lists
+	public function detachItems($fieldValue) {
+		$result = array('in' => [], 'out' => []);
+		$result['out'] = $this->getItems();
+		foreach ($fieldValue as $key) {
+			$result['in'][$key] = $result['out'][$key];
+			unset($result['out'][$key]);
+		}
+		return $result;
+	}
 	public function setItems($items) {
 		$this->items = $items;
 	}
