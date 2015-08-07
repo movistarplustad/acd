@@ -17,11 +17,12 @@
 			$humanFileSize = number_format($size)." bytes";
 		}
 
+		$urlPreview = 'file_preview.php?id='.urlencode($fieldValue['value']).'&amp;n='.htmlspecialchars($fieldValue['original_name']);
 		if (substr($fieldValue['type'], 0, 6) === 'image/') {
-			$preview = '<img src="file_preview.php?id='.urlencode($fieldValue['value']).'" alt="Image preview, '.htmlspecialchars($fieldValue['original_name']).'" class="field preview"/> '.htmlspecialchars($fieldValue['original_name']).' <span class="size">'.$humanFileSize."</span>";
+			$preview = '<img src="'.$urlPreview.'" alt="Image preview, '.htmlspecialchars($fieldValue['original_name']).'" class="field preview"/> '.htmlspecialchars($fieldValue['original_name']).' <span class="size">'.$humanFileSize."</span>";
 		}
 		else {
-			$preview = '<a href="file_preview.php?id='.urlencode($fieldValue['value']).'">'.htmlspecialchars($fieldValue['original_name']).'</a> <span class="size">'.$humanFileSize."</span>";
+			$preview = '<a href="'.$urlPreview.'">'.htmlspecialchars($fieldValue['original_name']).'</a> <span class="size">'.$humanFileSize."</span>";
 		}
 		$preview = "<div class='file-preview'>$preview</div>";
 	}

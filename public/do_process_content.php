@@ -93,14 +93,17 @@ switch ($accion) {
 					if ($_FILES['field']['error'][$key]['file'] === UPLOAD_ERR_OK) {
 						$normalizedvalue['original_name'] = $_FILES['field']['name'][$key]['file'];
 						$normalizedvalue['tmp_name'] = $_FILES['field']['tmp_name'][$key]['file'];
-						$finfo = new \finfo(FILEINFO_MIME_TYPE);
-						$normalizedvalue['type'] = $finfo->file($_FILES['field']['tmp_name'][$key]['file']);
 						$normalizedvalue['size'] = $_FILES['field']['size'][$key]['file'];
+						$fileTools = new \Acd\Model\File();
+						$fileType = $fileTools->getMimeFromFilename($normalizedvalue['original_name']);
+						if (!$fileType) {
+							$fileType = $fileTools->getMimeFromPath($normalizedvalue['tmp_name']);
+						}
+						$normalizedvalue['type'] = $fileType;
 					}
 				}
 				else {
 					$normalizedvalue = $formater->decode($fields[$key]['value'], $fieldType, $formater::FORMAT_EDITOR);
-					//d($key, $normalizedvalue, $fieldType);
 				}
 				$modified_content->setFieldValue($fieldId, $normalizedvalue);
 			}

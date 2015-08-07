@@ -29,12 +29,15 @@ if( !function_exists('apache_request_headers') ) {
 } 
 
 $idFile = $_GET['id'];
+$fileName = $_GET['n'];
 $path = \Acd\conf::$DATA_CONTENT_PATH.'/'.substr($idFile, 0, 3).'/'.$idFile;
 if (is_readable($path)){
-	$finfo = new \finfo(FILEINFO_MIME_TYPE);
-	$type = $finfo->file($path);
+	$fileTools = new \Acd\Model\File();
+	$fileType = $fileTools->getMimeFromFilename($fileName);
+	if (!$fileType) {
+		$fileType = $fileTools->getMimeFromPath($path);
+	}
 
-	//d($path, $type);
 	// Getting headers sent by the client.
 	$headers = apache_request_headers();
 
@@ -46,7 +49,7 @@ if (is_readable($path)){
 		// Image not cached or cache outdated, we respond '200 OK' and output the image.
 		header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($path)).' GMT', true, 200);
 		header('Content-Length: '.filesize($path));
-		header('Content-Type: '.$type);
+		header('Content-Type: '.$fileType);
 		print file_get_contents($path);
 	}
 }
