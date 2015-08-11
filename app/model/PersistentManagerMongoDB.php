@@ -477,6 +477,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		foreach ($cursor as $documentFound) {
 			$documentFound = $this->normalizeDocument($documentFound);
 			$contentFound = new ContentDo();
+			$structureDo->setId($documentFound['id_structure']);
 			$contentFound->load($documentFound, $structureDo);
 			$result->add($contentFound, $documentFound['id']);
 		}
