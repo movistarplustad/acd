@@ -51,6 +51,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 				case 'countParents':
 					return $this->countParents($structureDo, $query);
 					break;
+				case 'parents':
+					return $this->parents($structureDo, $query);
+					break;
 				case 'count-alias-id':
 					return $this->countAliasId($structureDo, $query);
 					break;
@@ -355,11 +358,14 @@ class PersistentManagerMongoDB implements iPersistentManager
 						break;
 					case 'collection' :
 						$newVal = new ContentsDo();
-						foreach ($field->getValue() as $itemCollection) {
-							$structureTmp = $this->getStructure($itemCollection['id_structure']);
-							$contentsTemp = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth, $filters);
-							if ($contentsTemp) {
-								$newVal->add($contentsTemp->one());
+						$items = $field->getValue();
+						if ($items) {
+							foreach ($items as $itemCollection) {
+								$structureTmp = $this->getStructure($itemCollection['id_structure']);
+								$contentsTemp = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth, $filters);
+								if ($contentsTemp) {
+									$newVal->add($contentsTemp->one());
+								}
 							}
 						}
 
@@ -448,6 +454,34 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		return $cursor->count();
 		// db.relation.find({"child" : DBRef("content", ObjectId("5510618a06b13a931ca41c07"))}).pretty()
+	}
+	private function parents($structureDo, $query) {
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+		// Id's from parents
+		$id = $query->getCondition();
+		$filter = ['child' => \MongoDBRef::create('content', new \MongoId($id))];
+		$mongoCollection = $this->db->selectCollection('relation');
+		$cursor = $mongoCollection->find($filter);
+		$idParents = [];
+		foreach ($cursor as $documentFound) {
+			$idParents[] = $documentFound['parent']['$id'];
+		}
+
+		// Content of parents
+		$filter = array('_id' => array('$in' =>$idParents));
+		$mongoCollection = $this->db->selectCollection('content');
+		$cursor = $mongoCollection->find($filter);
+		$result = new ContentsDo();
+		foreach ($cursor as $documentFound) {
+			$documentFound = $this->normalizeDocument($documentFound);
+			$contentFound = new ContentDo();
+			$contentFound->load($documentFound, $structureDo);
+			$result->add($contentFound, $documentFound['id']);
+		}
+
+		return $result;
 	}
 	private function countAliasId($structureDo, $query) {
 		// Exclude alias_id === ''

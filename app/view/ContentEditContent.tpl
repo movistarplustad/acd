@@ -55,9 +55,9 @@
 					<?=$profileOU->render()?>
 				</li>
 				<?php
-					if($content->getCountParents() !== null) {
+					if($content->getCountParents() !== null && $relationCount > 0) {
 				?>
-					<li class="item"><label>#Relations:&nbsp;</label><?=$relationCount?></li>
+					<li class="item"><label>#Relations:&nbsp;</label><a href="relation.php?id=<?=urlencode($content->getId())?>&amp;idt=<?=urlencode($content->getIdStructure())?>"><?=$relationCount?></a></li>
 				<?php
 					}
 				?>
