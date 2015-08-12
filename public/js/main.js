@@ -126,8 +126,12 @@ var editor = {
 			//$(".aliasId").aliasIdFormat();
 			$("input").aliasIdFormat();
 
-			/* Select multiple */
-			$('.field.select').selectivity();
+			/* Select simple and multiple */
+			$('.field.select').selectivity({
+				allowClear: true,
+				placeholder: "Select option..."
+			});
+
 		});
 	},
 	confirmDelete : function(e) {

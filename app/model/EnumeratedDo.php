@@ -24,9 +24,19 @@ class EnumeratedDo
 	}
 	// Split list of items in 2 lists
 	public function detachItems($fieldValue) {
+		if ($fieldValue == null) {
+			$aFieldValue = [];
+		}
+		elseif(is_string($fieldValue)) {
+			$aFieldValue = [];
+			$aFieldValue[] = $fieldValue;
+		}
+		else {
+			$aFieldValue = $fieldValue;
+		}
 		$result = array('in' => [], 'out' => []);
 		$result['out'] = $this->getItems();
-		foreach ($fieldValue as $key) {
+		foreach ($aFieldValue as $key) {
 			$result['in'][$key] = $result['out'][$key];
 			unset($result['out'][$key]);
 		}

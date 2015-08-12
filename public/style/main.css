@@ -398,6 +398,20 @@ input[readonly] {
 .tagit.ui-sortable .tagit-choice {
 	cursor: move;
 }
+/* added for selectivity simple select */
+.fa {
+	display: block;
+	border:  0;
+	padding: 0;
+	margin:  0;
+	width: 16px;
+	height: 16px;
+}
+.fa-sort-desc {
+	background-image: url(../js/jquery-ui/images/ui-icons_888888_256x240.png);
+	background-position: -64px -16px;
+}
+.selectivity-single-select,
 .selectivity-multiple-input-container {
 	border: 1px solid #aaa;
 	border-radius: 4px;
@@ -405,6 +419,10 @@ input[readonly] {
 	padding: 0;
 	font-size: 0.8em;
 }
+.selectivity-single-select {
+	min-height: 2.5em;
+}
+.selectivity-single-selected-item {}
 .selectivity-multiple-selected-item {
 	border: 1px solid #D3D3D3;
 	background-color: #eee;
@@ -413,10 +431,10 @@ input[readonly] {
 }
 .selectivity-multiple-selected-item-remove {
 	float: right;
-	margin: 0;
-	padding: 0;
 	width: 16px;
 	height: 16px;
+}
+.fa-remove {
 	background-image: url(../js/jquery-ui/images/ui-icons_888888_256x240.png);
 	background-position: -80px -128px;
 	text-align: bottom;

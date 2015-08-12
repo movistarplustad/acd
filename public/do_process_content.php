@@ -82,7 +82,7 @@ switch ($accion) {
 					$normalizedvalue = [
 						'value' => $fields[$key]['value'],
 						'tmp_name' => '',
-						'alt' => $fields[$key]['alt'],
+						'alt' => isset($fields[$key]['alt']) ? $fields[$key]['alt'] : '',
 						'delete' => isset($fields[$key]['delete'])
 					];
 					// Optional info
@@ -90,7 +90,7 @@ switch ($accion) {
 					@$normalizedvalue['type'] = $fields[$key]['type'] ?: '';
 					@$normalizedvalue['size'] = $fields[$key]['size'] ?: '';
 					// If get a new upload file
-					if ($_FILES['field']['error'][$key]['file'] === UPLOAD_ERR_OK) {
+					if (isset($_FILES['field']) && $_FILES['field']['error'][$key]['file'] === UPLOAD_ERR_OK) {
 						$normalizedvalue['original_name'] = $_FILES['field']['name'][$key]['file'];
 						$normalizedvalue['tmp_name'] = $_FILES['field']['tmp_name'][$key]['file'];
 						$normalizedvalue['size'] = $_FILES['field']['size'][$key]['file'];

@@ -31,7 +31,7 @@
 				$lockId = ($field->getId() === '' || $field->getId() === $field::EMPTY_ID) ? '' : ' readonly="readonly"';
 				// For enumerated field, select with sources
 				$selectEnumeratedSource = '';
-				if ($field->getType() === $field::TYPE_LIST_MULTIPLE) {
+				if ($field->getType() === $field::TYPE_LIST_MULTIPLE || $field->getType() === $field::TYPE_LIST_OPTIONS) {
 					$enumeratedSelected = $field->getOptions()->getId();
 					$optionEnumerateSource = '';
 					foreach ($enumeratedList as $item) {
