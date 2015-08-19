@@ -1,10 +1,19 @@
-<label for="<?=htmlspecialchars($fieldId)?>" class="for-tag"><?=htmlspecialchars($fieldName)?>:&nbsp;</label><select multiple="multiple" name="<?=htmlspecialchars($fieldId)?>" id="<?=htmlspecialchars($fieldId)?>" class="field select">
+<label for="<?=htmlspecialchars($fieldId)?>" class="for-tag"><?=htmlspecialchars($fieldName)?>:&nbsp;</label>
+<?php
+	 $itemsInOut = $fieldOptions->detachItems($fieldValue);
+?>
+<select multiple="multiple" name="<?=htmlspecialchars($fieldId)?>[]" id="<?=htmlspecialchars($fieldId)?>" class="field select">
 	<?php
-		foreach ($fieldOptions->getItems() as $key => $value) {
-			$selected = in_array($key, $fieldValue) ? ' selected="selected"' : '';
+		foreach ($itemsInOut['in'] as $key => $value) {
 	?>
-			<option value="<?=htmlspecialchars($key)?>"<?=$selected?>><?=htmlspecialchars($value)?></option>
+		<option value="<?=htmlspecialchars($key)?>" selected="selected"><?=htmlspecialchars($value)?></option>
 	<?php
+		}
+		foreach ($itemsInOut['out'] as $key => $value) {
+	?>
+		<option value="<?=htmlspecialchars($key)?>"><?=htmlspecialchars($value)?></option>
+	<?php
+
 		}
 	?>
 </select>

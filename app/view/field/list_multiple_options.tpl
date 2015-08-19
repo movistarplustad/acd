@@ -5,7 +5,7 @@
 <?php
 	 $itemsInOut = $fieldOptions->detachItems($fieldValue);
 ?>
-	<select multiple="multiple" name="field[<?=$id?>][value]" id="field_<?=$id?>" class="field select">
+	<select multiple="multiple" name="field[<?=$id?>][value][]" id="field_<?=$id?>" class="field select">
 		<?php
 			foreach ($itemsInOut['in'] as $key => $value) {
 		?>

@@ -34,11 +34,17 @@ class EnumeratedDo
 		else {
 			$aFieldValue = $fieldValue;
 		}
+		// Copy all values to $result['out'] and move matchs to $result['in']
 		$result = array('in' => [], 'out' => []);
 		$result['out'] = $this->getItems();
 		foreach ($aFieldValue as $key) {
-			$result['in'][$key] = $result['out'][$key];
-			unset($result['out'][$key]);
+			if(isset($result['out'][$key])) {
+				$result['in'][$key] = $result['out'][$key];
+				unset($result['out'][$key]);
+			}
+			else {
+				$result['in'][$key] = "!!!$key - not found in collection";
+			}
 		}
 		return $result;
 	}
