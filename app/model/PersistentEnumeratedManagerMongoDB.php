@@ -40,6 +40,7 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 		$mongoCollection = $this->db->selectCollection('enumerated');
 		try {
 			$cursor = $mongoCollection->find(array(), array('_id' => true));
+			$cursor->sort(array( '_id' => 1));
 			$enumeratedCollectionFound = new Collection();
 			foreach ($cursor as $documentFound) {
 				$enumeratedCollectionFound->add(array('id' => $documentFound['_id'])); // Now id and name are equeals
@@ -64,7 +65,13 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 
 		return $enumeratedDo;
 	}
-
+	public function delete($id) {
+		if (!$this->isInitialized()) {
+			$this->initialize();
+		}
+		$mongoCollection = $this->db->selectCollection('enumerated');
+		return $mongoCollection->remove(array('_id' => $id));
+	}
 	public function normalizeDocument($document) {
 		$document['id'] = (string) $document['_id'];
 		unset($document['_id']);

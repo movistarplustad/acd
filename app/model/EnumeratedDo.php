@@ -4,13 +4,14 @@ namespace Acd\Model;
 class EnumeratedDoException extends \exception {}
 class EnumeratedDo
 {
-	//const FOO = 'var';
+	const EMPTY_ID = '__NEW';
+
 	private $id;
 	private $items;
 
 	public function __construct() {
 		$this->id = null;
-		$this->items = new Collection();
+		$this->items = Array();
 	}
 	/* Setters and getters attributes */
 	public function setId($id) {
@@ -49,19 +50,18 @@ class EnumeratedDo
 		return $result;
 	}
 	public function setItems($items) {
+		// Array($key => $value, $key => $value);
 		$this->items = $items;
 	}
 	public function load($rawData) {
 		$this->setId($rawData['id']);
-		$this->setItems(isset($rawData['items']) ? $rawData['items'] : new Collection()) ;
+		$this->setItems(isset($rawData['items']) ? $rawData['items'] : Array()) ;
 	}
 	public function tokenizeData() {
 		$aFieldsData = array(
 			'id' => $this->getId(),
 			'items' => $this->getItems()
 		);
-
 		return $aFieldsData;
 	}
-
 }

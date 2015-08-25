@@ -131,8 +131,21 @@ var editor = {
 				allowClear: true,
 				placeholder: "Select option..."
 			});
-
 		});
+
+		/* Enumerated */
+		// Return a helper with preserved width of cells
+		var fixHelper = function(e, ui) {
+			ui.children().each(function() {
+				$(this).width($(this).width());
+			});
+			return ui;
+		};
+
+		$(".result_table.enumerated tbody").sortable({
+			helper: fixHelper
+		});
+
 	},
 	confirmDelete : function(e) {
 		var bDelete = window.confirm("remove permanently this element?");

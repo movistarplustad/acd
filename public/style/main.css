@@ -47,6 +47,9 @@ h1::after {
 	transform: rotate(-45deg);
 	background: linear-gradient(45deg, #434343 0%, #434343 50%, transparent 50%, transparent 100%) repeat scroll 0% 0% transparent;
 }
+.ui-sortable {
+	cursor: move;
+}
 .js #wrapper {
 	display: flex;
 }
@@ -166,21 +169,21 @@ a:active {
 	background-image: url(ic_receipt_24px.svg);
 }
 
-#structures_list .structure {
+.list_with_options .list_item {
 	padding: 0.5em 0 0 1em;
 	border-bottom: 1px solid #E9E9E9;
 	line-height: 2.5em;
 	min-height: 2.5em;
 	clear: both;
 }
-#structures_list .structure:hover {
+.list_with_options .list_item:hover {
 	background-color: #FFF;
 }
-#structures_list label {
+.list_with_options label {
 	width: 20em;
 	float: left;
 }
-#structures_list .tools {
+.list_with_options .tools {
 	float: left;
 	margin: 0 2em 0 0;
 }
@@ -466,28 +469,50 @@ input[readonly] {
 	padding: 0.2em;
 }
 
-.result-table {
+/* Enumerated page */
+.pre_table {
+	margin: 0 0 0.5em 2.5em;
+}
+.pre_table label {
+	font-weight: bold;
+}
+.result_table {
 	margin: 0 0 0 2em;
 }
-.result-table th {
+.result_table th {
 	text-align: left;
 }
-.result-table th,
-.result-table td {
-	padding: 0 1em 0 0.5em;
+.result_table tbody tr:hover {
+	background-color: #f9f9f9;
+}
+.result_table th,
+.result_table td {
+	padding: 0 1em 1em 0.5em;
+}
+.result_table .id {
+	width: 6em;
+}
+.result_table .description {
+	width: 20em;
+}
+.result_table .field.text {
+	width: 100%;
+}
+.enumerated .result_table .button {
+	font-size: 0.75em;
 }
 
 /* Media Queries */
 @media screen and (max-width: 480px) {
-	#structures_list .structure {
+	.list_with_options .list_item {
 		list-style: none;
 		padding: 0.5em 0 2em 0;
 		margin: 0 0 2em 0;
 	}
-	#structures_list label {
+	.list_with_options label {
 		width: 10em;
 	}
-	#structures_list .button {
+	.list_with_options .button {
 		width: 0;
 		height: 2.5em;
 		padding: 0.5em 0em 0.5em 1.8em;

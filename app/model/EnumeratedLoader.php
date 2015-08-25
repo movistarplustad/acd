@@ -34,5 +34,9 @@ class EnumeratedLoader
 		$NewEnumeratedDo = $dataManager->save($enumeratedDo);
 		return $NewEnumeratedDo;
 	}
+	public function delete($id) {
+		$dataManager = $this->getManager();
+		return $dataManager->delete($id);
+	}
 
 }

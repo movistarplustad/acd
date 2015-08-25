@@ -1,11 +1,11 @@
 <main>
 	<h2>Manage structures</h2>
 	<p class="result <?=$resultCode?>"><?=$resultDesc?></p>
-	<ol id="structures_list">
+	<ol id="structures_list" class="list_with_options">
 	<?php
 		foreach ($structures as $structure) {
 	?>
-		<li class="structure">
+		<li class="structure list_item">
 			<form action="do_process_structure.php" method="post">
 				<input type="hidden" name="id" value="<?=htmlspecialchars($structure->getId())?>"/>
 				<label><?=htmlspecialchars($structure->getName())?></label>

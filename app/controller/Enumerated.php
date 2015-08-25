@@ -3,11 +3,13 @@ namespace Acd\Controller;
 
 use \Acd\Model\EnumeratedLoader;
 use \Acd\Model\Query;
+use \Acd\Model\EnumeratedDo;
 use \Acd\View\HeaderMenu;
 // Output
 class Enumerated {
 	const VIEW_LIST = 'list'; // List of all enumerated collection
-	const VIEW_DETAIL = 'detail'; // Detail (values) of a collection
+	const VIEW_DETAIL = 'edit'; // Detail (values) of a collection
+	const VIEW_DETAIL_NEW = 'new'; // New collection
 	private  $id;
 	private $view;
 	private $contentFound;
@@ -55,11 +57,12 @@ class Enumerated {
 		if ($this->getId()) {
 			$query->setType('id');
 			$query->setCondition(['id' => $this->getId()]);
-			$this->setView($this::VIEW_DETAIL);
 		}
 		else {
-			$query->setType('all');
-			$this->setView($this::VIEW_LIST);
+			if (!$this->getView()){
+				$query->setType('all');
+				$this->setView($this::VIEW_LIST);
+			}
 		}
 		$this->setContent($enumeratedLoader->load($query));
 	}
@@ -70,12 +73,21 @@ class Enumerated {
 				$ou->setEnumeratedList($this->getContent());
 				break;
 			case $this::VIEW_DETAIL:
-				$ou = new \ACD\View\EnumeratedDetail();
-				$ou->setEnumeratedElement($this->getContent());
+				if ($this->getContent()->getId()) {
+					$ou = new \ACD\View\EnumeratedDetail();
+					$ou->setEnumeratedElement($this->getContent());
+				}
+				else {
+					throw new \Exception('Enumerated collection not found', 404);
+				}
 				break;
-			
+			case $this::VIEW_DETAIL_NEW:
+				$ou = new \ACD\View\EnumeratedDetail();
+				$emptyCollection = new EnumeratedDo();
+				$ou->setEnumeratedElement($emptyCollection);
+				break;
 			default:
-				throw new Exception("View (".$this->getView().") not defined", 1);
+				throw new \Exception("View (".$this->getView().") not defined", 1);
 				break;
 		}
 
