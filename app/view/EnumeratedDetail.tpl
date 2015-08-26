@@ -2,7 +2,7 @@
 $bNew = $enumeratedElement->getId() == '';
 ?>
 <main id="manageStructure">
-	<h2>Enumerated element <span class="structure_name"><?=$enumeratedElement->getId()?></span></h2>
+	<h2>Enumerated element <em class="structure_name"><?=$enumeratedElement->getId()?></em></h2>
 	<p class="result <?=$resultCode?>"><?=$resultDesc?></p>
 	<form action="do_enumerated.php" method="post">
 		<?php

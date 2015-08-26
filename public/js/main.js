@@ -127,9 +127,10 @@ var editor = {
 			$("input").aliasIdFormat();
 
 			/* Select simple and multiple */
+			$('.field.select option[value=""]').html(""); // Resolve bug of selectivity for empty options
 			$('.field.select').selectivity({
 				allowClear: true,
-				placeholder: "Select option..."
+				placeholder: "Select option…"
 			});
 		});
 

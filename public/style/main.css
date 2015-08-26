@@ -376,6 +376,7 @@ input[readonly] {
 /* Collection */
 .collection li {
 	list-style: inside decimal;
+	margin: 0 0 0.5em 0;
 }
 .collection.ui-sortable {
 	padding: 0;
@@ -384,8 +385,7 @@ input[readonly] {
 .collection.ui-sortable li {
 	background-image: url(draggable.png);
 	padding: 0 0 0 1em;
-	margin: 0;
-	background-position: left 0.5em;
+	background-position: left 0;
 	background-repeat: no-repeat;
 	cursor: move;
 }

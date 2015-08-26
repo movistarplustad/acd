@@ -1,6 +1,6 @@
 <input type="hidden" name="field[<?=$id?>][id]" value="<?=htmlspecialchars($fieldId)?>"/>
 <input type="hidden" name="field[<?=$id?>][name]" value="<?=htmlspecialchars($fieldName)?>"/>
-<label for="<?=htmlspecialchars($fieldId)?>"><?=htmlspecialchars($fieldName)?></label>
+<label for="field_<?=htmlspecialchars($id)?>"><?=htmlspecialchars($fieldName)?></label>
 <div class="select-wrap">
 <?php
 	 $itemsInOut = $fieldOptions->detachItems($fieldValue);

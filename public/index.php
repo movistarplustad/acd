@@ -68,10 +68,15 @@ switch ($action) {
 		}
 
 		$headerMenuOu = new View\HeaderMenu();
-		$headerMenuOu->setType('back');
+		$headerMenuOu->setType('backStructure');
+
+		$toolsOu = new View\Tools();
+		$toolsOu->setLogin($_SESSION['login']);
+		$toolsOu->setRol($_SESSION['rol']);
 
 		$skeletonOu->setHeadTitle('Edit structure');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
+		$skeletonOu->setTools($toolsOu->render());
 		break;
 	case 'clone':
 		$id = $_GET['id'];
@@ -90,13 +95,24 @@ switch ($action) {
 			$contentOu->setStorage($estructura->getStorage());
 			$contentOu->setFieldTypes(Model\FieldDo::getAvailableTypes());
 			$contentOu->setFields($estructura->getFields());
+
+			$enumeratedLoader = new Model\EnumeratedLoader();
+			$query = new Model\Query();
+			$query->setType('all');
+			$enumerated = $enumeratedLoader->load($query);
+			$contentOu->setEnumeratedList($enumerated);
 		}
 
 		$headerMenuOu = new View\HeaderMenu();
-		$headerMenuOu->setType('back');
+		$headerMenuOu->setType('backStructure');
+
+		$toolsOu = new View\Tools();
+		$toolsOu->setLogin($_SESSION['login']);
+		$toolsOu->setRol($_SESSION['rol']);
 
 		$skeletonOu->setHeadTitle('Clone structure');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
+		$skeletonOu->setTools($toolsOu->render());
 		break;
 	case 'list':
 	default:

@@ -3,7 +3,7 @@ $limits = $contents->getLimits();
 $lowerLimit = $limits->getLower();
 $bMorePage = $limits->getUpper() < $limits->getTotal();
 ?><main>
-	<h2>Manage elements <spam class="structure_name"><?=htmlspecialchars($structure->getName())?></spam></h2>
+	<h2>Manage elements <em class="structure_name"><?=htmlspecialchars($structure->getName())?></em></h2>
 	<form action="" method="get">
 		<input type="hidden" name="id" value="<?=htmlspecialchars($structure->getId())?>"/>
 		<input type="hidden" name="a" value="list_contents"/>

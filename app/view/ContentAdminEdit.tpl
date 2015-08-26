@@ -1,5 +1,5 @@
 <main id="manageStructure">
-	<h2>Edit structure <span class="structure_name"><?=htmlspecialchars($structureName)?></span></h2>
+	<h2>Edit structure <em class="structure_name"><?=htmlspecialchars($structureName)?></em></h2>
 	<p class="result <?=$resultCode?>"><?=$resultDesc?></p>
 	<form action="do_process_structure.php" method="post">
 		<fieldset class="common">

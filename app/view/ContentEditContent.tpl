@@ -1,7 +1,7 @@
 <?php
 	$title = (isset($bNew) && $bNew === true)
 		? 'New content'
-		: 'Edit content <spam class="structure_name">'.htmlspecialchars($structure->getName()).'</spam>';
+		: 'Edit content <em class="structure_name">'.htmlspecialchars($structure->getName()).'</em>';
 	$relationCount = $content->getCountParents();
 	$aliasIdCount = $content->getCountAliasId();
 	$deleteDisabled = $relationCount > 0 ? ' disabled="disabled"' : '';

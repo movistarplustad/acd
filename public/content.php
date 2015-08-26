@@ -26,8 +26,8 @@ switch ($action) {
 		return;
 		break;
 	case 'list_structures': 
-	$structures = new Model\StructuresDo();
-	$structures->loadFromFile();
+		$structures = new Model\StructuresDo();
+		$structures->loadFromFile();
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setType('menu');
 
@@ -76,10 +76,15 @@ switch ($action) {
 		}
 		$contentOu->setContents($contents);
 
+		$toolsOu = new View\Tools();
+		$toolsOu->setLogin($_SESSION['login']);
+		$toolsOu->setRol($_SESSION['rol']);
+
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
 		$skeletonOu->setHeadTitle('Manage elements');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
+		$skeletonOu->setTools($toolsOu->render());
 
 		if ($action == 'delete' && $bResult) {
 			$contentOu->setResultDesc('Done', 'ok');
@@ -113,10 +118,15 @@ switch ($action) {
 		$contentOu->newContent(true);
 		$contentOu->setUserRol($_SESSION['rol']);
 
+		$toolsOu = new View\Tools();
+		$toolsOu->setLogin($_SESSION['login']);
+		$toolsOu->setRol($_SESSION['rol']);
+
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
 		$skeletonOu->setHeadTitle('Manage content');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
+		$skeletonOu->setTools($toolsOu->render());
 
 		break;
 	case 'edit':
@@ -200,11 +210,16 @@ switch ($action) {
 		}
 		$contentOu->setContent($content);
 		$contentOu->setUserRol($_SESSION['rol']);
-		
+
+		$toolsOu = new View\Tools();
+		$toolsOu->setLogin($_SESSION['login']);
+		$toolsOu->setRol($_SESSION['rol']);
+
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
 		$skeletonOu->setHeadTitle('Manage content');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
+		$skeletonOu->setTools($toolsOu->render());
 
 		if ($action == 'summary') {
 			$summaryController = new Controller\Summary();

@@ -9,6 +9,7 @@ class FieldDo
 	const TYPE_TEXT_SIMPLE = 'text_simple';
 	const TYPE_TEXT_MULTILINE = 'text_multiline';
 	const TYPE_RICH_TEXT = 'rich_text';
+	const TYPE_TEXT_HANDMADE_HTML = 'text_handmade_html';
 	const TYPE_INTEGER = 'integer';
 	const TYPE_FLOAT = 'float';
 	const TYPE_RANGE = 'range';
@@ -41,6 +42,7 @@ class FieldDo
 			self::TYPE_TEXT_SIMPLE => 'Simple text',
 			self::TYPE_TEXT_MULTILINE => 'Multiline text area',
 			self::TYPE_RICH_TEXT => 'Rich text area',
+			self::TYPE_TEXT_HANDMADE_HTML => 'Handmade html textarea',
 			self::TYPE_INTEGER => 'Integer number',
 			self::TYPE_FLOAT => 'Decimal number',
 			self::TYPE_RANGE => 'Range',
@@ -55,7 +57,7 @@ class FieldDo
 			self::TYPE_LINK => 'Link',
 			self::TYPE_LIST_OPTIONS => 'Selection of options',
 			self::TYPE_LIST_MULTIPLE => 'List with zero or more selecting options',
-			self::TYPE_LIST_MULTIPLE_STICKY => 'Do not use, temporal list with zero or more selecting options only for sticky fields',
+			self::TYPE_LIST_MULTIPLE_STICKY => 'Do not use, temporal list with zero or more selecting options only for sticky fields'
 		);
 	}
 

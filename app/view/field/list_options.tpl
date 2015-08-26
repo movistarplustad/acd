@@ -1,12 +1,12 @@
 <input type="hidden" name="field[<?=$id?>][id]" value="<?=htmlspecialchars($fieldId)?>"/>
 <input type="hidden" name="field[<?=$id?>][name]" value="<?=htmlspecialchars($fieldName)?>"/>
-<label for="<?=htmlspecialchars($fieldId)?>"><?=htmlspecialchars($fieldName)?></label>
+<label for="field_<?=htmlspecialchars($id)?>"><?=htmlspecialchars($fieldName)?></label>
 <div class="select-wrap">
 <?php
 	 $itemsInOut = $fieldOptions->detachItems($fieldValue);
 ?>
 	<select name="field[<?=$id?>][value]" id="field_<?=$id?>" class="field select">
-		<option></option>
+		<option value="">Select option…</option>
 		<?php
 			foreach ($itemsInOut['in'] as $key => $value) {
 		?>

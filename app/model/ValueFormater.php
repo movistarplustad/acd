@@ -13,6 +13,7 @@ class ValueFormater
 	const TYPE_BOOLEAN = 'boolean';
 	const TYPE_LINK = 'link';
 	const TYPE_LIST_MULTIPLE = 'list_multiple_options';
+	const TYPE_TEXT_HANDMADE_HTML = 'text_handmade_html';
 
 	// Formats to getting and setting values
 	const FORMAT_INTERNAL = 0;
@@ -100,6 +101,64 @@ class ValueFormater
 			}
 			else {
 				return array();
+			}
+		};
+		$formater[self::TYPE_TEXT_HANDMADE_HTML][self::FORMAT_EDITOR] = function ($value) {
+			// cleanHtmlFragment
+			if (extension_loaded('tidy') === true) {
+				$encoding = 'utf8';
+				$tidy_config = array
+				(
+					'anchor-as-name' => false,
+					'break-before-br' => true,
+					'char-encoding' => $encoding,
+					'decorate-inferred-ul' => false,
+					'doctype' => 'omit',
+					'drop-empty-paras' => false,
+					'drop-font-tags' => true,
+					'drop-proprietary-attributes' => false,
+					'force-output' => false,
+					'hide-comments' => false,
+					'indent' => true,
+					'indent-attributes' => false,
+					'indent-spaces' => 2,
+					'input-encoding' => $encoding,
+					'join-styles' => false,
+					'logical-emphasis' => false,
+					'merge-divs' => false,
+					'merge-spans' => false,
+					'new-blocklevel-tags' => 'main article aside audio details dialog figcaption figure footer header hgroup menutidy nav section source summary track video',
+					'new-empty-tags' => 'command embed keygen source track wbr',
+					'new-inline-tags' => 'canvas command data datalist embed keygen mark meter output progress time wbr',
+					'newline' => 0,
+					'numeric-entities' => false,
+					'output-bom' => false,
+					'output-encoding' => $encoding,
+					'output-html' => true,
+					'preserve-entities' => true,
+					'quiet' => true,
+					'quote-ampersand' => true,
+					'quote-marks' => false,
+					'repeated-attributes' => 1,
+					'show-body-only' => true,
+					'show-warnings' => false,
+					'sort-attributes' => 1,
+					'tab-size' => 4,
+					'tidy-mark' => false,
+					'vertical-space' => true,
+					'wrap' => 0,
+				);
+				// Pre limpieza, quitar <script/>
+				$value = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $value); 
+				$tidy = new \tidy();
+				$tidy->parseString($value, $tidy_config, 'utf8');
+				$tidy->cleanRepair();
+				$result = \tidy_get_output($tidy);
+				return $result;
+			}
+			else {
+				throw new ValueFormaterInvalidFormatException("Text not validated. Tidy extension not instaled", 1);
+				return $value;
 			}
 		};
 
