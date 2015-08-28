@@ -58,7 +58,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 					return $this->countAliasId($structureDo, $query);
 					break;
 				case 'difuse-alias-id':
-					return $this->difuseAliasId($structureDo, $query);
+					return $this->difuseAliasId($structureDo, $query->getCondition('id'), $filters);
 					break;
 				default:
 					throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
@@ -211,7 +211,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 	// Transform a mongodb document to normalized document (aseptic persistent storage)
 	//TODO ver por qué no puede meterse dentro de normalizeDocument
 	function normalizeRef($DBRef) {
-		//var_dump($DBRef);
 		return [
 				'ref' => (string) $DBRef['ref']['$id'],
 				'id_structure' => $DBRef['id_structure']
@@ -499,7 +498,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			return 0;
 		}
 	}
-	private function difuseAliasId($structureDo, $query) {
+	private function difuseAliasId($structureDo, $id, $filters = []) {
 		// return array
 		// [
 		//	[
@@ -516,7 +515,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		// db.content.find({"alias_id" : {$in : ["alias", "alias/dos"]}}, {"_id": true, "id_structure" : true, "alias_id" : true});
 		// Select elements with alias-id start match ie. one match with one/two
-		$aDirectoryParts = explode('/', $query->getCondition());
+		$aDirectoryParts = explode('/', $id);
 		$aDirectory = [];
 		$directoryTmp = '';
 		$separator = ''; // First time is '' next is '/'
@@ -525,7 +524,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$separator = '/';
 			$aDirectory[] = $directoryTmp;
 		}
-		//$aDirectory = array_reverse($aDirectory);
 
 		$filter = [
 			'alias_id' => [
@@ -539,7 +537,8 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$fields = [
 			'_id' => true,
 			'id_structure' => true,
-			'alias_id' => true
+			'alias_id' => true,
+			'period_of_validity' => true
 		];
 
 		if (!$this->isInitialized($structureDo)) {
@@ -550,12 +549,17 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$cursor->sort(array( 'alias_id' => -1));
 
 		$result = [];
+		$contentCheckValidity = new ContentDo(); // Object from date validity tester
+		@$validityDate = $filters['validity-date'];
 		foreach ($cursor as $documentFound) {
-			$result[] = [
-				'id' =>  (string) $documentFound['_id'],
-				'id_structure' => $documentFound['id_structure'],
-				'alias_id' => $documentFound['alias_id']
-			];
+			$contentCheckValidity->setPeriodOfValidity($documentFound['period_of_validity']);
+			if ($contentCheckValidity->checkValidityDate($validityDate)) {
+				$result[] = [
+					'id' =>  (string) $documentFound['_id'],
+					'id_structure' => $documentFound['id_structure'],
+					'alias_id' => $documentFound['alias_id']
+				];
+			}
 		}
 
 		return $result;

@@ -62,7 +62,7 @@ class PersistentManagerMySql implements iPersistentManager
 					return $this->countAliasId($structureDo, $query);
 					break;
 				case 'difuse-alias-id':
-					return $this->difuseAliasId($structureDo, $query);
+					return $this->difuseAliasId($structureDo, $query->getCondition('id'), $filters);
 					break;
 			default:
 				throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
@@ -454,10 +454,10 @@ class PersistentManagerMySql implements iPersistentManager
 			return 0;
 		}
 	}
-	private function difuseAliasId($structureDo, $query) {
+	private function difuseAliasId($structureDo, $id, $filters = []) {
 		// SELECT id, id_structure, alias_id FROM content WHERE alias_id IN ('alias','alias/dos','alias/dos/tres','alias/dos/tres/cuatro') AND id_structure = 'contenido_my sql'  ORDER BY alias_id DESC;
 		// Select elements with alias-id start match ie. one match with one/two
-		$aDirectoryParts = explode('/', $query->getCondition());
+		$aDirectoryParts = explode('/', $id);
 		$aDirectory = [];
 		$directoryTmp = '';
 		$separator = ''; // First time is '' next is '/'
@@ -471,16 +471,24 @@ class PersistentManagerMySql implements iPersistentManager
 		if ($structureDo->getId()) {
 			$filter .= " AND id_structure = '".$this->mysqli->real_escape_string($structureDo->getId())."'";
 		}
-		$select = "SELECT id, id_structure, alias_id FROM content WHERE alias_id $filter  ORDER BY alias_id DESC";
+		$select = "SELECT id, id_structure, alias_id, UNIX_TIMESTAMP(period_of_validity_start) as period_of_validity_start, UNIX_TIMESTAMP(period_of_validity_end) as  period_of_validity_end FROM content WHERE alias_id $filter  ORDER BY alias_id DESC";
 
 		$result = [];
+		$contentCheckValidity = new ContentDo(); // Object from date validity tester
+		@$validityDate = $filters['validity-date'];
 		if ($dbResult = $this->mysqli->query($select)) {
 			while($obj = $dbResult->fetch_object()){
-				$result[] = [
-					'id' =>  $obj->id,
-					'id_structure' => $obj->id_structure,
-					'alias_id' => $obj->alias_id
-				];
+				$documentFound = [];
+				$documentFound['period_of_validity']['start'] = is_null($obj->period_of_validity_start) ? -INF : $obj->period_of_validity_start;
+				$documentFound['period_of_validity']['end'] = is_null($obj->period_of_validity_end) ? INF : $obj->period_of_validity_end;
+				$contentCheckValidity->setPeriodOfValidity($documentFound['period_of_validity']);
+				if ($contentCheckValidity->checkValidityDate($validityDate)) {
+					$result[] = [
+						'id' =>  $obj->id,
+						'id_structure' => $obj->id_structure,
+						'alias_id' => $obj->alias_id
+					];
+				}
 			}
 		}
 		return $result;
