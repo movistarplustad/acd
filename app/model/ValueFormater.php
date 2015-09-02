@@ -148,8 +148,9 @@ class ValueFormater
 					'vertical-space' => true,
 					'wrap' => 0,
 				);
-				// Pre limpieza, quitar <script/>
-				$value = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $value); 
+				// Clean previous tags and attributes 'dangerous'
+				$value = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $value);  // Clean tag <script>
+				$value = preg_replace("/style *= *('|\")([^('|\")]*)('|\")/is", "", $value);  // Clean attributes style="foo:var"
 				$tidy = new \tidy();
 				$tidy->parseString($value, $tidy_config, 'utf8');
 				$tidy->cleanRepair();
