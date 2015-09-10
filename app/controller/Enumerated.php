@@ -12,6 +12,7 @@ class Enumerated {
 	const VIEW_DETAIL_NEW = 'new'; // New collection
 	private  $id;
 	private $view;
+	private $backButtom;
 	private $contentFound;
 
 	/* Setters and getters attributes */
@@ -27,6 +28,12 @@ class Enumerated {
 	public function getView() {
 		return $this->view;
 	}
+	public function setBack($back) {
+		$this->backButtom = (boolean)$back;
+	}
+	public function getBack() {
+		return $this->backButtom;
+	}
 	public function setContent($contentFound) {
 		$this->contentFound = $contentFound;
 	}
@@ -39,15 +46,7 @@ class Enumerated {
 
 	public function getHeaderMenuOu() {
 		$headerMenuOu = new HeaderMenu();
-		$headerMenuOu->setUrl('enumerated.php');
-		switch ($this->getView()) {
-			case $this::VIEW_LIST:
-				$headerMenuOu->setType('menu');
-				break;
-			case $this::VIEW_DETAIL:
-				$headerMenuOu->setType('menuBackUrl');
-				break;
-		}
+		$headerMenuOu->setBack($this->getBack());
 		return $headerMenuOu;
 	}
 

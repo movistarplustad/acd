@@ -36,8 +36,18 @@ switch ($action) {
 		$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
 		$contentOu->setStorage($estructura->getStorage());
 
+		// back button
+		$navigation = new Controller\SessionNavigation();
+		$navigation->load();
+		$back = !$navigation->isEmpty();
+		$navigation->push([
+			'hash' => "new_structure - *new*",
+			'url' => $_SERVER["REQUEST_URI"]
+		]);
+		$navigation->save();
+
 		$headerMenuOu = new View\HeaderMenu();
-		$headerMenuOu->setType('back');
+		$headerMenuOu->setBack($back);
 
 		$skeletonOu->setHeadTitle('New structure');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
@@ -67,8 +77,18 @@ switch ($action) {
 			$contentOu->setActionType('error');
 		}
 
+		// back button
+		$navigation = new Controller\SessionNavigation();
+		$navigation->load();
+		$back = !$navigation->isEmpty();
+		$navigation->push([
+			'hash' => "edit_structure - $id",
+			'url' => $_SERVER["REQUEST_URI"]
+		]);
+		$navigation->save();
+
 		$headerMenuOu = new View\HeaderMenu();
-		$headerMenuOu->setType('backStructure');
+		$headerMenuOu->setBack($back);
 
 		$toolsOu = new View\Tools();
 		$toolsOu->setLogin($_SESSION['login']);
@@ -103,8 +123,18 @@ switch ($action) {
 			$contentOu->setEnumeratedList($enumerated);
 		}
 
+		// back button
+		$navigation = new Controller\SessionNavigation();
+		$navigation->load();
+		$back = !$navigation->isEmpty();
+		$navigation->push([
+			'hash' => "clone_structure - $id",
+			'url' => $_SERVER["REQUEST_URI"]
+		]);
+		$navigation->save();
+
 		$headerMenuOu = new View\HeaderMenu();
-		$headerMenuOu->setType('backStructure');
+		$headerMenuOu->setBack($back);
 
 		$toolsOu = new View\Tools();
 		$toolsOu->setLogin($_SESSION['login']);
@@ -120,8 +150,18 @@ switch ($action) {
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
+		// back button
+		$navigation = new Controller\SessionNavigation();
+		$navigation->load();
+		$back = !$navigation->isEmpty();
+		$navigation->push([
+			'hash' => "list_structures",
+			'url' => $_SERVER["REQUEST_URI"]
+		]);
+		$navigation->save();
+
 		$headerMenuOu = new View\HeaderMenu();
-		$headerMenuOu->setType('menu');
+		$headerMenuOu->setBack($back);
 
 		$contentOu->setActionType('index');
 		$contentOu->setStructures($structures);

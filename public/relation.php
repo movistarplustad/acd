@@ -24,9 +24,20 @@ else {
 		//$action = 'show';
 	}
 }
+// back button
+$navigation = new Controller\SessionNavigation();
+$navigation->load();
+$back = !$navigation->isEmpty(); // Check empty before insert new navigation
+$navigation->push([
+	'hash' => "enumerated_$action - $id", // Page hash, consecutive same hash no add navigation
+	'url' => $_SERVER["REQUEST_URI"]
+]);
+$navigation->save();
+
 $relationController = new Controller\Relation();
 $relationController->setIdContent($id);
 $relationController->setIdStructure($idt);
+$relationController->setBack($back);
 $relationController->load();
 
 $skeletonOu = new View\BaseSkeleton();

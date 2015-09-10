@@ -24,9 +24,10 @@ class enumerated_test extends \PHPUnit_Framework_TestCase
 
 	public function testModifyData()
 	{
+		$data = ['foo1' => 'var1'];
 		$enum = new EnumeratedDo();
+		$enum->setItems($data);
 		$data = $enum->getItems();
-		$data->add('foo', 'bar');
 		$this->assertEquals($enum->getItems(), $data);
 	}
 }

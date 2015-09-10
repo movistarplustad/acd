@@ -1,14 +1,14 @@
 <?php
 namespace Acd\View;
+use \Acd\Controller\SessionNavigation;
 // Output
 class HeaderMenu extends \Acd\View\Template {
-	protected $type;
-	protected $url;
-	public function setType($type) {
-		$this->type = $type;
+	protected $bBackLink;
+	public function __construct() {
+		$this->setBack(false);
 	}
-	public function setUrl($url) {
-		$this->url = $url;
+	public function setBack($bBackLink) {
+		$this->bBackLink = $bBackLink;
 	}
 	public function render($tpl = '') {
 		return parent::render(\Acd\conf::$DIR_TEMPLATES.'/HeaderMenu.tpl');

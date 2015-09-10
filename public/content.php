@@ -28,8 +28,19 @@ switch ($action) {
 	case 'list_structures': 
 		$structures = new Model\StructuresDo();
 		$structures->loadFromFile();
+
+		// back button
+		$navigation = new Controller\SessionNavigation();
+		$navigation->load();
+		$back = !$navigation->isEmpty();
+		$navigation->push([
+			'hash' => "list_structures",
+			'url' => $_SERVER["REQUEST_URI"]
+		]);
+		$navigation->save();
+
 		$headerMenuOu = new View\HeaderMenu();
-		$headerMenuOu->setType('menu');
+		$headerMenuOu->setBack($back);
 
 		$toolsOu = new View\Tools();
 		$toolsOu->setLogin($_SESSION['login']);
@@ -52,8 +63,19 @@ switch ($action) {
 		@$titleSearch = $_GET['s'];
 		$numPage = isset($_GET['p']) ? (int) $_GET['p'] : 0;
 		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
+
+		// back button
+		$navigation = new Controller\SessionNavigation();
+		$navigation->load();
+		$back = !$navigation->isEmpty();
+		$navigation->push([
+			'hash' => "list_contents - $id - $titleSearch - $numPage",
+			'url' => $_SERVER["REQUEST_URI"]
+		]);
+		$navigation->save();
+
 		$headerMenuOu = new View\HeaderMenu();
-		$headerMenuOu->setType('backContent');
+		$headerMenuOu->setBack($back);
 
 		$contentOu = new View\ContentEditListContent();
 		$contentOu->setId($id);
@@ -96,14 +118,18 @@ switch ($action) {
 		@$idParent = $_GET['idp'] ?: null; // TODO duplicado en edit y clone
 		@$idTypeParent = $_GET['idtp'] ?: null;
 
+		// back button
+		$navigation = new Controller\SessionNavigation();
+		$navigation->load();
+		$back = !$navigation->isEmpty();
+		$navigation->push([
+			'hash' => "edit_content - $idStructureType - *new*",
+			'url' => $_SERVER["REQUEST_URI"]
+		]);
+		$navigation->save();
+
 		$headerMenuOu = new View\HeaderMenu();
-		$headerMenuOu->setType('backListContent');
-		if ($idParent) {
-			$headerMenuOu->setUrl('content.php?a=edit&amp;id='.urlencode($idParent).'&amp;idt='.urlencode($idTypeParent));
-		}
-		else {
-			$headerMenuOu->setUrl('content.php?a=list_contents&amp;id='.urlencode($idStructureType));
-		}
+		$headerMenuOu->setBack($back);
 
 		$contentOu = new View\ContentEditContent();
 		$structure = new Model\StructureDo();
@@ -127,7 +153,6 @@ switch ($action) {
 		$skeletonOu->setHeadTitle('Manage content');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
-
 		break;
 	case 'edit':
 	case 'clone':
@@ -139,14 +164,18 @@ switch ($action) {
 		@$idParent = $_GET['idp'] ?: null;
 		@$idTypeParent = $_GET['idtp'] ?: null;
 
+		// back button
+		$navigation = new Controller\SessionNavigation();
+		$navigation->load();
+		$back = !$navigation->isEmpty();
+		$navigation->push([
+			'hash' => "edit_content - $idStructureType - $id",
+			'url' => $_SERVER["REQUEST_URI"]
+		]);
+		$navigation->save();
+
 		$headerMenuOu = new View\HeaderMenu();
-		$headerMenuOu->setType('backListContent');
-		if ($idParent) {
-			$headerMenuOu->setUrl('content.php?a=edit&amp;id='.urlencode($idParent).'&amp;idt='.urlencode($idTypeParent));
-		}
-		else {
-			$headerMenuOu->setUrl('content.php?a=list_contents&amp;id='.urlencode($idStructureType));
-		}
+		$headerMenuOu->setBack($back);
 
 		$contentOu = new View\ContentEditContent();
 		$structure = new Model\StructureDo();

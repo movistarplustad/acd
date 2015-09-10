@@ -25,8 +25,19 @@ switch ($action) {
 	case 'search': 
 		$structures = new Model\StructuresDo();
 		$structures->loadFromFile(conf::$DATA_PATH);
+
+		// back button
+		$navigation = new Controller\SessionNavigation();
+		$navigation->load();
+		$back = !$navigation->isEmpty();
+		$navigation->push([
+			'hash' => "edit_content _relation - $idParent - $idStructureTypeParent -  $idField",
+			'url' => $_SERVER["REQUEST_URI"]
+		]);
+		$navigation->save();
+
 		$headerMenuOu = new View\HeaderMenu();
-		$headerMenuOu->setType('menu');
+		$headerMenuOu->setBack($back);
 
 		$toolsOu = new View\Tools();
 		$toolsOu->setLogin($_SESSION['login']);

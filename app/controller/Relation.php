@@ -9,6 +9,7 @@ class Relation {
 	private $idStructure;
 	private $view;
 	private $content;
+	private $backButtom;
 	const VIEW_LIST = 'list'; // List of all parents of a contents
 
 	/* Setters and getters attributes */
@@ -53,10 +54,15 @@ class Relation {
 	public function getTitle() {
 		return 'Relations of ';
 	}
+	public function setBack($back) {
+		$this->backButtom = (boolean)$back;
+	}
+	public function getBack() {
+		return $this->backButtom;
+	}
 	public function getHeaderMenuOu() {
 		$headerMenuOu = new HeaderMenu();
-		$headerMenuOu->setUrl('content.php?a=edit&id='.urlencode($this->getIdContent()).'&idt='.urlencode($this->getIdStructure()));
-		$headerMenuOu->setType('menuBackUrl');
+		$headerMenuOu->setBack($this->getBack());
 		return $headerMenuOu;
 	}
 	public function render() {
