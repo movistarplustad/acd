@@ -32,7 +32,7 @@ class PersistentStructureManagerMySql implements iPersistentStructureManager
 		if (!$this->isInitialized()) {
 			$this->initialize();
 		}
-		$select = "SELECT id, name, storage, fields FROM structure"; // TODO LIMIT $limit
+		$select = "SELECT id, name, storage, fields FROM structure ORDER BY name"; // TODO LIMIT $limit
 		$result = [];
 		if ($dbResult = $this->mysqli->query($select)) {
 			while($obj = $dbResult->fetch_object()){
