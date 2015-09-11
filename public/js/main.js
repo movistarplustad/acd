@@ -9,6 +9,9 @@ var editor = {
 				editor.$body.toggleClass("withOptions");
 				e.preventDefault();
 			})
+		/* Back buttom */
+		$("#header-menu .back").on("mousedown mouseup click", navigationHistory.backButtom);
+
 		/* Delete buttons */
 		editor.$iDelete = $('input[value=delete]');
 
@@ -155,6 +158,52 @@ var editor = {
 		}
 	}
 };
+var navigationHistory = {
+	LONG_CLICK_TIME : 500,
+	backButtomTimeStamp : 0,
+	timeoutShow : 0,
+	$wrap : null,
+	$historyMenu : null,
+	backButtom : function(e) {
+		if (navigationHistory.$wrap === null) {
+			navigationHistory.$wrap = $(this).parent();
+		}
+		console.log(e.type, e.timeStamp, e.timeStamp - navigationHistory.backButtomTimeStamp);
+		switch (e.type) {
+			case 'mousedown' :
+				navigationHistory.backButtomTimeStamp = e.timeStamp;
+				navigationHistory.timeoutShow = window.setTimeout(navigationHistory.showHistory, navigationHistory.LONG_CLICK_TIME);
+				break;
+			case 'mouseup' :
+				if(e.timeStamp - navigationHistory.backButtomTimeStamp > navigationHistory.LONG_CLICK_TIME) {
+					window.clearTimeout(navigationHistory.timeoutShow);
+				}
+				break;
+			case 'click' :
+				if(e.timeStamp - navigationHistory.backButtomTimeStamp > navigationHistory.LONG_CLICK_TIME) {
+					e.preventDefault();
+				}
+				window.clearTimeout(navigationHistory.timeoutShow);
+				break;
+		}
+	},
+	showHistory : function() {
+		if (navigationHistory.$historyMenu === null) {
+			navigationHistory.$historyMenu = $(document.createElement("div"));
+			navigationHistory.$historyMenu.attr("id", "historyMenu");
+			navigationHistory.$wrap.append(navigationHistory.$historyMenu);
+			$.get( "history.php", function( data ) {
+				navigationHistory.$historyMenu.html(data);
+			});
+		}
+		console.log("ver historial");
+		$("body").on("click", navigationHistory.hideHistory);
+	},
+	hideHistory : function(e) {
+		console.log(this, e);
+		//navigationHistory.$historyMenu.hide();
+	}
+}
 var isSupported = document.getElementById && document.getElementsByTagName;
 if (isSupported) {
 	document.documentElement.className = "js";

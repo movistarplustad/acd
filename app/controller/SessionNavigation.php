@@ -8,7 +8,7 @@ class SessionNavigation {
 	protected $stack;
 	protected $limit;
 	
-	public function __construct($limit = 10) {
+	public function __construct($limit = 100) {
 		// initialize the stack
 		$this->stack = array();
 		// stack can only contain this many items
