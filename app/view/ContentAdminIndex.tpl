@@ -21,5 +21,5 @@
 		}
 	?>
 	</ol>
-	<div id="new_structure"><a href="?a=new" title="New structure" class="button new">new structure</a></div>
+	<div id="new_structure" class="actions"><a href="?a=new" title="New structure" class="button new">new structure</a></div>
 </main>

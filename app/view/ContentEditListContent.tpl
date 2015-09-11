@@ -31,5 +31,5 @@ $bMorePage = $limits->getUpper() < $limits->getTotal();
 		<?php
 	}
 	?>
-	<div id="new_structure"><a href="?a=new&amp;idt=<?=urlencode($structure->getId())?>" title="New content" class="button new">new content</a></div>
+	<div id="new_structure" class="actions"><a href="?a=new&amp;idt=<?=urlencode($structure->getId())?>" title="New content" class="button new">new content</a></div>
 </main>
