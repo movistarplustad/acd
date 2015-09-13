@@ -2,8 +2,9 @@
 namespace Acd\Controller;
 // Output
 class Summary {
-	private  $idContent;
+	private $idContent;
 	private $idStructure;
+	private $contentDo;
 
 	/* Setters and getters attributes */
 	public function setIdContent($id) {
