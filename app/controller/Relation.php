@@ -9,8 +9,13 @@ class Relation {
 	private $idStructure;
 	private $view;
 	private $content;
-	private $backButtom;
+	private $sessionNavigation;
+	private $requestUrl;
 	const VIEW_LIST = 'list'; // List of all parents of a contents
+
+	public function __construct() {
+		$this->initializeSessionNavigation();
+	}
 
 	/* Setters and getters attributes */
 	public function setIdContent($id) {
@@ -54,21 +59,31 @@ class Relation {
 	public function getTitle() {
 		return 'Relations of ';
 	}
-	public function setBack($back) {
-		$this->backButtom = (boolean)$back;
+	// back button
+	private function initializeSessionNavigation() {
+		$this->sessionNavigation = new SessionNavigation();
+		$this->sessionNavigation->load();
 	}
-	public function getBack() {
-		return $this->backButtom;
+	public function setRequestUrl($url) {
+		$this->requestUrl = $url;
 	}
 	public function getHeaderMenuOu() {
 		$headerMenuOu = new HeaderMenu();
-		$headerMenuOu->setBack($this->getBack());
+		$headerMenuOu->setBack(!$this->sessionNavigation->isEmpty());
 		return $headerMenuOu;
 	}
 	public function render() {
 		$ou = new \Acd\View\Relation();
 		$ou->setContentTitle($this->getContent()->getTitle());
 		$ou->setParentList($this->getParents());
+
+		$this->sessionNavigation->push([
+			'hash' => 'relation - '.$this->getIdStructure().' - '.$this->getIdContent(), // Page hash, consecutive same hash no add navigation
+			'url' => $this->requestUrl,
+			'title' => $this->getTitle().$this->getContent()->getTitle()
+		]);
+		$this->sessionNavigation->save();
+
 		return $ou->render();
 	}
 }

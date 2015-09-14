@@ -10,7 +10,7 @@ var editor = {
 				e.preventDefault();
 			})
 		/* Back buttom */
-		$("#header-menu .back").on("mousedown mouseup click", navigationHistory.backButtom);
+		navigationHistory.init();
 
 		/* Delete buttons */
 		editor.$iDelete = $('input[value=delete]');
@@ -164,11 +164,15 @@ var navigationHistory = {
 	timeoutShow : 0,
 	$wrap : null,
 	$historyMenu : null,
+	status : '',
+	init : function() {
+		$("#header-menu .back").on("mousedown mouseup click", navigationHistory.backButtom);
+		navigationHistory.status = 'hidden';
+	},
 	backButtom : function(e) {
 		if (navigationHistory.$wrap === null) {
 			navigationHistory.$wrap = $(this).parent();
 		}
-		console.log(e.type, e.timeStamp, e.timeStamp - navigationHistory.backButtomTimeStamp);
 		switch (e.type) {
 			case 'mousedown' :
 				navigationHistory.backButtomTimeStamp = e.timeStamp;
@@ -196,12 +200,21 @@ var navigationHistory = {
 				navigationHistory.$historyMenu.html(data);
 			});
 		}
-		console.log("ver historial");
+		navigationHistory.status = "loading";
+		navigationHistory.$historyMenu.attr("class", navigationHistory.status);
 		$("body").on("click", navigationHistory.hideHistory);
 	},
 	hideHistory : function(e) {
-		console.log(this, e);
-		//navigationHistory.$historyMenu.hide();
+		switch (navigationHistory.status) {
+			case "loading":
+				navigationHistory.status = "visible";
+				break;
+			case "visible":
+				navigationHistory.status = "hidden";
+				$("body").off("click", navigationHistory.hideHistory);
+				break;
+		}
+		navigationHistory.$historyMenu.attr("class", navigationHistory.status);
 	}
 }
 var isSupported = document.getElementById && document.getElementsByTagName;

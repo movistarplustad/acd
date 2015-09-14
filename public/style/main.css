@@ -43,6 +43,13 @@ body {
 		background-color: #F0F0F0;
 		box-shadow: 0.2em 0.2em 0.5em #9DA2AD;
 	}
+	#historyMenu.visible,
+	#historyMenu.loading {
+		display: block;
+	}
+	#historyMenu.hidden {
+		display: none;
+	}
 	#historyMenuxxx:before{
 		content: "";
 		display: block;
@@ -162,6 +169,7 @@ a:active {
 	text-decoration: none;
 }
 .button {
+	display: inline-block;
 	background-color: #FFF;
 	background-position: 0.2em center;
 	background-repeat: no-repeat;
@@ -227,9 +235,10 @@ a:active {
 	float: left;
 	margin: 0 2em 0 0;
 }
-#new_structure {
-	border-top: 1px solid #C2C2C2;
-	padding: 1em;
+#new_structure,
+#new_content,
+#new_enumerated {
+	/* padding: 0.2em 1em; */
 }
 .button.new {
 	font-size: 0.9em;
@@ -237,23 +246,6 @@ a:active {
 	background-size: 1.5em;
 	text-decoration: none;
 }
-/*
-#new_structure {
-	font-size: 2em;
-	width: 1em;
-	height: 1em;
-	border-radius: 1em;
-	border: 1px solid #999;
-	background-color: #76BFCA;
-}
-#new_structure a {
-	display: block;
-	line-height: 1em;
-	text-align: center;
-	color: #fff;
-	text-decoration: none;
-}
-*/
 
 /* Login */
 .form_login {

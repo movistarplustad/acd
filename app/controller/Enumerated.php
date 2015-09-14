@@ -12,9 +12,14 @@ class Enumerated {
 	const VIEW_DETAIL_NEW = 'new'; // New collection
 	private  $id;
 	private $view;
-	private $backButtom;
+	private $sessionNavigation;
+	private $requestUrl;
 	private $contentFound;
+	private $title;
 
+	public function __construct() {
+		$this->initializeSessionNavigation();
+	}
 	/* Setters and getters attributes */
 	public function setId($id) {
 		$this->id = (string)$id;
@@ -28,11 +33,13 @@ class Enumerated {
 	public function getView() {
 		return $this->view;
 	}
-	public function setBack($back) {
-		$this->backButtom = (boolean)$back;
+	// back button
+	private function initializeSessionNavigation() {
+		$this->sessionNavigation = new SessionNavigation();
+		$this->sessionNavigation->load();
 	}
-	public function getBack() {
-		return $this->backButtom;
+	public function setRequestUrl($url) {
+		$this->requestUrl = $url;
 	}
 	public function setContent($contentFound) {
 		$this->contentFound = $contentFound;
@@ -41,12 +48,22 @@ class Enumerated {
 		return $this->contentFound;
 	}
 	public function getTitle() {
-		return 'Collection of enumerated values';
+		switch ($this->getView()) {
+			case $this::VIEW_LIST:
+				return 'Collections of enumerated values';
+				break;
+			case $this::VIEW_DETAIL:
+				return 'Enumerated values of '.$this->getContent()->getId();
+				break;
+			case $this::VIEW_DETAIL_NEW:
+				return 'New collection of enumerated values';
+				break;
+		}
 	}
 
 	public function getHeaderMenuOu() {
 		$headerMenuOu = new HeaderMenu();
-		$headerMenuOu->setBack($this->getBack());
+		$headerMenuOu->setBack(!$this->sessionNavigation->isEmpty());
 		return $headerMenuOu;
 	}
 
@@ -89,6 +106,13 @@ class Enumerated {
 				throw new \Exception("View (".$this->getView().") not defined", 1);
 				break;
 		}
+
+		$this->sessionNavigation->push([
+			'hash' => 'enumerated - '.$this->getView().' - '.$this->getId(), // Page hash, consecutive same hash no add navigation
+			'url' => $this->requestUrl,
+			'title' => $this->getTitle()
+		]);
+		$this->sessionNavigation->save();
 
 		return $ou->render();
 	}

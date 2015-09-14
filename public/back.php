@@ -4,10 +4,13 @@ namespace Acd;
 require ('../autoload.php');
 session_start();
 
+$backSteps = isset($_GET['p']) ? (integer) $_GET['p'] : 1;
 $navigation = new \Acd\Controller\SessionNavigation();
 $navigation->load();
 try {
-	$navigation->pop();
+	for ($n = 0; $n < $backSteps; $n++) {
+		$navigation->pop();
+	}
 	$lastNavigation = $navigation->top();
 	//d($lastNavigation);
 	$returnUrl = $lastNavigation['url'];
@@ -17,4 +20,7 @@ catch(Controller\SessionNavigationException $e) {
 	$returnUrl = 'index.php';
 }
 
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 header("Location:$returnUrl");

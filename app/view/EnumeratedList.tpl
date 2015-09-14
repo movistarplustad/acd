@@ -18,5 +18,5 @@
 			}
 		?>
 	</ol>
-	<div id="new_enumerated"><a href="?a=new" title="New enumerated" class="button new">new enumerated</a></div>
+	<div id="new_enumerated" class="actions"><a href="?a=new" title="New enumerated" class="button new">new enumerated</a></div>
 </main>

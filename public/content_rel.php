@@ -14,13 +14,37 @@ $idField = $_GET['f'];
 $numPage = isset($_GET['p']) ? (int) $_GET['p'] : 0;
 if (!Model\Auth::isLoged()) {
 	$action = 'login';
+	header('Location: index.php');
+	return;
 }
 
+$contentRelationController = new Controller\ContentRelation();
+$contentRelationController->setIdContent($id);
+$contentRelationController->setIdStructureTypeSearch($idStructureTypeSearch);
+$contentRelationController->setTitleSearch($titleSearch);
+$contentRelationController->setIdParent($idParent);
+$contentRelationController->setIdStructureTypeParent($idStructureTypeParent);
+$contentRelationController->setIdField($idField);
+$contentRelationController->setPositionInField($positionInField);
+$contentRelationController->setNumPage($numPage);
+$contentRelationController->setRequestUrl($_SERVER["REQUEST_URI"]); // For history back
+$contentRelationController->setAction($action);
+
+$skeletonOu = new View\BaseSkeleton();
+$skeletonOu->setBodyClass('relation');
+
+$skeletonOu->setHeadTitle($contentRelationController->getTitle());
+$skeletonOu->setHeaderMenu($contentRelationController->getHeaderMenuOu()->render());
+
+$toolsOu = new View\Tools();
+$toolsOu->setLogin($_SESSION['login']);
+$toolsOu->setRol($_SESSION['rol']);
+$skeletonOu->setTools($toolsOu->render());
+$skeletonOu->setContent($contentRelationController->render());
+
+echo $skeletonOu->render();
+///////
 switch ($action) {
-	case 'login':
-		header('Location: index.php');
-		return;
-		break;
 	case 'select_type': 
 	case 'search': 
 		$structures = new Model\StructuresDo();

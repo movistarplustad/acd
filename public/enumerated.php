@@ -31,19 +31,10 @@ else {
 		@$id = $_GET['id']; //'PROFILE';
 	}
 }
-// back button
-$navigation = new Controller\SessionNavigation();
-$navigation->load();
-$back = !$navigation->isEmpty(); // Check empty before insert new navigation
-$navigation->push([
-	'hash' => "enumerated_$action - $id", // Page hash, consecutive same hash no add navigation
-	'url' => $_SERVER["REQUEST_URI"]
-]);
-$navigation->save();
 
 $enumeratedController = new Controller\Enumerated();
 $enumeratedController->setView($action);
-$enumeratedController->setBack($back);
+$enumeratedController->setRequestUrl($_SERVER["REQUEST_URI"]); // For history back
 $enumeratedController->setId($id);
 $enumeratedController->load();
 
