@@ -72,4 +72,13 @@ class File
 		return $finfo->file($filename);
 		// to uknown 'application/octet-stream';
 	}
+	public function getImageGeometryFromPath($filename) {
+		try {
+			$image = new \imagick($filename);
+			return $image->getImageGeometry();
+		}
+		catch (\ImagickException $e) {
+			return [];
+		}
+	}
 }

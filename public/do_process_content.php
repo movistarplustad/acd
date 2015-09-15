@@ -100,6 +100,8 @@ switch ($accion) {
 							$fileType = $fileTools->getMimeFromPath($normalizedvalue['tmp_name']);
 						}
 						$normalizedvalue['type'] = $fileType;
+						// Add with and height info for images
+						$normalizedvalue = array_merge($normalizedvalue, $fileTools->getImageGeometryFromPath($normalizedvalue['tmp_name']));
 					}
 				}
 				else {
