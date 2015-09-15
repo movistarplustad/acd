@@ -2,6 +2,7 @@
 namespace Acd\Controller;
 
 use \Acd\View\HeaderMenu;
+use \Acd\Model\SessionNavigation;
 // Output
 class ContentRelation {
 	private $id;
@@ -13,6 +14,8 @@ class ContentRelation {
 	private $positionInField;
 	private $numPage;
 	private $action;
+	private $structures;
+	private $contentParent;
 
 	public function __construct() {
 		$this->initializeSessionNavigation();
@@ -80,22 +83,28 @@ class ContentRelation {
 		return $this->action;
 	}
 	public function getTitle() {
+		return 'Add content to '.$this->contentParent->getTitle().' ('.$this->getIdStructureTypeParent().' / '.$this->getIdField().')';
 	}
 	public function getHeaderMenuOu() {
 		$headerMenuOu = new HeaderMenu();
 		$headerMenuOu->setBack(!$this->sessionNavigation->isEmpty());
 		return $headerMenuOu;
 	}
-	public function render() {
-		$structures = new \ACD\Model\StructuresDo();
-		$structures->loadFromFile();
+	public function load() {
+		$this->structures = new \ACD\Model\StructuresDo();
+		$this->structures->loadFromFile();
 
+		$contentLoader = new \Acd\Model\ContentLoader();
+		$contentLoader->setId($this->getIdStructureTypeParent());
+		$this->contentParent = $contentLoader->loadContent('id', $this->getIdParent());
+	}
+	public function render() {
 		$contentOu = new \ACD\View\ContentEditSearch();
 		$contentOu->setId($this->getIdParent());
 		$contentOu->setType($this->getIdStructureTypeParent());
 		$contentOu->setIdField($this->getIdField());
 		$contentOu->setPositionInField($this->getPositionInField());
-		$contentOu->setStructures($structures);
+		$contentOu->setStructures($this->structures);
 		$contentOu->setTitleSeach($this->getTitleSearch());
 		$contentOu->setStructureTypeSeach($this->getIdStructureTypeSearch());
 
@@ -116,7 +125,7 @@ class ContentRelation {
 			$contentOu->setResultSearch($matchContents);
 		}
 		$this->sessionNavigation->push([
-			'hash' => 'content-relation - '.$this->getIdContent().' - '.$this->getIdStructureTypeSearch(), // Page hash, consecutive same hash no add navigation
+			'hash' => 'content-relation - '.$this->getIdParent().' - '.$this->getIdStructureTypeParent().' - '.$this->getIdField(), // Page hash, consecutive same hash no add navigation
 			'url' => $this->requestUrl,
 			'title' => $this->getTitle()
 		]);

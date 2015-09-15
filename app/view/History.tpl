@@ -7,7 +7,7 @@ foreach ($items as $item) {
 	@$title = $item['title'];
 	$selected = ($n === $positionCurrentItem) ? ' class="selected"' : '';
 ?>
-	<li<?=$selected?>><a href="back.php?p=<?=$n?>"><?=$item['hash'].$title?></a></li>
+	<li<?=$selected?>><a href="back.php?p=<?=$n?>"><?=$title?></a></li>
 <?php
 	$n++;
 }

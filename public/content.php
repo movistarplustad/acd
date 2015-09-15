@@ -1,5 +1,6 @@
 <?php
 namespace Acd;
+use \Acd\Model\SessionNavigation;
 
 require ('../autoload.php');
 session_start();
@@ -30,12 +31,13 @@ switch ($action) {
 		$structures->loadFromFile();
 
 		// back button
-		$navigation = new Controller\SessionNavigation();
+		$navigation = new SessionNavigation();
 		$navigation->load();
 		$back = !$navigation->isEmpty();
 		$navigation->push([
-			'hash' => "list_structures",
-			'url' => $_SERVER["REQUEST_URI"]
+			'hash' => "content_list_structures",
+			'url' => $_SERVER["REQUEST_URI"],
+			'title' => 'Content, list of contents type'
 		]);
 		$navigation->save();
 
@@ -53,7 +55,7 @@ switch ($action) {
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('indexContent');
-		$skeletonOu->setHeadTitle('Manage content type');
+		$skeletonOu->setHeadTitle('Content, list of contents type');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;
@@ -65,12 +67,13 @@ switch ($action) {
 		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
 
 		// back button
-		$navigation = new Controller\SessionNavigation();
+		$navigation = new SessionNavigation();
 		$navigation->load();
 		$back = !$navigation->isEmpty();
 		$navigation->push([
 			'hash' => "list_contents - $id - $titleSearch - $numPage",
-			'url' => $_SERVER["REQUEST_URI"]
+			'url' => $_SERVER["REQUEST_URI"],
+			'title' => 'Manage elements of '.$id
 		]);
 		$navigation->save();
 
@@ -104,7 +107,7 @@ switch ($action) {
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
-		$skeletonOu->setHeadTitle('Manage elements');
+		$skeletonOu->setHeadTitle('Manage elements of '.$id);
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 
@@ -119,12 +122,13 @@ switch ($action) {
 		@$idTypeParent = $_GET['idtp'] ?: null;
 
 		// back button
-		$navigation = new Controller\SessionNavigation();
+		$navigation = new SessionNavigation();
 		$navigation->load();
 		$back = !$navigation->isEmpty();
 		$navigation->push([
 			'hash' => "edit_content - $idStructureType - *new*",
-			'url' => $_SERVER["REQUEST_URI"]
+			'url' => $_SERVER["REQUEST_URI"],
+			'title' => 'New content ('.$idStructureType.')'
 		]);
 		$navigation->save();
 
@@ -150,7 +154,7 @@ switch ($action) {
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
-		$skeletonOu->setHeadTitle('Manage content');
+		$skeletonOu->setHeadTitle('New content ('.$idStructureType.')');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;
@@ -165,12 +169,13 @@ switch ($action) {
 		@$idTypeParent = $_GET['idtp'] ?: null;
 
 		// back button
-		$navigation = new Controller\SessionNavigation();
+		$navigation = new SessionNavigation();
 		$navigation->load();
 		$back = !$navigation->isEmpty();
 		$navigation->push([
 			'hash' => "edit_content - $idStructureType - $id",
-			'url' => $_SERVER["REQUEST_URI"]
+			'url' => $_SERVER["REQUEST_URI"],
+			'title' => 'Manage content ('.$idStructureType.')'
 		]);
 		$navigation->save();
 
@@ -246,7 +251,7 @@ switch ($action) {
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
-		$skeletonOu->setHeadTitle('Manage content');
+		$skeletonOu->setHeadTitle('Manage content ('.$idStructureType.')');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 

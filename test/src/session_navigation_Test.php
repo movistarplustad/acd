@@ -1,5 +1,6 @@
 <?php
 namespace Acd;
+use \Acd\Model\SessionNavigation;
 
 class session_navigation_test extends \PHPUnit_Framework_TestCase
 {
@@ -7,13 +8,13 @@ class session_navigation_test extends \PHPUnit_Framework_TestCase
 
 	public function testIsEmpty()
 	{
-		$navigation = new Controller\SessionNavigation();
+		$navigation = new SessionNavigation();
 		$this->assertTrue($navigation->isEmpty());
 
 	}
 	public function testPush()
 	{
-		$navigation = new Controller\SessionNavigation();
+		$navigation = new SessionNavigation();
 		$item = [
 			'hash' => 'foo',
 			'url' => '/foo.html'
@@ -24,7 +25,7 @@ class session_navigation_test extends \PHPUnit_Framework_TestCase
 	}
 	public function testPop()
 	{
-		$navigation = new Controller\SessionNavigation();
+		$navigation = new SessionNavigation();
 		$item = [
 			'hash' => 'foo',
 			'url' => '/foo.html'
@@ -36,9 +37,9 @@ class session_navigation_test extends \PHPUnit_Framework_TestCase
 	}
 	public function testClearOut() {
 		/**
-		* @expectedException Controller\SessionNavigation\SessionNavigationException
+		* @expectedException Model\SessionNavigation\SessionNavigationException
 		*/
-		$navigation = new Controller\SessionNavigation();
+		$navigation = new SessionNavigation();
 		$item = [
 			'hash' => 'foo',
 			'url' => '/foo.html'
@@ -50,7 +51,7 @@ class session_navigation_test extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($navigation->pop(), $item);
 	}
 	public function testoveflowStack() {
-		$navigation = new Controller\SessionNavigation(5);
+		$navigation = new SessionNavigation(5);
 		for($n=0; $n < 15; $n++) {
 			$item = [
 				'hash' => "foo $n",
@@ -62,7 +63,7 @@ class session_navigation_test extends \PHPUnit_Framework_TestCase
 	}
 	public function testPush2ItemsSameHistory()
 	{
-		$navigation = new Controller\SessionNavigation();
+		$navigation = new SessionNavigation();
 		$item0 = [
 			'hash' => '2ItemsSameHistory',
 			'url' => '/foo0.html'
@@ -78,7 +79,7 @@ class session_navigation_test extends \PHPUnit_Framework_TestCase
 	}
 	public function testPush2Items2History()
 	{
-		$navigation = new Controller\SessionNavigation();
+		$navigation = new SessionNavigation();
 		$item0 = [
 			'hash' => '2Items2History 0',
 			'url' => '/foo0.html'

@@ -1,6 +1,6 @@
 <?php
 namespace Acd\View;
-use \Acd\Controller\SessionNavigation;
+use \Acd\Model\SessionNavigation;
 // Output
 class HeaderMenu extends \Acd\View\Template {
 	protected $bBackLink;

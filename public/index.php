@@ -1,5 +1,6 @@
 <?php
 namespace Acd;
+use \Acd\Model\SessionNavigation;
 
 require ('../autoload.php');
 
@@ -37,20 +38,26 @@ switch ($action) {
 		$contentOu->setStorage($estructura->getStorage());
 
 		// back button
-		$navigation = new Controller\SessionNavigation();
+		$navigation = new SessionNavigation();
 		$navigation->load();
 		$back = !$navigation->isEmpty();
 		$navigation->push([
 			'hash' => "new_structure - *new*",
-			'url' => $_SERVER["REQUEST_URI"]
+			'url' => $_SERVER["REQUEST_URI"],
+			'title' => 'New structure'
 		]);
 		$navigation->save();
 
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setBack($back);
 
+		$toolsOu = new View\Tools();
+		$toolsOu->setLogin($_SESSION['login']);
+		$toolsOu->setRol($_SESSION['rol']);
+
 		$skeletonOu->setHeadTitle('New structure');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
+		$skeletonOu->setTools($toolsOu->render());
 		break;
 	case 'edit':
 		try {
@@ -78,12 +85,13 @@ switch ($action) {
 		}
 
 		// back button
-		$navigation = new Controller\SessionNavigation();
+		$navigation = new SessionNavigation();
 		$navigation->load();
 		$back = !$navigation->isEmpty();
 		$navigation->push([
 			'hash' => "edit_structure - $id",
-			'url' => $_SERVER["REQUEST_URI"]
+			'url' => $_SERVER["REQUEST_URI"],
+			'title' => 'Edit structure '.$estructura->getName()
 		]);
 		$navigation->save();
 
@@ -94,7 +102,7 @@ switch ($action) {
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
-		$skeletonOu->setHeadTitle('Edit structure');
+		$skeletonOu->setHeadTitle('Edit structure '.$estructura->getName());
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;
@@ -124,12 +132,13 @@ switch ($action) {
 		}
 
 		// back button
-		$navigation = new Controller\SessionNavigation();
+		$navigation = new SessionNavigation();
 		$navigation->load();
 		$back = !$navigation->isEmpty();
 		$navigation->push([
 			'hash' => "clone_structure - $id",
-			'url' => $_SERVER["REQUEST_URI"]
+			'url' => $_SERVER["REQUEST_URI"],
+			'title' => 'Clone structure '.$estructura->getName()
 		]);
 		$navigation->save();
 
@@ -140,7 +149,7 @@ switch ($action) {
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
-		$skeletonOu->setHeadTitle('Clone structure');
+		$skeletonOu->setHeadTitle('Clone structure '.$estructura->getName());
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;
@@ -151,12 +160,13 @@ switch ($action) {
 		$toolsOu->setRol($_SESSION['rol']);
 
 		// back button
-		$navigation = new Controller\SessionNavigation();
+		$navigation = new SessionNavigation();
 		$navigation->load();
 		$back = !$navigation->isEmpty();
 		$navigation->push([
 			'hash' => "list_structures",
-			'url' => $_SERVER["REQUEST_URI"]
+			'url' => $_SERVER["REQUEST_URI"],
+			'title' => 'Manage structures'
 		]);
 		$navigation->save();
 

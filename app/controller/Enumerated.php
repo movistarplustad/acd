@@ -4,6 +4,7 @@ namespace Acd\Controller;
 use \Acd\Model\EnumeratedLoader;
 use \Acd\Model\Query;
 use \Acd\Model\EnumeratedDo;
+use \Acd\Model\SessionNavigation;
 use \Acd\View\HeaderMenu;
 // Output
 class Enumerated {

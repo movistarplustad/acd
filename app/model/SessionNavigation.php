@@ -1,5 +1,5 @@
 <?php
-namespace Acd\Controller;
+namespace Acd\Model;
 
 class SessionNavigationException extends \Exception {}
 // Manage user navigation for back  link

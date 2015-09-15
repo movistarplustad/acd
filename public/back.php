@@ -1,11 +1,12 @@
 <?php
 namespace Acd;
+use \Acd\Model\SessionNavigation;
 
 require ('../autoload.php');
 session_start();
 
 $backSteps = isset($_GET['p']) ? (integer) $_GET['p'] : 1;
-$navigation = new \Acd\Controller\SessionNavigation();
+$navigation = new SessionNavigation();
 $navigation->load();
 try {
 	for ($n = 0; $n < $backSteps; $n++) {
@@ -16,7 +17,7 @@ try {
 	$returnUrl = $lastNavigation['url'];
 	$navigation->save();
 }
-catch(Controller\SessionNavigationException $e) {
+catch(Model\SessionNavigationException $e) {
 	$returnUrl = 'index.php';
 }
 

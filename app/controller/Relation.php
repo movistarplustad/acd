@@ -3,6 +3,7 @@ namespace Acd\Controller;
 
 use \Acd\View\HeaderMenu;
 use \Acd\Model\ContentLoader;
+use \Acd\Model\SessionNavigation;
 // Output
 class Relation {
 	private  $idContent;
