@@ -64,6 +64,9 @@ class PersistentManagerMySql implements iPersistentManager
 				case 'difuse-alias-id':
 					return $this->difuseAliasId($structureDo, $query->getCondition('id'), $filters);
 					break;
+				case 'meta-information':
+					return $this->metaInformation($structureDo, $query->getCondition('id'));
+					break;
 			default:
 				throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
 				break;
@@ -492,5 +495,49 @@ class PersistentManagerMySql implements iPersistentManager
 			}
 		}
 		return $result;
+	}
+
+	private function metaInformation($structureDo, $id, $filters = []) {
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+
+		$contentFound = null;
+		try {
+			$id = $this->mysqli->real_escape_string($id);
+			$select = "SELECT id, title, id_structure, UNIX_TIMESTAMP(period_of_validity_start) as period_of_validity_start, UNIX_TIMESTAMP(period_of_validity_end) as period_of_validity_end, alias_id, data FROM content WHERE id = '$id'";
+			if ($dbResult = $this->mysqli->query($select)) {
+				//$result = new ContentsDo();
+				while($obj = $dbResult->fetch_object()){
+					$documentFound = array();
+					$documentFound['id'] = $obj->id;
+					$documentFound['title'] = $obj->title;
+					$documentFound['period_of_validity']['start'] = is_null($obj->period_of_validity_start) ? -INF : $obj->period_of_validity_start;
+					$documentFound['period_of_validity']['end'] = is_null($obj->period_of_validity_end) ? INF : $obj->period_of_validity_end;
+					$documentFound['alias_id'] = $obj->alias_id;
+					$documentFound['data'] = unserialize($obj->data);
+
+					// Tags
+					$select = "SELECT id, tag FROM content_tag WHERE id = '$id'";
+					if ($dbResult = $this->mysqli->query($select)) {
+						$aTags = [];
+						while($objTag = $dbResult->fetch_object()){
+							$aTags[] = $objTag->tag;
+						}
+						$documentFound['tags'] = $aTags;
+					}
+
+					$structureDo = $this->getStructure($obj->id_structure); // Recreate structure information
+					$contentFound = new ContentDo();
+					$contentFound->load($documentFound, $structureDo);
+				}
+			}
+		}
+		catch( \Exception $e ) {
+			$contentFound = null;
+		}
+
+		//return $result;
+		return $contentFound;
 	}
 }

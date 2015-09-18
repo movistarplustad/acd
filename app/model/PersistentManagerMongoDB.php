@@ -60,6 +60,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 				case 'difuse-alias-id':
 					return $this->difuseAliasId($structureDo, $query->getCondition('id'), $filters);
 					break;
+				case 'meta-information':
+					return $this->metaInformation($structureDo, $query->getCondition('id'));
+					break;
 				default:
 					throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
 					break;
@@ -562,6 +565,30 @@ class PersistentManagerMongoDB implements iPersistentManager
 			}
 		}
 
+		return $result;
+	}
+	private function metaInformation($structureDo, $id, $filters = []) {
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+		$mongoCollection = $this->db->selectCollection('content');
+		try {
+			$oId = new \MongoId($id);
+		}
+		catch( \Exception $e ) {
+			return null;
+		}
+		try {
+			$documentFound = $mongoCollection->findOne(array("_id" => $oId));
+			$documentFound = $this->normalizeDocument($documentFound);
+			$structureDo = $this->getStructure($documentFound['id_structure']); // Recreate structure information
+			$contentFound = new ContentDo();
+			$contentFound->load($documentFound, $structureDo);
+			$result = $contentFound;
+		}
+		catch( \Exception $e ) {
+			$result = null;
+		}
 		return $result;
 	}
 }

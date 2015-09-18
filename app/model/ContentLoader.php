@@ -90,6 +90,7 @@ class ContentLoader extends StructureDo
 				return $content;
 			break;
 			case 'difuse-alias-id':
+			case 'meta-information':
 				if($this->getId()) {
 					$this->loadStructure();
 					$persistentManagers = [];
@@ -101,9 +102,12 @@ class ContentLoader extends StructureDo
 				$query = new Query();
 				$query->setType($method);
 				$query->setCondition($params);
-				$result = [];
+				$result = null;
+				// Return only one content
 				foreach ($persistentManagers as $persistentManager) {
-					$result = array_merge($result, $persistentManager->load($this, $query));
+					if(!$result) {
+						$result = $persistentManager->load($this, $query);
+					}
 				}
 				return $result;
 				break;
