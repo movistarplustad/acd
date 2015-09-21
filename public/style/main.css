@@ -279,7 +279,24 @@ h2 .structure_name {
 	font-style: italic;
 }
 
+/* Structure list */
+.wrap_filter {
+	background-image: url("ic_search_24px.svg");
+	background-repeat: no-repeat;
+	background-position: 1em 0;
+	padding: 0 0 0 3em;
+}
+.wrap_filter input[type=search] {
+	width: 20em;
+}
+
 /* Content list */
+.wrap_search {
+	padding: 0 0 0 1em;
+}
+.wrap_search input[type=search] {
+	width: 20em;
+}
 #contents_list  {
 	counter-reset: num-item 0;
 	list-style: none;

@@ -30,6 +30,7 @@
 <script type="text/javascript" src="js/tag-it/tag-it.min.js"></script>
 <script type="text/javascript" src="js/alias-id.js"></script>
 <script type="text/javascript" src="js/selectivity/selectivity-full.min.js"></script>
+<script type="text/javascript" src="js/jets.min.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>

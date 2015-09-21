@@ -4,7 +4,7 @@ $lowerLimit = $limits->getLower();
 $bMorePage = $limits->getUpper() < $limits->getTotal();
 ?><main>
 	<h2>Manage elements <em class="structure_name"><?=htmlspecialchars($structure->getName())?></em></h2>
-	<form action="" method="get">
+	<form action="" method="get" class="wrap_search">
 		<input type="hidden" name="id" value="<?=htmlspecialchars($structure->getId())?>"/>
 		<input type="hidden" name="a" value="list_contents"/>
 		<label for="title">Title:&nbsp;</label><input type="search" name="s" id="title" value="<?=htmlspecialchars($titleSearch)?>" />
