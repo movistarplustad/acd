@@ -20,12 +20,14 @@ var editor = {
 		$( ".fields .items" ).sortable();
 
 		/* Search structures */
-		$("#structures_list")
-			.before("<div class='wrap_filter'><label for='structures_filter'>Filter:</label> <input type='search' id='structures_filter'/></div>");
-		var jets = new Jets({
-			searchTag: '#structures_filter',
-			contentTag: "#structures_list"
-		});
+		if($("#structures_list").length > 0) {
+			$("#structures_list")
+				.before("<div class='wrap_filter'><label for='structures_filter'>Filter:</label> <input type='search' id='structures_filter'/></div>");
+			var jets = new Jets({
+				searchTag: '#structures_filter',
+				contentTag: "#structures_list"
+			});
+		}
 
 		/* Sortable collection fields */
 		$( ".collection" ).sortable({
