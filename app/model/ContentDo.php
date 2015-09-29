@@ -70,7 +70,7 @@ class ContentDo
 				return $this->periodOfValidity;
 				break;
 			case ContentDo::PERIOD_OF_VALIDITY_TOKENIZE:
-				// Purge infinite values, transform to empty string (infinite values not accepted y json grammar)
+				// Purge infinite values, transform to empty string (infinite values not accepted in json grammar)
 				$periodOfValidityTmp = [];
 				foreach ($this->periodOfValidity as $key => $value) {
 					$periodOfValidityTmp[$key] = is_finite((double) $value) ? $value : '';
@@ -249,7 +249,8 @@ class ContentDo
 		$aFieldsData = array();
 		// Test if the field value is a real value or reference
 		foreach ($this->getFields() as $field) {
-			switch ($field->getType()) {
+			$type = $field->getType();
+			switch ($type) {
 				case 'content':
 					$itemValue = $field->getValue();
 					$value = is_object($itemValue) ? $itemValue->tokenizeData() : $itemValue;
@@ -261,7 +262,7 @@ class ContentDo
 					}
 					break;
 				default:
-					$value = $field->getValue();
+					$value = ValueFormater::encode($field->getValue(), $type, ValueFormater::FORMAT_TOKENIZE);
 					break;
 			}
 			$aFieldsData[$field->getId()] = $value;

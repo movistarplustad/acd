@@ -19,6 +19,7 @@ class ValueFormater
 	const FORMAT_INTERNAL = 0;
 	const FORMAT_EDITOR = 1;
 	const FORMAT_HUMAN = 2;
+	const FORMAT_TOKENIZE = 3;
 
 	const PERIOD_OF_VALIDITY_START = 'start';
 	const PERIOD_OF_VALIDITY_END = 'end';
@@ -208,6 +209,20 @@ class ValueFormater
 			//$result = array_pad($result, 2, '');
 			return $result;
 		};
+		// Purge infinite values in FORMAT_TOKENIZE, transform to empty string (infinite values not accepted in json grammar)
+		$formater[self::TYPE_DATE][self::FORMAT_TOKENIZE] = function ($value) {
+			$result = is_finite((double) $value) ? $value : '';
+			return $result;
+		};
+		$formater[self::TYPE_DATE_RANGE][self::FORMAT_TOKENIZE] = function ($aValue) {
+			$result = [];
+			foreach ($aValue as $key => $value) {
+				$result[$key] = is_finite((double) $value) ? $value : '';
+			}
+			return $result;
+		};
+		$formater[self::TYPE_DATE_TIME][self::FORMAT_TOKENIZE] = $formater[self::TYPE_DATE][self::FORMAT_TOKENIZE];
+		$formater[self::TYPE_DATE_TIME_RANGE][self::FORMAT_TOKENIZE] = $formater[self::TYPE_DATE_RANGE][self::FORMAT_TOKENIZE];
 		$formater[self::TYPE_TAGS][self::FORMAT_EDITOR] = function ($value) {
 			return $value ? implode(',', $value) : '';
 		};

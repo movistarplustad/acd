@@ -48,9 +48,10 @@ var editor = {
 		inputElem.setAttribute("type", "date");
 		if(inputElem.type === "text") {
 			$("input[type=date]").datetimepicker({
-				lang:'es',
-				timepicker:false,
-				format:"Y-m-d",
+				lang: "es",
+				dayOfWeekStart: 1,
+				timepicker: false,
+				format: "Y-m-d",
 				onShow:function( ct , $input){
 					this.setOptions({
 						minDate: false,
@@ -74,10 +75,10 @@ var editor = {
 		inputElem.setAttribute("type", "datetime");
 		if(inputElem.type === "text") {
 			$("input[type=datetime]").datetimepicker({
-				lang:'es',
+				lang: "es",
 				step: 30,
 				dayOfWeekStart: 1,
-				format:"Y-m-dTH:i:00Z",
+				format: "Y-m-dTH:i:00Z",
 				onShow:function( ct , $input){
 					this.setOptions({
 						minDate: false,
