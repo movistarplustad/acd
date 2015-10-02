@@ -18,7 +18,7 @@ class conf {
 	public static $USE_AUTHENTICATION;
 	public static $AUTH_PERSITENT_EXPIRATION_TIME;
 	public static $PATH_AUTH_CREDENTIALS_FILE;
-	public static $PATH_AUTH_PREMANENT_LOGIN_DIR;
+	public static $PATH_AUTH_PERMANENT_LOGIN_DIR;
 	public static $ROL_DEVELOPER;
 	public static $ROL_EDITOR;
 	public static $MYSQL_SERVER;
@@ -58,7 +58,7 @@ conf::$PERMISSION_PATH = '/mnt/contenido/acd/permission.json';
 conf::$USE_AUTHENTICATION = true;
 conf::$AUTH_PERSITENT_EXPIRATION_TIME = 31536000; // 1 year
 conf::$PATH_AUTH_CREDENTIALS_FILE = '/mnt/contenido/acd/auth.json';
-conf::$PATH_AUTH_PREMANENT_LOGIN_DIR = '/mnt/contenido/acd/auth_permanent_login';
+conf::$PATH_AUTH_PERMANENT_LOGIN_DIR = '/mnt/contenido/acd/auth_permanent_login';
 
 conf::$ROL_DEVELOPER = 'developer';
 conf::$ROL_EDITOR = 'editor';

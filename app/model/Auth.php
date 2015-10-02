@@ -44,7 +44,7 @@ class Auth  {
 	}
 
 	private static function persistentFilePath($login) {
-		return \Acd\conf::$PATH_AUTH_PREMANENT_LOGIN_DIR.'/'.hash('sha1', $login);
+		return \Acd\conf::$PATH_AUTH_PERMANENT_LOGIN_DIR.'/'.hash('sha1', $login);
 	}
 	public static function isLoged() {
 		if (\Acd\conf::$USE_AUTHENTICATION === false) {
