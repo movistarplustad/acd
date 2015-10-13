@@ -110,7 +110,7 @@ class ValueFormater
 				$encoding = 'utf8';
 				$tidy_config = array
 				(
-					'anchor-as-name' => false,
+					//'anchor-as-name' => false, //error en producción
 					'break-before-br' => true,
 					'char-encoding' => $encoding,
 					'decorate-inferred-ul' => false,
@@ -127,7 +127,7 @@ class ValueFormater
 					'join-styles' => false,
 					'logical-emphasis' => false,
 					'merge-divs' => false,
-					'merge-spans' => false,
+					//'merge-spans' => false, //error en producción
 					'new-blocklevel-tags' => 'main article aside audio details dialog figcaption figure footer header hgroup menutidy nav section source summary track video',
 					'new-empty-tags' => 'command embed keygen source track wbr',
 					'new-inline-tags' => 'canvas command data datalist embed keygen mark meter output progress time wbr',
