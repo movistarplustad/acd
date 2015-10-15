@@ -1,6 +1,6 @@
 <?php
 	$title = (isset($bNew) && $bNew === true)
-		? 'New content'
+		? 'New content <em class="structure_name">'.htmlspecialchars($structure->getName()).'</em>'
 		: 'Edit content <em class="structure_name">'.htmlspecialchars($structure->getName()).'</em>';
 	$relationCount = $content->getCountParents();
 	$aliasIdCount = $content->getCountAliasId();
