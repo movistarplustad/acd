@@ -154,7 +154,7 @@ switch ($action) {
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
-		$skeletonOu->setHeadTitle('New content ('.$idStructureType.')');
+		$skeletonOu->setHeadTitle('New content ('.$structure->getName().')');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;
@@ -251,7 +251,7 @@ switch ($action) {
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
-		$skeletonOu->setHeadTitle('Manage content ('.$idStructureType.')');
+		$skeletonOu->setHeadTitle('Manage content ('.$structure->getName().')');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 
