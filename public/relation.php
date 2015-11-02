@@ -14,7 +14,7 @@ if (!Model\Auth::isLoged()) {
 	return;
 }
 else {
-	if ($_SESSION['rol'] == 'editor') {
+	if ($_SESSION['rol'] != \Acd\conf::$ROL_DEVELOPER && $_SESSION['rol'] != \Acd\conf::$ROL_EDITOR) {
 		header('HTTP/1.0 403 Forbidden');
 		echo 'Unauthorized, only admin can show this section.';
 		die();
