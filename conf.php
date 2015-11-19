@@ -26,6 +26,7 @@ class conf {
 	public static $MYSQL_PASSWORD;
 	public static $MYSQL_SCHEMA;
 	public static $MONGODB_SERVER;
+	public static $MONGODB_DB;
 	public static $SESSION_GC_MAXLIFETIME;
 }
 conf::$DIR_TEMPLATES = DIR_BASE.'/app/view';
@@ -69,6 +70,7 @@ conf::$MYSQL_PASSWORD = 'strip';
 conf::$MYSQL_SCHEMA = 'acd';
 
 conf::$MONGODB_SERVER = 'mongodb://plusdbspol01.prisadigital.int:27017,plusdbspol02.prisadigital.int:27017,plusdbspol03.prisadigital.int:27017/?replicaSet=ReplicaPlusProduccion';
+conf::$MONGODB_DB = 'acd';
 
 conf::$SESSION_GC_MAXLIFETIME = 14400;
 ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);

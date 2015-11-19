@@ -3,10 +3,10 @@ namespace Acd\Model;
 
 class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 {
+	private $db;
 	public function initialize() {
 		$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-		$this->db = $mongo->acd;
-		//$db->createCollection('content', false);
+		$this->db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
 	}
 	public function isInitialized() {
 		return isset($this->db);

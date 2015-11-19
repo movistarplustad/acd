@@ -7,8 +7,8 @@ $bMongoDB = false;
 $bMySql = true;
 
 if($bMongoDB){
-	$mongo = new \MongoClient();
-	$db = $mongo->acd;
+	$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
+	$db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
 
 	$aCollections = [
 		'content',

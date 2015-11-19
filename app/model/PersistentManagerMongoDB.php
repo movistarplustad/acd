@@ -9,8 +9,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 	private $structuresCache;
 	public function initialize($structureDo) {
 		$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-		$this->db = $mongo->acd;
-		//$db->createCollection('content', false);
+		$this->db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
 	}
 	public function isInitialized($structureDo) {
 		return isset($this->db);
