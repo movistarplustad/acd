@@ -92,12 +92,17 @@ class StructureDo
 	}
 
 	public function load($data) {
-		$this->setName($data['name']);
-		$this->setStorage($data['storage']);
-		foreach ($data['fields'] as $dataField) {
-			$field = new FieldDo();
-			$field->load($dataField);
-			$this->addField($field);
+		if(isset($data['name']) && isset($data['storage']) && isset($data['fields'])){
+			$this->setName($data['name']);
+			$this->setStorage($data['storage']);
+			foreach ($data['fields'] as $dataField) {
+				$field = new FieldDo();
+				$field->load($dataField);
+				$this->addField($field);
+			}
+		}
+		else {
+			throw new StorageKeyInvalidException("No data loaded, structure-id probably does not exist.");
 		}
 	}
 
