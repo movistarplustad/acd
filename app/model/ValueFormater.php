@@ -130,7 +130,7 @@ class ValueFormater
 					//'merge-spans' => false, //error en producción
 					'new-blocklevel-tags' => 'main article aside audio details dialog figcaption figure footer header hgroup menutidy nav section source summary track video',
 					'new-empty-tags' => 'command embed keygen source track wbr',
-					'new-inline-tags' => 'canvas command data datalist embed keygen mark meter output progress time wbr',
+					'new-inline-tags' => 'canvas command data datalist embed keygen mark meter output progress time wbr picture',
 					'newline' => 0,
 					'numeric-entities' => false,
 					'output-bom' => false,
