@@ -41,6 +41,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 					$contentsTemp = $this->loadTagOneDepth($structureDo, $query->getCondition('tags'), $query->getDepth(), $filters);
 					return is_null($contentsTemp) ? null : $contentsTemp->one();
 					break;
+				case 'field_value':
+					return $this->loadFieldValue($structureDo, $query->getCondition('data_value_query'), $query);
+					break;
 				case 'all':
 					return $this->loadAll($structureDo, $query);
 					break;
@@ -95,7 +98,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 					if($value['ref']) {
 						$insert['data'][$key]['ref'] = \MongoDBRef::create('content', new \MongoId($value['ref']));
 						$insert['data'][$key]['id_structure'] = $value['id_structure'];
-	
+
 						$oIdChildsRelated[] = $insert['data'][$key]['ref']; // For table relations
 					}
 					$bChildsRelated = true;
@@ -143,7 +146,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 	}
 
 	private function updateRelations($db, $parent, $children) {
-		// Redundant cache content relations 
+		// Redundant cache content relations
 		$mongoCollection = $db->selectCollection('relation');
 		//d("Padre . Hijos", $parent, $children);
 		// emptying old relations & add news
@@ -220,7 +223,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 				// TODO instance
 			];
 	}
-	/* 
+	/*
 	Sample of docs
 	Simple relation
 	----------------------
@@ -588,6 +591,35 @@ class PersistentManagerMongoDB implements iPersistentManager
 		catch( \Exception $e ) {
 			$result = null;
 		}
+		return $result;
+	}
+	private function loadFieldValue($structureDo, $dataValueQuery, $query)
+	{
+		// Transform load by field value in load by id
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+		$mongoCollection = $this->db->selectCollection('content');
+
+		$limits = $query->getLimits();
+		$deep = $query->getDepth();
+		$filters = $this->getFilters($query);
+		$result = new ContentsDo();
+		// Build filter (TODO, find use of array_walk or similar)
+		$filters = [];
+		foreach ($dataValueQuery as $queryKey => $queryValue) {
+			$filters['data.'.$queryKey] = $queryValue; // Search only in data fields
+		}
+		$cursor = $mongoCollection->find($filters);
+		$cursor->skip($limits->getLower())->limit($limits->getUpper()-$limits->getLower());
+		foreach ($cursor as $documentFound) {
+			$documentFound = $this->normalizeDocument($documentFound);
+			$idContent = $documentFound['id'];
+			$content = $this->loadIdDepth($structureDo, $idContent, $deep, $filters);
+			//d($queryKey, $queryValue, $documentFound, $content);
+			$result->add($content->one(), $idContent);
+		}
+
 		return $result;
 	}
 }
