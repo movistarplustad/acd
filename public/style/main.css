@@ -269,7 +269,7 @@ a:active {
 .form_login .text input {
 	margin: 0;
 	padding: 0;
-	font-size: 100%; 
+	font-size: 100%;
 }
 .form_login .submit {
 	float: right;
@@ -340,6 +340,7 @@ option[disabled] {
 
 /* Messages */
 .result,
+.info,
 .warning {
 	padding: 0 0 0.2em 2em;
 	background-position: left 0;
@@ -351,6 +352,7 @@ option[disabled] {
 .result.fail {
 	background-image: url(ic_announcement_24px.svg);
 }
+.info,
 .warning {
 	background-image: url(ic_announcement_24px.svg);
 }
