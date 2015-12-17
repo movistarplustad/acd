@@ -42,7 +42,7 @@
 					<?php
 						if($aliasIdCount > 1) {
 					?>
-						<p class="result info"><strong>Info.</strong> Alias-id is repeated <?=$aliasIdCount?> times.</p>
+						<p class="result info"><strong>Info.</strong> Alias-id is repeated <a href="alias_id.php?id=<?=urlencode($aliasId)?>"><?=$aliasIdCount?></a> times.</p>
 					<?php
 						}
 					?>
