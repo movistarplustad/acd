@@ -5,7 +5,7 @@
 		$list['difuse'] = '';
 		foreach ($matchList as $item) {
 			$target = ($item->getAliasId() === $aliasId) ? 'precise' : 'difuse';
-			$list[$target] .= '<li><a href="content.php?a=edit&amp;id='.htmlspecialchars($item->getId()).'&amp;idt='.htmlspecialchars($item->getIdStructure()).'">'.htmlspecialchars($item->getTitle()).'</a> ('.htmlspecialchars($item->getIdStructure()).')</li>';
+			$list[$target] .= '<li><em>'.htmlspecialchars($item->getAliasId()).'</em> - <a href="content.php?a=edit&amp;id='.htmlspecialchars($item->getId()).'&amp;idt='.htmlspecialchars($item->getIdStructure()).'">'.htmlspecialchars($item->getTitle()).'</a> ('.htmlspecialchars($item->getIdStructure()).')</li>';
 		}
 	?>
 	<h2><em><?=htmlspecialchars($contentTitle)?></em> are in:</h2>
