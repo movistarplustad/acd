@@ -41,7 +41,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 					$contentsTemp = $this->loadTagOneDepth($structureDo, $query->getCondition('tags'), $query->getDepth(), $filters);
 					return is_null($contentsTemp) ? null : $contentsTemp->one();
 					break;
-				case 'field_value':
+				case 'field-value':
 					return $this->loadFieldValue($structureDo, $query->getCondition('data_value_query'), $query);
 					break;
 				case 'all':
