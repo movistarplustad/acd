@@ -606,7 +606,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$filters = $this->getFilters($query);
 		$result = new ContentsDo();
 		// Build filter (TODO, find use of array_walk or similar)
-		$filters = [];
+		$filters = ['id_structure' => $structureDo->getId()];
 		foreach ($dataValueQuery as $queryKey => $queryValue) {
 			$filters['data.'.$queryKey] = $queryValue; // Search only in data fields
 		}
@@ -616,7 +616,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$documentFound = $this->normalizeDocument($documentFound);
 			$idContent = $documentFound['id'];
 			$content = $this->loadIdDepth($structureDo, $idContent, $deep, $filters);
-			//d($queryKey, $queryValue, $documentFound, $content);
 			$result->add($content->one(), $idContent);
 		}
 
