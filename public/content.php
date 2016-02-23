@@ -23,10 +23,10 @@ if (!Model\Auth::isLoged()) {
 
 switch ($action) {
 	case 'login':
-		header('Location: index.php');
+		header('Location: index.php?re='.urlencode($_SERVER["REQUEST_URI"]));
 		return;
 		break;
-	case 'list_structures': 
+	case 'list_structures':
 		$structures = new Model\StructuresDo();
 		$structures->loadFromFile();
 
@@ -224,7 +224,7 @@ switch ($action) {
 					default:
 				 		$newRef = $modifiedField;
 						break;
-				} 
+				}
 				//d($content);
 				//d($modifiedFieldName, $newRef);
 				$content->setFieldValue($modifiedFieldName, $newRef);

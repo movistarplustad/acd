@@ -26,6 +26,9 @@ class ContentAdmin extends \Acd\View\Template
 	public function setLogin($login) {
 		$this->__set('login', $login);
 	}
+	public function setPostLogin($urlPostLogin) {
+		$this->__set('urlPostLogin', $urlPostLogin);
+	}
 	// INDEX
 	public function setStructures($structures) {
 		$this->__set('structures', $structures);
@@ -49,7 +52,7 @@ class ContentAdmin extends \Acd\View\Template
 	public function setEnumeratedList($enumeratedList){
 		$this->__set('enumeratedList', $enumeratedList);
 	}
-	
+
 	public function render($tpl = '') {
 		switch ($this->getActionType()) {
 			case 'login':

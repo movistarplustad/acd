@@ -6,7 +6,7 @@ require ('../autoload.php');
 session_start();
 if (!Model\Auth::isLoged()) {
 	$action = 'login';
-	header('Location: index.php');
+	header('Location: index.php?re='.urlencode($_SERVER["REQUEST_URI"]));
 	return;
 }
 else {

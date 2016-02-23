@@ -14,7 +14,7 @@ $idField = $_GET['f'];
 $numPage = isset($_GET['p']) ? (int) $_GET['p'] : 0;
 if (!Model\Auth::isLoged()) {
 	$action = 'login';
-	header('Location: index.php');
+	header('Location: index.php?re='.urlencode($_SERVER["REQUEST_URI"]));
 	return;
 }
 

@@ -4,7 +4,8 @@ namespace Acd;
 require ('../autoload.php');
 session_start();
 
-$returnUrl = 'index.php';
+$returnUrl = isset($_POST['re']) ? $_POST['re'] : 'index.php';
+$queryStringSeparator = strpos($returnUrl, '?') ? '&' : '?';
 // First: check is loged
 $loginCookie = isset($_COOKIE['login']) ? $_COOKIE['login'] : null;
 $token = isset($_COOKIE['token']) ? $_COOKIE['token'] : null;
@@ -13,14 +14,14 @@ $password = isset($_POST['password']) ? $_POST['password'] : null;
 $remember = isset($_POST['remember']) && ($_POST['remember'] === '1');
 
 if (Model\Auth::loginByCredentials($loginForm, $password, $remember)) {
-	$returnUrl .= '?r=okcred';
+	$returnUrl .= $queryStringSeparator.'r=okcred';
 }
 elseif (Model\Auth::loginByPersintence($loginCookie, $token)) {
-	$returnUrl .= '?r=okpers';
+	$returnUrl .= $queryStringSeparator.'r=okpers';
 }
 else {
 	Model\Auth::logout();
-	$returnUrl .= '?r=kologin&login='.urlencode($loginForm);
+	$returnUrl .= $queryStringSeparator.'r=kologin&login='.urlencode($loginForm);
 }
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

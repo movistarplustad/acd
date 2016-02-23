@@ -26,6 +26,10 @@ switch ($action) {
 		$skeletonOu->setBodyClass('login');
 		$contentOu->setActionType('login');
 		$contentOu->setLogin(isset($_GET['login']) ? $_GET['login'] : '');
+		// Referer
+		if(isset($_GET['re'])) {
+			$contentOu->setPostLogin($_GET['re']);
+		}
 		break;
 	case 'new':
 		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
