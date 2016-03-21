@@ -138,7 +138,7 @@ var editor = {
 
 			/* Alias Id. */
 			//$(".aliasId").aliasIdFormat();
-			$("input").aliasIdFormat();
+			$("input[type=text]").aliasIdFormat();
 
 			/* Select simple and multiple */
 			$('.field.select option[value=""]').html(""); // Resolve bug of selectivity for empty options

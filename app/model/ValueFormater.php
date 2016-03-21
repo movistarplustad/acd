@@ -14,6 +14,7 @@ class ValueFormater
 	const TYPE_LINK = 'link';
 	const TYPE_LIST_MULTIPLE = 'list_multiple_options';
 	const TYPE_TEXT_HANDMADE_HTML = 'text_handmade_html';
+	const TYPE_COORDINATE = 'coordinate';
 
 	// Formats to getting and setting values
 	const FORMAT_INTERNAL = 0;
@@ -32,7 +33,7 @@ class ValueFormater
 			// Empty values return empty string
 			if ($value) {
 				$valueDecode = \DateTime::createFromFormat('Y-m-d', $value);
-				$valueDecode->setTime(0, 0, 0); 
+				$valueDecode->setTime(0, 0, 0);
 				return $valueDecode->getTimeStamp();
 			}
 			else {
@@ -49,7 +50,7 @@ class ValueFormater
 				foreach ($aValue as $attributeName => $value) {
 					if($value) {
 						$valueDecode = \DateTime::createFromFormat('Y-m-d', $value);
-						$valueDecode->setTime(0, 0, 0); 
+						$valueDecode->setTime(0, 0, 0);
 						$result[$attributeName] = $valueDecode->getTimeStamp();
 					}
 				}
@@ -163,6 +164,16 @@ class ValueFormater
 				return $value;
 			}
 		};
+		$formater[self::TYPE_COORDINATE][self::FORMAT_EDITOR] = function ($value) {
+			$result = ['latitude' => 0.0, 'longitude' => 0.0];
+			if (isset($value['latitude'])) {
+				$result['latitude'] = floatval($value['latitude']);
+			}
+			if (isset($value['longitude'])) {
+				$result['longitude'] = floatval($value['longitude']);
+			}
+			return $result;
+		};
 
 		if(isset($formater[$type][$format])) {
 			return $formater[$type][$format]($value);
@@ -255,6 +266,16 @@ class ValueFormater
 		$formater[self::TYPE_LIST_MULTIPLE][self::FORMAT_EDITOR] = function ($value) {
 			//return implode(',', $value);
 			return $value ? $value : array();
+		};
+		$formater[self::TYPE_COORDINATE][self::FORMAT_EDITOR] = function ($value) {
+			$result = ['latitude' => 0.0, 'longitude' => 0.0];
+			if (isset($value['latitude'])) {
+				$result['latitude'] = floatval($value['latitude']);
+			}
+			if (isset($value['longitude'])) {
+				$result['longitude'] = floatval($value['longitude']);
+			}
+			return $result;
 		};
 
 		if(isset($formater[$type][$format])) {
