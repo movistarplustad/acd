@@ -89,6 +89,8 @@ switch ($accion) {
 					@$normalizedvalue['original_name'] = $fields[$key]['original_name'] ?: '';
 					@$normalizedvalue['type'] = $fields[$key]['type'] ?: '';
 					@$normalizedvalue['size'] = $fields[$key]['size'] ?: '';
+					@$normalizedvalue['width'] = $fields[$key]['width'] ?: '';
+					@$normalizedvalue['height'] = $fields[$key]['height'] ?: '';
 					// If get a new upload file
 					if (isset($_FILES['field']) && $_FILES['field']['error'][$key]['file'] === UPLOAD_ERR_OK) {
 						$normalizedvalue['original_name'] = $_FILES['field']['name'][$key]['file'];

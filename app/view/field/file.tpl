@@ -38,6 +38,8 @@ if ($idParent) {
 <input type="hidden" name="field[<?=$id?>][original_name]" value="<?=htmlspecialchars($fieldValue['original_name'])?>"/>
 <input type="hidden" name="field[<?=$id?>][type]" value="<?=htmlspecialchars($fieldValue['type'])?>"/>
 <input type="hidden" name="field[<?=$id?>][size]" value="<?=htmlspecialchars($fieldValue['size'])?>"/>
+<input type="hidden" name="field[<?=$id?>][width]" value="<?=htmlspecialchars($fieldValue['width'])?>"/>
+<input type="hidden" name="field[<?=$id?>][height]" value="<?=htmlspecialchars($fieldValue['height'])?>"/>
 
 <div>
 	<?=$preview?>
