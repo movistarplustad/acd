@@ -78,7 +78,7 @@ class File
 			return $image->getImageGeometry();
 		}
 		catch (\ImagickException $e) {
-			return [];
+			return ['width' => '', 'height' => ''];
 		}
 	}
 }
