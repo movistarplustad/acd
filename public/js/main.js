@@ -25,7 +25,23 @@ var editor = {
 				.before("<div class='wrap_filter'><label for='structures_filter'>Filter:</label> <input type='search' id='structures_filter'/></div>");
 			var jets = new Jets({
 				searchTag: '#structures_filter',
-				contentTag: "#structures_list"
+				contentTag: "#structures_list",
+				diacriticsMap: {
+					a: 'ÀÁÂÃÄÅàáâãäåĀāąĄ',
+					c: 'ÇçćĆčČ',
+					d: 'đĐďĎ',
+					e: 'ÈÉÊËèéêëěĚĒēęĘ',
+					i: 'ÌÍÎÏìíîïĪī',
+					l: 'łŁ',
+					n: 'ÑñňŇńŃ',
+					o: 'ÒÓÔÕÕÖØòóôõöøŌō',
+					r: 'řŘ',
+					s: 'ŠšśŚ',
+					t: 'ťŤ',
+					u: 'ÙÚÛÜùúûüůŮŪū',
+					y: 'ŸÿýÝ',
+					z: 'ŽžżŻźŹ'
+				}
 			});
 		}
 
