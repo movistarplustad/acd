@@ -26,11 +26,11 @@ if( !function_exists('apache_request_headers') ) {
 		if(isset($_SERVER['CONTENT_LENGTH'])) $arh['Content-Length'] =$_SERVER['CONTENT_LENGTH'];
 		return( $arh );
 	}
-} 
+}
 
 $idFile = $_GET['id'];
 $fileName = $_GET['n'];
-$path = \Acd\conf::$DATA_CONTENT_PATH.'/'.substr($idFile, 0, 3).'/'.$idFile;
+$path = \Acd\Model\File::getPath($idFile);
 if (is_readable($path)){
 	$fileTools = new \Acd\Model\File();
 	$fileType = $fileTools->getMimeFromFilename($fileName);

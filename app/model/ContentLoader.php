@@ -13,7 +13,7 @@ class ContentLoader extends StructureDo
 		$this->setStructureLoaded(false);
 		$this->setLimits(new Limits());
 		parent::__construct();
-	}	
+	}
 
 	/* Setters and getters attributes */
 	public function getStructureLoaded() {
@@ -156,10 +156,6 @@ class ContentLoader extends StructureDo
 			return $result;
 		}
 	}
-	public function getFilePath($idFile) {
-		$relativePath = substr($idFile, 0, 3);
-		return \Acd\conf::$DATA_CONTENT_PATH.'/'.$relativePath.'/'.$idFile;
-	}
 	public function saveContent($contentDo) {
 		/* Get metainformation */
 		$this->loadStructure();
@@ -176,7 +172,7 @@ class ContentLoader extends StructureDo
 				$uploadData = $field->getValue();
 				$fieldId = $field->getId();
 				$idFile = md5(urlencode($structureId ).'/'.urlencode($fieldId).'/'.$contentId);
-				$destinationPath = $this->getFilePath($idFile);
+				$destinationPath = File::getPath($idFile);
 				$dirPath = dirname($destinationPath);
 				if($uploadData['delete']) {
 					if (is_writable($destinationPath)){
@@ -224,7 +220,7 @@ class ContentLoader extends StructureDo
 				// TODO unify with saveUpload
 				$fieldId = $field->getId();
 				$idFile = md5(urlencode($structureId ).'/'.urlencode($fieldId).'/'.$contentId);
-				$destinationPath = $this->getFilePath($idFile);
+				$destinationPath = File::getPath($idFile);
 				if (is_writable($destinationPath)){
 					unlink ($destinationPath);
 					$dirPath = dirname($destinationPath);

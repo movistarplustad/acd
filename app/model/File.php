@@ -81,4 +81,7 @@ class File
 			return ['width' => '', 'height' => ''];
 		}
 	}
+	public static function getPath($idFile) {
+		return \Acd\conf::$DATA_CONTENT_PATH.'/'.substr($idFile, 0, 3).'/'.$idFile;
+	}
 }
