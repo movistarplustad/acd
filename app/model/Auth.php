@@ -3,7 +3,7 @@ namespace Acd\Model;
 
 class AuthInvalidUserException extends \exception {}
 class Auth  {
-	private static function hashPassword($password, $cost=11){
+	public static function hashPassword($password, $cost=11){
 		//return password_hash($password, PASSWORD_DEFAULT); // php5.5
 
 		/* To generate the salt, first generate enough random bytes. Because
@@ -62,6 +62,7 @@ class Auth  {
 		}
 	}
 
+	// TODO: Borrar
 	protected static function loadAllCredentials() {
 		$path = \Acd\conf::$PATH_AUTH_CREDENTIALS_FILE;
 		$content = file_get_contents($path);

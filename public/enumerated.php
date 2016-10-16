@@ -29,6 +29,7 @@ else {
 				break;
 		}
 		@$id = $_GET['id']; //'PROFILE';
+		@$result = $_GET['r'];
 	}
 }
 
@@ -54,6 +55,14 @@ $toolsOu->setLogin($_SESSION['login']);
 $toolsOu->setRol($_SESSION['rol']);
 
 $skeletonOu->setTools($toolsOu->render());
+switch ($result) {
+    case 'ok':
+        $skeletonOu->setResultDesc('Done', 'ok');
+        break;
+    case 'ko':
+        $skeletonOu->setResultDesc('Fail', 'ko');
+        break;
+}
 $skeletonOu->setContent($sContent);
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

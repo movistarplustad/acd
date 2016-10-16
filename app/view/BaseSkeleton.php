@@ -24,6 +24,10 @@ class BaseSkeleton extends \Acd\View\Template {
 	public function setTools($tools) {
 		$this->__set('tools', $tools);
 	}
+	public function setResultDesc($description, $code) {
+		$this->__set('resultDesc', $description);
+		$this->__set('resultCode', $code);
+	}
 	public function render($tpl = '') {
 		return parent::render(\Acd\conf::$DIR_TEMPLATES.'/BaseSkeleton.tpl');
 	}

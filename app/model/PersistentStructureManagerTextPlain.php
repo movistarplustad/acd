@@ -42,4 +42,7 @@ class PersistentStructureManagerTextPlain implements iPersistentStructureManager
 		fclose($handle);
 		rename($tempPath, $path);
 	}
+	public function loadEnumerated($id) {
+		throw new PersistentStructureManagerMySqlException("Not implemented", self::SAVE_FAILED);
+	}
 }
