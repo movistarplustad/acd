@@ -80,6 +80,7 @@ switch ($accion) {
 				}
 				elseif ($fieldType === 'file' ) {
 					$normalizedvalue = [
+						'origin' => conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_UPLOAD,
 						'value' => $fields[$key]['value'],
 						'tmp_name' => '',
 						'alt' => isset($fields[$key]['alt']) ? $fields[$key]['alt'] : '',

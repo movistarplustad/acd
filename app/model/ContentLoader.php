@@ -192,7 +192,20 @@ class ContentLoader extends StructureDo
 					if (!is_dir($dirPath)){
 						mkdir($dirPath, 0755, true);
 					}
-					move_uploaded_file($uploadData['tmp_name'], $destinationPath);
+					switch ($uploadData['origin']) {
+						case \Acd\conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_UPLOAD:
+							move_uploaded_file($uploadData['tmp_name'], $destinationPath);
+							break;
+
+						case \Acd\conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_PATH:
+							copy($uploadData['tmp_name'], $destinationPath);
+							break;
+
+						default:
+							throw new ContentLoaderException('Error on save file, origin method not supported.', 1);
+							break;
+					}
+
 					$uploadData['value'] = $idFile;
 				}
 				unset($uploadData['tmp_name']);
