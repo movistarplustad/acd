@@ -5,6 +5,8 @@ class PersistentStorageUnknownInvalidException extends \exception {}
 class ContentLoaderException extends \exception {}
 class ContentLoader extends StructureDo
 {
+	const LOAD_ONE = 'ONE';
+	const LOAD_MULTIPLE = 'MULTIPLE';
 	private $bStructureLoaded;
 	private $filters; // TODO
 	private $limitis;
@@ -73,7 +75,7 @@ class ContentLoader extends StructureDo
 		}
 	}
 	// Aseptic loadContent/loadContents return ContentsDo, ContentDo, null, etc loadContent and loadConents resolve this situation
-	private  function _loadContents($method, $params = null) {
+	private function _loadContents($method, $resultType, $params = null) {
 		switch ($method) {
 			case 'id+countParents':
 				//$content = $this->loadContents('id', $params);
@@ -83,8 +85,8 @@ class ContentLoader extends StructureDo
 				if($content) {
 					// Set the relations number to content, and content is contents->get($id)
 					//$content->get($params)->setCountParents($this->loadContents('countParents', $params));
-					$content->setCountParents($this->_loadContents('countParents', $params));
-					$content->setCountAliasId($this->_loadContents('count-alias-id', ['alias_id' => $content->getAliasId()]));
+					$content->setCountParents($this->_loadContents('countParents', ContentLoader::LOAD_MULTIPLE, $params));
+					$content->setCountAliasId($this->_loadContents('count-alias-id', ContentLoader::LOAD_MULTIPLE, ['alias_id' => $content->getAliasId()]));
 				}
 
 				return $content;
@@ -119,6 +121,9 @@ class ContentLoader extends StructureDo
 				$query = new Query();
 				$query->setType($method);
 				$query->setCondition($params);
+				if ($resultType === contentLoader::LOAD_ONE) {
+					$this->getLimits()->setStep(1);
+				}
 				$query->setLimits($this->getLimits());
 				return $persistentManager->load($this, $query);
 			break;
@@ -127,7 +132,7 @@ class ContentLoader extends StructureDo
 	}
 	// Return always a ContentsDo collection or throw exception
 	public function loadContents($method, $params = null) {
-		$result = $this->_loadContents($method, $params);
+		$result = $this->_loadContents($method, ContentLoader::LOAD_MULTIPLE, $params);
 		if (is_object($result) && get_class($result) === 'Acd\Model\ContentDo') {
 			// Add ContentDo to ContentsDo collection
 			$resultContents = new ContentsDo();
@@ -146,7 +151,7 @@ class ContentLoader extends StructureDo
 	}
 	// Return ContentDo object, other value like number or null
 	public function loadContent($method, $params = null) {
-		$result = $this->_loadContents($method, $params);
+		$result = $this->_loadContents($method, ContentLoader::LOAD_ONE, $params);
 		if (is_object($result) && get_class($result) === 'Acd\Model\ContentsDo') {
 			// Extract first ContentDo from collection
 			return $result->one();

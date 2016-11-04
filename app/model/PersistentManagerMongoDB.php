@@ -335,7 +335,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$limits->setTotal($cursor->count());
 		$result = new ContentsDo();
 		foreach ($cursor as $documentFound) {
-			$result->add($this->loadIdDepth ($structureDo, (string) $documentFound['_id'], $depth, $filters));
+			$result->add($this->loadIdDepth ($structureDo, (string) $documentFound['_id'], $depth, $filters)->one());
 		}
 		$result->setLimits($limits);
 		return $result;
