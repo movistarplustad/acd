@@ -9,7 +9,7 @@ $queryStringSeparator = strpos($returnUrl, '?') ? '&' : '?';
 // First: check is loged
 $loginCookie = isset($_COOKIE['login']) ? $_COOKIE['login'] : null;
 $token = isset($_COOKIE['token']) ? $_COOKIE['token'] : null;
-$loginForm = isset($_POST['login']) ? $_POST['login'] : null;
+$loginForm = isset($_POST['login']) && $_POST['login'] !== '' ? $_POST['login'] : null;
 $password = isset($_POST['password']) ? $_POST['password'] : null;
 $remember = isset($_POST['remember']) && ($_POST['remember'] === '1');
 

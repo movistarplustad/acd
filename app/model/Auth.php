@@ -71,16 +71,21 @@ class Auth  {
 		return $aCredentials;
 	}
 	public static function loginByCredentials($login, $password, $remember) {
-		$aCredentials = Auth::loadAllCredentials();
-		// TODO: controlar errores
-		$bLoginCorrect = isset($aCredentials[$login]) && Auth::validate_pw($password, $aCredentials[$login]['password']);
+		$query = new Query();
+		$query->setType('id');
+		$query->setCondition(['id' => $login]);
+		$userLoader = new UserLoader();
+		$user = $userLoader->load($query);
 
+		$bLoginCorrect = $user && Auth::validate_pw($password, $user->getPassword());
+
+		// TODO: controlar errores
 		// Remember login
 		if ($bLoginCorrect && $remember) {
 			$persistentData = array(
 				'login' => $login,
 				'token' => hash('sha1', uniqid()),
-				'rol' => $aCredentials[$login]['rol'],
+				'rol' => $user->getRol(),
 				'timestamp' => time()
 			);
 			$jsonCredentials = json_encode($persistentData);
@@ -105,7 +110,7 @@ class Auth  {
 			$_SESSION['loged'] = true;
 			$_SESSION['login_method'] = 'password';
 			$_SESSION['login'] = $login;
-			$_SESSION['rol'] = $aCredentials[$login]['rol'];
+			$_SESSION['rol'] = $user->getRol();
 		}
 		return $bLoginCorrect;
 	}
