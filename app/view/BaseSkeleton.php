@@ -2,6 +2,7 @@
 namespace Acd\View;
 // Output
 class BaseSkeleton extends \Acd\View\Template {
+	protected $view;
 	public function __construct() {
 		$this->__set('bodyClass', '');
 		$this->__set('headTitle', 'ACD');
@@ -24,7 +25,21 @@ class BaseSkeleton extends \Acd\View\Template {
 	public function setTools($tools) {
 		$this->__set('tools', $tools);
 	}
+	public function setView($view) {
+		$this->view = $view;
+	}
+	protected function getTpl() {
+		switch($this->view) {
+			case 'ajax':
+				$tpl = \Acd\conf::$DIR_TEMPLATES.'/BaseSkeletonAjax.tpl';
+				break;
+			default:
+				$tpl = \Acd\conf::$DIR_TEMPLATES.'/BaseSkeleton.tpl';
+				break;
+		}
+		return $tpl;
+	}
 	public function render($tpl = '') {
-		return parent::render(\Acd\conf::$DIR_TEMPLATES.'/BaseSkeleton.tpl');
+		return parent::render($this->getTpl());
 	}
 }

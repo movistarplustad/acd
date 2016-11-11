@@ -426,7 +426,7 @@ input[readonly] {
 	color: #999;
 }
 /* Collection */
-.collection li {
+.collection > li {
 	list-style: inside decimal;
 	margin: 0 0 0.5em 0;
 }
@@ -434,14 +434,14 @@ input[readonly] {
 	padding: 0;
 	margin: 0;
 }
-.collection.ui-sortable li {
+.collection.ui-sortable > li {
 	background-image: url(draggable.png);
 	padding: 0 0 0 1em;
 	background-position: left 0;
 	background-repeat: no-repeat;
 	cursor: move;
 }
-.collection.ui-sortable li.find {
+.collection.ui-sortable > li.find {
 	margin: 1em 0 0 -1em;
 	background-image: none;
 	cursor: auto;
@@ -493,6 +493,9 @@ input[readonly] {
 	background-image: url(../js/jquery-ui/images/ui-icons_888888_256x240.png);
 	background-position: -80px -128px;
 	text-align: bottom;
+}
+.wrapChildContent.hidden {
+	display: none;
 }
 .contentSummary {
 	margin: 0 1em;

@@ -17,6 +17,8 @@ function loadNewRef($idRef, $idStructure) {
 	return $content;
 }
 $action = isset($_GET['a']) ? $_GET['a'] : 'list_structures';
+$view = isset($_GET['v']) ? $_GET['v'] : 'page';
+
 if (!Model\Auth::isLoged()) {
 	$action = 'login';
 }
@@ -272,6 +274,7 @@ switch ($action) {
 }
 
 $skeletonOu->setContent($contentOu->render());
+$skeletonOu->setView($view);
 
 header("Content-Type: text/html");
 header("Expires: 0");

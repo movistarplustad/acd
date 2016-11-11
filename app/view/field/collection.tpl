@@ -3,7 +3,7 @@
 <input type="hidden" name="field[<?=$id?>][name]" value="<?=htmlspecialchars($fieldName)?>"/>
 <label for="field_<?=$id?>"><?=htmlspecialchars($fieldName)?></label>
 <ul class="collection">
-<?php 
+<?php
 //	$id ='TODO';
 	if ($fieldRef) { // TODO hacer que en el futuro fieldRef sea un array vacío
 		$pos = 0;
@@ -12,7 +12,7 @@
 			$idStructure = $fieldRefItem->getIdStructure();
 			$title = $fieldRefItem->getTitle();
 ?>
-		<li>
+		<li class="relatedContent">
 			<input type="hidden" name="field[<?=$id?>][value][]" value="<?=htmlspecialchars($idContent)?>"/>
 			<input type="hidden" name="field[<?=$id?>][type][]" value="<?=htmlspecialchars($idStructure)?>" />
 			<input type="text" name="field[<?=$id?>][title][]" value="<?=htmlspecialchars($title)?>" disabled="disabled" class="field relationTitle"/>
