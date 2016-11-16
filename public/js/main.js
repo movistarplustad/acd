@@ -46,7 +46,7 @@ var editor = {
 		}
 
 		/* Content fields */
-		editor.enhacedContentForm($("body"));
+		editor.enhacedContentForm(document);
 
 		/* Content list */
 		$("#contents_list")
@@ -68,56 +68,6 @@ var editor = {
 			helper: fixHelper
 		});
 
-		/* Related content */
-if(false){
-		$(".relatedContent .button.edit")
-			.each(function () {
-				$(this)
-					.data("status", "empty");
-
-				$(this)
-					.parent()
-					.append("<div class='wrapChildContent hidden'>+s</div>");
-			})
-			.on("click", function(e) {
-				var $edit = $(this);
-				var wrapContent = $edit.siblings(".wrapChildContent");
-
-				switch ($edit.data("status")) {
-					case "empty":
-						/* Load and fill gap */
-						var url = $edit.attr("href");
-						$(wrapContent)
-							.removeClass("hidden")
-							.html("<p class='result'>Loading...</p>");
-						$.get( url, {"v" : "ajax"})
-							.done(function(data) {
-								/* Get inner form and insert in gap */
-								var $contentFields = $(data)
-									.find(".inner-form");
-								$contentFields.find(".wrap-actions").remove();
-
-								editor.enhacedContentForm(wrapContent);
-								$(wrapContent)
-									.html($contentFields);
-								$edit.data("status", "fill-visible");
-
-							});
-
-						break;
-					case "fill-visible":
-						$(wrapContent).addClass("hidden");
-						$edit.data("status", "fill-hidden");
-						break;
-					case "fill-hidden":
-						$(wrapContent).removeClass("hidden");
-						$edit.data("status", "fill-visible");
-						break;
-				}
-
-				e.preventDefault();
-			});
-}
 
 	},
 	enhacedContentForm : function(context) {
@@ -234,6 +184,53 @@ if(false){
 			allowClear: true,
 			placeholder: "Select option…"
 		});
+
+		/* Related content */
+		$context.find(".relatedContent .button.edit")
+			.each(function () {
+				$(this)
+					.data("status", "empty");
+
+				$(this)
+					.parent()
+					.append("<div class='wrapChildContent hidden'></div>");
+			})
+			.on("click", function(e) {
+				var $edit = $(this);
+				var $wrapContent = $edit.siblings(".wrapChildContent");
+
+				switch ($edit.data("status")) {
+					case "empty":
+						/* Load and fill gap */
+						var url = $edit.attr("href");
+						$wrapContent
+							.removeClass("hidden")
+							.html("<p class='result'>Loading...</p>");
+						$.get( url, {"v" : "ajax"})
+							.done(function(data) {
+								/* Get inner form and insert in gap */
+								var $contentFields = $(data)
+									.find(".inner-form");
+								$contentFields.find(".wrap-actions").remove();
+								$wrapContent
+									.html($contentFields);
+								editor.enhacedContentForm($wrapContent.get(0));
+								$edit.data("status", "fill-visible");
+							});
+
+						break;
+					case "fill-visible":
+						$wrapContent.addClass("hidden");
+						$edit.data("status", "fill-hidden");
+						break;
+					case "fill-hidden":
+						$wrapContent.removeClass("hidden");
+						$edit.data("status", "fill-visible");
+						break;
+				}
+
+				e.preventDefault();
+			});
 
 	},
 	confirmDelete : function(e) {

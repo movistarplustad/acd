@@ -1,7 +1,7 @@
 <!-- TODO -->
-<input type="hidden" name="field[<?=$id?>][id]" value="<?=htmlspecialchars($fieldId)?>"/>
-<input type="hidden" name="field[<?=$id?>][name]" value="<?=htmlspecialchars($fieldName)?>"/>
-<label for="field_<?=$id?>"><?=htmlspecialchars($fieldName)?></label>
+<input type="hidden" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][id]" value="<?=htmlspecialchars($fieldId)?>"/>
+<input type="hidden" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][name]" value="<?=htmlspecialchars($fieldName)?>"/>
+<label for="field_<?=htmlspecialchars($id.'_'.$idParent)?>"><?=htmlspecialchars($fieldName)?></label>
 <ul class="collection">
 <?php
 //	$id ='TODO';
@@ -13,9 +13,9 @@
 			$title = $fieldRefItem->getTitle();
 ?>
 		<li class="relatedContent">
-			<input type="hidden" name="field[<?=$id?>][value][]" value="<?=htmlspecialchars($idContent)?>"/>
-			<input type="hidden" name="field[<?=$id?>][type][]" value="<?=htmlspecialchars($idStructure)?>" />
-			<input type="text" name="field[<?=$id?>][title][]" value="<?=htmlspecialchars($title)?>" disabled="disabled" class="field relationTitle"/>
+			<input type="hidden" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][value][]" value="<?=htmlspecialchars($idContent)?>"/>
+			<input type="hidden" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][type][]" value="<?=htmlspecialchars($idStructure)?>" />
+			<input type="text" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][title][]" value="<?=htmlspecialchars($title)?>" disabled="disabled" class="field relationTitle"/>
 			<a href="content.php?a=edit&amp;id=<?=urlencode($idContent)?>&amp;idt=<?=urlencode($idStructure)?>&amp;idp=<?=urlencode($idParent)?>&amp;idtp=<?=urlencode($idStructureParent)?>" class="button edit">Edit</a>
 			<a href="content.php?a=edit&amp;id=<?=urlencode($idParent)?>&amp;idt=<?=urlencode($idStructureParent)?>&amp;idm=<?=urlencode($fieldId)?>&amp;refm=&amp;reftm=&amp;posm=<?=$pos?>" class="button clear">Clear</a>
 			<span class="periodValidity" title="Period of validity"><?=\Acd\Model\ValueFormater::encode($fieldRefItem->getPeriodOfValidity(), \Acd\Model\ValueFormater::TYPE_DATE_RANGE, \Acd\Model\ValueFormater::FORMAT_HUMAN)?></span>
@@ -24,7 +24,7 @@
 			$pos++;
 		}
 	}
-	if ($idParent) {
+	if (!$bNew) {
 ?>
 	<li class="find">
 		<a href="content_rel.php?a=select_type&amp;idp=<?=urlencode($idParent)?>&amp;idtp=<?=urlencode($idStructureParent)?>&amp;f=<?=urlencode($fieldId)?>" class="button search">Find new</a>

@@ -1,4 +1,4 @@
-<input type="hidden" name="field[<?=$id?>][id]" value="<?=htmlspecialchars($fieldId)?>"/>
-<input type="hidden" name="field[<?=$id?>][name]" value="<?=htmlspecialchars($fieldName)?>"/>
-<label for="field_<?=$id?>"><?=htmlspecialchars($fieldName)?></label>
-<input type="checkbox" name="field[<?=$id?>][value]" value="1" id="field_<?=$id?>"<?=$fieldValue?>/>
+<input type="hidden" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][id]" value="<?=htmlspecialchars($fieldId)?>"/>
+<input type="hidden" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][name]" value="<?=htmlspecialchars($fieldName)?>"/>
+<label for="field_<?=htmlspecialchars($id.'_'.$idParent)?>"><?=htmlspecialchars($fieldName)?></label>
+<input type="checkbox" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][value]" value="1" id="field_<?=htmlspecialchars($id.'_'.$idParent)?>"<?=$fieldValue?>/>

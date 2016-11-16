@@ -327,6 +327,7 @@ h2 .structure_name {
 	clear: both;
 }
 .internal .item label {
+	line-height: normal;
 	/*
 	width: 15%;
 	float: left;

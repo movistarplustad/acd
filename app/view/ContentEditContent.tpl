@@ -1,4 +1,5 @@
 <?php
+	$idHtml = htmlspecialchars($idContent);
 	$title = (isset($bNew) && $bNew === true)
 		? 'New content <em class="structure_name">'.htmlspecialchars($structure->getName()).'</em>'
 		: 'Edit content <em class="structure_name">'.htmlspecialchars($structure->getName()).'</em>';
@@ -25,19 +26,19 @@
 		<div class="inner-form">
 			<fieldset class="internal">
 				<legend>Internal data</legend>
-				<input type="hidden" name="id" value="<?=htmlspecialchars($content->getId())?>"/>
-				<input type="hidden" name="ids" value="<?=htmlspecialchars($content->getIdStructure())?>"/>
+				<input type="hidden" name="id[]" value="<?=$idHtml?>"/>
+				<input type="hidden" name="ids[<?=$idHtml?>]" value="<?=htmlspecialchars($content->getIdStructure())?>"/>
 				<ul>
 					<li class="item">
-						<label for="title">Title:&nbsp;</label><input type="text" name="title" id="title" value="<?=htmlspecialchars($contentTitle)?>" required="required" class="field text" maxlength="256"/>
+						<label for="title_<?=$idHtml?>">Title:&nbsp;</label><input type="text" name="title[<?=$idHtml?>]" id="title_<?=$idHtml?>" value="<?=htmlspecialchars($contentTitle)?>" required="required" class="field text" maxlength="256"/>
 					</li>
 					<li class="item">
 					<?php
 						$periodOfValidity = \Acd\Model\ValueFormater::encode($content->getPeriodOfValidity(), \Acd\Model\ValueFormater::TYPE_DATE_TIME_RANGE, \Acd\Model\ValueFormater::FORMAT_EDITOR );
 					?>
-					<label for="validityPeriodStart">Period of validity:&nbsp;</label><input type="datetime" name="validityPeriod[start]" id="validityPeriodStart" value="<?=htmlspecialchars($periodOfValidity[\Acd\Model\contentDO::PERIOD_OF_VALIDITY_START])?>" class="range start"/>
+					<label for="validityPeriodStart_<?=$idHtml?>">Period of validity:&nbsp;</label><input type="datetime" name="validityPeriod[<?=$idHtml?>][start]" id="validityPeriodStart_<?=$idHtml?>" value="<?=htmlspecialchars($periodOfValidity[\Acd\Model\contentDO::PERIOD_OF_VALIDITY_START])?>" class="range start"/>
 						-
-						<input type="datetime" name="validityPeriod[end]" id="validityPeriodEnd" value="<?=htmlspecialchars($periodOfValidity[\Acd\Model\contentDO::PERIOD_OF_VALIDITY_END])?>" class="range end"/>
+						<input type="datetime" name="validityPeriod[<?=$idHtml?>][end]" id="validityPeriodEnd_<?=$idHtml?>" value="<?=htmlspecialchars($periodOfValidity[\Acd\Model\contentDO::PERIOD_OF_VALIDITY_END])?>" class="range end"/>
 					</li>
 					<li class="item">
 						<?php
@@ -47,10 +48,10 @@
 						<?php
 							}
 						?>
-						<label for="aliasId">Alias-id.:&nbsp;</label><input type="text" name="aliasId" id="aliasId" value="<?=htmlspecialchars($aliasId)?>" class="field aliasId" maxlength="256"/>
+						<label for="aliasId_<?=$idHtml?>">Alias-id.:&nbsp;</label><input type="text" name="aliasId[<?=$idHtml?>]" id="aliasId_<?=$idHtml?>" value="<?=htmlspecialchars($aliasId)?>" class="field aliasId" maxlength="256"/>
 					</li>
 					<li class="item">
-						<label for="tags" class="for-tag">Tags:&nbsp;</label><input type="text" name="tags" id="tags" value="<?=htmlspecialchars($contentTags)?>" class="field tags"<?=$tagsReadonly?>/>
+						<label for="tags_<?=$idHtml?>" class="for-tag">Tags:&nbsp;</label><input type="text" name="tags[<?=$idHtml?>]" id="tags_<?=$idHtml?>" value="<?=htmlspecialchars($contentTags)?>" class="field tags"<?=$tagsReadonly?>/>
 					</li>
 					<li class="item">
 						<?=$profileOU->render()?>
