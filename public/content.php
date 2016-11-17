@@ -171,15 +171,17 @@ switch ($action) {
 		@$idTypeParent = $_GET['idtp'] ?: null;
 
 		// back button
-		$navigation = new SessionNavigation();
-		$navigation->load();
-		$back = !$navigation->isEmpty();
-		$navigation->push([
-			'hash' => "edit_content - $idStructureType - $id",
-			'url' => $_SERVER["REQUEST_URI"],
-			'title' => 'Manage content ('.$idStructureType.')'
-		]);
-		$navigation->save();
+		if($view === 'page') {
+			$navigation = new SessionNavigation();
+			$navigation->load();
+			$back = !$navigation->isEmpty();
+			$navigation->push([
+				'hash' => "edit_content - $idStructureType - $id",
+				'url' => $_SERVER["REQUEST_URI"],
+				'title' => 'Manage content ('.$idStructureType.')'
+			]);
+			$navigation->save();
+		}
 
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setBack($back);
