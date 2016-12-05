@@ -171,6 +171,7 @@ switch ($action) {
 		@$idTypeParent = $_GET['idtp'] ?: null;
 
 		// back button
+		$back = false;
 		if($view === 'page') {
 			$navigation = new SessionNavigation();
 			$navigation->load();
