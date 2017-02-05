@@ -17,7 +17,13 @@ var editor = {
 
 		/* Prevent accidental  delete*/
 		editor.$iDelete.bind("click", editor.confirmDelete);
-		$( ".fields .items" ).sortable();
+		$( ".fields .items" )
+		.find( ".field" )
+			.prepend("<span class='draggable'></span>").end()
+		.sortable({
+			items: "> .field",
+			handle: "> .draggable"
+		});
 
 		/* Search structures */
 		if($("#structures_list").length > 0) {
@@ -73,9 +79,13 @@ var editor = {
 	enhacedContentForm : function(context) {
 		var $context = $(context);
 		/* Sortable collection fields li:first-child */
-		$context.find( ".collection" ).sortable({
-			items: "li:not(.find)"
-		});
+		$context.find( ".collection" )
+			.find( ".relatedContent" )
+				.prepend("<span class='draggable'></span>").end()
+			.sortable({
+				items: "> .relatedContent",
+				handle: "> .draggable"
+			});
 
 		/* Date fields */
 		/* Polyfill */

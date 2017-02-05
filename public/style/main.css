@@ -94,9 +94,6 @@ h1::after {
 	transform: rotate(-45deg);
 	background: linear-gradient(45deg, #434343 0%, #434343 50%, transparent 50%, transparent 100%) repeat scroll 0% 0% transparent;
 }
-.ui-sortable {
-	cursor: move;
-}
 .js #wrapper {
 	display: flex;
 }
@@ -378,6 +375,13 @@ option[disabled] {
 	width: 10em;
 	text-align: right;
 }
+.draggable {
+	background-image: url(draggable.png);
+	padding: 0 0 0 1em;
+	background-position: left 0;
+	background-repeat: no-repeat;
+	cursor: move;
+}
 
 /* Field controls */
 .fields li label {
@@ -434,13 +438,6 @@ input[readonly] {
 .collection.ui-sortable {
 	padding: 0;
 	margin: 0;
-}
-.collection.ui-sortable > li {
-	background-image: url(draggable.png);
-	padding: 0 0 0 1em;
-	background-position: left 0;
-	background-repeat: no-repeat;
-	cursor: move;
 }
 .collection.ui-sortable > li.find {
 	margin: 1em 0 0 -1em;
