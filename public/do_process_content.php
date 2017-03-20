@@ -3,14 +3,15 @@ namespace Acd;
 use \Acd\Model\ValueFormater;
 
 require ('../autoload.php');
+const ERROR = 'ERROR';
 
-$accion = strtolower($_POST['a']);
-$id = $_POST['id'];
-if ($accion == 'save' && $id == '') {
-	$accion = 'new';
+$action = isset($_POST['a']) ? strtolower($_POST['a']) : ERROR;
+$postId = isset($_POST['id']) ? $_POST['id'] : [];
+if ($action == 'save' && $postId == '') {
+	$action = 'new';
 }
 $returnUrl = null;
-foreach ($_POST['id'] as $id) {
+foreach ($postId as $id) {
 	$idStructure = $_POST['ids'][$id];
 	$title = isset($_POST['title'][$id]) ? $_POST['title'][$id] : null;
 	$periodOfValidity = array(
@@ -19,7 +20,7 @@ foreach ($_POST['id'] as $id) {
 	);
 	$periodOfValidity = ValueFormater::decode($periodOfValidity , ValueFormater::TYPE_DATE_TIME_RANGE, ValueFormater::FORMAT_EDITOR);
 
-	$aliasId =isset($_POST['aliasId'][$id]) ? $_POST['aliasId'][$id] : null;
+	$aliasId = isset($_POST['aliasId'][$id]) ? $_POST['aliasId'][$id] : null;
 	$tags = isset($_POST['tags'][$id]) ? ValueFormater::decode($_POST['tags'][$id] , ValueFormater::TYPE_TAGS, ValueFormater::FORMAT_EDITOR) : array();
 	$profile = isset($_POST['profile'][$id]) ? ValueFormater::decode($_POST['profile'][$id] , ValueFormater::TYPE_LIST_MULTIPLE, ValueFormater::FORMAT_EDITOR) : array();
 	$fields = isset($_POST['field'][$id]) ? $_POST['field'][$id] : array();
@@ -49,7 +50,7 @@ foreach ($_POST['id'] as $id) {
 		$modified_content = new Model\ContentDo();
 	}
 
-	switch ($accion) {
+	switch ($action) {
 		case 'new':
 		case 'save':
 				$modified_content->setTitle($title);
@@ -124,7 +125,7 @@ foreach ($_POST['id'] as $id) {
 					$returnUrl = 'content.php?a=edit&r=ok&id='.urlencode($id).'&idt='.urlencode($idStructure);
 				}
 			/* TODO ERROR
-				$returnUrl = 'content.php?a='.$accion.'&r=ko&id='.urlencode($id).'&idt='.urlencode($idt).'&title='.urlencode($title);
+				$returnUrl = 'content.php?a='.$action.'&r=ko&id='.urlencode($id).'&idt='.urlencode($idt).'&title='.urlencode($title);
 			*/
 			break;
 		case 'clone':
@@ -133,7 +134,7 @@ foreach ($_POST['id'] as $id) {
 		case 'delete':
 			try {
 				$contentLoader->deleteContent($id);
-				$returnUrl = 'content.php?a='.$accion.'&r=ok&id='.urlencode($idStructure);
+				$returnUrl = 'content.php?a='.$action.'&r=ok&id='.urlencode($idStructure);
 			} catch (\Exception $e) {
 				$returnUrl = 'content.php?a=edit&r=ko_delete&id='.urlencode($id).'&idt='.urlencode($idStructure);
 			}
@@ -143,9 +144,14 @@ foreach ($_POST['id'] as $id) {
 			$returnUrl = 'content.php?a=summary&id='.urlencode($id).'&idt='.urlencode($idStructure);
 			break;
 		default:
-			$returnUrl = '404.html';
+			$returnUrl = ERROR;
 			break;
 	}
+}
+if(!$returnUrl || $returnUrl === ERROR) {
+	header("HTTP/1.0 500 Internal Server Error");
+	echo "Error, request can not be processed. Empty form.\n";
+	die();
 }
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
