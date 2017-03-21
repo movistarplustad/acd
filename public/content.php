@@ -201,45 +201,55 @@ switch ($action) {
 
 		// Modify relations or collection of relations
 		//&idm=imagen alternativa&refm=yy54f5c82b6803fabb068b4567&reftm=enlace&posm=0
-		if (isset($_GET['idm'])) {
-			$modifiedFieldName = $_GET['idm']; //'imagen alternativa'; // elementos
-			$modifiedRef = $_GET['refm']; //'xx54f5c82b6803fabb068b4567';
-			$modifiedIdStructure = $_GET['reftm']; //''enlace';
-			$modifiedFieldPosition = isset($_GET['posm']) ? $_GET['posm'] : null;
-			try {
-				//+d($content->getFields());
-				$modifiedField = $content->getFields()->get($modifiedFieldName);
-				switch ($modifiedField->getType()) {
-					case Model\FieldDo::TYPE_CONTENT:
-						$newRef = loadNewRef($modifiedRef, $modifiedIdStructure);
-						break;
-					case Model\FieldDo::TYPE_COLLECTION:
-
-						/* Modify or delete item */
-						if ($modifiedRef) {
-							$newRef = $modifiedField->getValue();
-							$newRef->add(loadNewRef($modifiedRef, $modifiedIdStructure));
-						}
-						else {
-							$newRef = $modifiedField->getValue();
-							$newRef->remove($modifiedFieldPosition);
-						}
-
-						break;
-					default:
-				 		$newRef = $modifiedField;
-						break;
-				}
-				//d($content);
-				//d($modifiedFieldName, $newRef);
-				$content->setFieldValue($modifiedFieldName, $newRef);
-				//d($content);
-
-				$modifiedField->setDirty(true, $modifiedFieldPosition);
+		if (isset($_GET['modrel']) && isset($_GET['element'])) {
+			$elements = $_GET['element'];
+			$selectedElements = @$_GET['posElement'] ?: [];
+			$insertRelatedPosition = 'bottom';
+			if (isset($_GET['relto']) && $_GET['relto'] === 'top') {
+				$insertRelatedPosition = 'top';
+				$selectedElements = array_reverse($selectedElements);
 			}
-			catch(\Exception $e) {
-				$contentOu->setResultDesc("Error, field <em>$modifiedFieldName</em> not found in content", "fail");
-				$bResult = false;
+			foreach ($selectedElements as $position) {
+				$modifiedFieldName = $elements[$position]['idm']; //'imagen alternativa'; // elementos
+				$modifiedRef = $elements[$position]['refm']; //'xx54f5c82b6803fabb068b4567';
+				$modifiedIdStructure = $elements[$position]['reftm']; //''enlace';
+				$modifiedFieldPosition = isset($elements[$position]['posm']) ? $elements[$position]['posm'] : null;
+				try {
+					//+d($content->getFields());
+					$modifiedField = $content->getFields()->get($modifiedFieldName);
+					switch ($modifiedField->getType()) {
+						case Model\FieldDo::TYPE_CONTENT:
+							$newRef = loadNewRef($modifiedRef, $modifiedIdStructure);
+							break;
+						case Model\FieldDo::TYPE_COLLECTION:
+
+							/* Modify or delete item */
+							if ($modifiedRef) {
+								$newRef = $modifiedField->getValue();
+								$position = $insertRelatedPosition === 'top' ? $newRef::PREPEND : null;
+								$newRef->add(loadNewRef($modifiedRef, $modifiedIdStructure), $position);
+							}
+							else {
+								$newRef = $modifiedField->getValue();
+								$newRef->remove($modifiedFieldPosition);
+							}
+
+							break;
+						default:
+							$newRef = $modifiedField;
+							break;
+					}
+					//d($content);
+					//d($modifiedFieldName, $newRef);
+					$content->setFieldValue($modifiedFieldName, $newRef);
+					//d($content);
+
+					$modifiedField->setDirty(true, $modifiedFieldPosition);
+				}
+				catch(\Exception $e) {
+					$contentOu->setResultDesc("Error, field <em>$modifiedFieldName</em> not found in content", "fail");
+					$bResult = false;
+				}
 			}
 		}
 
