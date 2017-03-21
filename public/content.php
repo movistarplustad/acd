@@ -16,8 +16,8 @@ function loadNewRef($idRef, $idStructure) {
 
 	return $content;
 }
-$action = isset($_GET['a']) ? $_GET['a'] : 'list_structures';
-$view = isset($_GET['v']) ? $_GET['v'] : 'page';
+$action = isset($_REQUEST['a']) ? $_REQUEST['a'] : 'list_structures';
+$view = isset($_REQUEST['v']) ? $_REQUEST['v'] : 'page';
 
 if (!Model\Auth::isLoged()) {
 	$action = 'login';
@@ -63,10 +63,10 @@ switch ($action) {
 		break;
 	case 'delete':
 	case 'list_contents':
-		$id = $_GET['id'];
-		@$titleSearch = $_GET['s'];
-		$numPage = isset($_GET['p']) ? (int) $_GET['p'] : 0;
-		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
+		$id = $_REQUEST['id'];
+		@$titleSearch = $_REQUEST['s'];
+		$numPage = isset($_REQUEST['p']) ? (int) $_REQUEST['p'] : 0;
+		$bResult = isset($_REQUEST['r']) && $_REQUEST['r'] === 'ko' ? false : true;
 
 		// back button
 		$navigation = new SessionNavigation();
@@ -118,10 +118,10 @@ switch ($action) {
 		}
 		break;
 	case 'new':
-		$idStructureType = $_GET['idt'];
+		$idStructureType = $_REQUEST['idt'];
 		// Posible parent
-		@$idParent = $_GET['idp'] ?: null; // TODO duplicado en edit y clone
-		@$idTypeParent = $_GET['idtp'] ?: null;
+		@$idParent = $_REQUEST['idp'] ?: null; // TODO duplicado en edit y clone
+		@$idTypeParent = $_REQUEST['idtp'] ?: null;
 
 		// back button
 		$navigation = new SessionNavigation();
@@ -163,12 +163,12 @@ switch ($action) {
 	case 'edit':
 	case 'clone':
 	case 'summary':
-		$bResult = isset($_GET['r']) && $_GET['r'] == 'ok' ? true : false;
-		$id = $_GET['id'];
-		$idStructureType = $_GET['idt'];
+		$bResult = isset($_REQUEST['r']) && $_REQUEST['r'] == 'ok' ? true : false;
+		$id = $_REQUEST['id'];
+		$idStructureType = $_REQUEST['idt'];
 		// Posible parent
-		@$idParent = $_GET['idp'] ?: null;
-		@$idTypeParent = $_GET['idtp'] ?: null;
+		@$idParent = $_REQUEST['idp'] ?: null;
+		@$idTypeParent = $_REQUEST['idtp'] ?: null;
 
 		// back button
 		$back = false;
@@ -201,11 +201,11 @@ switch ($action) {
 
 		// Modify relations or collection of relations
 		//&idm=imagen alternativa&refm=yy54f5c82b6803fabb068b4567&reftm=enlace&posm=0
-		if (isset($_GET['modrel']) && isset($_GET['element'])) {
-			$elements = $_GET['element'];
-			$selectedElements = @$_GET['posElement'] ?: [];
+		if (isset($_REQUEST['modrel']) && isset($_REQUEST['element'])) {
+			$elements = $_REQUEST['element'];
+			$selectedElements = @$_REQUEST['posElement'] ?: [];
 			$insertRelatedPosition = 'bottom';
-			if (isset($_GET['relto']) && $_GET['relto'] === 'top') {
+			if (isset($_REQUEST['relto']) && $_REQUEST['relto'] === 'top') {
 				$insertRelatedPosition = 'top';
 				$selectedElements = array_reverse($selectedElements);
 			}

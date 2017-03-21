@@ -32,7 +32,7 @@
 		$lowerLimit = $limits->getLower();
 		$bMorePage = $limits->getUpper() < $limits->getTotal();
 	?>
-		<form action="content.php" method="get">
+		<form action="content.php" method="post">
 			<input name="a" value="edit" type="hidden"/>
 			<input name="modrel" value="1" type="hidden"/>
 			<input name="id" value="<?=htmlspecialchars($id)?>" type="hidden"/>
@@ -57,7 +57,7 @@
 				}
 			?>
 			</ol>
-			<input name="relto" value="top" type="checkbox" id="relto"/><label for="relto">Insert in the beginning</label>
+			<input name="relto" value="top" type="checkbox" id="relto"/><label for="relto">Top insert</label>
 			<input name="action" value="add" type="submit"/>
 		</form>
 	<?php
