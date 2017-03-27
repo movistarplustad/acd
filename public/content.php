@@ -205,7 +205,8 @@ switch ($action) {
 			$elements = $_REQUEST['element'];
 			$selectedElements = @$_REQUEST['posElement'] ?: [];
 			$insertRelatedPosition = 'bottom';
-			if (isset($_REQUEST['relto']) && $_REQUEST['relto'] === 'top') {
+			if ((isset($_REQUEST['action']) && $_REQUEST['action'] === 'add top') ||
+				(isset($_REQUEST['relto']) && $_REQUEST['relto'] === 'top')) {
 				$insertRelatedPosition = 'top';
 				$selectedElements = array_reverse($selectedElements);
 			}

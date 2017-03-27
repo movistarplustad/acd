@@ -32,7 +32,7 @@
 		$lowerLimit = $limits->getLower();
 		$bMorePage = $limits->getUpper() < $limits->getTotal();
 	?>
-		<form action="content.php" method="post">
+		<form action="content.php?a=edit&id=<?=urlencode($id)?>&idt=<?=urlencode($type)?>" method="post">
 			<input name="a" value="edit" type="hidden"/>
 			<input name="modrel" value="1" type="hidden"/>
 			<input name="id" value="<?=htmlspecialchars($id)?>" type="hidden"/>
@@ -57,8 +57,17 @@
 				}
 			?>
 			</ol>
-			<input name="relto" value="top" type="checkbox" id="relto"/><label for="relto">Top insert</label>
-			<input name="action" value="add" type="submit"/>
+			<div class="wrap-actions">
+				<div class="actions">
+
+					<input name="action" value="add top" class="button add_top" type="submit"/>
+					<input name="action" value="add bottom" class="button add_bottom" type="submit"/>
+					<!--
+					<span class=""><input name="relto" value="top" type="checkbox" id="relto"/><label for="relto">Top insert</label></span>
+					<input name="action" value="add" class="button add" type="submit"/>
+					-->
+				</div>
+			</div>
 		</form>
 	<?php
 	if ($bMorePage) {
