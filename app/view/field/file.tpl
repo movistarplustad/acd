@@ -27,34 +27,34 @@
 		$preview = "<div class='file-preview'>$preview</div>";
 	}
 ?>
-<input type="hidden" name="field[<?=$id?>][id]" value="<?=htmlspecialchars($fieldId)?>"/>
-<input type="hidden" name="field[<?=$id?>][name]" value="<?=htmlspecialchars($fieldName)?>"/>
-<label for="field_<?=$id?>"><?=htmlspecialchars($fieldName)?></label>
+<input type="hidden" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][id]" value="<?=htmlspecialchars($fieldId)?>"/>
+<input type="hidden" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][name]" value="<?=htmlspecialchars($fieldName)?>"/>
+<label for="field_<?=htmlspecialchars($id.'_'.$idParent)?>"><?=htmlspecialchars($fieldName)?></label>
 <?php
-if ($idParent) {
+if (!$bNew) {
 	if ($fieldValue['value']) {
 ?>
-<input type="hidden" name="field[<?=$id?>][value]" value="<?=htmlspecialchars($fieldValue['value'])?>"/>
-<input type="hidden" name="field[<?=$id?>][original_name]" value="<?=htmlspecialchars($fieldValue['original_name'])?>"/>
-<input type="hidden" name="field[<?=$id?>][type]" value="<?=htmlspecialchars($fieldValue['type'])?>"/>
-<input type="hidden" name="field[<?=$id?>][size]" value="<?=htmlspecialchars($fieldValue['size'])?>"/>
-<input type="hidden" name="field[<?=$id?>][width]" value="<?=htmlspecialchars($fieldValue['width'])?>"/>
-<input type="hidden" name="field[<?=$id?>][height]" value="<?=htmlspecialchars($fieldValue['height'])?>"/>
+<input type="hidden" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][value]" value="<?=htmlspecialchars($fieldValue['value'])?>"/>
+<input type="hidden" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][original_name]" value="<?=htmlspecialchars($fieldValue['original_name'])?>"/>
+<input type="hidden" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][type]" value="<?=htmlspecialchars($fieldValue['type'])?>"/>
+<input type="hidden" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][size]" value="<?=htmlspecialchars($fieldValue['size'])?>"/>
+<input type="hidden" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][width]" value="<?=htmlspecialchars($fieldValue['width'])?>"/>
+<input type="hidden" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][height]" value="<?=htmlspecialchars($fieldValue['height'])?>"/>
 
 <div>
 	<?=$preview?>
-	Description / image alt <input type="text" name="field[<?=$id?>][alt]" value="<?=htmlspecialchars($fieldValue['alt'])?>"/>
+	Description / image alt <input type="text" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][alt]" value="<?=htmlspecialchars($fieldValue['alt'])?>"/>
 </div>
-<input type="file" name="field[<?=$id?>][file]" class="field file" id="field_<?=$id?>"/>
-<input type="checkbox" name="field[<?=$id?>][delete]" value="1" id="field_<?=$id?>_delete"/> <label for="field_<?=$id?>_delete">Delete</label>
+<input type="file" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][file]" class="field file" id="field_<?=htmlspecialchars($id.'_'.$idParent)?>"/>
+<input type="checkbox" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][delete]" value="1" id="field_<?=htmlspecialchars($id.'_'.$idParent)?>_delete"/> <label for="field_<?=htmlspecialchars($id.'_'.$idParent)?>_delete">Delete</label>
 <?php
 	}
 	else {
 ?>
 <div>
-	Description / image alt <input type="text" name="field[<?=$id?>][alt]" value=""/>
+	Description / image alt <input type="text" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][alt]" value=""/>
 </div>
-<input type="file" name="field[<?=$id?>][file]" class="field file" id="field_<?=$id?>"/>
+<input type="file" name="field[<?=htmlspecialchars($idParent)?>][<?=$id?>][file]" class="field file" id="field_<?=$id?>"/>
 <?php
 	}
 }

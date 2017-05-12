@@ -5,6 +5,8 @@ class PersistentStorageUnknownInvalidException extends \exception {}
 class ContentLoaderException extends \exception {}
 class ContentLoader extends StructureDo
 {
+	const LOAD_ONE = 'ONE';
+	const LOAD_MULTIPLE = 'MULTIPLE';
 	private $bStructureLoaded;
 	private $filters; // TODO
 	private $limitis;
@@ -13,7 +15,7 @@ class ContentLoader extends StructureDo
 		$this->setStructureLoaded(false);
 		$this->setLimits(new Limits());
 		parent::__construct();
-	}	
+	}
 
 	/* Setters and getters attributes */
 	public function getStructureLoaded() {
@@ -73,7 +75,7 @@ class ContentLoader extends StructureDo
 		}
 	}
 	// Aseptic loadContent/loadContents return ContentsDo, ContentDo, null, etc loadContent and loadConents resolve this situation
-	private  function _loadContents($method, $params = null) {
+	private function _loadContents($method, $resultType, $params = null) {
 		switch ($method) {
 			case 'id+countParents':
 				//$content = $this->loadContents('id', $params);
@@ -83,8 +85,8 @@ class ContentLoader extends StructureDo
 				if($content) {
 					// Set the relations number to content, and content is contents->get($id)
 					//$content->get($params)->setCountParents($this->loadContents('countParents', $params));
-					$content->setCountParents($this->_loadContents('countParents', $params));
-					$content->setCountAliasId($this->_loadContents('count-alias-id', ['alias_id' => $content->getAliasId()]));
+					$content->setCountParents($this->_loadContents('countParents', ContentLoader::LOAD_MULTIPLE, $params));
+					$content->setCountAliasId($this->_loadContents('count-alias-id', ContentLoader::LOAD_MULTIPLE, ['alias_id' => $content->getAliasId()]));
 				}
 
 				return $content;
@@ -119,6 +121,9 @@ class ContentLoader extends StructureDo
 				$query = new Query();
 				$query->setType($method);
 				$query->setCondition($params);
+				if ($resultType === contentLoader::LOAD_ONE) {
+					$this->getLimits()->setStep(1);
+				}
 				$query->setLimits($this->getLimits());
 				return $persistentManager->load($this, $query);
 			break;
@@ -127,7 +132,7 @@ class ContentLoader extends StructureDo
 	}
 	// Return always a ContentsDo collection or throw exception
 	public function loadContents($method, $params = null) {
-		$result = $this->_loadContents($method, $params);
+		$result = $this->_loadContents($method, ContentLoader::LOAD_MULTIPLE, $params);
 		if (is_object($result) && get_class($result) === 'Acd\Model\ContentDo') {
 			// Add ContentDo to ContentsDo collection
 			$resultContents = new ContentsDo();
@@ -146,7 +151,7 @@ class ContentLoader extends StructureDo
 	}
 	// Return ContentDo object, other value like number or null
 	public function loadContent($method, $params = null) {
-		$result = $this->_loadContents($method, $params);
+		$result = $this->_loadContents($method, ContentLoader::LOAD_ONE, $params);
 		if (is_object($result) && get_class($result) === 'Acd\Model\ContentsDo') {
 			// Extract first ContentDo from collection
 			return $result->one();
@@ -155,10 +160,6 @@ class ContentLoader extends StructureDo
 			// It's a ContentDo or an expected value (number in a count query)
 			return $result;
 		}
-	}
-	public function getFilePath($idFile) {
-		$relativePath = substr($idFile, 0, 3);
-		return \Acd\conf::$DATA_CONTENT_PATH.'/'.$relativePath.'/'.$idFile;
 	}
 	public function saveContent($contentDo) {
 		/* Get metainformation */
@@ -176,7 +177,7 @@ class ContentLoader extends StructureDo
 				$uploadData = $field->getValue();
 				$fieldId = $field->getId();
 				$idFile = md5(urlencode($structureId ).'/'.urlencode($fieldId).'/'.$contentId);
-				$destinationPath = $this->getFilePath($idFile);
+				$destinationPath = File::getPath($idFile);
 				$dirPath = dirname($destinationPath);
 				if($uploadData['delete']) {
 					if (is_writable($destinationPath)){
@@ -196,7 +197,20 @@ class ContentLoader extends StructureDo
 					if (!is_dir($dirPath)){
 						mkdir($dirPath, 0755, true);
 					}
-					move_uploaded_file($uploadData['tmp_name'], $destinationPath);
+					switch ($uploadData['origin']) {
+						case \Acd\conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_UPLOAD:
+							move_uploaded_file($uploadData['tmp_name'], $destinationPath);
+							break;
+
+						case \Acd\conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_PATH:
+							copy($uploadData['tmp_name'], $destinationPath);
+							break;
+
+						default:
+							throw new ContentLoaderException('Error on save file, origin method not supported.', 1);
+							break;
+					}
+
 					$uploadData['value'] = $idFile;
 				}
 				unset($uploadData['tmp_name']);
@@ -224,7 +238,7 @@ class ContentLoader extends StructureDo
 				// TODO unify with saveUpload
 				$fieldId = $field->getId();
 				$idFile = md5(urlencode($structureId ).'/'.urlencode($fieldId).'/'.$contentId);
-				$destinationPath = $this->getFilePath($idFile);
+				$destinationPath = File::getPath($idFile);
 				if (is_writable($destinationPath)){
 					unlink ($destinationPath);
 					$dirPath = dirname($destinationPath);

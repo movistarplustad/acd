@@ -16,7 +16,9 @@ function loadNewRef($idRef, $idStructure) {
 
 	return $content;
 }
-$action = isset($_GET['a']) ? $_GET['a'] : 'list_structures';
+$action = isset($_REQUEST['a']) ? $_REQUEST['a'] : 'list_structures';
+$view = isset($_REQUEST['v']) ? $_REQUEST['v'] : 'page';
+
 if (!Model\Auth::isLoged()) {
 	$action = 'login';
 }
@@ -61,10 +63,10 @@ switch ($action) {
 		break;
 	case 'delete':
 	case 'list_contents':
-		$id = $_GET['id'];
-		@$titleSearch = $_GET['s'];
-		$numPage = isset($_GET['p']) ? (int) $_GET['p'] : 0;
-		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
+		$id = $_REQUEST['id'];
+		@$titleSearch = $_REQUEST['s'];
+		$numPage = isset($_REQUEST['p']) ? (int) $_REQUEST['p'] : 0;
+		$bResult = isset($_REQUEST['r']) && $_REQUEST['r'] === 'ko' ? false : true;
 
 		// back button
 		$navigation = new SessionNavigation();
@@ -116,10 +118,10 @@ switch ($action) {
 		}
 		break;
 	case 'new':
-		$idStructureType = $_GET['idt'];
+		$idStructureType = $_REQUEST['idt'];
 		// Posible parent
-		@$idParent = $_GET['idp'] ?: null; // TODO duplicado en edit y clone
-		@$idTypeParent = $_GET['idtp'] ?: null;
+		@$idParent = $_REQUEST['idp'] ?: null; // TODO duplicado en edit y clone
+		@$idTypeParent = $_REQUEST['idtp'] ?: null;
 
 		// back button
 		$navigation = new SessionNavigation();
@@ -161,23 +163,26 @@ switch ($action) {
 	case 'edit':
 	case 'clone':
 	case 'summary':
-		$bResult = isset($_GET['r']) && $_GET['r'] == 'ok' ? true : false;
-		$id = $_GET['id'];
-		$idStructureType = $_GET['idt'];
+		$bResult = isset($_REQUEST['r']) && $_REQUEST['r'] == 'ok' ? true : false;
+		$id = $_REQUEST['id'];
+		$idStructureType = $_REQUEST['idt'];
 		// Posible parent
-		@$idParent = $_GET['idp'] ?: null;
-		@$idTypeParent = $_GET['idtp'] ?: null;
+		@$idParent = $_REQUEST['idp'] ?: null;
+		@$idTypeParent = $_REQUEST['idtp'] ?: null;
 
 		// back button
-		$navigation = new SessionNavigation();
-		$navigation->load();
-		$back = !$navigation->isEmpty();
-		$navigation->push([
-			'hash' => "edit_content - $idStructureType - $id",
-			'url' => $_SERVER["REQUEST_URI"],
-			'title' => 'Manage content ('.$idStructureType.')'
-		]);
-		$navigation->save();
+		$back = false;
+		if($view === 'page') {
+			$navigation = new SessionNavigation();
+			$navigation->load();
+			$back = !$navigation->isEmpty();
+			$navigation->push([
+				'hash' => "edit_content - $idStructureType - $id",
+				'url' => $_SERVER["REQUEST_URI"],
+				'title' => 'Manage content ('.$idStructureType.')'
+			]);
+			$navigation->save();
+		}
 
 		$headerMenuOu = new View\HeaderMenu();
 		$headerMenuOu->setBack($back);
@@ -196,45 +201,56 @@ switch ($action) {
 
 		// Modify relations or collection of relations
 		//&idm=imagen alternativa&refm=yy54f5c82b6803fabb068b4567&reftm=enlace&posm=0
-		if (isset($_GET['idm'])) {
-			$modifiedFieldName = $_GET['idm']; //'imagen alternativa'; // elementos
-			$modifiedRef = $_GET['refm']; //'xx54f5c82b6803fabb068b4567';
-			$modifiedIdStructure = $_GET['reftm']; //''enlace';
-			$modifiedFieldPosition = isset($_GET['posm']) ? $_GET['posm'] : null;
-			try {
-				//+d($content->getFields());
-				$modifiedField = $content->getFields()->get($modifiedFieldName);
-				switch ($modifiedField->getType()) {
-					case Model\FieldDo::TYPE_CONTENT:
-						$newRef = loadNewRef($modifiedRef, $modifiedIdStructure);
-						break;
-					case Model\FieldDo::TYPE_COLLECTION:
-
-						/* Modify or delete item */
-						if ($modifiedRef) {
-							$newRef = $modifiedField->getValue();
-							$newRef->add(loadNewRef($modifiedRef, $modifiedIdStructure));
-						}
-						else {
-							$newRef = $modifiedField->getValue();
-							$newRef->remove($modifiedFieldPosition);
-						}
-
-						break;
-					default:
-				 		$newRef = $modifiedField;
-						break;
-				}
-				//d($content);
-				//d($modifiedFieldName, $newRef);
-				$content->setFieldValue($modifiedFieldName, $newRef);
-				//d($content);
-
-				$modifiedField->setDirty(true, $modifiedFieldPosition);
+		if (isset($_REQUEST['modrel']) && isset($_REQUEST['element'])) {
+			$elements = $_REQUEST['element'];
+			$selectedElements = @$_REQUEST['posElement'] ?: [];
+			$insertRelatedPosition = 'bottom';
+			if ((isset($_REQUEST['action']) && $_REQUEST['action'] === 'add top') ||
+				(isset($_REQUEST['relto']) && $_REQUEST['relto'] === 'top')) {
+				$insertRelatedPosition = 'top';
+				$selectedElements = array_reverse($selectedElements);
 			}
-			catch(\Exception $e) {
-				$contentOu->setResultDesc("Error, field <em>$modifiedFieldName</em> not found in content", "fail");
-				$bResult = false;
+			foreach ($selectedElements as $position) {
+				$modifiedFieldName = $elements[$position]['idm']; //'imagen alternativa'; // elementos
+				$modifiedRef = $elements[$position]['refm']; //'xx54f5c82b6803fabb068b4567';
+				$modifiedIdStructure = $elements[$position]['reftm']; //''enlace';
+				$modifiedFieldPosition = isset($elements[$position]['posm']) ? $elements[$position]['posm'] : null;
+				try {
+					//+d($content->getFields());
+					$modifiedField = $content->getFields()->get($modifiedFieldName);
+					switch ($modifiedField->getType()) {
+						case Model\FieldDo::TYPE_CONTENT:
+							$newRef = loadNewRef($modifiedRef, $modifiedIdStructure);
+							break;
+						case Model\FieldDo::TYPE_COLLECTION:
+
+							/* Modify or delete item */
+							if ($modifiedRef) {
+								$newRef = $modifiedField->getValue();
+								$position = $insertRelatedPosition === 'top' ? $newRef::PREPEND : null;
+								$newRef->add(loadNewRef($modifiedRef, $modifiedIdStructure), $position);
+							}
+							else {
+								$newRef = $modifiedField->getValue();
+								$newRef->remove($modifiedFieldPosition);
+							}
+
+							break;
+						default:
+							$newRef = $modifiedField;
+							break;
+					}
+					//d($content);
+					//d($modifiedFieldName, $newRef);
+					$content->setFieldValue($modifiedFieldName, $newRef);
+					//d($content);
+
+					$modifiedField->setDirty(true, $modifiedFieldPosition);
+				}
+				catch(\Exception $e) {
+					$contentOu->setResultDesc("Error, field <em>$modifiedFieldName</em> not found in content", "fail");
+					$bResult = false;
+				}
 			}
 		}
 
@@ -272,6 +288,7 @@ switch ($action) {
 }
 
 $skeletonOu->setContent($contentOu->render());
+$skeletonOu->setView($view);
 
 header("Content-Type: text/html");
 header("Expires: 0");

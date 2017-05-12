@@ -1,8 +1,8 @@
-<label for="<?=htmlspecialchars($fieldId)?>" class="for-tag"><?=htmlspecialchars($fieldName)?>:&nbsp;</label>
+<label for="<?=htmlspecialchars($fieldId.'_'.$idParent)?>" class="for-tag"><?=htmlspecialchars($fieldName)?>:&nbsp;</label>
 <?php
 	 $itemsInOut = $fieldOptions->detachItems($fieldValue);
 ?>
-<select multiple="multiple" name="<?=htmlspecialchars($fieldId)?>[]" id="<?=htmlspecialchars($fieldId)?>" class="field select">
+<select multiple="multiple" name="<?=htmlspecialchars($fieldId)?>[<?=htmlspecialchars($idParent)?>][]" id="<?=htmlspecialchars($fieldId.'_'.$idParent)?>" class="field select">
 	<?php
 		foreach ($itemsInOut['in'] as $key => $value) {
 	?>

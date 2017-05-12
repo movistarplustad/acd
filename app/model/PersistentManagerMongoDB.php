@@ -41,6 +41,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 					$contentsTemp = $this->loadTagOneDepth($structureDo, $query->getCondition('tags'), $query->getDepth(), $filters);
 					return is_null($contentsTemp) ? null : $contentsTemp->one();
 					break;
+				case 'tag-deep': // Elements matching with tag
+					return $this->loadTagDepth($structureDo, $query->getCondition('tags'), $query, $filters);
+					break;
 				case 'field-value':
 					return $this->loadFieldValue($structureDo, $query->getCondition('data_value_query'), $query);
 					break;
@@ -317,6 +320,25 @@ class PersistentManagerMongoDB implements iPersistentManager
 		else {
 			return null;
 		}
+	}
+	private function loadTagDepth($structureDo, $tags, $query, $filters = []) {
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+		$depth = $query->getDepth();
+		// Set pagination limits
+		$limits = $query->getLimits();
+		$mongoCollection = $this->db->selectCollection('content');
+		// db.content.find({"tags":{ $in : ["portadacine"]}, "id_structure" : "padre"}).pretty()
+		$cursor = $mongoCollection->find(array('tags' => array('$in' => $tags), 'id_structure' => $structureDo->getId()));
+		$cursor->skip($limits->getLower())->limit($limits->getUpper()-$limits->getLower()); // Limits
+		$limits->setTotal($cursor->count());
+		$result = new ContentsDo();
+		foreach ($cursor as $documentFound) {
+			$result->add($this->loadIdDepth ($structureDo, (string) $documentFound['_id'], $depth, $filters)->one());
+		}
+		$result->setLimits($limits);
+		return $result;
 	}
 	private function loadAliasIdDepth($structureDo, $idContent, $depth, $filters = []) {
 		if (!$this->isInitialized($structureDo)) {
@@ -606,17 +628,19 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$filters = $this->getFilters($query);
 		$result = new ContentsDo();
 		// Build filter (TODO, find use of array_walk or similar)
-		$filters = ['id_structure' => $structureDo->getId()];
+		$filtersFields = ['id_structure' => $structureDo->getId()];
 		foreach ($dataValueQuery as $queryKey => $queryValue) {
-			$filters['data.'.$queryKey] = $queryValue; // Search only in data fields
+			$filtersFields['data.'.$queryKey] = $queryValue; // Search only in data fields
 		}
-		$cursor = $mongoCollection->find($filters);
+		$cursor = $mongoCollection->find($filtersFields);
 		$cursor->skip($limits->getLower())->limit($limits->getUpper()-$limits->getLower());
 		foreach ($cursor as $documentFound) {
 			$documentFound = $this->normalizeDocument($documentFound);
 			$idContent = $documentFound['id'];
 			$content = $this->loadIdDepth($structureDo, $idContent, $deep, $filters);
-			$result->add($content->one(), $idContent);
+			if ($content) {
+				$result->add($content->one(), $idContent);
+			}
 		}
 
 		return $result;
