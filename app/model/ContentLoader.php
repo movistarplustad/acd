@@ -179,7 +179,7 @@ class ContentLoader extends StructureDo
 				$idFile = md5(urlencode($structureId ).'/'.urlencode($fieldId).'/'.$contentId);
 				$destinationPath = File::getPath($idFile);
 				$dirPath = dirname($destinationPath);
-				if($uploadData['delete']) {
+				if(isset($uploadData['delete']) && $uploadData['delete']) {
 					if (is_writable($destinationPath)){
 						unlink ($destinationPath);
 						if (count(scandir($dirPath)) == 2) {
@@ -193,7 +193,7 @@ class ContentLoader extends StructureDo
 						$uploadData['size'] = '';
 					}
 				}
-				if($uploadData['tmp_name'] && $uploadData['size']) {
+				if(isset($uploadData['tmp_name']) && $uploadData['tmp_name'] && isset($uploadData['size']) && $uploadData['size']) {
 					if (!is_dir($dirPath)){
 						mkdir($dirPath, 0755, true);
 					}
