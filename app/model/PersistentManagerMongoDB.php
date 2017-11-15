@@ -547,9 +547,12 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$directoryTmp = '';
 		$separator = ''; // First time is '' next is '/'
 		foreach ($aDirectoryParts as $directory) {
-			$directoryTmp .= $separator.$directory;
-			$separator = '/';
-			$aDirectory[] = $directoryTmp;
+			// Trim empty directory names
+			if($directory !== '') {
+				$directoryTmp .= $separator.$directory;
+				$separator = '/';
+				$aDirectory[] = $directoryTmp;
+			}
 		}
 
 		$filter = [

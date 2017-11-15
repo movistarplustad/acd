@@ -15,6 +15,9 @@ class AliasId extends Template {
 	public function setMatchList($matchList) {
 		$this->__set('matchList', $matchList);
 	}
+	public function setResultDesc($resultDesc) {
+		$this->__set('resultDesc', $resultDesc);
+	}
 
 	public function render($tpl = '') {
 		$tpl = \Acd\conf::$DIR_TEMPLATES.'/AliasId.tpl';
