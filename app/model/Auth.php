@@ -71,6 +71,7 @@ class Auth  {
 		return $aCredentials;
 	}
 	public static function loginByCredentials($login, $password, $remember) {
+		if (!$login) throw new AuthInvalidUserException("Invalid login cannot be null value");
 		$query = new Query();
 		$query->setType('id');
 		$query->setCondition(['id' => $login]);

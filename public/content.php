@@ -284,7 +284,8 @@ switch ($action) {
 		}
 		break;
 	default:
-		dd("Error 404");
+		header("HTTP/1.0 404 Not Found");
+		die("Error 404");
 }
 
 $skeletonOu->setContent($contentOu->render());
