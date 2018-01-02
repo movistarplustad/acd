@@ -17,7 +17,13 @@ var editor = {
 
 		/* Prevent accidental  delete*/
 		editor.$iDelete.bind("click", editor.confirmDelete);
-		$( ".fields .items" ).sortable();
+		$( ".fields .items" )
+		.find( ".field" )
+			.prepend("<span class='draggable'></span>").end()
+		.sortable({
+			items: "> .field",
+			handle: "> .draggable"
+		});
 
 		/* Search structures */
 		if($("#structures_list").length > 0) {
@@ -25,14 +31,28 @@ var editor = {
 				.before("<div class='wrap_filter'><label for='structures_filter'>Filter:</label> <input type='search' id='structures_filter'/></div>");
 			var jets = new Jets({
 				searchTag: '#structures_filter',
-				contentTag: "#structures_list"
+				contentTag: "#structures_list",
+				diacriticsMap: {
+					a: 'ÀÁÂÃÄÅàáâãäåĀāąĄ',
+					c: 'ÇçćĆčČ',
+					d: 'đĐďĎ',
+					e: 'ÈÉÊËèéêëěĚĒēęĘ',
+					i: 'ÌÍÎÏìíîïĪī',
+					l: 'łŁ',
+					n: 'ÑñňŇńŃ',
+					o: 'ÒÓÔÕÕÖØòóôõöøŌō',
+					r: 'řŘ',
+					s: 'ŠšśŚ',
+					t: 'ťŤ',
+					u: 'ÙÚÛÜùúûüůŮŪū',
+					y: 'ŸÿýÝ',
+					z: 'ŽžżŻźŹ'
+				}
 			});
 		}
 
-		/* Sortable collection fields */
-		$( ".collection" ).sortable({
-			items: "li:not(.find)"
-		});
+		/* Content fields */
+		editor.enhacedContentForm(document);
 
 		/* Content list */
 		$("#contents_list")
@@ -41,13 +61,39 @@ var editor = {
 				$(this).css("counter-reset", "num-item " + lowerLimit); // Set first position number
 			});
 
+		/* Enumerated */
+		// Return a helper with preserved width of cells
+		var fixHelper = function(e, ui) {
+			ui.children().each(function() {
+				$(this).width($(this).width());
+			});
+			return ui;
+		};
+
+		$(".result_table.enumerated tbody").sortable({
+			helper: fixHelper
+		});
+
+
+	},
+	enhacedContentForm : function(context) {
+		var $context = $(context);
+		/* Sortable collection fields li:first-child */
+		$context.find( ".collection" )
+			.find( ".relatedContent" )
+				.prepend("<span class='draggable'></span>").end()
+			.sortable({
+				items: "> .relatedContent",
+				handle: "> .draggable"
+			});
+
 		/* Date fields */
 		/* Polyfill */
 		// 1990-12-31T23:59:60Z
 		var inputElem = document.createElement("input");
 		inputElem.setAttribute("type", "date");
 		if(inputElem.type === "text") {
-			$("input[type=date]").datetimepicker({
+			$context.find("input[type=date]").datetimepicker({
 				lang: "es",
 				dayOfWeekStart: 1,
 				timepicker: false,
@@ -74,7 +120,7 @@ var editor = {
 		)}
 		inputElem.setAttribute("type", "datetime");
 		if(inputElem.type === "text") {
-			$("input[type=datetime]").datetimepicker({
+			$context.find("input[type=datetime]").datetimepicker({
 				lang: "es",
 				step: 30,
 				dayOfWeekStart: 1,
@@ -97,15 +143,16 @@ var editor = {
 						})
 					}
 				}
-
-				});
+			});
 		}
 
 		/* Textarea WYSIWYG  */
-		CKEDITOR.replaceAll("richtext");
+		$context.find(".richtext").each( function() {
+			CKEDITOR.replace(this);
+		});
 
 		/* Tags */
-		$(".tags")
+		$context.find(".tags")
 			.filter(function() {
 				var options = {};
 
@@ -124,42 +171,76 @@ var editor = {
 
 				$(this).tagit(options);
 
-				var sortableTags = $(".tags.sortable");
+				var sortableTags = $context.find(".tags.sortable");
 				$(sortableTags).siblings(".tagit").sortable({
 					stop: function(event,ui) {
 						$(sortableTags).val(
-							$(".tagit-label",$(this))
+							$context.find(".tagit-label",$(this))
 								.clone()
 								.text(function(index,text){ return (index == 0) ? text : "," + text; })
 								.text()
 						);
 					}
-		  	      });
-
-			/* Alias Id. */
-			//$(".aliasId").aliasIdFormat();
-			$("input[type=text]").aliasIdFormat();
-
-			/* Select simple and multiple */
-			$('.field.select option[value=""]').html(""); // Resolve bug of selectivity for empty options
-			$('.field.select').selectivity({
-				allowClear: true,
-				placeholder: "Select option…"
+				});
 			});
+
+		/* Alias Id. */
+		//$(".aliasId").aliasIdFormat();
+		$context.find("input[type=text]").aliasIdFormat();
+
+		/* Select simple and multiple */
+		$context.find('.field.select option[value=""]').html(""); // Resolve bug of selectivity for empty options
+		$context.find('.field.select').selectivity({
+			allowClear: true,
+			placeholder: "Select option…"
 		});
 
-		/* Enumerated */
-		// Return a helper with preserved width of cells
-		var fixHelper = function(e, ui) {
-			ui.children().each(function() {
-				$(this).width($(this).width());
-			});
-			return ui;
-		};
+		/* Related content */
+		$context.find(".relatedContent .button.edit")
+			.each(function () {
+				$(this)
+					.data("status", "empty");
 
-		$(".result_table.enumerated tbody").sortable({
-			helper: fixHelper
-		});
+				$(this)
+					.parent()
+					.append("<div class='wrapChildContent hidden'></div>");
+			})
+			.on("click", function(e) {
+				var $edit = $(this);
+				var $wrapContent = $edit.siblings(".wrapChildContent");
+
+				switch ($edit.data("status")) {
+					case "empty":
+						/* Load and fill gap */
+						var url = $edit.attr("href");
+						$wrapContent
+							.removeClass("hidden")
+							.html("<p class='result'>Loading...</p>");
+						$.get( url, {"v" : "ajax"})
+							.done(function(data) {
+								/* Get inner form and insert in gap */
+								var $contentFields = $(data)
+									.find(".inner-form");
+								$contentFields.find(".wrap-actions").remove();
+								$wrapContent
+									.html($contentFields);
+								editor.enhacedContentForm($wrapContent.get(0));
+								$edit.data("status", "fill-visible");
+							});
+
+						break;
+					case "fill-visible":
+						$wrapContent.addClass("hidden");
+						$edit.data("status", "fill-hidden");
+						break;
+					case "fill-hidden":
+						$wrapContent.removeClass("hidden");
+						$edit.data("status", "fill-visible");
+						break;
+				}
+
+				e.preventDefault();
+			});
 
 	},
 	confirmDelete : function(e) {

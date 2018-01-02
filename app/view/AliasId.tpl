@@ -12,6 +12,7 @@
 	<ol id="precise_aliasId_list">
 			<?=$list['precise']?>
 	</ol>
+	<?=$resultDesc ? "<p>$resultDesc</p>" : ''?>
 	<?php
 	if ($list['difuse']) {
 	?>

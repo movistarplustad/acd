@@ -7,6 +7,7 @@ class Collection implements \IteratorAggregate
 {
 	protected $elements;
 	private $limits;
+	const PREPEND = 'PREPEND';
 
 	public function __construct() {
 		$this->elements = array(); /* Create empty structure */
@@ -22,16 +23,23 @@ class Collection implements \IteratorAggregate
 	}
 
 	public function add($element, $key = null) {
-		if ($key == null) {
-			$this->elements[] = $element;
-		}
-		else {
-			if ($this->hasKey($key)) {
-				throw new KeyHasUseException("Key '$key' already in use.");
-			}
-			else {
-				$this->elements[$key] = $element;
-			}
+		switch ($key) {
+			// Insert onto the begin
+			case Collection::PREPEND:
+				array_unshift($this->elements, $element);
+				break;
+			// Insert onto the end
+			case null:
+				$this->elements[] = $element;
+				break;
+			default:
+				if ($this->hasKey($key)) {
+					throw new KeyHasUseException("Key '$key' already in use.");
+				}
+				else {
+					$this->elements[$key] = $element;
+				}
+				break;
 		}
 	}
 

@@ -26,9 +26,14 @@ else {
 }
 
 $aliasIdController = new Controller\AliasId();
-$aliasIdController->setAliasId($aliasId);
-$aliasIdController->setRequestUrl($_SERVER["REQUEST_URI"]); // For history back
-$aliasIdController->load();
+try {
+	$aliasIdController->setAliasId($aliasId);
+	$aliasIdController->setRequestUrl($_SERVER["REQUEST_URI"]); // For history back
+	$aliasIdController->load();
+}
+catch( \Acd\Model\StorageKeyInvalidException $e) {
+	$aliasIdController->setResultDesc("Error, zero results. ".$e->getMessage());
+}
 
 $skeletonOu = new View\BaseSkeleton();
 $skeletonOu->setBodyClass('aliasId');

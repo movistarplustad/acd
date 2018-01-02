@@ -15,6 +15,7 @@ class ValueFormater
 	const TYPE_LIST_MULTIPLE = 'list_multiple_options';
 	const TYPE_TEXT_HANDMADE_HTML = 'text_handmade_html';
 	const TYPE_COORDINATE = 'coordinate';
+	const TYPE_ID = 'id';
 
 	// Formats to getting and setting values
 	const FORMAT_INTERNAL = 0;
@@ -174,6 +175,9 @@ class ValueFormater
 			}
 			return $result;
 		};
+		$formater[self::TYPE_ID][self::FORMAT_EDITOR] = function ($value) {
+			return $value === '-' ? '' : $value;
+		};
 
 		if(isset($formater[$type][$format])) {
 			return $formater[$type][$format]($value);
@@ -276,6 +280,9 @@ class ValueFormater
 				$result['longitude'] = floatval($value['longitude']);
 			}
 			return $result;
+		};
+		$formater[self::TYPE_ID][self::FORMAT_EDITOR] = function ($value) {
+			return $value ? $value : '-';
 		};
 
 		if(isset($formater[$type][$format])) {

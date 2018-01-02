@@ -17,7 +17,7 @@
 					$selected = $storage === $key ? ' selected="selected"' : '';
 					$disabled = $value['disabled'] ? ' disabled="disabled"' : '';
 					$options .= '<option value="'.htmlspecialchars($key).'"'.$selected.$disabled.'>'.htmlspecialchars($value['name']).'</option>';
-					
+
 				}
 				?>
 				<label for="storage">Storage type:&nbsp;</label><select name="storage" id="storage" required="required"><?=$options?></select>
@@ -93,7 +93,7 @@
 
 
 	<article class="dev_sample">
-		<h1>Examples for developer</h1>		
+		<h1>Examples for developer</h1>
 		<pre>
 			// Can use contentLoader->loadContents(...) to return ContentsDo collection with the 0:n ContentDo matching elements
 			// Can use contentLoader->loadContent(...) to return ContentDo object,  discret content ie. number in count query or null if matching is not done
@@ -111,30 +111,35 @@
 			// Sample #3 by any match tag, with n related levels
 			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
+			$contentsByTagWithLevelOfDepth = $contentLoader->loadContent('tag-deep', ['tags' => ['portadacine', 'otros'], 'depth' => 2]);
+
+			// Sample #4 only one content by any match tag, with n related levels
+			$contentLoader = new \Acd\Model\ContentLoader();
+			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
 			$contentByTagWithLevelOfDepth = $contentLoader->loadContent('tag-one-deep', ['tags' => ['portadacine', 'otros'], 'depth' => 2]);
 
-			// Sample #4 by any match tag, with n related levels and only content in date
+			// Sample #5 by any match tag, with n related levels and only content in date
 			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
 			$contentByTagWithLevelOfDepth = $contentLoader->loadContent('tag-one-deep', ['tags' => ['portadacine', 'otros'], 'depth' => 2, 'validity-date' => time()]);
 
-			// Sample #5 by alias-id, with n related leveles and only content in date
+			// Sample #6 by alias-id, with n related leveles and only content in date
 			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
 			$content = $contentLoader->loadContent('alias-id-deep', ['id' => $aliasIdContent, 'depth' => 5, 'validity-date' => time()]);
 
-			// Sample #6 by id, with n related levels and only content in date and profile JAZZ
+			// Sample #7 by id, with n related levels and only content in date and profile JAZZ
 			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>');
 			$content = $contentLoader->loadContent('id-deep', ['id' => $idContent, 'depth' => 5, 'validity-date' => time(), 'profile' => 'JAZZ']);
 
-			// Sample #7 difuse search by alias-id, e.g. one/two/three match by one/two/three &amp; one/two &amp; one
+			// Sample #8 difuse search by alias-id, e.g. one/two/three match by one/two/three &amp; one/two &amp; one
 			$aliasId='one/two/three';
 			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>'); // Optional
 			$matchContents = $contentLoader->loadContent('difuse-alias-id', ['id' => $aliasId]);
 
-			// Sample #8 difuse search by alias-id, e.g. one/two/three match by one/two/three &amp; one/two &amp; one and only content in date
+			// Sample #9 difuse search by alias-id, e.g. one/two/three match by one/two/three &amp; one/two &amp; one and only content in date
 			$aliasId='one/two/three';
 			$contentLoader = new \Acd\Model\ContentLoader();
 			$contentLoader->setId('<?=htmlspecialchars($structureId)?>'); // Optional

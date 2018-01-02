@@ -10,12 +10,14 @@ class AliasId {
 	private $aliasIdMatches;
 	private $view;
 	private $content;
+	private $resultDesc;
 	private $sessionNavigation;
 	private $requestUrl;
 	const VIEW_LIST = 'list'; // List of all alias-id matches
 
 	public function __construct() {
 		$this->initializeSessionNavigation();
+		$this->setAliasIdMatches([]);
 	}
 
 	/* Setters and getters attributes */
@@ -30,6 +32,12 @@ class AliasId {
 	}
 	public function getView() {
 		return $this->view;
+	}
+	public function setResultDesc($resultDesc) {
+		$this->resultDesc = $resultDesc;
+	}
+	public function getResultDesc() {
+		return $this->resultDesc;
 	}
 	private function setContent($content) {
 		$this->content = $content;
@@ -76,6 +84,7 @@ class AliasId {
 		$ou->setContentTitle($this->getAliasId());
 		$ou->setAliasId($this->getAliasId());
 		$ou->setMatchList($this->getAliasIdMatches());
+		$ou->setResultDesc($this->getResultDesc());
 
 		$this->sessionNavigation->push([
 			'hash' => 'aliasId - '.$this->getAliasId(), // Page hash, consecutive same hash no add navigation

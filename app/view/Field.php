@@ -1,5 +1,6 @@
 <?php
 namespace Acd\View;
+use \Acd\Model\ValueFormater;
 //require_once (DIR_BASE.'/app/view/Template.php');
 // Output
 class Field extends Template {
@@ -9,7 +10,7 @@ class Field extends Template {
 	public function __construct() {
 		$this->__set('resultDesc', '');
 		$this->__set('resultCode', '');
-	}	
+	}
 
 	public function setId($id) {
 		$this->__set('id', $id);
@@ -19,7 +20,7 @@ class Field extends Template {
 		$this->__set('fieldId', $field->getId());
 		$this->__set('fieldName', $field->getName());
 
-		$this->__set('fieldValue', \Acd\Model\ValueFormater::encode($field->getValue(), $field->getType(), \Acd\Model\ValueFormater::FORMAT_EDITOR)); // Antes $field->getValue());
+		$this->__set('fieldValue', ValueFormater::encode($field->getValue(), $field->getType(), ValueFormater::FORMAT_EDITOR)); // Antes $field->getValue());
 		//$ref = $field->getRef();
 		$ref = $field->getValue();
 		if($field->getType() === 'content' && $ref) {
@@ -45,11 +46,14 @@ class Field extends Template {
 	}
 	public function setParent($parent) {
 		$this->__set('idStructureParent', $parent->getIdStructure());
-		$this->__set('idParent', $parent->getId());
+		$this->__set('idParent', ValueFormater::encode($parent->getId(), ValueFormater::TYPE_ID, ValueFormater::FORMAT_EDITOR));
+		$this->__set('bNew', !$parent->getId());
 	}
+	/* Quarantine
 	public function newContent($bnewContent) {
 		$this->__set('bNew', true);
 	}
+	*/
 	public function setResultDesc($description, $code) {
 		$this->__set('resultDesc', $description);
 		$this->__set('resultCode', $code);
@@ -63,7 +67,7 @@ class Field extends Template {
 		}
 		else {
 			throw new Exception("Template form not defined [$type]", EXCEPTION_TEMPLATE_FORM_TYPE);
-			
+
 		}
 	}
 	public function render($tpl = '') {

@@ -1,12 +1,13 @@
 <?php
 namespace Acd\View;
+use \Acd\Model\ValueFormater;
 // Output
 class ContentEditContent extends Template {
 	private $structure;
 	public function __construct() {
 		$this->__set('resultDesc', '');
 		$this->__set('resultCode', '');
-	}	
+	}
 
 	// INDEX
 	/*
@@ -24,15 +25,17 @@ class ContentEditContent extends Template {
 	}
 	public function setContent($content) {
 		$this->__set('content', $content);
-		$this->__set('contentTitle', \Acd\Model\ValueFormater::encode($content->getTitle(), \Acd\Model\ValueFormater::TYPE_TEXT_SIMPLE, \Acd\Model\ValueFormater::FORMAT_EDITOR));
-		$this->__set('aliasId', \Acd\Model\ValueFormater::encode($content->getAliasId(), \Acd\Model\ValueFormater::TYPE_TEXT_SIMPLE, \Acd\Model\ValueFormater::FORMAT_EDITOR));
-		$this->__set('contentTags', \Acd\Model\ValueFormater::encode($content->getTags(), \Acd\Model\ValueFormater::TYPE_TAGS, \Acd\Model\ValueFormater::FORMAT_EDITOR));
+		$this->__set('idContent', ValueFormater::encode($content->getId(), ValueFormater::TYPE_ID, ValueFormater::FORMAT_EDITOR));
+		$this->__set('contentTitle', ValueFormater::encode($content->getTitle(), ValueFormater::TYPE_TEXT_SIMPLE, ValueFormater::FORMAT_EDITOR));
+		$this->__set('aliasId', ValueFormater::encode($content->getAliasId(), ValueFormater::TYPE_TEXT_SIMPLE, ValueFormater::FORMAT_EDITOR));
+		$this->__set('contentTags', ValueFormater::encode($content->getTags(), ValueFormater::TYPE_TAGS, ValueFormater::FORMAT_EDITOR));
 		// TODO: add all sticky fields al Field objects
 		// Create fieldOutput object and set options for structure and set value for content
 		$this->structure->getStickyFields()->get('profile')->setValue($content->getProfile()->getValue());
 		$fieldOU = new \Acd\View\Field();
 		$fieldOU->setId('profile');
 		$fieldOU->setField($this->structure->getStickyFields()->get('profile'));
+		$fieldOU->setParent($content);
 		$this->__set('profileOU', $fieldOU);
 	}
 	public function setUserRol($rol) {
