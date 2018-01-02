@@ -5,8 +5,8 @@ require ('../autoload.php');
 
 $action = strtolower($_POST['a']);
 $id = $_POST['id'];
-$password = $_POST['password'] ? $_POST['password'] : null; // If password is not setted store a null value
-$rol = $_POST['rol'];
+$password = isset($_POST['password']) && $_POST['password'] !== '' ? $_POST['password'] : null; // If password is not setted store a null value
+$rol = isset($_POST['rol']) ? $_POST['rol'] : null;
 
 $userLoader = new Model\UserLoader();
 $query = new Model\Query();

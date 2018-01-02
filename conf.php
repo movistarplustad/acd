@@ -32,9 +32,9 @@ class conf {
 	public static $SESSION_GC_MAXLIFETIME;
 }
 conf::$DIR_TEMPLATES = DIR_BASE.'/app/view';
-conf::$DATA_PATH = '/mnt/contenido/acd/structures.json';
-conf::$DATA_DIR_PATH = '/mnt/contenido/acd/structures';
-conf::$DATA_CONTENT_PATH = '/mnt/contenido/acd/contents';
+conf::$DATA_PATH = '/mnt/content/acd/structures.json';
+conf::$DATA_DIR_PATH = '/mnt/content/acd/structures';
+conf::$DATA_CONTENT_PATH = '/mnt/content/acd/contents';
 conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_UPLOAD = 'FORM_UPLOAD';
 conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_PATH = 'PATH';
 conf::$STORAGE_TYPE_TEXTPLAIN  = 'text/plain';
