@@ -63,7 +63,7 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
 				$documentFound = $this->normalizeDocument($documentFound);
 				$userFound = new UserDo();
 				$userFound->load($documentFound);
-				$userCollectionFound->add($userFound);
+				$userCollectionFound->add($userFound, $userFound->getId());
 			}
 			return $userCollectionFound;
 			//return $aCredentials;
@@ -72,28 +72,41 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
 			return null;
 		}
 	}
-	public function save($userDo) {
-		// TODO
-		if (!$this->isInitialized()) {
-			$this->initialize();
+	private function saveAll($allUsers) {
+		$path = \ACD\conf::$PATH_AUTH_CREDENTIALS_FILE;
+		$aData = array();
+		foreach ($allUsers as $user) {
+			$aData[$user->getId()] = $user->tokenizeData();
 		}
-		$mongoCollection = $this->db->selectCollection('user');
-		$insert = $userDo->tokenizeData();
+		$tempPath = $path.'.tmp';
+		$somecontent = json_encode($aData);
 
-		$id = $userDo->getId();
-		unset ($insert['id']);
-		$insert['save_ts'] = time(); // Log, timestamp for last save / update operation
-		$mongoCollection->update(array('_id' => $id), $insert, array('upsert' => true));
+		if (!$handle = fopen($tempPath, 'a')) {
+			 echo "Cannot open file ($tempPath)";
+			 exit;
+		}
 
+		// Write $somecontent to our opened file.
+		if (fwrite($handle, $somecontent) === FALSE) {
+			throw new PersistentStructureManagerTextPlainException("Cannot write to file ($tempPath)", self::SAVE_FAILED);
+			exit;
+		}
+		fclose($handle);
+		rename($tempPath, $path);
+	}
+	public function save($userDo) {
+		/* Construct the json */
+		$allUsers = $this->loadAll(null);
+		$allUsers->set($userDo, $userDo->getId());
+		$this->saveAll($allUsers);
 		return $userDo;
 	}
 	public function delete($id) {
-		// TODO
-		if (!$this->isInitialized()) {
-			$this->initialize();
-		}
-		$mongoCollection = $this->db->selectCollection('user');
-		return $mongoCollection->remove(array('_id' => $id));
+		/* Construct the json */
+		$allUsers = $this->loadAll(null);
+		$allUsers->remove($id);
+		$this->saveAll($allUsers);
+		return $allUsers;
 	}
 	public function normalizeDocument($document) {
 		unset($document['_id']);
