@@ -76,6 +76,9 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
 		$mongoCollection = $this->db->selectCollection('user');
 		return $mongoCollection->remove(array('_id' => $id));
 	}
+	public function persist($userDo) {
+		dd("Persistir MongoDB", $userDo);
+	}
 	public function normalizeDocument($document) {
 		$document['id'] = (string) $document['_id'];
 		unset($document['_id']);

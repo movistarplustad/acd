@@ -1,5 +1,6 @@
 <?php
 namespace Acd\Model;
+use Acd\conf;
 
 class AuthInvalidUserException extends \exception {}
 class Auth  {
@@ -44,10 +45,10 @@ class Auth  {
 	}
 
 	private static function persistentFilePath($login) {
-		return \Acd\conf::$PATH_AUTH_PERMANENT_LOGIN_DIR.'/'.hash('sha1', $login);
+		return conf::$PATH_AUTH_PERMANENT_LOGIN_DIR.'/'.hash('sha1', $login);
 	}
 	public static function isLoged() {
-		if (\Acd\conf::$USE_AUTHENTICATION === false) {
+		if (conf::$USE_AUTHENTICATION === false) {
 			Auth::loginByFake();
 			return true;
 		}
@@ -55,8 +56,8 @@ class Auth  {
 			return true;
 		}
 		else {
-			$loginCookie = isset($_COOKIE['login']) ? $_COOKIE['login'] : null;
-			$token = isset($_COOKIE['token']) ? $_COOKIE['token'] : null;
+			$loginCookie = isset($_COOKIE[conf::$COOKIE_PREFIX.'login']) ? $_COOKIE[conf::$COOKIE_PREFIX.'login'] : null;
+			$token = isset($_COOKIE[conf::$COOKIE_PREFIX.'token']) ? $_COOKIE[conf::$COOKIE_PREFIX.'token'] : null;
 
 			return Auth::loginByPersintence($loginCookie, $token);
 		}
@@ -64,7 +65,7 @@ class Auth  {
 
 	// TODO: Borrar
 	protected static function loadAllCredentials() {
-		$path = \Acd\conf::$PATH_AUTH_CREDENTIALS_FILE;
+		$path = conf::$PATH_AUTH_CREDENTIALS_FILE;
 		$content = file_get_contents($path);
 		$aCredentials = json_decode($content, true);
 
@@ -83,28 +84,10 @@ class Auth  {
 		// TODO: controlar errores
 		// Remember login
 		if ($bLoginCorrect && $remember) {
-			$persistentData = array(
-				'login' => $login,
-				'token' => hash('sha1', uniqid()),
-				'rol' => $user->getRol(),
-				'timestamp' => time()
-			);
-			$jsonCredentials = json_encode($persistentData);
-			$path = Auth::persistentFilePath($login);
-			if (!$handle = fopen($path, 'w')) {
-				 echo "Cannot open file ($path)";
-				 exit;
-			}
-
-			// Write $jsonCredentials to our opened file.
-			if (fwrite($handle, $jsonCredentials) === FALSE) {
-				echo "Cannot write to file ($path)";
-				exit;
-			}
-			fclose($handle);
-			$expiration = time()+\Acd\conf::$AUTH_PERSITENT_EXPIRATION_TIME;
-			setcookie('login', $persistentData['login'],$expiration , '/', '', 0, 0);
-			setcookie('token', $persistentData['token'], $expiration, '/', '', 0, 1);
+			$userLoader->persist($user);
+			$expiration = time()+conf::$AUTH_PERSITENT_EXPIRATION_TIME;
+			setcookie(conf::$COOKIE_PREFIX.'login', $persistentData['login'],$expiration , '/', '', 0, 0);
+			setcookie(conf::$COOKIE_PREFIX.'token', $persistentData['token'], $expiration, '/', '', 0, 1);
 		}
 
 		if ($bLoginCorrect) {
@@ -138,7 +121,7 @@ class Auth  {
 			$_SESSION['loged'] = true;
 			$_SESSION['login_method'] = 'fake';
 			$_SESSION['login'] = 'no-login';
-			$_SESSION['rol'] = \Acd\conf::$ROL_DEVELOPER ;
+			$_SESSION['rol'] = conf::$ROL_DEVELOPER ;
 	}
 	public static function logout() {
 		// Inicializar la sesión.
@@ -162,14 +145,14 @@ class Auth  {
 		session_destroy();
 
 		// Eliminar los datos persistentes
-		$loginCookie = isset($_COOKIE['login']) ? $_COOKIE['login'] : null;
-		$token = isset($_COOKIE['token']) ? $_COOKIE['token'] : null;
+		$loginCookie = isset($_COOKIE[conf::$COOKIE_PREFIX.'login']) ? $_COOKIE[conf::$COOKIE_PREFIX.'login'] : null;
+		$token = isset($_COOKIE[conf::$COOKIE_PREFIX.'token']) ? $_COOKIE[conf::$COOKIE_PREFIX.'token'] : null;
 		$path = Auth::persistentFilePath($loginCookie);
 		if (file_exists($path)) {
 			unlink($path);
 		}
-		setcookie('login', '', time() - 42000, '/', '', 0, 0);
-		setcookie('token', '', time() - 42000, '/', '', 0, 0);
+		setcookie(conf::$COOKIE_PREFIX.'login', '', time() - 42000, '/', '', 0, 0);
+		setcookie(conf::$COOKIE_PREFIX.'token', '', time() - 42000, '/', '', 0, 0);
 	}
 	public static function getCredentials($login) {
 		$aCredentials = Auth::loadAllCredentials();
@@ -194,7 +177,7 @@ class Auth  {
 		if ($login === '' || $password === '') {
 			throw new AuthInvalidUserException("Invalid login or password [$login] : [$password]");
 		}
-		if ($rol !== \Acd\conf::$ROL_DEVELOPER && $rol !== \Acd\conf::$ROL_EDITOR) {
+		if ($rol !== conf::$ROL_DEVELOPER && $rol !== conf::$ROL_EDITOR) {
 			throw new AuthInvalidUserException("Invalid rol [$rol]");
 		}
 		$aCredentials = Auth::loadAllCredentials();
@@ -202,8 +185,8 @@ class Auth  {
 		$aCredentials[$login]['rol'] = $rol;
 		$jsonCredentials = json_encode($aCredentials);
 
-		$path = \Acd\conf::$PATH_AUTH_CREDENTIALS_FILE;
-		$tempPath = \Acd\conf::$PATH_AUTH_CREDENTIALS_FILE.'.tmp';
+		$path = conf::$PATH_AUTH_CREDENTIALS_FILE;
+		$tempPath = conf::$PATH_AUTH_CREDENTIALS_FILE.'.tmp';
 		if (!$handle = fopen($tempPath, 'a')) {
 			 echo "Cannot open file ($tempPath)";
 			 exit;
@@ -217,5 +200,4 @@ class Auth  {
 		fclose($handle);
 		rename($tempPath, $path);
 	}
-
 }

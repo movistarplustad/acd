@@ -8,6 +8,9 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
 	private function getStoragePath($structureDo) {
 		return \Acd\conf::$DATA_DIR_PATH.'/'.$structureDo->getId().'.json';
 	}
+	private static function persistentFilePath($login) {
+		return conf::$PATH_AUTH_PERMANENT_LOGIN_DIR.'/'.hash('sha1', $login);
+	}
 	public function initialize() {
 		if (!$this->isInitialized()){
 			$emptyData = '{}';
@@ -107,6 +110,28 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
 		$allUsers->remove($id);
 		$this->saveAll($allUsers);
 		return $allUsers;
+	}
+	public function persist($userDo) {
+		$persistentData = array(
+				'login' => $userDo->getId(),
+				'token' => hash('sha1', uniqid()),
+				'rol' => $userDo->getRol(),
+				'timestamp' => time()
+			);
+		$jsonCredentials = json_encode($persistentData);
+		$path = Auth::persistentFilePath($login);
+		if (!$handle = fopen($path, 'w')) {
+				echo "Cannot open file ($path)";
+				exit;
+		}
+
+		// Write $jsonCredentials to our opened file.
+		if (fwrite($handle, $jsonCredentials) === FALSE) {
+			echo "Cannot write to file ($path)";
+			exit;
+		}
+		fclose($handle);
+		dd("Persistir Text Plain", $userDo, $persistentData);
 	}
 	public function normalizeDocument($document) {
 		unset($document['_id']);

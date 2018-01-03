@@ -1,5 +1,6 @@
 <?php
 namespace Acd;
+use Acd\conf;
 
 require ('../autoload.php');
 session_start();
@@ -7,8 +8,8 @@ session_start();
 $returnUrl = isset($_POST['re']) ? $_POST['re'] : 'index.php';
 $queryStringSeparator = strpos($returnUrl, '?') ? '&' : '?';
 // First: check is loged
-$loginCookie = isset($_COOKIE['login']) ? $_COOKIE['login'] : null;
-$token = isset($_COOKIE['token']) ? $_COOKIE['token'] : null;
+$loginCookie = isset($_COOKIE[conf::$COOKIE_PREFIX.'login']) ? $_COOKIE[conf::$COOKIE_PREFIX.'login'] : null;
+$token = isset($_COOKIE[conf::$COOKIE_PREFIX.'token']) ? $_COOKIE[conf::$COOKIE_PREFIX.'token'] : null;
 $loginForm = isset($_POST['login']) && $_POST['login'] !== '' ? $_POST['login'] : null;
 $password = isset($_POST['password']) ? $_POST['password'] : null;
 $remember = isset($_POST['remember']) && ($_POST['remember'] === '1');

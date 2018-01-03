@@ -30,16 +30,20 @@ class UserLoader
         $dataManager = $this->getManager();
         return $dataManager->load($query);
     }
-
-    public function save($enumeratedDo)
+    public function save($userDO)
     {
         $dataManager = $this->getManager();
-        $NewEnumeratedDo = $dataManager->save($enumeratedDo);
-        return $NewEnumeratedDo;
+        $NewUserDO = $dataManager->save($userDO);
+        return $NewUserDO;
     }
     public function delete($id)
     {
         $dataManager = $this->getManager();
         return $dataManager->delete($id);
+    }
+   public function persist($userDO)
+    {
+        $dataManager = $this->getManager();
+        return $dataManager->persist($userDO);
     }
 }

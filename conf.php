@@ -30,6 +30,7 @@ class conf {
 	public static $MONGODB_SERVER;
 	public static $MONGODB_DB;
 	public static $SESSION_GC_MAXLIFETIME;
+	public static $COOKIE_PREFIX;
 }
 conf::$DIR_TEMPLATES = DIR_BASE.'/app/view';
 conf::$DATA_PATH = '/mnt/content/acd/structures.json';
@@ -78,6 +79,8 @@ conf::$MONGODB_DB = 'acd';
 
 conf::$SESSION_GC_MAXLIFETIME = 14400;
 ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+
+conf::$COOKIE_PREFIX = 'acd_';
 
 // Developer / local / personal  configuration
 // Default  environment  for develop is 'local', in production environment  conf.devel.php does not exist
