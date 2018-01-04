@@ -1,5 +1,6 @@
 <?php
 namespace Acd\Model;
+use Acd\conf;
 
 class PersistentManagerTextPlainException extends \exception {} // TODO Unificar
 class PersistentUserManagerTextPlain implements iPersistentUserManager
@@ -8,8 +9,8 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
 	private function getStoragePath($structureDo) {
 		return \Acd\conf::$DATA_DIR_PATH.'/'.$structureDo->getId().'.json';
 	}
-	private static function persistentFilePath($login) {
-		return conf::$PATH_AUTH_PERMANENT_LOGIN_DIR.'/'.hash('sha1', $login);
+	private static function persistentFilePath($token) {
+		return conf::$PATH_AUTH_PERMANENT_LOGIN_DIR.'/'.$token;
 	}
 	public function initialize() {
 		if (!$this->isInitialized()){
@@ -85,14 +86,12 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
 		$somecontent = json_encode($aData);
 
 		if (!$handle = fopen($tempPath, 'a')) {
-			 echo "Cannot open file ($tempPath)";
-			 exit;
+			throw new PersistentStructureManagerTextPlainException("Cannot open file ($tempPath)");
 		}
 
 		// Write $somecontent to our opened file.
 		if (fwrite($handle, $somecontent) === FALSE) {
 			throw new PersistentStructureManagerTextPlainException("Cannot write to file ($tempPath)", self::SAVE_FAILED);
-			exit;
 		}
 		fclose($handle);
 		rename($tempPath, $path);
@@ -111,7 +110,7 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
 		$this->saveAll($allUsers);
 		return $allUsers;
 	}
-	public function persist($userDo) {
+	public function persistSession($userDo) {
 		$persistentData = array(
 				'login' => $userDo->getId(),
 				'token' => hash('sha1', uniqid()),
@@ -119,19 +118,38 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
 				'timestamp' => time()
 			);
 		$jsonCredentials = json_encode($persistentData);
-		$path = Auth::persistentFilePath($login);
+		$path = $this->persistentFilePath($persistentData['token']);
 		if (!$handle = fopen($path, 'w')) {
-				echo "Cannot open file ($path)";
-				exit;
+			throw new PersistentManagerTextPlainException("Cannot open file ($path)");
 		}
 
 		// Write $jsonCredentials to our opened file.
 		if (fwrite($handle, $jsonCredentials) === FALSE) {
-			echo "Cannot write to file ($path)";
-			exit;
+			throw new PersistentManagerTextPlainException("Cannot write to file ($path)");
 		}
 		fclose($handle);
-		dd("Persistir Text Plain", $userDo, $persistentData);
+		return $persistentData['token'];
+	}
+	public function loadPersistSession($token){
+		$path = $this->persistentFilePath($token);
+		$userDo = new UserDo();
+		if($token !== '' && file_exists($path)) {
+			$content = file_get_contents($path);
+			$aPersistentCredentials = json_decode($content, TRUE);
+			$userDo->setId($aPersistentCredentials['login']);
+			$userDo->setRol($aPersistentCredentials['rol']);
+		}
+		return $userDo;
+	}
+	public function deletePersistSession($token){
+		$path = $this->persistentFilePath($token);
+		if (file_exists($path)) {
+			unlink($path);
+			return TRUE;
+		}
+		else {
+			return FALSE;
+		}
 	}
 	public function normalizeDocument($document) {
 		unset($document['_id']);

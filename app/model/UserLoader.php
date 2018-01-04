@@ -41,9 +41,20 @@ class UserLoader
         $dataManager = $this->getManager();
         return $dataManager->delete($id);
     }
-   public function persist($userDO)
+   public function persistSession($userDO)
     {
         $dataManager = $this->getManager();
-        return $dataManager->persist($userDO);
+        return $dataManager->persistSession($userDO);
     }
+    public function loadPersistSession($token)
+    {
+        $dataManager = $this->getManager();
+        return $dataManager->loadPersistSession($token);
+    }
+    public function deletePersistSession($token)
+    {
+        $dataManager = $this->getManager();
+        return $dataManager->deletePersistSession($token);
+    }
+
 }

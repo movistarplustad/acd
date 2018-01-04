@@ -14,4 +14,7 @@ interface iPersistentUserManager
 	public function load($query);
 	public function save($userDo);
 	public function delete($id);
+	public function persistSession($userDo); // Return token
+	public function loadPersistSession($token);
+	public function deletePersistSession($token);
 }

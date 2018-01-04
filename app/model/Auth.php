@@ -44,6 +44,7 @@ class Auth  {
 		return crypt($password, $hash)==$hash;
 	}
 
+	// TODO QUITAR
 	private static function persistentFilePath($login) {
 		return conf::$PATH_AUTH_PERMANENT_LOGIN_DIR.'/'.hash('sha1', $login);
 	}
@@ -84,10 +85,10 @@ class Auth  {
 		// TODO: controlar errores
 		// Remember login
 		if ($bLoginCorrect && $remember) {
-			$userLoader->persist($user);
+			$token = $userLoader->persistSession($user);
 			$expiration = time()+conf::$AUTH_PERSITENT_EXPIRATION_TIME;
-			setcookie(conf::$COOKIE_PREFIX.'login', $persistentData['login'],$expiration , '/', '', 0, 0);
-			setcookie(conf::$COOKIE_PREFIX.'token', $persistentData['token'], $expiration, '/', '', 0, 1);
+			setcookie(conf::$COOKIE_PREFIX.'login', $user->getId(), $expiration , '/', '', 0, 0);
+			setcookie(conf::$COOKIE_PREFIX.'token', $token, $expiration, '/', '', 0, 1);
 		}
 
 		if ($bLoginCorrect) {
@@ -100,18 +101,14 @@ class Auth  {
 	}
 	public static function loginByPersintence($login, $token) {
 		$bLoginCorrect = false;
-		$path = Auth::persistentFilePath($login);
-		if(file_exists($path)) {
-			$content = file_get_contents($path);
-			$aPersistentCredentials = json_decode($content, true);
-
-			$bLoginCorrect = ($aPersistentCredentials['login'] === $login && $aPersistentCredentials['token'] === $token);
-		}
-		if ($bLoginCorrect) {
+		$userLoader = new UserLoader();
+		$user = $userLoader->loadPersistSession($token);
+		if($user->getId() === $login && $login !== '') {
 			$_SESSION['loged'] = true;
 			$_SESSION['login_method'] = 'persistence';
 			$_SESSION['login'] = $login;
-			$_SESSION['rol'] = $aPersistentCredentials['rol'];
+			$_SESSION['rol'] = $user->getRol();
+			$bLoginCorrect = true;
 		}
 
 		return $bLoginCorrect;
@@ -145,11 +142,11 @@ class Auth  {
 		session_destroy();
 
 		// Eliminar los datos persistentes
+		$userLoader = new UserLoader();
 		$loginCookie = isset($_COOKIE[conf::$COOKIE_PREFIX.'login']) ? $_COOKIE[conf::$COOKIE_PREFIX.'login'] : null;
 		$token = isset($_COOKIE[conf::$COOKIE_PREFIX.'token']) ? $_COOKIE[conf::$COOKIE_PREFIX.'token'] : null;
-		$path = Auth::persistentFilePath($loginCookie);
-		if (file_exists($path)) {
-			unlink($path);
+		if($token !== '') {
+			$userLoader->deletePersistSession($token);
 		}
 		setcookie(conf::$COOKIE_PREFIX.'login', '', time() - 42000, '/', '', 0, 0);
 		setcookie(conf::$COOKIE_PREFIX.'token', '', time() - 42000, '/', '', 0, 0);
