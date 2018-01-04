@@ -76,8 +76,51 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
 		$mongoCollection = $this->db->selectCollection('user');
 		return $mongoCollection->remove(array('_id' => $id));
 	}
-	public function persist($userDo) {
-		dd("Persistir MongoDB", $userDo);
+	public function persistSession($userDo) {
+		if (!$this->isInitialized()) {
+			$this->initialize();
+		};
+		$token = hash('sha1', uniqid());
+		$persistentData = array(
+				'login' => $userDo->getId(),
+				'rol' => $userDo->getRol(),
+				'timestamp' => time()
+			);
+		$mongoCollection = $this->db->selectCollection('authPermanent');
+		$mongoCollection->update(array('_id' => $token), $persistentData, array('upsert' => true));
+		return $token;
+	}
+	public function loadPersistSession($token) {
+		if (!$this->isInitialized()) {
+			$this->initialize();
+		};
+		$mongoCollection = $this->db->selectCollection('authPermanent');
+		$userDo = new UserDo();
+		if($token) {
+			$mongoCollection = $this->db->selectCollection('authPermanent');
+			try {
+				// If exists persistent session mark the lastuse timestamp
+				// useful for future purges
+				$documentFound = $mongoCollection->findOne(['_id' => $token]);
+				if($documentFound) {
+					$userDo->setId($documentFound['login']);
+					$userDo->setRol($documentFound['rol']);
+					$documentFound['lastUse'] = time();
+					$mongoCollection->update(array('_id' => $documentFound['_id']), $documentFound, array('upsert' => true));
+				}
+			}
+			catch( \Exception $e ) {
+				throw new \Exception("Unable to load loadPersistSession (MongoDB)");
+			}
+		}
+		return $userDo;
+	}
+	public function deletePersistSession($token) {
+		if (!$this->isInitialized()) {
+			$this->initialize();
+		}
+		$mongoCollection = $this->db->selectCollection('authPermanent');
+		return $mongoCollection->remove(array('_id' => $token));
 	}
 	public function normalizeDocument($document) {
 		$document['id'] = (string) $document['_id'];

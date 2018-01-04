@@ -133,11 +133,25 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
 	public function loadPersistSession($token){
 		$path = $this->persistentFilePath($token);
 		$userDo = new UserDo();
-		if($token !== '' && file_exists($path)) {
+		if($token && file_exists($path)) {
+			// If exists persistent session mark the lastuse timestamp
+			// useful for future purges
 			$content = file_get_contents($path);
 			$aPersistentCredentials = json_decode($content, TRUE);
 			$userDo->setId($aPersistentCredentials['login']);
 			$userDo->setRol($aPersistentCredentials['rol']);
+
+			$aPersistentCredentials['lastUse'] = time();
+			$jsonCredentials = json_encode($aPersistentCredentials);
+			if (!$handle = fopen($path, 'w')) {
+				throw new PersistentManagerTextPlainException("Cannot open file ($path)");
+			}
+
+			// Write $jsonCredentials to our opened file.
+			if (fwrite($handle, $jsonCredentials) === FALSE) {
+				throw new PersistentManagerTextPlainException("Cannot write to file ($path)");
+			}
+			fclose($handle);
 		}
 		return $userDo;
 	}

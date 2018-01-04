@@ -103,7 +103,7 @@ class Auth  {
 		$bLoginCorrect = false;
 		$userLoader = new UserLoader();
 		$user = $userLoader->loadPersistSession($token);
-		if($user->getId() === $login && $login !== '') {
+		if($user->getId() === $login && $login) {
 			$_SESSION['loged'] = true;
 			$_SESSION['login_method'] = 'persistence';
 			$_SESSION['login'] = $login;
