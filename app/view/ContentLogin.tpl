@@ -19,7 +19,7 @@
 			<input type="password" name="password" value="" placeholder="e.g. *******" id="password"/>
 		</div>
 		<div class="remember">
-			<input type="checkbox" name="remember" id="remember" value="<?=('1')?>"/>
+			<input type="checkbox" name="remember" id="remember" value="1" <?=\Acd\Model\ValueFormater::encode($bRemember, \Acd\Model\ValueFormater::TYPE_BOOLEAN, \Acd\Model\ValueFormater::FORMAT_EDITOR)?>/>
 			<label for="remember">Remember</label>
 		</div>
 		<div class="submit"><input type="submit" name="a" value="Enter"/></div>

@@ -26,6 +26,7 @@ switch ($action) {
 		$skeletonOu->setBodyClass('login');
 		$contentOu->setActionType('login');
 		$contentOu->setLogin(isset($_GET['login']) ? $_GET['login'] : '');
+		$contentOu->setRemember(isset($_GET['remember']) && $_GET['remember'] === '1');
 		// Referer
 		if(isset($_GET['re'])) {
 			$contentOu->setPostLogin($_GET['re']);

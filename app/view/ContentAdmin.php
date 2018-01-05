@@ -29,6 +29,9 @@ class ContentAdmin extends \Acd\View\Template
 	public function setPostLogin($urlPostLogin) {
 		$this->__set('urlPostLogin', $urlPostLogin);
 	}
+	public function setRemember($bRemember) {
+		$this->__set('bRemember', $bRemember);
+	}
 	// INDEX
 	public function setStructures($structures) {
 		$this->__set('structures', $structures);
