@@ -125,7 +125,7 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
             $mongoCollection = $this->db->selectCollection('authPermanent');
             try {
                 $cursor = $mongoCollection->find(['login' => $id]);
-                $cursor->sort(array( 'lastUse' => 1));
+                $cursor->sort(array( 'lastUse' => 1, 'timestamp' => 1));
                 $authPersistentCollectionFound = new Collection();
                 foreach ($cursor as $documentFound) {
                     $documentFound = $this->normalizeDocument($documentFound);

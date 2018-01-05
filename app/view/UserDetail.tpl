@@ -41,28 +41,35 @@ $userRol = $userElement->getRol();
 		<div class="actions">
 			<input name="a" value="save" class="button publish" type="submit">
 		</div>
+		</fieldset>
+	</form>
+	<?php
+		if($authPermanentList) {
+	?>
+		<h2>Authenticated sessions</h2>
 		<?php
-			if($authPermanentList) {
-		?>
-			<h2>Authenticated sessions</h2>
-			<?php
-				$listAuth = '';
-				foreach($authPermanentList as $authPermanent) {
-					$listAuth .= '<li>'
+			$listAuth = '';
+			foreach($authPermanentList as $authPermanent) {
+				$listAuth .= '<li class="list_item">'
+				.'<form action="do_process_auth_permanent.php" method="post">'
+				.'<input name="id" value="'.$authPermanent->getId().'" type="hidden"/>'
+				.'<input name="login" value="'.$authPermanent->getLogin().'" type="hidden"/>'
+				.'<label>'
 					.$authPermanent->getId().' '
 					.'<span class="date" title="Creation '.\Acd\Model\ValueFormater::encode($authPermanent->getCreationDate(), \Acd\Model\ValueFormater::TYPE_DATE_TIME, \Acd\Model\ValueFormater::FORMAT_EDITOR).'">'
 						.\Acd\Model\ValueFormater::encode($authPermanent->getCreationDate(), \Acd\Model\ValueFormater::TYPE_DATE_TIME, \Acd\Model\ValueFormater::FORMAT_HUMAN)
-					.'</span> '
+					.'</span> - '
 					.'<span class="date" title="Last use '.\Acd\Model\ValueFormater::encode($authPermanent->getLastUseDate(), \Acd\Model\ValueFormater::TYPE_DATE_TIME, \Acd\Model\ValueFormater::FORMAT_EDITOR).'">'
 						.\Acd\Model\ValueFormater::encode($authPermanent->getLastUseDate(), \Acd\Model\ValueFormater::TYPE_DATE_TIME, \Acd\Model\ValueFormater::FORMAT_HUMAN)
-					.'</span>'
-					.'</li>';
-				}
-			?>
-			<ol id="auth_persistent_list"><?=$listAuth?></ol>
-		<?php
+					.'</span> '
+				.'</label>'
+				.'<span class="tools"><input type="submit" name="a" value="delete" class="button delete"/></span>'
+				.'</form>'
+				.'</li>';
 			}
 		?>
-		</fieldset>
-	</form>
+		<ol id="auth_persistent_list" class="list_with_options"><?=$listAuth?></ol>
+	<?php
+		}
+	?>
 </main>

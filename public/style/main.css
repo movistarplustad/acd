@@ -562,11 +562,12 @@ input[readonly] {
 }
 
 /* User */
+#auth_persistent_list.list_with_options label {
+	width: 35em;
+	text-align: left;
+}
 #auth_persistent_list .date {
 	font-size: 0.6em;
-}
-#auth_persistent_list .date::before {
-	content: ' - ';
 }
 
 /* Media Queries */

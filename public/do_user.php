@@ -54,7 +54,8 @@ switch ($action) {
 		}
 		break;
 	default:
-		$returnUrl = '404.html';
+		header("HTTP/1.0 404 Not Found");
+		die("Error 404");
 		break;
 }
 
