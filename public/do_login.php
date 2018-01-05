@@ -1,6 +1,8 @@
 <?php
 namespace Acd;
 use Acd\conf;
+use Acd\Model\UserLoader;
+use \Acd\Model\Query;
 
 require ('../autoload.php');
 session_start();
@@ -22,8 +24,16 @@ try {
 		$returnUrl .= $queryStringSeparator.'r=okpers';
 	}
 	else {
+		$result = 'kologin';
 		Model\Auth::logout();
-		$returnUrl .= $queryStringSeparator.'r=kologin&login='.urlencode($loginForm);
+		// Count total users un database, report if zero users found
+		$userLoader = new UserLoader();
+		$query = new Query();
+		$query->setType('all');
+		if($userLoader->load($query)->length() === 0) {
+			$result = 'kologinzerouser';
+		}
+		$returnUrl .= $queryStringSeparator.'r='.$result.'&login='.urlencode($loginForm);
 	}
 
 	header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

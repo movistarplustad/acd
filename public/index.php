@@ -198,6 +198,9 @@ switch ($result) {
 	case 'kologin':
 		$contentOu->setResultDesc('<em>Error</em>, incorrect login or password', 'fail');
 		break;
+	case 'kologinzerouser':
+		$contentOu->setResultDesc('<em>Error</em>, user database empty or not available', 'fail');
+		break;
 }
 $skeletonOu->setContent($contentOu->render());
 

@@ -123,7 +123,8 @@ class Auth  {
 	public static function logout() {
 		// Inicializar la sesión.
 		// Si está usando session_name("algo"), ¡no lo olvide ahora!
-		session_start();
+		// The session start and destroy is executed in main page
+		//session_start();
 
 		// Destruir todas las variables de sesión.
 		$_SESSION = array();
@@ -139,7 +140,7 @@ class Auth  {
 		}
 
 		// Finalmente, destruir la sesión.
-		session_destroy();
+		//session_destroy();
 
 		// Eliminar los datos persistentes
 		$userLoader = new UserLoader();
