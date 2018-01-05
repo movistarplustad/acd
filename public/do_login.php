@@ -33,7 +33,7 @@ try {
 		if($userLoader->load($query)->length() === 0) {
 			$result = 'kologinzerouser';
 		}
-		$returnUrl .= $queryStringSeparator.'r='.$result.'&login='.urlencode($loginForm).'&remember='.($remember ? '1' : '0');
+		$returnUrl = './?re='.urlencode($returnUrl).'&login='.urlencode($loginForm).'&remember='.($remember ? '1' : '0');
 	}
 
 	header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

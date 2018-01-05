@@ -6,6 +6,7 @@ class UserDetail extends Template {
 	public function __construct() {
 		$this->__set('resultDesc', '');
 		$this->__set('resultCode', '');
+		$this->__set('authPermanentList', false);
 	}
 
 	// INDEX
