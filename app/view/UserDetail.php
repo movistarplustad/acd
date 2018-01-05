@@ -1,5 +1,6 @@
 <?php
 namespace Acd\View;
+use Acd\conf;
 // Output
 class UserDetail extends Template {
 	public function __construct() {
@@ -11,13 +12,16 @@ class UserDetail extends Template {
 	public function setUserElement($userElement) {
 		$this->__set('userElement', $userElement);
 		$this->__set('roles', [
-			\Acd\conf::$ROL_DEVELOPER => \Acd\conf::$ROL_DEVELOPER,
-			\Acd\conf::$ROL_EDITOR => \Acd\conf::$ROL_EDITOR
+			conf::$ROL_DEVELOPER => conf::$ROL_DEVELOPER,
+			conf::$ROL_EDITOR => conf::$ROL_EDITOR
 		]);
+	}
+	public function setAuthPermanentList($authPermanentList) {
+		$this->__set('authPermanentList', $authPermanentList);
 	}
 
 	public function render($tpl = '') {
-		$tpl = \Acd\conf::$DIR_TEMPLATES.'/UserDetail.tpl';
+		$tpl = conf::$DIR_TEMPLATES.'/UserDetail.tpl';
 		return parent::render($tpl);
 	}
 }

@@ -17,6 +17,8 @@ class User
     private $view;
     private $sessionNavigation;
     private $requestUrl;
+    private $contentUser;
+    private $contentAuthPermanent;
 
     public function __construct()
     {
@@ -49,12 +51,19 @@ class User
     {
         $this->requestUrl = $url;
     }
-    private function setContent($content)
+    private function setContentUser($contentUser)
     {
-        $this->content = $content;
+        $this->contentUser = $contentUser;
     }
-	public function getContent() {
-		return $this->content;
+	public function getContentUser() {
+		return $this->contentUser;
+    }
+    private function setContentAuthPermanent($contentAuthPermanent)
+    {
+        $this->contentAuthPermanent = $contentAuthPermanent;
+    }
+	public function getContentAuthPermanent() {
+		return $this->contentAuthPermanent;
 	}
     public function load()
     {
@@ -63,14 +72,14 @@ class User
         if ($this->getId()) {
             $query->setType('id');
             $query->setCondition(['id' => $this->getId()]);
-dd($userLoader->loadUserPersistSessions($this->getId()));
+            $this->setContentAuthPermanent($userLoader->loadUserPersistSessions($this->getId()));
         } else {
             if (!$this->getView()) {
                 $query->setType('all');
                 $this->setView($this::VIEW_LIST);
             }
         }
-        $this->setContent($userLoader->load($query));
+        $this->setContentUser($userLoader->load($query));
     }
     public function getTitle()
     {
@@ -79,7 +88,7 @@ dd($userLoader->loadUserPersistSessions($this->getId()));
                 return 'Users';
                 break;
             case $this::VIEW_DETAIL:
-                return 'User '.$this->getContent()->getId();
+                return 'User '.$this->getContentUser()->getId();
                 break;
             case $this::VIEW_DETAIL_NEW:
                 return 'New user';
@@ -97,12 +106,13 @@ dd($userLoader->loadUserPersistSessions($this->getId()));
         switch ($this->getView()) {
             case $this::VIEW_LIST:
                 $ou = new \ACD\View\UserList();
-                $ou->setUserList($this->getContent());
+                $ou->setUserList($this->getContentUser());
                 break;
             case $this::VIEW_DETAIL:
-                if ($this->getContent()->getId()) {
+                if ($this->getContentUser()->getId()) {
                     $ou = new \ACD\View\UserDetail();
-                    $ou->setUserElement($this->getContent());
+                    $ou->setUserElement($this->getContentUser());
+                    $ou->setAuthPermanentList($this->getContentAuthPermanent());
                 } else {
                     throw new \Exception('User collection not found', 404);
                 }

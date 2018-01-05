@@ -184,9 +184,11 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
                 if(is_file(conf::$PATH_AUTH_PERMANENT_LOGIN_DIR."/$entry")) {
                     $documentFound = file_get_contents(conf::$PATH_AUTH_PERMANENT_LOGIN_DIR."/$entry");
                     $documentFound = json_decode($documentFound, true);
-                    $authPersistent = new AuthPersistentDo();
-                    $authPersistent->load($documentFound);
-                    $authPersistentCollectionFound->add($authPersistent);
+                    if($documentFound['login'] === $id) {
+                        $authPersistent = new AuthPersistentDo();
+                        $authPersistent->load($documentFound);
+                        $authPersistentCollectionFound->add($authPersistent);
+                    }
                 }
             }
             closedir($handle);

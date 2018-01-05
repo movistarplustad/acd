@@ -561,6 +561,14 @@ input[readonly] {
 	font-size: 0.75em;
 }
 
+/* User */
+#auth_persistent_list .date {
+	font-size: 0.6em;
+}
+#auth_persistent_list .date::before {
+	content: ' - ';
+}
+
 /* Media Queries */
 @media screen and (max-width: 480px) {
 	.list_with_options .list_item {

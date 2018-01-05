@@ -41,6 +41,28 @@ $userRol = $userElement->getRol();
 		<div class="actions">
 			<input name="a" value="save" class="button publish" type="submit">
 		</div>
+		<?php
+			if($authPermanentList) {
+		?>
+			<h2>Authenticated sessions</h2>
+			<?php
+				$listAuth = '';
+				foreach($authPermanentList as $authPermanent) {
+					$listAuth .= '<li>'
+					.$authPermanent->getId().' '
+					.'<span class="date" title="Creation '.\Acd\Model\ValueFormater::encode($authPermanent->getCreationDate(), \Acd\Model\ValueFormater::TYPE_DATE_TIME, \Acd\Model\ValueFormater::FORMAT_EDITOR).'">'
+						.\Acd\Model\ValueFormater::encode($authPermanent->getCreationDate(), \Acd\Model\ValueFormater::TYPE_DATE_TIME, \Acd\Model\ValueFormater::FORMAT_HUMAN)
+					.'</span> '
+					.'<span class="date" title="Last use '.\Acd\Model\ValueFormater::encode($authPermanent->getLastUseDate(), \Acd\Model\ValueFormater::TYPE_DATE_TIME, \Acd\Model\ValueFormater::FORMAT_EDITOR).'">'
+						.\Acd\Model\ValueFormater::encode($authPermanent->getLastUseDate(), \Acd\Model\ValueFormater::TYPE_DATE_TIME, \Acd\Model\ValueFormater::FORMAT_HUMAN)
+					.'</span>'
+					.'</li>';
+				}
+			?>
+			<ol id="auth_persistent_list"><?=$listAuth?></ol>
+		<?php
+			}
+		?>
 		</fieldset>
 	</form>
 </main>

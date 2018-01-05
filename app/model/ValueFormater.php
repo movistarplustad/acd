@@ -244,6 +244,14 @@ class ValueFormater
 		$formater[self::TYPE_BOOLEAN][self::FORMAT_EDITOR] = function ($value) {
 			return $value ? ' checked="checked"' : '';
 		};
+		$formater[self::TYPE_DATE_TIME][self::FORMAT_HUMAN] = function ($value) {
+			if($value) {
+				return date('j M G:i\h', $value);
+			}
+			else {
+				return '';
+			}
+		};
 		$formater[self::TYPE_DATE_RANGE][self::FORMAT_HUMAN] = function ($aValue) {
 			$result = [
 				ValueFormater::PERIOD_OF_VALIDITY_START => '∞',
