@@ -63,6 +63,7 @@ class User
         if ($this->getId()) {
             $query->setType('id');
             $query->setCondition(['id' => $this->getId()]);
+dd($userLoader->loadUserPersistSessions($this->getId()));
         } else {
             if (!$this->getView()) {
                 $query->setType('all');

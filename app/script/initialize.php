@@ -13,7 +13,10 @@ if($bMongoDB){
 	$aCollections = [
 		'content',
 		'relation',
-		'structure'
+		'structure',
+		'enumerated',
+		'user',
+		'authPermanent'
 		];
 	$aCollectionsInDB = [];
 	$aCollectionsInDB = $db->getCollectionNames();
@@ -39,6 +42,12 @@ if($bMongoDB){
 	$mongoCollection->createIndex (['id_structure' => 1, 'tags' => 1]);
 	// Content and alias_id
 	$mongoCollection->createIndex (['id_structure' => 1, 'alias_id' => 1]);
+
+	// authenticacion permanent user history
+	echo "Creating indexed in content authPermanent\n";
+	$mongoCollection = $db->selectCollection('authPermanent');
+	$mongoCollection->createIndex (['login' => 1]);
+
 	var_dump($mongoCollection->getIndexInfo());
 
 

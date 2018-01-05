@@ -68,7 +68,7 @@ class UserDo
 	}
 
 	/* TODO: Bad name loadFromFile, change for loadFromPersistentStorage */
-	public function loadFromFile($options = []) {
+	public function BORRARloadFromFile($options = []) {
 		$bLoadEnumerated = isset($options['loadEnumerated']) && $options['loadEnumerated'] === true;
 		$dataManager = $this->getManager();
 		$document = $dataManager->loadById($this->getId());
@@ -84,7 +84,7 @@ class UserDo
 		return $bLoaded;
 	}
 
-	private function assignEnumeratedOptionsToFieds() {
+	private function BORRARassignEnumeratedOptionsToFieds() {
 		$dataManager = $this->getManager();
 		$query = new Query();
 		$query->setType('id');

@@ -25,6 +25,7 @@ class UserLoader
         }
     }
 
+    // User
     public function load($query)
     {
         $dataManager = $this->getManager();
@@ -41,7 +42,9 @@ class UserLoader
         $dataManager = $this->getManager();
         return $dataManager->delete($id);
     }
-   public function persistSession($userDO)
+
+    // Persistent sessions
+    public function persistSession($userDO)
     {
         $dataManager = $this->getManager();
         return $dataManager->persistSession($userDO);
@@ -55,6 +58,11 @@ class UserLoader
     {
         $dataManager = $this->getManager();
         return $dataManager->deletePersistSession($token);
+    }
+    public function loadUserPersistSessions($id)
+    {
+        $dataManager = $this->getManager();
+        return $dataManager->loadUserPersistSessions($id);
     }
 
 }
