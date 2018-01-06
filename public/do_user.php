@@ -22,6 +22,9 @@ switch ($action) {
 		break;
 	case 'delete':
 		$userLoader = new Model\UserLoader();
+		foreach($userLoader->loadUserPersistSessions($id) as $persistentSession) {
+			$userLoader->deletePersistSession($persistentSession->getId());
+		}
 		$result = $userLoader->delete($id) ? 'ok' : 'ko';
 		$returnUrl = 'user.php?a=delete&r='.$result;
 		break;
