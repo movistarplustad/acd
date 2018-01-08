@@ -68,7 +68,7 @@ class AuthPersistentDo
             $this->setCreationDate($data['timestamp']);
             $this->setLastUseDate(isset($data['lastUse']) ? $data['lastUse'] : null);
         } else {
-            throw new AuthPersistentDoException("No data loaded, token o user-id probably does not exist.");
+            throw new AuthPersistentDoException('No data loaded, token o user-id probably does not exist. '.var_export($data, TRUE));
         }
     }
 
