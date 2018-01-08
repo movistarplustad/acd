@@ -207,6 +207,9 @@ a:active {
 .button.clear {
 	background-image: url(ic_clear_24px.svg);
 }
+.button.clear.checked {
+	background-image: url(ic_done_24px.svg);
+}
 .button.summary {
 	background-image: url(ic_dvr_24px.svg);
 	margin-left: 1em;
@@ -454,6 +457,10 @@ input[readonly] {
 .periodValidity {
 	font-size: 0.6em;
 }
+.relatedContent.removable {
+	opacity: 0.3;
+}
+
 .tagit.ui-sortable .tagit-choice {
 	cursor: move;
 }
