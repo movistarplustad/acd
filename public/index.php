@@ -26,6 +26,7 @@ switch ($action) {
 		$skeletonOu->setBodyClass('login');
 		$contentOu->setActionType('login');
 		$contentOu->setLogin(isset($_GET['login']) ? $_GET['login'] : '');
+		$contentOu->setRemember(isset($_GET['remember']) && $_GET['remember'] === '1');
 		// Referer
 		if(isset($_GET['re'])) {
 			$contentOu->setPostLogin($_GET['re']);
@@ -197,6 +198,9 @@ switch ($result) {
 		break;
 	case 'kologin':
 		$contentOu->setResultDesc('<em>Error</em>, incorrect login or password', 'fail');
+		break;
+	case 'kologinzerouser':
+		$contentOu->setResultDesc('<em>Error</em>, user database empty or not available', 'fail');
 		break;
 }
 $skeletonOu->setContent($contentOu->render());

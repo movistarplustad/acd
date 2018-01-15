@@ -242,6 +242,24 @@ var editor = {
 				e.preventDefault();
 			});
 
+			/* Delete multiple related content */
+			$context.find(".relatedContent .button.clear")
+				.on("click", function (e) {
+					var $wrapper = $(this).closest(".relatedContent");
+					var $iData = $wrapper.find("input[type=hidden]");
+					if ($(this).hasClass("checked")) {
+						$iData.prop({ disabled: false });
+						$wrapper.removeClass("removable");
+						$(this).removeClass("checked");
+					}
+					else {
+						$iData.prop({ disabled: true });
+						$wrapper.addClass("removable");
+						$(this).addClass("checked");
+					}
+					e.preventDefault();
+				});
+
 	},
 	confirmDelete : function(e) {
 		var bDelete = window.confirm("remove permanently this element?");

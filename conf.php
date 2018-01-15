@@ -30,11 +30,12 @@ class conf {
 	public static $MONGODB_SERVER;
 	public static $MONGODB_DB;
 	public static $SESSION_GC_MAXLIFETIME;
+	public static $COOKIE_PREFIX;
 }
 conf::$DIR_TEMPLATES = DIR_BASE.'/app/view';
-conf::$DATA_PATH = '/mnt/contenido/acd/structures.json';
-conf::$DATA_DIR_PATH = '/mnt/contenido/acd/structures';
-conf::$DATA_CONTENT_PATH = '/mnt/contenido/acd/contents';
+conf::$DATA_PATH = '/mnt/content/acd/structures.json';
+conf::$DATA_DIR_PATH = '/mnt/content/acd/structures';
+conf::$DATA_CONTENT_PATH = '/mnt/content/acd/contents';
 conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_UPLOAD = 'FORM_UPLOAD';
 conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_PATH = 'PATH';
 conf::$STORAGE_TYPE_TEXTPLAIN  = 'text/plain';
@@ -59,25 +60,27 @@ conf::$STORAGE_TYPES = [
 	];
 conf::$DEFAULT_STORAGE = conf::$STORAGE_TYPE_MONGODB;
 
-conf::$PERMISSION_PATH = '/mnt/contenido/acd/permission.json';
+conf::$PERMISSION_PATH = '/mnt/content/acd/permission.json';
 conf::$USE_AUTHENTICATION = true;
 conf::$AUTH_PERSITENT_EXPIRATION_TIME = 31536000; // 1 year
-conf::$PATH_AUTH_CREDENTIALS_FILE = '/mnt/contenido/acd/auth.json';
-conf::$PATH_AUTH_PERMANENT_LOGIN_DIR = '/mnt/contenido/acd/auth_permanent_login';
+conf::$PATH_AUTH_CREDENTIALS_FILE = '/mnt/content/acd/auth.json';
+conf::$PATH_AUTH_PERMANENT_LOGIN_DIR = '/mnt/content/acd/auth_permanent_login';
 
 conf::$ROL_DEVELOPER = 'developer';
 conf::$ROL_EDITOR = 'editor';
 
 conf::$MYSQL_SERVER = 'localhost';
 conf::$MYSQL_USER = 'usuarioweb';
-conf::$MYSQL_PASSWORD = 'strip';
+conf::$MYSQL_PASSWORD = '';
 conf::$MYSQL_SCHEMA = 'acd';
 
-conf::$MONGODB_SERVER = 'mongodb://plusdbspol01.prisadigital.int:27017,plusdbspol02.prisadigital.int:27017,plusdbspol03.prisadigital.int:27017/?replicaSet=ReplicaPlusProduccion';
+conf::$MONGODB_SERVER = 'mongodb://localhost:27017'; // mongodb://hosting01.int:27017,hosting02.int:27017,hosting03.int:27017/?replicaSet=Replica
 conf::$MONGODB_DB = 'acd';
 
 conf::$SESSION_GC_MAXLIFETIME = 14400;
 ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+
+conf::$COOKIE_PREFIX = 'acd_';
 
 // Developer / local / personal  configuration
 // Default  environment  for develop is 'local', in production environment  conf.devel.php does not exist

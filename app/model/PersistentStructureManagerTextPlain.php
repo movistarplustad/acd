@@ -26,7 +26,7 @@ class PersistentStructureManagerTextPlain implements iPersistentStructureManager
 		$path = \ACD\conf::$DATA_PATH;
 		/* Construct the json */
 		$data = $structuresDo->tokenizeData();
-		$tempPath = DIR_DATA.'/temp.json';
+		$tempPath = $path.'.tmp';
 		$somecontent = json_encode($data);
 
 		if (!$handle = fopen($tempPath, 'a')) {
@@ -41,5 +41,8 @@ class PersistentStructureManagerTextPlain implements iPersistentStructureManager
 		}
 		fclose($handle);
 		rename($tempPath, $path);
+	}
+	public function loadEnumerated($id) {
+		throw new PersistentStructureManagerMySqlException("Not implemented", self::SAVE_FAILED);
 	}
 }

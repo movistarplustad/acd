@@ -4,7 +4,7 @@
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	
+
 	<link rel="stylesheet" type="text/css" href="js/jquery-ui/jquery-ui.min.css"/>
 	<link rel="stylesheet" type="text/css" href="js/datetimepicker/jquery.datetimepicker.css"/>
 	<link rel="stylesheet" type="text/css" href="js/tag-it/jquery.tagit.css"/>
@@ -20,6 +20,13 @@
 	<h1>ACD</h1>
 </header>
 <div id="wrapper">
+	<?php
+	if (isset($resultCode)) {
+	?>
+		<p class="result <?=$resultCode?>"><?=$resultDesc?></p>
+	<?php
+	}
+	?>
 	<?=$content?>
 	<?=$tools?>
 </div>

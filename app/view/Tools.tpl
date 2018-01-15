@@ -22,6 +22,11 @@
 			<li><a href="content.php" class="no-button manage-content">Manage content</a></li>
 			<?php
 				}
+				if ($rol == 'developer') {
+			?>
+			<li><a href="user.php" class="no-button manage-user">Manage users</a></li>
+			<?php
+				}
 			?>
 		</ul>
 	</nav>
