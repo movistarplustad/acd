@@ -580,9 +580,10 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		$result = [];
 		$contentCheckValidity = new ContentDo(); // Object from date validity tester
-		@$validityDate = $filters['validity-date'];
+		$validityDate = isset($filters['validity-date']) ? $filters['validity-date'] : null;
 		foreach ($cursor as $documentFound) {
-			$contentCheckValidity->setPeriodOfValidity(@$documentFound['period_of_validity']); // @$documentFound for retrocompatibility
+			$periodOfValidity = isset($documentFound['period_of_validity']) ? $documentFound['period_of_validity'] : null; // @$documentFound for retrocompatibility
+			$contentCheckValidity->setPeriodOfValidity($periodOfValidity);
 			if ($contentCheckValidity->checkValidityDate($validityDate)) {
 				$result[] = [
 					'id' =>  (string) $documentFound['_id'],
