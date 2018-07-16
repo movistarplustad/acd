@@ -5,8 +5,11 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 {
 	private $db;
 	public function initialize() {
-		$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-		$this->db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
+//		$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
+//		$this->db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
+    //TODO: Ver cóm pasarle el servidor, porque si es '' no funciona.
+    $mongo = new \MongoDB\Client(\Acd\conf::$MONGODB_SERVER);
+    $this->db = $mongo->selectDatabase(\Acd\conf::$MONGODB_DB);
 	}
 	public function isInitialized() {
 		return isset($this->db);
@@ -23,10 +26,10 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 		}
 	}
 	private function loadById($query) {
-		$mongoCollection = $this->db->selectCollection('enumerated');
+		$mongoCollection = $this->db->enumerated;
 		try {
 			$id = $query->getCondition('id');
-			$documentFound = $mongoCollection->findOne(array("_id" => $id));
+			$documentFound = $mongoCollection->findOne(["_id" => $id]);
 			$documentFound = $this->normalizeDocument($documentFound);
 			$enumeratedFound = new EnumeratedDo();
 			$enumeratedFound->load($documentFound);
@@ -37,14 +40,15 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 		}
 	}
 	private function loadAll($query) {
-		$mongoCollection = $this->db->selectCollection('enumerated');
+		$mongoCollection = $this->db->enumerated;
 		try {
-			$cursor = $mongoCollection->find(array(), array('_id' => true));
-			$cursor->sort(array( '_id' => 1));
+			$cursor = $mongoCollection->find([], ['projection' => ['_id' => true], 'sort' =>['_id' => 1]]);
+//			$cursor->sort(array( '_id' => 1));
 			$enumeratedCollectionFound = new Collection();
 			foreach ($cursor as $documentFound) {
 				$enumeratedCollectionFound->add(array('id' => $documentFound['_id'])); // Now id and name are equeals
 			}
+
 			return $enumeratedCollectionFound;
 		}
 		catch( \Exception $e ) {
@@ -55,13 +59,13 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 		if (!$this->isInitialized()) {
 			$this->initialize();
 		}
-		$mongoCollection = $this->db->selectCollection('enumerated');
+		$mongoCollection = $this->db->enumerated;
 		$insert = $enumeratedDo->tokenizeData();
 
 		$id = $enumeratedDo->getId();
 		unset ($insert['id']);
 		$insert['save_ts'] = time(); // Log, timestamp for last save / update operation
-		$mongoCollection->update(array('_id' => $id), $insert, array('upsert' => true));
+		$mongoCollection->updateOne(['_id' => $id], ['$set' => $insert], ['upsert' => true]);
 
 		return $enumeratedDo;
 	}
@@ -69,8 +73,8 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 		if (!$this->isInitialized()) {
 			$this->initialize();
 		}
-		$mongoCollection = $this->db->selectCollection('enumerated');
-		return $mongoCollection->remove(array('_id' => $id));
+		$mongoCollection = $this->db->enumerated;
+		return $mongoCollection->deleteOne(['_id' => $id]);
 	}
 	public function normalizeDocument($document) {
 		$document['id'] = (string) $document['_id'];
