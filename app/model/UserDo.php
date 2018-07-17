@@ -42,6 +42,10 @@ class UserDo
 				//echo "tipo texto";
 				return new PersistentStructureManagerTextPlain();
 				break;
+			case \Acd\conf::$STORAGE_TYPE_MONGODB_LEGACY:
+				//echo "tipo mongo";
+				return new PersistentStructureManagerMongoDBLegacy();
+				break;
 			case \Acd\conf::$STORAGE_TYPE_MONGODB:
 				//echo "tipo mongo";
 				return new PersistentStructureManagerMongoDB();

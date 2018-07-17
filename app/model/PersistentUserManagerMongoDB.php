@@ -8,8 +8,8 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
     {
         // If not is initialized do the initializacion
         if (!$this->isInitialized()) {
-            $mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-            $this->db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
+            $this->mongo = new \MongoDB\Client(\Acd\conf::$MONGODB_SERVER);
+            $this->db = $this->mongo->selectDatabase(\Acd\conf::$MONGODB_DB);
         }
     }
     public function isInitialized()
@@ -27,10 +27,10 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
     }
     private function loadById($query)
     {
-        $mongoCollection = $this->db->selectCollection('user');
+        $mongoCollection = $this->db->user;
         try {
             $id = $query->getCondition('id');
-            $documentFound = $mongoCollection->findOne(array("_id" => $id));
+            $documentFound = $mongoCollection->findOne(["_id" => $id]);
             $documentFound = $this->normalizeDocument($documentFound);
             $userFound = new UserDo();
             $userFound->load($documentFound);
@@ -42,10 +42,9 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
     }
     private function loadAll($query)
     {
-        $mongoCollection = $this->db->selectCollection('user');
+        $mongoCollection = $this->db->user;
         try {
-            $cursor = $mongoCollection->find(array());
-            $cursor->sort(array( '_id' => 1));
+            $cursor = $mongoCollection->find([], ['sort' => ['_id' => 1]]);
             $userCollectionFound = new Collection();
             foreach ($cursor as $documentFound) {
                 $documentFound = $this->normalizeDocument($documentFound);
@@ -61,13 +60,13 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
     public function save($userDo)
     {
         $this->initialize();
-        $mongoCollection = $this->db->selectCollection('user');
+        $mongoCollection = $this->db->user;
         $insert = $userDo->tokenizeData();
 
         $id = $userDo->getId();
         unset($insert['id']);
         $insert['save_ts'] = time(); // Log, timestamp for last save / update operation
-        $mongoCollection->update(array('_id' => $id), $insert, array('upsert' => true));
+        $mongoCollection->updateOne(['_id' => $id], ['$set' => $insert], ['upsert' => true]);
 
         return $userDo;
     }
@@ -75,7 +74,7 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
     {
         $this->initialize();
         $mongoCollection = $this->db->selectCollection('user');
-        return $mongoCollection->remove(array('_id' => $id));
+        return $mongoCollection->deleteMany(['_id' => $id]);
     }
     public function persistSession($userDo)
     {
@@ -87,7 +86,7 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
                 'timestamp' => time()
             );
         $mongoCollection = $this->db->selectCollection('authPermanent');
-        $mongoCollection->update(array('_id' => $token), $persistentData, array('upsert' => true));
+        $mongoCollection->updateOne(array('_id' => $token), ['$set' => $persistentData], array('upsert' => true));
         return $token;
     }
     public function loadPersistSession($token)
@@ -104,7 +103,7 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
                     $userDo->setId($documentFound['login']);
                     $userDo->setRol($documentFound['rol']);
                     $documentFound['lastUse'] = time();
-                    $mongoCollection->update(array('_id' => $documentFound['_id']), $documentFound, array('upsert' => true));
+                    $mongoCollection->updateOne(array('_id' => $documentFound['_id']), ['$set' => $documentFound], array('upsert' => true));
                 }
             } catch (\Exception $e) {
                 throw new \Exception("Unable to load loadPersistSession (MongoDB)");
@@ -116,7 +115,7 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
     {
         $this->initialize();
         $mongoCollection = $this->db->selectCollection('authPermanent');
-        return $mongoCollection->remove(array('_id' => $token));
+        return $mongoCollection->deleteMany(['_id' => $token]);
     }
     public function loadUserPersistSessions($id)
     {
@@ -124,8 +123,8 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
         if ($id) {
             $mongoCollection = $this->db->selectCollection('authPermanent');
             try {
-                $cursor = $mongoCollection->find(['login' => $id]);
-                $cursor->sort(array( 'lastUse' => 1, 'timestamp' => 1));
+                $cursor = $mongoCollection->find(['login' => $id], [ 'sort' => ['lastUse' => 1, 'timestamp' => 1]]);
+                //$cursor->sort(array( 'lastUse' => 1, 'timestamp' => 1));
                 $authPersistentCollectionFound = new Collection();
                 foreach ($cursor as $documentFound) {
                     $documentFound = $this->normalizeDocument($documentFound);

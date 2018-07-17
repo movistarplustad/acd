@@ -9,8 +9,11 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 	private $enumeratedManager;
 	public function initialize() {
 		try {
-			$this->mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-			$this->db = $this->mongo->selectDB(\Acd\conf::$MONGODB_DB);
+//			$this->mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
+//			$this->db = $this->mongo->selectDB(\Acd\conf::$MONGODB_DB);
+      //TODO: Ver cóm pasarle el servidor, porque si es '' no funciona.
+        $this->mongo = new \MongoDB\Client(\Acd\conf::$MONGODB_SERVER);
+        $this->db = $this->mongo->selectDatabase(\Acd\conf::$MONGODB_DB);
 			return true;
 		}
 		catch (MongoConnectionException $e) {
@@ -30,11 +33,12 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 		if (!$this->isInitialized()) {
 			$this->initialize();
 		}
-		$mongoCollection = $this->db->selectCollection('structure');
-		$byStructureQuery = array();
+		$mongoCollection = $this->db->structure;
+//		$byStructureQuery = array();
 
-		$cursor = $mongoCollection->find($byStructureQuery);
-		$cursor->sort(array( 'name' => 1));
+//		$cursor = $mongoCollection->find($byStructureQuery);
+    $cursor = $mongoCollection->find([], ['sort' => ['name' => 1]]);
+		//$cursor->sort(array( 'name' => 1));
 		$result = [];
 		foreach ($cursor as $documentFound) {
 			$id = $documentFound['_id'];
@@ -47,8 +51,12 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 		if (!$this->isInitialized()) {
 			$this->initialize();
 		}
-		$mongoCollection = $this->db->selectCollection('structure');
-		$documentFound = $mongoCollection->findOne(array("_id" => $id));
+
+//		$mongoCollection = $this->db->selectCollection('structure');
+//  $documentFound = $mongoCollection->findOne(array("_id" => $id));
+    $mongoCollection = $this->db->structure;
+    $documentFound = $mongoCollection->findOne(["_id" => $id]);
+
 		// TODO controlar errores
 		$documentFound['id'] = $id;
 		unset($documentFound['_id']);
@@ -59,17 +67,15 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 		if (!$this->isInitialized()) {
 			$this->initialize();
 		}
-		$mongoCollection = $this->db->selectCollection('structure');
+		$mongoCollection = $this->db->structure;
 		//$data = $structuresDo->tokenizeData();
 		// TODO ir más finos en bbdd que borrar todo y volver a guardarlo
-		$mongoCollection->remove(array()); 
+		$mongoCollection->deleteMany([]);
 		foreach ($structuresDo as $structure) {
 			$id = $structure->getId();
-			//dd($structure);
 			$insert = $structure->tokenizeData()[$id];
 			$insert['_id'] = $id;
-			//d($insert);
-			$mongoCollection->update(array('_id' => $id), $insert, array('upsert' => true));
+			$mongoCollection->insertOne($insert);
 
 		}
 		//db.structure.update({'_id' : 'chat_tienda'},{'_id' : 'chat_tienda',       "name": "Chat de tienda online Mongo", "storage" : "mongodb", 'fieds' : []}, {upsert :true})
@@ -88,8 +94,8 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 	}
 }
 /*
-db.structure.update({'_id' : 'chat_tienda'},{'_id' : 'chat_tienda',       "name": "Chat de tienda online Mongo", "storage" : "mongodb", 
-	'fields' : 
+db.structure.update({'_id' : 'chat_tienda'},{'_id' : 'chat_tienda',       "name": "Chat de tienda online Mongo", "storage" : "mongodb",
+	'fields' :
 	[
         {
           "Títulofer": {

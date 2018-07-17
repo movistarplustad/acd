@@ -14,6 +14,7 @@ class conf {
 	public static $STORAGE_TYPE_TEXTPLAIN;
 	public static $STORAGE_TYPE_MONGODB;
 	public static $STORAGE_TYPE_MYSQL;
+	public static $STORAGE_TYPE_MONGODB_LEGACY;
 	public static $DEFAULT_STORAGE;
 	public static $FIELD_TYPES;
 	public static $PERMISSION_PATH;
@@ -41,6 +42,7 @@ conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_PATH = 'PATH';
 conf::$STORAGE_TYPE_TEXTPLAIN  = 'text/plain';
 conf::$STORAGE_TYPE_MONGODB  = 'mongodb';
 conf::$STORAGE_TYPE_MYSQL  = 'mysql';
+conf::$STORAGE_TYPE_MONGODB_LEGACY  = 'mongodb-legacy';
 conf::$STORAGE_TYPES = [
 		conf::$STORAGE_TYPE_TEXTPLAIN =>
 			[
@@ -56,7 +58,12 @@ conf::$STORAGE_TYPES = [
 			[
 				'name' => 'MySql',
 				'disabled' => true
-			]
+			],
+		conf::$STORAGE_TYPE_MONGODB_LEGACY =>
+			[
+				'name' => 'Mongo DB Legacy',
+				'disabled' => true
+			],
 	];
 conf::$DEFAULT_STORAGE = conf::$STORAGE_TYPE_MONGODB;
 

@@ -1,5 +1,8 @@
 <?php
-require ('conf.php');
+require (__DIR__ .'/conf.php');
+//require '/opt/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
+
 //http://stackoverflow.com/questions/5280347/autoload-classes-from-different-folders
 // autoload classes based on a 1:1 mapping from namespace to directory structure.
 spl_autoload_register(function ($className)

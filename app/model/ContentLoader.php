@@ -30,6 +30,10 @@ class ContentLoader extends StructureDo
 				//echo "tipo texto";
 				return new PersistentManagerTextPlain();
 				break;
+			case \Acd\conf::$STORAGE_TYPE_MONGODB_LEGACY:
+				//echo "tipo mongo legacy";
+				return new PersistentManagerMongoDBLegacy();
+				break;
 			case \Acd\conf::$STORAGE_TYPE_MONGODB:
 				//echo "tipo mongo";
 				return new PersistentManagerMongoDB();
@@ -52,6 +56,9 @@ class ContentLoader extends StructureDo
 				switch ($idStorage) {
 					case \Acd\conf::$STORAGE_TYPE_TEXTPLAIN:
 						$persistentManagers[] = new PersistentManagerTextPlain();
+						break;
+					case \Acd\conf::$STORAGE_TYPE_MONGODB_LEGACY:
+						$persistentManagers[] = new PersistentManagerMongoDBLegacy();
 						break;
 					case \Acd\conf::$STORAGE_TYPE_MONGODB:
 						$persistentManagers[] = new PersistentManagerMongoDB();

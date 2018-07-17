@@ -7,8 +7,11 @@ $bMongoDB = false;
 $bMySql = true;
 
 if($bMongoDB){
-	$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-	$db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
+	//$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
+	//$db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
+  $mongo = new \MongoDB\Client(\Acd\conf::$MONGODB_SERVER);
+  //$db = $mongo->selectDatabase(\Acd\conf::$MONGODB_DB);
+    $db = $mongo->selectDatabase('delete');
 
 	$aCollections = [
 		'content',
