@@ -37,6 +37,7 @@ class FieldDo
 	private $instance; // Attributes for the relation width external content, eg. date validation
 	private $options; // Enumerated posible options
 	private $bDirty; // Field indicator to store if the value has modified without save
+	private $restrictedStructures; // In field type collection or content restrict to certain structures
 
 	public static function getAvailableTypes() {
 		return array(
@@ -152,6 +153,15 @@ class FieldDo
 		}
 		return $this->options;
 	}
+	public function setRestrictedStructures($restrictedStructures) {
+		$this->restrictedStructures = $restrictedStructures;
+	}
+	public function getRestrictedStructures() {
+		if (!isset($this->restrictedStructures)) {
+			$this->restrictedStructures = new StructuresDo();
+		}
+		return $this->restrictedStructures;
+	}
 	public function setDirty($bDirty, $numItem = 0) {
 		$this->bDirty = (boolean)$bDirty;
 		if($this->bDirty) {
@@ -171,9 +181,14 @@ class FieldDo
 		$this->setType($data[$id]['type']);
 		$this->setName($data[$id]['name']);
 		if (isset($data[$id]['id_options']) && $data[$id]['id_options'] != '') {
-			$options =  new EnumeratedDo();
+			$options = new EnumeratedDo();
 			$options->setId($data[$id]['id_options']);
 			$this->setOptions($options);
+		}
+		if (isset($data[$id]['restricted_structured'])) {
+			$restrictedStructures = new StructuresDo();
+			$restrictedStructures->hydrateFromArray($data[$id]['restricted_structured']);
+			$this->setRestrictedStructures($restrictedStructures);
 		}
 	}
 	// Load content
@@ -231,6 +246,15 @@ class FieldDo
 		// Field with value from a list of values (enumerated collection)
 		if ($this->getOptions()->getId()) {
 			$aStructureData['id_options'] = $this->getOptions()->getId();
+		}
+		// Structures restriction in field type collection or content
+		if ($this->getRestrictedStructures()->length() > 0) {
+
+			$aRestrictedStructures = [];
+			foreach ($this->getRestrictedStructures() as $structure) {
+				$aRestrictedStructures[] = $structure->getId();
+			}
+			$aStructureData['restricted_structured'] = $aRestrictedStructures;
 		}
 		return array(
 			$id => $aStructureData

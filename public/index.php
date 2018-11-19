@@ -35,12 +35,12 @@ switch ($action) {
 	case 'new':
 		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
 
-		$estructura = new Model\StructureDo();
+		$structure = new Model\StructureDo();
 
 		$skeletonOu->setBodyClass('new');
 		$contentOu->setActionType('new');
 		$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
-		$contentOu->setStorage($estructura->getStorage());
+		$contentOu->setStorage($structure->getStorage());
 
 		// back button
 		$navigation = new SessionNavigation();
@@ -67,16 +67,17 @@ switch ($action) {
 	case 'edit':
 		try {
 			$id = $_GET['id'];
-			$estructura = $structures->get($id);
+			$structure = $structures->get($id);
 			$contentOu->setStructureId($id);
+			$contentOu->setStructures($structures);
 
 			$skeletonOu->setBodyClass('edit');
 			$contentOu->setActionType('edit');
-			$contentOu->setStructureName($estructura->getName());
+			$contentOu->setStructureName($structure->getName());
 			$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
-			$contentOu->setStorage($estructura->getStorage());
+			$contentOu->setStorage($structure->getStorage());
 			$contentOu->setFieldTypes(Model\FieldDo::getAvailableTypes());
-			$contentOu->setFields($estructura->getFields());
+			$contentOu->setFields($structure->getFields());
 
 			$enumeratedLoader = new Model\EnumeratedLoader();
 			$query = new Model\Query();
@@ -96,7 +97,7 @@ switch ($action) {
 		$navigation->push([
 			'hash' => "edit_structure - $id",
 			'url' => $_SERVER["REQUEST_URI"],
-			'title' => 'Edit structure '.$estructura->getName()
+			'title' => 'Edit structure '.$structure->getName()
 		]);
 		$navigation->save();
 
@@ -107,15 +108,15 @@ switch ($action) {
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
-		$skeletonOu->setHeadTitle('Edit structure '.$estructura->getName());
+		$skeletonOu->setHeadTitle('Edit structure '.$structure->getName());
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;
 	case 'clone':
 		$id = $_GET['id'];
-		$estructura = $structures->get($id);
+		$structure = $structures->get($id);
 		$contentOu->setStructureId("dup_$id");
-		if ($estructura === null) {
+		if ($structure === null) {
 			/* Error, intentando editar una estructura que no existe */
 			$skeletonOu->setBodyClass('error');
 			$contentOu->setActionType('error');
@@ -123,11 +124,11 @@ switch ($action) {
 		else {
 			$skeletonOu->setBodyClass('clone');
 			$contentOu->setActionType('clone');
-			$contentOu->setStructureName('[copy] '.$estructura->getName());
+			$contentOu->setStructureName('[copy] '.$structure->getName());
 			$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
-			$contentOu->setStorage($estructura->getStorage());
+			$contentOu->setStorage($structure->getStorage());
 			$contentOu->setFieldTypes(Model\FieldDo::getAvailableTypes());
-			$contentOu->setFields($estructura->getFields());
+			$contentOu->setFields($structure->getFields());
 
 			$enumeratedLoader = new Model\EnumeratedLoader();
 			$query = new Model\Query();
@@ -143,7 +144,7 @@ switch ($action) {
 		$navigation->push([
 			'hash' => "clone_structure - $id",
 			'url' => $_SERVER["REQUEST_URI"],
-			'title' => 'Clone structure '.$estructura->getName()
+			'title' => 'Clone structure '.$structure->getName()
 		]);
 		$navigation->save();
 
@@ -154,7 +155,7 @@ switch ($action) {
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
-		$skeletonOu->setHeadTitle('Clone structure '.$estructura->getName());
+		$skeletonOu->setHeadTitle('Clone structure '.$structure->getName());
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;

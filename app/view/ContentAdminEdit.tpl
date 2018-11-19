@@ -17,7 +17,6 @@
 					$selected = $storage === $key ? ' selected="selected"' : '';
 					$disabled = $value['disabled'] ? ' disabled="disabled"' : '';
 					$options .= '<option value="'.htmlspecialchars($key).'"'.$selected.$disabled.'>'.htmlspecialchars($value['name']).'</option>';
-
 				}
 				?>
 				<label for="storage">Storage type:&nbsp;</label><select name="storage" id="storage" required="required"><?=$options?></select>
@@ -42,6 +41,27 @@
 					}
 					$selectEnumeratedSource = '<div><label for="field_'.$n.'_source">Source:&nbsp;</label> <select  name="field['.$n.'][source]" id="field_'.$n.'_source" class="source select">'.$optionEnumerateSource.'</select></div>';
 				}
+				// Related contents can restrict structures asociated
+				$restrictedStructures = '';
+				if ($field->getType() === $field::TYPE_CONTENT || $field->getType() === $field::TYPE_COLLECTION) {
+
+					$optionsRestristedStructures = '';
+					foreach ($structures as $structure) {
+						$key = $structure->getId();
+						$value = $structure->getName();
+						$selected = $field->getRestrictedStructures()->hasKey($key)
+							? ' selected="selected"'
+							: '';
+						$optionsRestristedStructures .= '<option value="'.htmlspecialchars($key).'"'.$selected.'>'.htmlspecialchars($value).'</option>';
+					}
+					$restrictedStructures = '
+						<div class="restricted-structures-wrap">
+							<label for="field_'.$n.'_restrictedStructures">Restrict to:&nbsp;</label>
+							<select name="field['.$n.'][restrictedStructures]" id="field_'.$n.'_restrictedStructures" multiple="multiple" class="field select">'.
+										$optionsRestristedStructures.'
+									</select>
+						</div>';
+				}
 
 				$structure_fields .= '<li class="field">
 					<label for="field_'.$n.'_id">Id:&nbsp;</label>
@@ -51,9 +71,9 @@
 						<label for="field_'.$n.'_name">Description:&nbsp;</label>
 						<input type="text" name="field['.$n.'][name]" id="field_'.$n.'_name" value="'.htmlspecialchars($field->getName()).'" id="field_'.$n.'"/>
 						<input type="hidden" name="field['.$n.'][type]" value="'.htmlspecialchars($field->getType()).'"/>
-						'.$field->getType().'
 					</div>
-					'.$selectEnumeratedSource.'
+					'.$restrictedStructures
+					.$selectEnumeratedSource.'
 					<div class="delete">
 						<label for="delete_field_'.$n.'">Delete</label>
 						<input type="checkbox" name="field['.$n.'][delete]" value="1" id="delete_field_'.$n.'"/>

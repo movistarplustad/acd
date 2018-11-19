@@ -37,7 +37,7 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
 //		$byStructureQuery = array();
 
 //		$cursor = $mongoCollection->find($byStructureQuery);
-    $cursor = $mongoCollection->find([], ['sort' => ['name' => 1]]);
+		$cursor = $mongoCollection->find([], ['sort' => ['name' => 1]]);
 		//$cursor->sort(array( 'name' => 1));
 		$result = [];
 		foreach ($cursor as $documentFound) {
