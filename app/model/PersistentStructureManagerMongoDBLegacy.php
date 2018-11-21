@@ -62,7 +62,7 @@ class PersistentStructureManagerMongoDBLegacy implements iPersistentStructureMan
 		$mongoCollection = $this->db->selectCollection('structure');
 		//$data = $structuresDo->tokenizeData();
 		// TODO ir más finos en bbdd que borrar todo y volver a guardarlo
-		$mongoCollection->remove(array()); 
+		$mongoCollection->remove(array());
 		foreach ($structuresDo as $structure) {
 			$id = $structure->getId();
 			//dd($structure);
@@ -77,7 +77,7 @@ class PersistentStructureManagerMongoDBLegacy implements iPersistentStructureMan
 	}
 	private function getEnumeratedManager() {
 		if (!isset($this->enumeratedManager)) {
-			$this->enumeratedManager = new PersistentEnumeratedManagerMongoDB();
+			$this->enumeratedManager = new PersistentEnumeratedManagerMongoDBLegacy();
 		}
 
 		return $this->enumeratedManager;
@@ -88,8 +88,8 @@ class PersistentStructureManagerMongoDBLegacy implements iPersistentStructureMan
 	}
 }
 /*
-db.structure.update({'_id' : 'chat_tienda'},{'_id' : 'chat_tienda',       "name": "Chat de tienda online Mongo", "storage" : "mongodb", 
-	'fields' : 
+db.structure.update({'_id' : 'chat_tienda'},{'_id' : 'chat_tienda',       "name": "Chat de tienda online Mongo", "storage" : "mongodb",
+	'fields' :
 	[
         {
           "Títulofer": {
