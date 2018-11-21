@@ -45,12 +45,19 @@ class StructuresDo extends Collection
 		return true;
 	}
 
-	// Create structures each id of array
-	public function hydrateFromArray($aId) {
+	// Create structures each id of array, only id no data
+	public function populateFromArray($aId) {
 		foreach ($aId as $id) {
 			$structure = new StructureDo();
 			$structure->setId($id);
 			$this->add($structure, $id);
+		}
+	}
+
+	// Fill data each structure
+	public function hydratate() {
+		foreach ($this->elements as $key => $value) {
+			$value->loadFromFile();
 		}
 	}
 

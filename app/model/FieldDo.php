@@ -187,7 +187,7 @@ class FieldDo
 		}
 		if (isset($data[$id]['restricted_structured'])) {
 			$restrictedStructures = new StructuresDo();
-			$restrictedStructures->hydrateFromArray($data[$id]['restricted_structured']);
+			$restrictedStructures->populateFromArray($data[$id]['restricted_structured']);
 			$this->setRestrictedStructures($restrictedStructures);
 		}
 	}
