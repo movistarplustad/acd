@@ -41,6 +41,9 @@ class PersistentManagerMongoDBLegacy implements iPersistentManager
 					$contentsTemp = $this->loadTagOneDepth($structureDo, $query->getCondition('tags'), $query->getDepth(), $filters);
 					return is_null($contentsTemp) ? null : $contentsTemp->one();
 					break;
+				case 'tag-deep': // Elements matching with tag
+					return $this->loadTagDepth($structureDo, $query->getCondition('tags'), $query, $filters);
+					break;
 				case 'field-value':
 					return $this->loadFieldValue($structureDo, $query->getCondition('data_value_query'), $query);
 					break;
@@ -318,6 +321,25 @@ class PersistentManagerMongoDBLegacy implements iPersistentManager
 			return null;
 		}
 	}
+	private function loadTagDepth($structureDo, $tags, $query, $filters = []) {
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+		$depth = $query->getDepth();
+		// Set pagination limits
+		$limits = $query->getLimits();
+		$mongoCollection = $this->db->selectCollection('content');
+		// db.content.find({"tags":{ $in : ["portadacine"]}, "id_structure" : "padre"}).pretty()
+		$cursor = $mongoCollection->find(array('tags' => array('$in' => $tags), 'id_structure' => $structureDo->getId()));
+		$cursor->skip($limits->getLower())->limit($limits->getUpper()-$limits->getLower()); // Limits
+		$limits->setTotal($cursor->count());
+		$result = new ContentsDo();
+		foreach ($cursor as $documentFound) {
+			$result->add($this->loadIdDepth ($structureDo, (string) $documentFound['_id'], $depth, $filters)->one());
+		}
+		$result->setLimits($limits);
+		return $result;
+	}
 	private function loadAliasIdDepth($structureDo, $idContent, $depth, $filters = []) {
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
@@ -336,8 +358,8 @@ class PersistentManagerMongoDBLegacy implements iPersistentManager
 			$depth--;
 			$content = $this->loadById($structureDo, $idContent);
 
-			@$validityDate = $filters['validity-date'];
-			@$profile =  $filters['profile'];
+			$validityDate = isset($filters['validity-date']) ? $filters['validity-date'] : null;
+			$profile = isset($filters['profile']) ? $filters['profile'] : '';
 			$isValid = $content && $content->checkValidityDate($validityDate) && $content->checkProfile($profile);
 			// TODO Organize code
 			if (!$isValid) return null;
@@ -525,9 +547,12 @@ class PersistentManagerMongoDBLegacy implements iPersistentManager
 		$directoryTmp = '';
 		$separator = ''; // First time is '' next is '/'
 		foreach ($aDirectoryParts as $directory) {
-			$directoryTmp .= $separator.$directory;
-			$separator = '/';
-			$aDirectory[] = $directoryTmp;
+			// Trim empty directory names
+			if($directory !== '') {
+				$directoryTmp .= $separator.$directory;
+				$separator = '/';
+				$aDirectory[] = $directoryTmp;
+			}
 		}
 
 		$filter = [
@@ -555,9 +580,10 @@ class PersistentManagerMongoDBLegacy implements iPersistentManager
 
 		$result = [];
 		$contentCheckValidity = new ContentDo(); // Object from date validity tester
-		@$validityDate = $filters['validity-date'];
+		$validityDate = isset($filters['validity-date']) ? $filters['validity-date'] : null;
 		foreach ($cursor as $documentFound) {
-			$contentCheckValidity->setPeriodOfValidity(@$documentFound['period_of_validity']); // @$documentFound for retrocompatibility
+			$periodOfValidity = isset($documentFound['period_of_validity']) ? $documentFound['period_of_validity'] : null; // @$documentFound for retrocompatibility
+			$contentCheckValidity->setPeriodOfValidity($periodOfValidity);
 			if ($contentCheckValidity->checkValidityDate($validityDate)) {
 				$result[] = [
 					'id' =>  (string) $documentFound['_id'],
@@ -606,17 +632,19 @@ class PersistentManagerMongoDBLegacy implements iPersistentManager
 		$filters = $this->getFilters($query);
 		$result = new ContentsDo();
 		// Build filter (TODO, find use of array_walk or similar)
-		$filters = ['id_structure' => $structureDo->getId()];
+		$filtersFields = ['id_structure' => $structureDo->getId()];
 		foreach ($dataValueQuery as $queryKey => $queryValue) {
-			$filters['data.'.$queryKey] = $queryValue; // Search only in data fields
+			$filtersFields['data.'.$queryKey] = $queryValue; // Search only in data fields
 		}
-		$cursor = $mongoCollection->find($filters);
+		$cursor = $mongoCollection->find($filtersFields);
 		$cursor->skip($limits->getLower())->limit($limits->getUpper()-$limits->getLower());
 		foreach ($cursor as $documentFound) {
 			$documentFound = $this->normalizeDocument($documentFound);
 			$idContent = $documentFound['id'];
 			$content = $this->loadIdDepth($structureDo, $idContent, $deep, $filters);
-			$result->add($content->one(), $idContent);
+			if ($content) {
+				$result->add($content->one(), $idContent);
+			}
 		}
 
 		return $result;

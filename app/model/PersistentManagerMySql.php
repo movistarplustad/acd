@@ -144,7 +144,7 @@ class PersistentManagerMySql implements iPersistentManager
 			}
 			$contentDo->setId($this->mysqli->insert_id);
 		}
-		
+
 		$this->updateTags($contentDo->getId(), $contentDo->getTags());
 
 		$bChildsRelated = false;
@@ -198,7 +198,7 @@ class PersistentManagerMySql implements iPersistentManager
 	}
 
 	private function updateRelations($parent, $children) {
-		// Redundant cache content relations 
+		// Redundant cache content relations
 		//d("Padre . Hijos", $parent, $children);
 		// emptying old relations & add news
 		$parent = $this->mysqli->real_escape_string($parent);
@@ -267,7 +267,7 @@ class PersistentManagerMySql implements iPersistentManager
 
 					$contentFound = new ContentDo();
 					$contentFound->load($documentFound, $structureDo);
-					
+
 					//$result->add($contentFound, $id);
 				}
 			}
@@ -296,7 +296,7 @@ class PersistentManagerMySql implements iPersistentManager
 			$depth--;
 			//$content = $this->loadById($structureDo, $idContent)->get($idContent);
 			$content = $this->loadById($structureDo, $idContent);
-			@$validityDate = $filters['validity-date'];
+			$validityDate = isset($filters['validity-date']) ? $filters['validity-date'] : null;
 			$isValid = $content && $content->checkValidityDate($validityDate);
 			// TODO Organize code
 			if (!$isValid) return null;
@@ -362,7 +362,7 @@ class PersistentManagerMySql implements iPersistentManager
 				$contentFound = new ContentDo();
 				$contentFound->load($documentFound, $structureDo);
 				$result->add($contentFound, $obj->id);
-			} 
+			}
 			/* free result set */
 			$dbResult->close();
 		}
@@ -375,8 +375,8 @@ class PersistentManagerMySql implements iPersistentManager
 	}
 
 	private function loadEditorSearch($structureDo, $query) {
-		// SELECT id, title, data FROM content WHERE id_structure = 'directo' AND title LIKE '%foo%'; 
-		// SELECT distinct c.id as id, title, data FROM content as c, content_tag as ct WHERE 
+		// SELECT id, title, data FROM content WHERE id_structure = 'directo' AND title LIKE '%foo%';
+		// SELECT distinct c.id as id, title, data FROM content as c, content_tag as ct WHERE
 		//  (title LIKE '%zzz%' OR alias_id LIKE '%zzz%' OR
 		//  (ct.tag = 'zzz' AND c.id = ct.id)) AND c.id_structure = 'una_mysql' LIMIT 0, 20"
 		// Set pagination limits
@@ -411,7 +411,7 @@ class PersistentManagerMySql implements iPersistentManager
 				$contentFound = new ContentDo();
 				$contentFound->load($documentFound, $structureDo);
 				$result->add($contentFound, $obj->id);
-			} 
+			}
 			/* free result set */
 			$dbResult->close();
 		}
@@ -478,7 +478,7 @@ class PersistentManagerMySql implements iPersistentManager
 
 		$result = [];
 		$contentCheckValidity = new ContentDo(); // Object from date validity tester
-		@$validityDate = $filters['validity-date'];
+		$validityDate = isset($filters['validity-date']) ? $filters['validity-date'] : null;
 		if ($dbResult = $this->mysqli->query($select)) {
 			while($obj = $dbResult->fetch_object()){
 				$documentFound = [];

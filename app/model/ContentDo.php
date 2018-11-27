@@ -7,7 +7,7 @@ class ContentDo
 {
 	const PERIOD_OF_VALIDITY_START = 'start';
 	const PERIOD_OF_VALIDITY_END = 'end';
-	const PERIOD_OF_VALIDITY_RAW = 'raw'; 
+	const PERIOD_OF_VALIDITY_RAW = 'raw';
 	const PERIOD_OF_VALIDITY_TOKENIZE = 'tokenize'; // For tokenize
 	const PROFILE_ENUMERATED_ID = 'PROFILE';
 	private $id;
@@ -165,7 +165,7 @@ class ContentDo
 	}
 	public function setStructureRef($fieldName, $structureRef) {
 		$this->getFields()->setStructureRef($fieldName, $structureRef);
-	}	
+	}
 	public function setData($keyData, $data = null) {
 		echo "TODO";
 		/* Setting full structure */
@@ -216,13 +216,13 @@ class ContentDo
 	public function load($rawData, $structure = null) {
 		$this->setId($rawData['id']);
 		$this->setTitle($rawData['title']);
-		@$periodOfValidity = $rawData['period_of_validity'] ?: [];
+		$periodOfValidity = isset($rawData['period_of_validity']) ? $rawData['period_of_validity'] : [];
 		$this->setPeriodOfValidity($periodOfValidity);
-		@$aliasId = $rawData['alias_id'];
+		$aliasId = isset($rawData['alias_id']) ? $rawData['alias_id'] : null;
 		$this->setAliasId($aliasId);
-		@$tags = $rawData['tags'] ?: [];
+		$tags = isset($rawData['tags']) ? $rawData['tags'] : [];
 		$this->setTags($tags);
-		@$profile = $rawData['profile'] ?: [];
+		$profile = isset($rawData['profile']) ? $rawData['profile'] : [];
 		$this->setProfileValues($profile);
 		if($structure !== null) {
 			$this->buildSkeleton($structure);
