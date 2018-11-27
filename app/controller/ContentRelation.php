@@ -91,12 +91,17 @@ class ContentRelation {
 		return $headerMenuOu;
 	}
 	public function load() {
-		$this->structures = new \ACD\Model\StructuresDo();
-		$this->structures->loadFromFile();
-
 		$contentLoader = new \Acd\Model\ContentLoader();
 		$contentLoader->setId($this->getIdStructureTypeParent());
 		$this->contentParent = $contentLoader->loadContent('id', $this->getIdParent());
+		$this->structures = $this->contentParent->getFields()->get($this->getIdField())->getRestrictedStructures();
+		// Check if the field has restricted structures, otherwise put all available structures
+		if($this->structures->length() === 0) {
+			$this->structures->loadFromFile(); // Load all structures
+		}
+		else {
+			$this->structures->hydratate(); // Load only restricted structures
+		}
 	}
 	public function render() {
 		$contentOu = new \ACD\View\ContentEditSearch();

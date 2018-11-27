@@ -14,7 +14,7 @@ $structures = new Model\StructuresDo();
 $structures->loadFromFile(\Acd\conf::$DATA_PATH);
 
 try {
-	$structureFound = $structures->get($id);	
+	$structureFound = $structures->get($id);
 } catch (\Exception $e) {
 	$structureFound = null;
 }
@@ -54,6 +54,17 @@ switch ($accion) {
 						$source->setId($fields[$idField]['source']);
 						$field->setOptions($source);
 					}
+
+					if(isset($fields[$idField]['restrictedStructures'])) {
+						$restrictedStructures = new Model\StructuresDo();
+						foreach($fields[$idField]['restrictedStructures'] as $idRestrictedStructure) {
+							$restrictedStructure = new Model\StructureDo();
+							$restrictedStructure->setId($idRestrictedStructure);
+							$restrictedStructures->add($restrictedStructure, $idRestrictedStructure);
+						}
+						$field->setRestrictedStructures($restrictedStructures);
+					}
+
 					$modified_structure->addField($field);
 				}
 			}
@@ -69,7 +80,7 @@ switch ($accion) {
 		}
 		else {
 			$returnUrl = 'index.php?a='.$accion.'&r=ko&id='.urlencode($id).'&name='.urlencode($name).'&storage='.urlencode($storage);
-		}		
+		}
 		break;
 	case 'clone':
 		$returnUrl = 'index.php?a=clone&id='.urlencode($id);

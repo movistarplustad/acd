@@ -8,8 +8,13 @@
 		<label for="title">Title:</label><input type="search" name="s" id="title" value="<?=htmlspecialchars($titleSearch)?>" />
 		<label for="idt">Structure type:</label>
 			<select name="idt" id="idt" required="required">
+			<?php
+				// If there is only one structure it is not necessary to choose it
+				if ($structures->length() > 1) {
+			?>
 				<option></option>
 			<?php
+			}
 				foreach ($structures as $estructure) {
 					$selected = $estructure->getId() === $idStructureTypeSearch ? ' selected="selected"' : '';
 			?>

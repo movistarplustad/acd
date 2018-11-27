@@ -374,6 +374,9 @@ option[disabled] {
 #manageStructure .field .delete {
 	text-align: right;
 }
+#manageStructure .restricted-structures-wrap {
+	display: flex;
+}
 
 .internal .item {
 	min-height: 1.5em;
