@@ -1,7 +1,7 @@
 <?php
 namespace Acd\Model;
 
-class StructuresDo extends Collection 
+class StructuresDo extends Collection
 {
 	private function getManager() {
 		switch (\Acd\conf::$DEFAULT_STORAGE) {
@@ -43,6 +43,22 @@ class StructuresDo extends Collection
 		}
 
 		return true;
+	}
+
+	// Create structures each id of array, only id no data
+	public function populateFromArray($aId) {
+		foreach ($aId as $id) {
+			$structure = new StructureDo();
+			$structure->setId($id);
+			$this->add($structure, $id);
+		}
+	}
+
+	// Fill data each structure
+	public function hydratate() {
+		foreach ($this->elements as $key => $value) {
+			$value->loadFromFile();
+		}
 	}
 
 	public function save($path = null) {
