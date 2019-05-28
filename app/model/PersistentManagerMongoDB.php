@@ -4,24 +4,28 @@ namespace Acd\Model;
 use \MongoDB\BSON\ObjectID;
 
 
-class PersistentManagerMongoDBException extends \exception {} // TODO Unificar
+class PersistentManagerMongoDBException extends \exception
+{ } // TODO Unificar
 class PersistentManagerMongoDB implements iPersistentManager
 {
 	private $db;
 	const STRUCTURE_TYPE_COLLECTION = '_collection';
 	private $structuresCache;
-	public function initialize($structureDo) {
-//		$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-//		$this->db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
+	public function initialize($structureDo)
+	{
+		//		$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
+		//		$this->db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
 
-    //TODO: Ver cóm pasarle el servidor, porque si es '' no funciona.
-    $mongo = new \MongoDB\Client(\Acd\conf::$MONGODB_SERVER);
-    $this->db = $mongo->selectDatabase(\Acd\conf::$MONGODB_DB);
+		//TODO: Ver cóm pasarle el servidor, porque si es '' no funciona.
+		$mongo = new \MongoDB\Client(\Acd\conf::$MONGODB_SERVER);
+		$this->db = $mongo->selectDatabase(\Acd\conf::$MONGODB_DB);
 	}
-	public function isInitialized($structureDo) {
+	public function isInitialized($structureDo)
+	{
 		return isset($this->db);
 	}
-	private function getFilters($query) {
+	private function getFilters($query)
+	{
 		$filters = [];
 		if ($query->getCondition('validity-date')) {
 			$filters['validity-date'] = $query->getCondition('validity-date');
@@ -31,61 +35,63 @@ class PersistentManagerMongoDB implements iPersistentManager
 		}
 		return $filters;
 	}
-	public function load($structureDo, $query) {
+	public function load($structureDo, $query)
+	{
 		$filters = $this->getFilters($query);
 		//if ($this->isInitialized($structureDo)) {
-			switch ($query->getType()) {
-				case 'id':
-					return $this->loadById($structureDo, $query->getCondition());
-					break;
-				case 'id-deep':
-					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $filters);
-					break;
-				case 'alias-id-deep':
-					return $this->loadAliasIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $filters);
-					break;
-				case 'tag-one-deep': // First element matching with tag
-					$contentsTemp = $this->loadTagOneDepth($structureDo, $query->getCondition('tags'), $query->getDepth(), $filters);
-					return is_null($contentsTemp) ? null : $contentsTemp->one();
-					break;
-				case 'tag-deep': // Elements matching with tag
-					return $this->loadTagDepth($structureDo, $query->getCondition('tags'), $query, $filters);
-					break;
-				case 'field-value':
-					return $this->loadFieldValue($structureDo, $query->getCondition('data_value_query'), $query);
-					break;
-				case 'all':
-					return $this->loadAll($structureDo, $query);
-					break;
-				case 'editor-search':
-					return $this->loadEditorSearch($structureDo, $query);
-					break;
-				case 'countParents':
-					return $this->countParents($structureDo, $query);
-					break;
-				case 'parents':
-					return $this->parents($structureDo, $query);
-					break;
-				case 'count-alias-id':
-					return $this->countAliasId($structureDo, $query);
-					break;
-				case 'difuse-alias-id':
-					return $this->difuseAliasId($structureDo, $query->getCondition('id'), $filters);
-					break;
-				case 'meta-information':
-					return $this->metaInformation($structureDo, $query->getCondition('id'));
-					break;
-				default:
-					throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
-					break;
-			}
+		switch ($query->getType()) {
+			case 'id':
+				return $this->loadById($structureDo, $query->getCondition());
+				break;
+			case 'id-deep':
+				return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $filters);
+				break;
+			case 'alias-id-deep':
+				return $this->loadAliasIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $filters);
+				break;
+			case 'tag-one-deep': // First element matching with tag
+				$contentsTemp = $this->loadTagOneDepth($structureDo, $query->getCondition('tags'), $query->getDepth(), $filters);
+				return is_null($contentsTemp) ? null : $contentsTemp->one();
+				break;
+			case 'tag-deep': // Elements matching with tag
+				return $this->loadTagDepth($structureDo, $query->getCondition('tags'), $query, $filters);
+				break;
+			case 'field-value':
+				return $this->loadFieldValue($structureDo, $query->getCondition('data_value_query'), $query);
+				break;
+			case 'all':
+				return $this->loadAll($structureDo, $query);
+				break;
+			case 'editor-search':
+				return $this->loadEditorSearch($structureDo, $query);
+				break;
+			case 'countParents':
+				return $this->countParents($structureDo, $query);
+				break;
+			case 'parents':
+				return $this->parents($structureDo, $query);
+				break;
+			case 'count-alias-id':
+				return $this->countAliasId($structureDo, $query);
+				break;
+			case 'difuse-alias-id':
+				return $this->difuseAliasId($structureDo, $query->getCondition('id'), $filters);
+				break;
+			case 'meta-information':
+				return $this->metaInformation($structureDo, $query->getCondition('id'));
+				break;
+			default:
+				throw new PersistentStorageQueryTypeNotImplemented('Query type [' . $query->getType() . '] not implemented');
+				break;
+		}
 		//}
 		//else {
 		//	// Structure empty
 		//	return new Collection();
 		//}
 	}
-	public function save($structureDo, $contentDo) {
+	public function save($structureDo, $contentDo)
+	{
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
@@ -103,9 +109,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 			switch ($field->getType()) {
 				case $field::TYPE_CONTENT:
 					// Relation
-					if($value['ref']) {
-            $mongoId = new ObjectID($value['ref']);
-//						$insert['data'][$key]['ref'] = \MongoDBRef::create('content', new \MongoId($value['ref']));
+					if ($value['ref']) {
+						$mongoId = new ObjectID($value['ref']);
+						//						$insert['data'][$key]['ref'] = \MongoDBRef::create('content', new \MongoId($value['ref']));
 						$insert['data'][$key]['ref'] = \Acd\Lib\MongoDBRef::create('content', $mongoId);
 						$insert['data'][$key]['id_structure'] = $value['id_structure'];
 
@@ -115,22 +121,22 @@ class PersistentManagerMongoDB implements iPersistentManager
 					break;
 				case $field::TYPE_COLLECTION:
 					// Collection relation
-					if(!is_array($value)) {
+					if (!is_array($value)) {
 						$value = [];
 					}
 					foreach ($value as $id => $item) {
-            $mongoId = new ObjectID($item['ref']);
-//						$value[$id]['ref'] = \MongoDBRef::create('content', new \MongoId($item['ref']));
-            $value[$id]['ref'] = \Acd\Lib\MongoDBRef::create('content', $mongoId);
+						$mongoId = new ObjectID($item['ref']);
+						//						$value[$id]['ref'] = \MongoDBRef::create('content', new \MongoId($item['ref']));
+						$value[$id]['ref'] = \Acd\Lib\MongoDBRef::create('content', $mongoId);
 						$value[$id]['id_structure'] = $item['id_structure'];
 
 
 						$oIdChildsRelated[] = $value[$id]['ref']; // For table relations
 					}
-					$insert['data'][$key]= [
+					$insert['data'][$key] = [
 						'id_structure' => self::STRUCTURE_TYPE_COLLECTION,
 						'ref' => $value
-						];
+					];
 					$bChildsRelated = true;
 					break;
 				default:
@@ -138,46 +144,47 @@ class PersistentManagerMongoDB implements iPersistentManager
 					break;
 			}
 		}
-		unset ($insert['id']);
+		unset($insert['id']);
 		$insert['save_ts'] = time(); // Log, timestamp for last save / update operation
 		if ($contentDo->getId()) {
-      $oId = new ObjectID($contentDo->getId());
-//			$oId = new \MongoId($contentDo->getId());
+			$oId = new ObjectID($contentDo->getId());
+			//			$oId = new \MongoId($contentDo->getId());
 
 			$mongoCollection->updateOne(['_id' => $oId], ['$set' => $insert]);
-		}
-		else {
+		} else {
 			$result = $mongoCollection->insertOne($insert);
-//        $contentDo->setId($insert['_id']);
-           $contentDo->setId($result->getInsertedId());
-//      $oId = new ObjectID($insert['_id']);
-//            $oId = new ObjectID($insert['_id']);
-            $oId = new ObjectID($result->getInsertedId());
-//			$oId = new \MongoId($insert['_id']);
+			//        $contentDo->setId($insert['_id']);
+			$contentDo->setId($result->getInsertedId());
+			//      $oId = new ObjectID($insert['_id']);
+			//            $oId = new ObjectID($insert['_id']);
+			$oId = new ObjectID($result->getInsertedId());
+			//			$oId = new \MongoId($insert['_id']);
 		}
-		if($bChildsRelated) {
+		if ($bChildsRelated) {
 			$this->updateRelations($this->db, \Acd\Lib\MongoDBRef::create('content', $oId), $oIdChildsRelated);
 		}
 
 		return $contentDo;
 	}
 
-	private function updateRelations($db, $parent, $children) {
+	private function updateRelations($db, $parent, $children)
+	{
 		// Redundant cache content relations
 		$mongoCollection = $db->relation;
 		//d("Padre . Hijos", $parent, $children);
 		// emptying old relations & add news
-//		$mongoCollection->remove(array('parent' => $parent));
-    $mongoCollection->deleteMany(['parent' => $parent]);
+		//		$mongoCollection->remove(array('parent' => $parent));
+		$mongoCollection->deleteMany(['parent' => $parent]);
 		foreach ($children as $child) {
 			$mongoCollection->insertOne([
 				'parent' => $parent,
 				'child' => $child
-				]);
+			]);
 		}
 	}
 
-	public function delete($structureDo, $idContent) {
+	public function delete($structureDo, $idContent)
+	{
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
@@ -189,37 +196,38 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$numRelations = $this->countParents($structureDo, $query);
 		if ($numRelations > 0) {
 			throw new PersistentManagerMongoDBException("Delete failed, the content has $numRelations relationships", self::DELETE_FAILED);
-		}
-		else {
+		} else {
 			$mongoCollection = $this->db->selectCollection('content');
-        $oId = new ObjectID($idContent);
-//			$oId = new \MongoId($idContent);
+			$oId = new ObjectID($idContent);
+			//			$oId = new \MongoId($idContent);
 			$mongoCollection->deleteOne(['_id' => $oId]);
 		}
 
 		$this->updateRelations($this->db,  \Acd\Lib\MongoDBRef::create('content', $oId), array());
 	}
 
-	private function loadById($structureDo, $id) {
+	private function loadById($structureDo, $id)
+	{
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
 		//$id = $query->getCondition();
 		// TODO revisar
 		$mongoCollection = $this->db->content;
-    try {
-        $oId = new ObjectID($id);
-    } catch (\Exception $e) {
-        return NULL;
-    }
-    try {
+		try {
+			$oId = new ObjectID($id);
+		} catch (\Exception $e) {
+			return NULL;
+		}
+		try {
 			$documentFound = $mongoCollection->findOne(["_id" => $oId], [
-        'typeMap' => [
-                'array' => 'array',
-               'root' => 'array',
-               'document' => 'array']
-   ]);
-//   var_dump($documentFound);die;
+				'typeMap' => [
+					'array' => 'array',
+					'root' => 'array',
+					'document' => 'array'
+				]
+			]);
+			//   var_dump($documentFound);die;
 			$documentFound = $this->normalizeDocument($documentFound);
 			$contentFound = new ContentDo();
 			$contentFound->load($documentFound, $structureDo);
@@ -227,8 +235,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			//+d($contentFound);
 			//$result = new ContentsDo();
 			//$result->add($contentFound, $id);
-		}
-		catch( \Exception $e ) {
+		} catch (\Exception $e) {
 			//$result = null;
 			$contentFound = null;
 		}
@@ -239,13 +246,14 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 	// Transform a mongodb document to normalized document (aseptic persistent storage)
 	//TODO ver por qué no puede meterse dentro de normalizeDocument
-	function normalizeRef($DBRef) {
+	function normalizeRef($DBRef)
+	{
 		return [
-				'ref' => (string) $DBRef['ref']['$id'],
-				'id_structure' => $DBRef['id_structure']
-				// value
-				// TODO instance
-			];
+			'ref' => (string)$DBRef['ref']['$id'],
+			'id_structure' => $DBRef['id_structure']
+			// value
+			// TODO instance
+		];
 	}
 	/*
 	Sample of docs
@@ -293,12 +301,13 @@ class PersistentManagerMongoDB implements iPersistentManager
 	}
 
 	*/
-	private function normalizeDocument($document) {
-		$document['id'] = (string) $document['_id'];
+	private function normalizeDocument($document)
+	{
+		$document['id'] = (string)$document['_id'];
 
 		foreach ($document['data'] as $key => $value) {
 			// External content
-			if(isset($value['ref']) && \Acd\Lib\MongoDBRef::isRef($value['ref'])) {
+			if (isset($value['ref']) && \Acd\Lib\MongoDBRef::isRef($value['ref'])) {
 				$document['data'][$key] = $this->normalizeRef($value);
 			}
 			// Collection
@@ -318,7 +327,8 @@ class PersistentManagerMongoDB implements iPersistentManager
 	}
 	// Cache from structure data
 	// TODO Unify in iPersistentStructure Manager?
-	private function getStructure($id) {
+	private function getStructure($id)
+	{
 		if (!isset($this->structuresCache[$id])) {
 			$structure = new structureDo();
 			$structure->setId($id);
@@ -328,7 +338,8 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		return $this->structuresCache[$id];
 	}
-	private function loadTagOneDepth($structureDo, $tags, $depth, $filters = []) {
+	private function loadTagOneDepth($structureDo, $tags, $depth, $filters = [])
+	{
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
@@ -336,13 +347,13 @@ class PersistentManagerMongoDB implements iPersistentManager
 		// db.content.find({"tags":{ $in : ["portadacine"]}, "id_structure" : "padre"}).pretty()
 		$documentFound = $mongoCollection->findOne(['tags' => ['$in' => $tags], 'id_structure' => $structureDo->getId()]);
 		if ($documentFound) {
-			return $this->loadIdDepth ($structureDo, (string) $documentFound['_id'], $depth, $filters);
-		}
-		else {
+			return $this->loadIdDepth($structureDo, (string)$documentFound['_id'], $depth, $filters);
+		} else {
 			return null;
 		}
 	}
-	private function loadTagDepth($structureDo, $tags, $query, $filters = []) {
+	private function loadTagDepth($structureDo, $tags, $query, $filters = [])
+	{
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
@@ -351,37 +362,41 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$limits = $query->getLimits();
 		$mongoCollection = $this->db->content;
 		// db.content.find({"tags":{ $in : ["portadacine"]}, "id_structure" : "padre"}).pretty()
-		$cursor = $mongoCollection->find(['tags' => ['$in' => $tags], 'id_structure' => $structureDo->getId()],['skip' => $limits->getLower(),
-          'limit' => $limits->getUpper()-$limits->getLower(),
-        'typeMap' => [
-                'array' => 'array',
-               'root' => 'array',
-               'document' => 'array']
-        ]);
-//		$cursor->skip($limits->getLower())->limit($limits->getUpper()-$limits->getLower()); // Limits
-//		$limits->setTotal($cursor->count());
+		$query = ['tags' => ['$in' => $tags], 'id_structure' => $structureDo->getId()];
+		$cursor = $mongoCollection->find($query, [
+			'skip' => $limits->getLower(),
+			'limit' => $limits->getUpper() - $limits->getLower(),
+			'typeMap' => [
+				'array' => 'array',
+				'root' => 'array',
+				'document' => 'array'
+			]
+		]);
+
 		$result = new ContentsDo();
 		foreach ($cursor as $documentFound) {
-			$result->add($this->loadIdDepth ($structureDo, (string) $documentFound['_id'], $depth, $filters)->one());
+			$result->add($this->loadIdDepth($structureDo, (string)$documentFound['_id'], $depth, $filters)->one());
 		}
-  	$limits->setTotal($result->length());
+
+		$limits->setTotal($mongoCollection->count($query));
 		$result->setLimits($limits);
 		return $result;
 	}
-	private function loadAliasIdDepth($structureDo, $idContent, $depth, $filters = []) {
+	private function loadAliasIdDepth($structureDo, $idContent, $depth, $filters = [])
+	{
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
 		$mongoCollection = $this->db->selectCollection('content');
 		$documentFound = $mongoCollection->findOne(array("alias_id" => $idContent, 'id_structure' => $structureDo->getId()), array("_id" => true));
 		if ($documentFound) {
-			return $this->loadIdDepth ($structureDo, (string) $documentFound['_id'], $depth, $filters);
-		}
-		else {
+			return $this->loadIdDepth($structureDo, (string)$documentFound['_id'], $depth, $filters);
+		} else {
 			return null;
 		}
 	}
-	private function loadIdDepth($structureDo, $idContent, $depth, $filters = []) {
+	private function loadIdDepth($structureDo, $idContent, $depth, $filters = [])
+	{
 		if ($depth > 0) {
 			$depth--;
 			$content = $this->loadById($structureDo, $idContent);
@@ -396,27 +411,26 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$fields = $content->getFields();
 			// Walk fields and fill their values
 			foreach ($fields as $field) {
-				switch($field->getType()) {
-					case 'content' :
+				switch ($field->getType()) {
+					case 'content':
 						// Has relation info?
-						if($field->getValue() && $field->getValue()['id_structure']) {
+						if ($field->getValue() && $field->getValue()['id_structure']) {
 							$structureTmp = $this->getStructure($field->getValue()['id_structure']);
-							$contentsTemp = $this->loadIdDepth ($structureTmp, $field->getValue()['ref'], $depth, $filters);
+							$contentsTemp = $this->loadIdDepth($structureTmp, $field->getValue()['ref'], $depth, $filters);
 							if ($contentsTemp) {
 								$field->setValue($contentsTemp->one());
 							}
-						}
-						else {
+						} else {
 							$field->setValue(null);
 						}
 						break;
-					case 'collection' :
+					case 'collection':
 						$newVal = new ContentsDo();
 						$items = $field->getValue();
 						if ($items) {
 							foreach ($items as $itemCollection) {
 								$structureTmp = $this->getStructure($itemCollection['id_structure']);
-								$contentsTemp = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth, $filters);
+								$contentsTemp = $this->loadIdDepth($structureTmp, $itemCollection['ref'], $depth, $filters);
 								if ($contentsTemp) {
 									$newVal->add($contentsTemp->one());
 								}
@@ -433,27 +447,29 @@ class PersistentManagerMongoDB implements iPersistentManager
 		}
 	}
 
-	private function loadAll($structureDo, $query) {
+	private function loadAll($structureDo, $query)
+	{
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
 		$mongoCollection = $this->db->content;
 		$byStructureQuery = array('id_structure' => $structureDo->getId());
-
- 		// Set pagination limits
+		// Set pagination limits
 		$limits = $query->getLimits();
 
-		$cursor = $mongoCollection->find($byStructureQuery, [ 'sort' => [ '_id' => -1 ],
-          'skip' => $limits->getLower(),
-          'limit' => $limits->getUpper()-$limits->getLower(),
-        'typeMap' => [
-                'array' => 'array',
-               'root' => 'array',
-               'document' => 'array']
-        ]);
-//		$cursor->sort(array( '_id' => -1))
-//			->skip($limits->getLower())->limit($limits->getUpper()-$limits->getLower()); // Limits
-//		$limits->setTotal($cursor->count());
+		$cursor = $mongoCollection->find($byStructureQuery, [
+			'sort' => ['_id' => -1],
+			'skip' => $limits->getLower(),
+			'limit' => $limits->getUpper() - $limits->getLower(),
+			'typeMap' => [
+				'array' => 'array',
+				'root' => 'array',
+				'document' => 'array'
+			]
+		]);
+		//		$cursor->sort(array( '_id' => -1))
+		//			->skip($limits->getLower())->limit($limits->getUpper()-$limits->getLower()); // Limits
+		//		$limits->setTotal($cursor->count());
 		$result = new ContentsDo();
 		foreach ($cursor as $documentFound) {
 			$documentFound = $this->normalizeDocument($documentFound);
@@ -461,25 +477,26 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$contentFound->load($documentFound, $structureDo);
 			$result->add($contentFound, $documentFound['id']);
 		}
-    $limits->setTotal($result->length());
+		$limits->setTotal($mongoCollection->count($byStructureQuery));
 		$result->setLimits($limits);
 
 		return $result;
 	}
 
-	private function loadEditorSearch($structureDo, $query) {
+	private function loadEditorSearch($structureDo, $query)
+	{
 		//db.content.find({"id_structure": "item_mosaico", "title" : /.*quinto.*/i}).pretty()
 		//db.getCollection('content').find({$or : [{"alias_id" : "dos"}, {"title" : "dos"}, {"tags" : [{$in  : 'dos'}]}], 'id_structure' : 'unimongo'})
 		$filter = array();
 		$stringFilter = array();
-		if(isset($query->getCondition()['title'])) {
+		if (isset($query->getCondition()['title'])) {
 			$search = $query->getCondition()['title'];
 			$stringFilter[] = array('title' => array('$regex' => new \MongoDB\BSON\Regex("^.*$search.*", 'i')));
 			$stringFilter[] = array('alias_id' => array('$regex' => new \MongoDB\BSON\Regex("^.*$search.*", 'i')));
 			$stringFilter[] = array('tags' => array('$in' => array($search)));
 			$filter['$or'] = $stringFilter;
 		}
-		if(isset($query->getCondition()['idStructure'])) {
+		if (isset($query->getCondition()['idStructure'])) {
 			$filter['id_structure'] = $query->getCondition()['idStructure'];
 		}
 
@@ -489,17 +506,19 @@ class PersistentManagerMongoDB implements iPersistentManager
 		// Set pagination limits
 		$limits = $query->getLimits();
 		$mongoCollection = $this->db->content;
-		$cursor = $mongoCollection->find($filter, [ 'sort' => [ '_id' => -1 ],
-          'skip' => $limits->getLower(),
-          'limit' => $limits->getUpper()-$limits->getLower(),
-        'typeMap' => [
-                'array' => 'array',
-               'root' => 'array',
-               'document' => 'array']
-        ]);
-//		$cursor->sort(array( '_id' => -1))
-//			->skip($limits->getLower())->limit($limits->getUpper()-$limits->getLower()); // Limits
-//		$limits->setTotal($cursor->count());
+		$cursor = $mongoCollection->find($filter, [
+			'sort' => ['_id' => -1],
+			'skip' => $limits->getLower(),
+			'limit' => $limits->getUpper() - $limits->getLower(),
+			'typeMap' => [
+				'array' => 'array',
+				'root' => 'array',
+				'document' => 'array'
+			]
+		]);
+		//		$cursor->sort(array( '_id' => -1))
+		//			->skip($limits->getLower())->limit($limits->getUpper()-$limits->getLower()); // Limits
+		//		$limits->setTotal($cursor->count());
 		$result = new ContentsDo();
 
 		foreach ($cursor as $documentFound) {
@@ -509,18 +528,19 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$result->add($contentFound, $documentFound['id']);
 		}
 
-  $limits->setTotal($result->length());
+		$limits->setTotal($mongoCollection->count($filter));
 		$result->setLimits($limits);
 		return $result;
 	}
 
-	private function countParents($structureDo, $query) {
+	private function countParents($structureDo, $query)
+	{
 		$id = $query->getCondition();
-  //var_dump($query, $id);die;
-  if($id == '') {
-      return 0;
-  }
-    $mongold = new ObjectID($id);
+		//var_dump($query, $id);die;
+		if ($id == '') {
+			return 0;
+		}
+		$mongold = new ObjectID($id);
 		$filter = ['child' => \Acd\Lib\MongoDBRef::create('content', $mongold)];
 
 		if (!$this->isInitialized($structureDo)) {
@@ -529,35 +549,38 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$mongoCollection = $this->db->relation;
 		$cursor = $mongoCollection->find($filter);
 
-  return count($cursor->toArray());
-//		return $cursor->count();
+		return count($cursor->toArray());
+		//		return $cursor->count();
 		// db.relation.find({"child" : DBRef("content", ObjectId("5510618a06b13a931ca41c07"))}).pretty()
 	}
-	private function parents($structureDo, $query) {
+	private function parents($structureDo, $query)
+	{
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
 		// Id's from parents
 		$id = $query->getCondition();
-    $mongold = new ObjectID($id);
+		$mongold = new ObjectID($id);
 		$filter = ['child' => \Acd\Lib\MongoDBRef::create('content', $mongold)];
 		$mongoCollection = $this->db->relation;
 		$cursor = $mongoCollection->find($filter, ['typeMap' => [
-                'array' => 'array',
-               'root' => 'array',
-               'document' => 'array']]);
+			'array' => 'array',
+			'root' => 'array',
+			'document' => 'array'
+		]]);
 		$idParents = [];
 		foreach ($cursor as $documentFound) {
 			$idParents[] = $documentFound['parent']['$id'];
 		}
 
 		// Content of parents
-		$filter = array('_id' => array('$in' =>$idParents));
+		$filter = array('_id' => array('$in' => $idParents));
 		$mongoCollection = $this->db->content;
 		$cursor = $mongoCollection->find($filter, ['typeMap' => [
-                'array' => 'array',
-               'root' => 'array',
-               'document' => 'array']]);
+			'array' => 'array',
+			'root' => 'array',
+			'document' => 'array'
+		]]);
 		$result = new ContentsDo();
 		foreach ($cursor as $documentFound) {
 			$documentFound = $this->normalizeDocument($documentFound);
@@ -569,9 +592,10 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		return $result;
 	}
-	private function countAliasId($structureDo, $query) {
+	private function countAliasId($structureDo, $query)
+	{
 		// Exclude alias_id === ''
-		if($query->getCondition('alias_id')) {
+		if ($query->getCondition('alias_id')) {
 			if (!$this->isInitialized($structureDo)) {
 				$this->initialize($structureDo);
 			}
@@ -579,12 +603,12 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$cursor = $mongoCollection->find($query->getCondition());
 
 			return count($cursor->toArray());
-		}
-		else {
+		} else {
 			return 0;
 		}
 	}
-	private function difuseAliasId($structureDo, $id, $filters = []) {
+	private function difuseAliasId($structureDo, $id, $filters = [])
+	{
 		// return array
 		// [
 		//	[
@@ -607,8 +631,8 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$separator = ''; // First time is '' next is '/'
 		foreach ($aDirectoryParts as $directory) {
 			// Trim empty directory names
-			if($directory !== '') {
-				$directoryTmp .= $separator.$directory;
+			if ($directory !== '') {
+				$directoryTmp .= $separator . $directory;
 				$separator = '/';
 				$aDirectory[] = $directoryTmp;
 			}
@@ -633,7 +657,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
-        $fields['sort']  = [ 'alias_id' => -1];
+		$fields['sort']  = ['alias_id' => -1];
 
 		$mongoCollection = $this->db->content;
 		$cursor = $mongoCollection->find($filter, $fields);
@@ -647,7 +671,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$contentCheckValidity->setPeriodOfValidity($periodOfValidity);
 			if ($contentCheckValidity->checkValidityDate($validityDate)) {
 				$result[] = [
-					'id' =>  (string) $documentFound['_id'],
+					'id' =>  (string)$documentFound['_id'],
 					'id_structure' => $documentFound['id_structure'],
 					'alias_id' => $documentFound['alias_id']
 				];
@@ -656,16 +680,16 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		return $result;
 	}
-	private function metaInformation($structureDo, $id, $filters = []) {
+	private function metaInformation($structureDo, $id, $filters = [])
+	{
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
 		$mongoCollection = $this->db->selectCollection('content');
 		try {
-      $oId = new ObjectID($id);
-//			$oId = new \MongoId($id);
-		}
-		catch( \Exception $e ) {
+			$oId = new ObjectID($id);
+			//			$oId = new \MongoId($id);
+		} catch (\Exception $e) {
 			return null;
 		}
 		try {
@@ -675,8 +699,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$contentFound = new ContentDo();
 			$contentFound->load($documentFound, $structureDo);
 			$result = $contentFound;
-		}
-		catch( \Exception $e ) {
+		} catch (\Exception $e) {
 			$result = null;
 		}
 		return $result;
@@ -696,17 +719,18 @@ class PersistentManagerMongoDB implements iPersistentManager
 		// Build filter (TODO, find use of array_walk or similar)
 		$filtersFields = ['id_structure' => $structureDo->getId()];
 		foreach ($dataValueQuery as $queryKey => $queryValue) {
-			$filtersFields['data.'.$queryKey] = $queryValue; // Search only in data fields
+			$filtersFields['data.' . $queryKey] = $queryValue; // Search only in data fields
 		}
-		$cursor = $mongoCollection->find($filtersFields, ['skip' => $limits->getLower(),
-                'limit' => $limits->getUpper()-$limits->getLower(),
-                'typeMap' => [
-                    'array' => 'array',
-                    'root' => 'array',
-                    'document' => 'array'
-                ]
-      ]);
-//		$cursor->skip($limits->getLower())->limit($limits->getUpper()-$limits->getLower());
+		$cursor = $mongoCollection->find($filtersFields, [
+			'skip' => $limits->getLower(),
+			'limit' => $limits->getUpper() - $limits->getLower(),
+			'typeMap' => [
+				'array' => 'array',
+				'root' => 'array',
+				'document' => 'array'
+			]
+		]);
+		//		$cursor->skip($limits->getLower())->limit($limits->getUpper()-$limits->getLower());
 		foreach ($cursor as $documentFound) {
 			$documentFound = $this->normalizeDocument($documentFound);
 			$idContent = $documentFound['id'];
