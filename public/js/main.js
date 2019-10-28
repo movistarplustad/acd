@@ -188,6 +188,9 @@ var editor = {
 		//$(".aliasId").aliasIdFormat();
 		$context.find("input[type=text]").aliasIdFormat();
 
+		/* Color rgb / rgba. */
+		$context.find("input.colorrgb, input.colorrgba").colorValue();
+
 		/* Select simple and multiple */
 		$context.find('.field.select option[value=""]').html(""); // Resolve bug of selectivity for empty options
 		$context.find('.field.select').selectivity({
