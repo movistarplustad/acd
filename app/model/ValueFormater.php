@@ -181,7 +181,7 @@ class ValueFormater
 			// val[rgb] + val[alfa] y hex format, ej. #46e7da01
 			$result = $value['rgb'];
 			// 0..1 float value to hex zero-padded
-			$result .= sprintf('%02s', dechex($value['alfa'] * 255));
+			$result .= sprintf('%02s', dechex($value['alfa']));
 			return $result;
 		};
 		$formater[self::TYPE_ID][self::FORMAT_EDITOR] = function ($value) {
@@ -302,7 +302,7 @@ class ValueFormater
 			//$result = ['rgb' => '#000000', 'alfa' => 0.0];
 
 			$result['rgb'] = '#' . substr($value, 1, 6);
-			$result['alfa'] = round(hexdec(substr($value, 7, 2)) / 255, 4);
+			$result['alfa'] = hexdec(substr($value, 7, 2));
 			return $result;
 		};
 		$formater[self::TYPE_ID][self::FORMAT_EDITOR] = function ($value) {
