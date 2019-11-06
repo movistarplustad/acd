@@ -179,9 +179,14 @@ class ValueFormater
 		};
 		$formater[self::TYPE_COLOR_RGBA][self::FORMAT_EDITOR] = function ($value) {
 			// val[rgb] + val[alfa] y hex format, ej. #46e7da01
-			$result = $value['rgb'];
-			// 0..1 float value to hex zero-padded
-			$result .= sprintf('%02s', dechex($value['alfa']));
+			if (isset($value['empty']) && $value['empty']) {
+				$result = null;
+			}
+			else {
+				$result = $value['rgb'];
+				// 0..1 float value to hex zero-padded
+				$result .= sprintf('%02s', dechex($value['alfa']));
+			}
 			return $result;
 		};
 		$formater[self::TYPE_ID][self::FORMAT_EDITOR] = function ($value) {
