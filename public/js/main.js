@@ -189,7 +189,8 @@ var editor = {
 		$context.find("input[type=text]").aliasIdFormat();
 
 		/* Color rgb / rgba. */
-		$context.find("input.colorrgb, input.colorrgba").colorValue();
+		$context.find("input.colorrgba").colorValue();
+		$context.find("input.colorrgb").colorValue();
 
 		/* Select simple and multiple */
 		$context.find('.field.select option[value=""]').html(""); // Resolve bug of selectivity for empty options

@@ -444,11 +444,16 @@ input[readonly] {
 }
 .action.empty {
 	display: inline-block;
-	padding-left: 1.5em;
-	background-position: 0 center;
-	background-repeat: no-repeat;
-	background-size: 1.5em;
-	background-image: url(ic_cancel-24px.svg);
+}
+.action.empty.unset {
+	display: none;
+}
+.action.empty svg {
+	vertical-align: middle;
+	fill: #959899;
+}
+.action.empty .clear.hidden {
+	display: none;
 }
 /* Collection */
 .collection > li {

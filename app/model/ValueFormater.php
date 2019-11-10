@@ -177,6 +177,16 @@ class ValueFormater
 			}
 			return $result;
 		};
+		$formater[self::TYPE_COLOR_RGB][self::FORMAT_EDITOR] = function ($value) {
+			// val[rgb] hex format, ej. #46e7da
+			if (isset($value['empty']) && $value['empty']) {
+				$result = null;
+			}
+			else {
+				$result = $value['rgb'];
+			}
+			return $result;
+		};
 		$formater[self::TYPE_COLOR_RGBA][self::FORMAT_EDITOR] = function ($value) {
 			// val[rgb] + val[alfa] y hex format, ej. #46e7da01
 			if (isset($value['empty']) && $value['empty']) {
@@ -303,11 +313,25 @@ class ValueFormater
 			}
 			return $result;
 		};
+		$formater[self::TYPE_COLOR_RGB][self::FORMAT_EDITOR] = function ($value) {
+			//$result = ['rgb' => '#000000'];
+
+			$result['rgb'] = null;
+			if($value) {
+				$result['rgb'] = '#' . substr($value, 1, 6);
+			}
+
+			return $result;
+		};
 		$formater[self::TYPE_COLOR_RGBA][self::FORMAT_EDITOR] = function ($value) {
 			//$result = ['rgb' => '#000000', 'alfa' => 0.0];
 
-			$result['rgb'] = '#' . substr($value, 1, 6);
-			$result['alfa'] = hexdec(substr($value, 7, 2));
+			$result['rgb'] = null;
+			$result['alfa'] = null;
+			if($value) {
+				$result['rgb'] = '#' . substr($value, 1, 6);
+				$result['alfa'] = hexdec(substr($value, 7, 2));
+			}
 			return $result;
 		};
 		$formater[self::TYPE_ID][self::FORMAT_EDITOR] = function ($value) {
