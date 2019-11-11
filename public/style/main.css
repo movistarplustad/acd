@@ -442,6 +442,19 @@ label.for-tag {
 input[readonly] {
 	color: #999;
 }
+.action.empty {
+	display: inline-block;
+}
+.action.empty.unset {
+	display: none;
+}
+.action.empty svg {
+	vertical-align: middle;
+	fill: #959899;
+}
+.action.empty .clear.hidden {
+	display: none;
+}
 /* Collection */
 .collection > li {
 	list-style: inside decimal;

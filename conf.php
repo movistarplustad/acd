@@ -96,6 +96,6 @@ if (file_exists(DIR_BASE.'/conf.'.$environment.'.php')) {
 	require DIR_BASE.'/conf.'.$environment.'.php';
 }
 /* Debug */
-if (file_exists(DIR_BASE.'/../tools/kint/Kint.class.php')) {
-	require DIR_BASE.'/../tools/kint/Kint.class.php';
-}
+// if (file_exists(DIR_BASE.'/../tools/kint/Kint.class.php')) {
+// 	require DIR_BASE.'/../tools/kint/Kint.class.php';
+// }

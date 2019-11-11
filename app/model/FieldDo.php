@@ -25,6 +25,8 @@ class FieldDo
 	const TYPE_LIST_OPTIONS = 'list_options';
 	const TYPE_LIST_MULTIPLE = 'list_multiple_options';
 	const TYPE_COORDINATE = 'coordinate';
+	const TYPE_COLOR_RGB = 'color_rgb';
+	const TYPE_COLOR_RGBA = 'color_rgba';
 	const TYPE_LIST_MULTIPLE_STICKY = 'list_multiple_options_sticky'; // TODO Temporal  hasta unificar campos fijos y variables
 	// const TYPE_TAGS = 'tags'; // TODO do in future
 
@@ -60,6 +62,8 @@ class FieldDo
 			self::TYPE_LIST_OPTIONS => 'Selection of options',
 			self::TYPE_LIST_MULTIPLE => 'List with zero or more selecting options',
 			self::TYPE_COORDINATE => 'Geospatial coordinate',
+			self::TYPE_COLOR_RGB => 'Color RGB',
+			self::TYPE_COLOR_RGBA => 'Color RGBA',
 			self::TYPE_LIST_MULTIPLE_STICKY => 'Do not use, temporal list with zero or more selecting options only for sticky fields'
 		);
 	}
