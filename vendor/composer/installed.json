@@ -36,7 +36,7 @@
         },
         "time": "2019-05-03T16:49:16+00:00",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "files": [
                 "init.php"

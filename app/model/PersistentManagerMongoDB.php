@@ -1,4 +1,5 @@
 <?php
+
 namespace Acd\Model;
 
 use \MongoDB\BSON\ObjectID;
@@ -227,7 +228,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 					'document' => 'array'
 				]
 			]);
-			//   var_dump($documentFound);die;
 			$documentFound = $this->normalizeDocument($documentFound);
 			$contentFound = new ContentDo();
 			$contentFound->load($documentFound, $structureDo);
@@ -249,7 +249,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 	function normalizeRef($DBRef)
 	{
 		return [
-			'ref' => (string)$DBRef['ref']['$id'],
+			'ref' => (string) $DBRef['ref']['$id'],
 			'id_structure' => $DBRef['id_structure']
 			// value
 			// TODO instance
@@ -303,7 +303,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 	*/
 	private function normalizeDocument($document)
 	{
-		$document['id'] = (string)$document['_id'];
+		$document['id'] = (string) $document['_id'];
 
 		foreach ($document['data'] as $key => $value) {
 			// External content
@@ -347,7 +347,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		// db.content.find({"tags":{ $in : ["portadacine"]}, "id_structure" : "padre"}).pretty()
 		$documentFound = $mongoCollection->findOne(['tags' => ['$in' => $tags], 'id_structure' => $structureDo->getId()]);
 		if ($documentFound) {
-			return $this->loadIdDepth($structureDo, (string)$documentFound['_id'], $depth, $filters);
+			return $this->loadIdDepth($structureDo, (string) $documentFound['_id'], $depth, $filters);
 		} else {
 			return null;
 		}
@@ -375,7 +375,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		$result = new ContentsDo();
 		foreach ($cursor as $documentFound) {
-			$result->add($this->loadIdDepth($structureDo, (string)$documentFound['_id'], $depth, $filters)->one());
+			$result->add($this->loadIdDepth($structureDo, (string) $documentFound['_id'], $depth, $filters)->one());
 		}
 
 		$limits->setTotal($mongoCollection->count($query));
@@ -390,7 +390,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$mongoCollection = $this->db->selectCollection('content');
 		$documentFound = $mongoCollection->findOne(array("alias_id" => $idContent, 'id_structure' => $structureDo->getId()), array("_id" => true));
 		if ($documentFound) {
-			return $this->loadIdDepth($structureDo, (string)$documentFound['_id'], $depth, $filters);
+			return $this->loadIdDepth($structureDo, (string) $documentFound['_id'], $depth, $filters);
 		} else {
 			return null;
 		}
@@ -536,7 +536,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 	private function countParents($structureDo, $query)
 	{
 		$id = $query->getCondition();
-		//var_dump($query, $id);die;
 		if ($id == '') {
 			return 0;
 		}
@@ -671,7 +670,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$contentCheckValidity->setPeriodOfValidity($periodOfValidity);
 			if ($contentCheckValidity->checkValidityDate($validityDate)) {
 				$result[] = [
-					'id' =>  (string)$documentFound['_id'],
+					'id' =>  (string) $documentFound['_id'],
 					'id_structure' => $documentFound['id_structure'],
 					'alias_id' => $documentFound['alias_id']
 				];
