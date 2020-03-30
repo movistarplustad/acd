@@ -6,7 +6,8 @@ use \MongoDB\BSON\ObjectID;
 
 
 class PersistentManagerMongoDBException extends \exception
-{ } // TODO Unificar
+{
+} // TODO Unificar
 class PersistentManagerMongoDB implements iPersistentManager
 {
 	private $db;

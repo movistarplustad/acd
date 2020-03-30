@@ -1,11 +1,15 @@
 <?php
+
 namespace Acd\Model;
 
-class PersistentManagerMySqlException extends \exception {} // TODO Unificar
+class PersistentManagerMySqlException extends \exception
+{
+} // TODO Unificar
 class PersistentManagerMySql implements iPersistentManager
 {
 	private $mysqli;
-	public function initialize($structureDo) {
+	public function initialize($structureDo)
+	{
 		//Data from global.php
 		$dbHost = \Acd\conf::$MYSQL_SERVER;
 		$dbUser = \Acd\conf::$MYSQL_USER;
@@ -18,16 +22,17 @@ class PersistentManagerMySql implements iPersistentManager
 		}
 		return true;
 	}
-	public function isInitialized($structureDo) {
+	public function isInitialized($structureDo)
+	{
 		try {
 			$this->initialize($structureDo);
 			return true;
-		}
-		catch ( PersistentManagerMySqlException $e ) {
+		} catch (PersistentManagerMySqlException $e) {
 			return false;
 		}
 	}
-	private function getFilters($query) {
+	private function getFilters($query)
+	{
 		$filters = [];
 		if ($query->getCondition('validity-date')) {
 			$filters['validity-date'] = $query->getCondition('validity-date');
@@ -37,7 +42,8 @@ class PersistentManagerMySql implements iPersistentManager
 		}
 		return $filters;
 	}
-	public function load($structureDo, $query) {
+	public function load($structureDo, $query)
+	{
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
@@ -46,34 +52,34 @@ class PersistentManagerMySql implements iPersistentManager
 			case 'id':
 				return $this->loadById($structureDo, $query->getCondition());
 				break;
-				case 'id-deep':
-					return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $filters);
-					break;
-				case 'all':
-					return $this->loadAll($structureDo, $query);
-					break;
-				case 'editor-search':
-					return $this->loadEditorSearch($structureDo, $query);
-					break;
-				case 'countParents':
-					return $this->countParents($structureDo, $query);
-					break;
-				case 'count-alias-id':
-					return $this->countAliasId($structureDo, $query);
-					break;
-				case 'difuse-alias-id':
-					return $this->difuseAliasId($structureDo, $query->getCondition('id'), $filters);
-					break;
-				case 'meta-information':
-					return $this->metaInformation($structureDo, $query->getCondition('id'));
-					break;
+			case 'id-deep':
+				return $this->loadIdDepth($structureDo, $query->getCondition('id'), $query->getDepth(), $filters);
+				break;
+			case 'all':
+				return $this->loadAll($structureDo, $query);
+				break;
+			case 'editor-search':
+				return $this->loadEditorSearch($structureDo, $query);
+				break;
+			case 'countParents':
+				return $this->countParents($structureDo, $query);
+				break;
+			case 'count-alias-id':
+				return $this->countAliasId($structureDo, $query);
+				break;
+			case 'difuse-alias-id':
+				return $this->difuseAliasId($structureDo, $query->getCondition('id'), $filters);
+				break;
+			case 'meta-information':
+				return $this->metaInformation($structureDo, $query->getCondition('id'));
+				break;
 			default:
-				throw new PersistentStorageQueryTypeNotImplemented('Query type ['.$query->getType().'] not implemented');
+				throw new PersistentStorageQueryTypeNotImplemented('Query type [' . $query->getType() . '] not implemented');
 				break;
 		}
-
 	}
-	public function save($structureDo, $contentDo) {
+	public function save($structureDo, $contentDo)
+	{
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
@@ -89,8 +95,7 @@ class PersistentManagerMySql implements iPersistentManager
 			$dummyDate = $contentDo->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_START);
 			if (is_finite($dummyDate)) {
 				$dummyDate = "FROM_UNIXTIME($dummyDate)";
-			}
-			else {
+			} else {
 				$dummyDate = 'null';
 			}
 			$period_of_validity_start = $this->mysqli->real_escape_string($dummyDate);
@@ -98,8 +103,7 @@ class PersistentManagerMySql implements iPersistentManager
 			$dummyDate = $contentDo->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_END);
 			if (is_finite($dummyDate)) {
 				$dummyDate = "FROM_UNIXTIME($dummyDate)";
-			}
-			else {
+			} else {
 				$dummyDate = 'null';
 			}
 			$period_of_validity_end = $this->mysqli->real_escape_string($dummyDate);
@@ -110,8 +114,7 @@ class PersistentManagerMySql implements iPersistentManager
 			if ($this->mysqli->query($select) !== true) {
 				throw new PersistentManagerMySqlException("Update failed when save document", self::UPDATE_FAILED);
 			}
-		}
-		else {
+		} else {
 			// Insert
 			$title = $this->mysqli->real_escape_string($contentDo->getTitle());
 			$alias_id = $this->mysqli->real_escape_string($contentDo->getAliasId());
@@ -120,8 +123,7 @@ class PersistentManagerMySql implements iPersistentManager
 			$dummyDate = $contentDo->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_START);
 			if (is_finite($dummyDate)) {
 				$dummyDate = "FROM_UNIXTIME($dummyDate)";
-			}
-			else {
+			} else {
 				$dummyDate = 'null';
 			}
 			$period_of_validity_start = $this->mysqli->real_escape_string($dummyDate);
@@ -129,8 +131,7 @@ class PersistentManagerMySql implements iPersistentManager
 			$dummyDate = $contentDo->getPeriodOfValidity(ContentDo::PERIOD_OF_VALIDITY_END);
 			if (is_finite($dummyDate)) {
 				$dummyDate = "FROM_UNIXTIME($dummyDate)";
-			}
-			else {
+			} else {
 				$dummyDate = 'null';
 			}
 			$period_of_validity_end = $this->mysqli->real_escape_string($dummyDate);
@@ -161,7 +162,7 @@ class PersistentManagerMySql implements iPersistentManager
 					break;
 				case $field::TYPE_COLLECTION:
 					// Collection relation
-					if(is_array($field)) {
+					if (is_array($field)) {
 						foreach ($field->getValue() as $fieldValue) {
 							$child = $fieldValue['ref'];
 							if ($child) {
@@ -174,14 +175,15 @@ class PersistentManagerMySql implements iPersistentManager
 			}
 		}
 
-		if($bChildsRelated) {
+		if ($bChildsRelated) {
 			$this->updateRelations($contentDo->getId(), $oIdChildsRelated);
 		}
 
 		return $contentDo;
 	}
 
-	private function updateTags($idContent, $aTags) {
+	private function updateTags($idContent, $aTags)
+	{
 		// emptying old tags & add news
 		$id = $this->mysqli->real_escape_string($idContent);
 		$select = "DELETE FROM content_tag WHERE id = $id";
@@ -197,7 +199,8 @@ class PersistentManagerMySql implements iPersistentManager
 		}
 	}
 
-	private function updateRelations($parent, $children) {
+	private function updateRelations($parent, $children)
+	{
 		// Redundant cache content relations
 		//d("Padre . Hijos", $parent, $children);
 		// emptying old relations & add news
@@ -215,7 +218,8 @@ class PersistentManagerMySql implements iPersistentManager
 		}
 	}
 
-	public function delete($structureDo, $idContent) {
+	public function delete($structureDo, $idContent)
+	{
 		if ($this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
@@ -228,14 +232,14 @@ class PersistentManagerMySql implements iPersistentManager
 		$numRelations = $this->countParents($structureDo, $query);
 		if ($numRelations > 0) {
 			throw new PersistentManagerMySqlException("Delete failed, the content has $numRelations relationships", self::DELETE_FAILED);
-		}
-		elseif ($this->mysqli->query($select) !== true) {
+		} elseif ($this->mysqli->query($select) !== true) {
 			throw new PersistentManagerMySqlException("Delete failed", self::DELETE_FAILED);
 		}
 		$this->updateTags($id, array());
 	}
 
-	private function loadById($structureDo, $id) {
+	private function loadById($structureDo, $id)
+	{
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
@@ -246,7 +250,7 @@ class PersistentManagerMySql implements iPersistentManager
 			$select = "SELECT id, title, UNIX_TIMESTAMP(period_of_validity_start) as period_of_validity_start, UNIX_TIMESTAMP(period_of_validity_end) as period_of_validity_end, alias_id, data FROM content WHERE id = '$id'";
 			if ($dbResult = $this->mysqli->query($select)) {
 				//$result = new ContentsDo();
-				while($obj = $dbResult->fetch_object()){
+				while ($obj = $dbResult->fetch_object()) {
 					$documentFound = array();
 					$documentFound['id'] = $obj->id;
 					$documentFound['title'] = $obj->title;
@@ -259,7 +263,7 @@ class PersistentManagerMySql implements iPersistentManager
 					$select = "SELECT id, tag FROM content_tag WHERE id = '$id'";
 					if ($dbResult = $this->mysqli->query($select)) {
 						$aTags = [];
-						while($objTag = $dbResult->fetch_object()){
+						while ($objTag = $dbResult->fetch_object()) {
 							$aTags[] = $objTag->tag;
 						}
 						$documentFound['tags'] = $aTags;
@@ -271,8 +275,7 @@ class PersistentManagerMySql implements iPersistentManager
 					//$result->add($contentFound, $id);
 				}
 			}
-		}
-		catch( \Exception $e ) {
+		} catch (\Exception $e) {
 			$contentFound = null;
 		}
 
@@ -281,7 +284,8 @@ class PersistentManagerMySql implements iPersistentManager
 	}
 	// Cache from structure data
 	// TODO Unify in iPersistentStructure Manager?
-	private function getStructure($id) {
+	private function getStructure($id)
+	{
 		if (!isset($this->structuresCache[$id])) {
 			$structure = new structureDo();
 			$structure->setId($id);
@@ -291,7 +295,8 @@ class PersistentManagerMySql implements iPersistentManager
 
 		return $this->structuresCache[$id];
 	}
-	private function loadIdDepth ($structureDo, $idContent, $depth, $filters = []) {
+	private function loadIdDepth($structureDo, $idContent, $depth, $filters = [])
+	{
 		if ($depth > 0) {
 			$depth--;
 			//$content = $this->loadById($structureDo, $idContent)->get($idContent);
@@ -305,22 +310,22 @@ class PersistentManagerMySql implements iPersistentManager
 			$fields = $content->getFields();
 			// Walk fields and fill their values
 			foreach ($fields as $field) {
-				switch($field->getType()) {
-					case 'content' :
+				switch ($field->getType()) {
+					case 'content':
 						// Has relation info?
-						if($field->getValue() && $field->getValue()['id_structure']) {
+						if ($field->getValue() && $field->getValue()['id_structure']) {
 							$structureTmp = $this->getStructure($field->getValue()['id_structure']);
-							$contentsTemp = $this->loadIdDepth ($structureTmp, $field->getValue()['ref'], $depth, $filters);
+							$contentsTemp = $this->loadIdDepth($structureTmp, $field->getValue()['ref'], $depth, $filters);
 							if ($contentsTemp) {
 								$field->setValue($contentsTemp->one());
 							}
 						}
 						break;
-					case 'collection' :
+					case 'collection':
 						$newVal = new ContentsDo();
 						foreach ($field->getValue() as $itemCollection) {
 							$structureTmp = $this->getStructure($itemCollection['id_structure']);
-							$contentsTemp = $this->loadIdDepth ($structureTmp, $itemCollection['ref'], $depth, $filters);
+							$contentsTemp = $this->loadIdDepth($structureTmp, $itemCollection['ref'], $depth, $filters);
 							if ($contentsTemp) {
 								$newVal->add($contentsTemp->one());
 							}
@@ -335,7 +340,8 @@ class PersistentManagerMySql implements iPersistentManager
 			return $result;
 		}
 	}
-	private function loadAll($structureDo, $query) {
+	private function loadAll($structureDo, $query)
+	{
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
@@ -353,7 +359,7 @@ class PersistentManagerMySql implements iPersistentManager
 		$selectCount = "SELECT count(*) as total $whereCondition";
 
 		if ($dbResult = $this->mysqli->query($select)) {
-			while($obj = $dbResult->fetch_object()){
+			while ($obj = $dbResult->fetch_object()) {
 				$documentFound = array();
 				$documentFound['id'] = $obj->id;
 				$documentFound['title'] = $obj->title;
@@ -374,7 +380,8 @@ class PersistentManagerMySql implements iPersistentManager
 		return $result;
 	}
 
-	private function loadEditorSearch($structureDo, $query) {
+	private function loadEditorSearch($structureDo, $query)
+	{
 		// SELECT id, title, data FROM content WHERE id_structure = 'directo' AND title LIKE '%foo%';
 		// SELECT distinct c.id as id, title, data FROM content as c, content_tag as ct WHERE
 		//  (title LIKE '%zzz%' OR alias_id LIKE '%zzz%' OR
@@ -384,17 +391,17 @@ class PersistentManagerMySql implements iPersistentManager
 		$limitLower = $limits->getLower();
 		$limitUpper = $limits->getUpper();
 		$filter = array();
-		if(isset($query->getCondition()['title'])) {
+		if (isset($query->getCondition()['title'])) {
 			$search = $this->mysqli->real_escape_string($query->getCondition()['title']);
-			$filter['title'] = "(title LIKE '%".$search."%' OR alias_id LIKE '%".$search."%' OR (ct.tag = '$search' AND c.id = ct.id))";
+			$filter['title'] = "(title LIKE '%" . $search . "%' OR alias_id LIKE '%" . $search . "%' OR (ct.tag = '$search' AND c.id = ct.id))";
 		}
-		if(isset($query->getCondition()['idStructure'])) {
+		if (isset($query->getCondition()['idStructure'])) {
 			$search = $this->mysqli->real_escape_string($query->getCondition()['idStructure']);
-			$filter['id_structure'] = "id_structure = '".$search."'";
+			$filter['id_structure'] = "id_structure = '" . $search . "'";
 		}
 		$where = '';
 		if ($filter) {
-			$whereCondition = 'FROM content as c, content_tag as ct WHERE '.implode(' AND ', $filter);
+			$whereCondition = 'FROM content as c, content_tag as ct WHERE ' . implode(' AND ', $filter);
 		}
 		$select = "SELECT distinct c.id as id, title, data $whereCondition LIMIT $limitLower, $limitUpper";
 
@@ -402,7 +409,7 @@ class PersistentManagerMySql implements iPersistentManager
 
 		$result = new ContentsDo();
 		if ($dbResult = $this->mysqli->query($select)) {
-			while($obj = $dbResult->fetch_object()){
+			while ($obj = $dbResult->fetch_object()) {
 				$documentFound = array();
 				$documentFound['id'] = $obj->id;
 				$documentFound['title'] = $obj->title;
@@ -423,7 +430,8 @@ class PersistentManagerMySql implements iPersistentManager
 		return $result;
 	}
 
-	private function countParents($structureDo, $query) {
+	private function countParents($structureDo, $query)
+	{
 		//SELECT count(*) FROM relation WHERE child = 1
 
 		$id = $this->mysqli->real_escape_string($query->getCondition());
@@ -431,33 +439,34 @@ class PersistentManagerMySql implements iPersistentManager
 		$total = '?';
 
 		if ($dbResult = $this->mysqli->query($select)) {
-			while($obj = $dbResult->fetch_object()){
+			while ($obj = $dbResult->fetch_object()) {
 				$total = $obj->total;
 			}
 		}
 
 		return $total;
 	}
-	private function countAliasId($structureDo, $query) {
+	private function countAliasId($structureDo, $query)
+	{
 		//SELECT count(*) FROM content WHERE alias_id = '$aliasId'
-		if($query->getCondition('alias_id')) {
+		if ($query->getCondition('alias_id')) {
 			$aliasId = $this->mysqli->real_escape_string($query->getCondition('alias_id'));
 			$select = "SELECT count(*) as total FROM content WHERE alias_id = '$aliasId'";
 			$total = 0;
 
 			if ($dbResult = $this->mysqli->query($select)) {
-				while($obj = $dbResult->fetch_object()){
+				while ($obj = $dbResult->fetch_object()) {
 					$total = $obj->total;
 				}
 			}
 
 			return $total;
-		}
-		else {
+		} else {
 			return 0;
 		}
 	}
-	private function difuseAliasId($structureDo, $id, $filters = []) {
+	private function difuseAliasId($structureDo, $id, $filters = [])
+	{
 		// SELECT id, id_structure, alias_id FROM content WHERE alias_id IN ('alias','alias/dos','alias/dos/tres','alias/dos/tres/cuatro') AND id_structure = 'contenido_my sql'  ORDER BY alias_id DESC;
 		// Select elements with alias-id start match ie. one match with one/two
 		$aDirectoryParts = explode('/', $id);
@@ -465,14 +474,14 @@ class PersistentManagerMySql implements iPersistentManager
 		$directoryTmp = '';
 		$separator = ''; // First time is '' next is '/'
 		foreach ($aDirectoryParts as $directory) {
-			$directoryTmp .= $separator.$this->mysqli->real_escape_string($directory);
+			$directoryTmp .= $separator . $this->mysqli->real_escape_string($directory);
 			$separator = '/';
 			$aDirectory[] = $directoryTmp;
 		}
 
-		$filter = "IN ('" . implode("','", $aDirectory). "')";
+		$filter = "IN ('" . implode("','", $aDirectory) . "')";
 		if ($structureDo->getId()) {
-			$filter .= " AND id_structure = '".$this->mysqli->real_escape_string($structureDo->getId())."'";
+			$filter .= " AND id_structure = '" . $this->mysqli->real_escape_string($structureDo->getId()) . "'";
 		}
 		$select = "SELECT id, id_structure, alias_id, UNIX_TIMESTAMP(period_of_validity_start) as period_of_validity_start, UNIX_TIMESTAMP(period_of_validity_end) as  period_of_validity_end FROM content WHERE alias_id $filter  ORDER BY alias_id DESC";
 
@@ -480,7 +489,7 @@ class PersistentManagerMySql implements iPersistentManager
 		$contentCheckValidity = new ContentDo(); // Object from date validity tester
 		$validityDate = isset($filters['validity-date']) ? $filters['validity-date'] : null;
 		if ($dbResult = $this->mysqli->query($select)) {
-			while($obj = $dbResult->fetch_object()){
+			while ($obj = $dbResult->fetch_object()) {
 				$documentFound = [];
 				$documentFound['period_of_validity']['start'] = is_null($obj->period_of_validity_start) ? -INF : $obj->period_of_validity_start;
 				$documentFound['period_of_validity']['end'] = is_null($obj->period_of_validity_end) ? INF : $obj->period_of_validity_end;
@@ -497,7 +506,8 @@ class PersistentManagerMySql implements iPersistentManager
 		return $result;
 	}
 
-	private function metaInformation($structureDo, $id, $filters = []) {
+	private function metaInformation($structureDo, $id, $filters = [])
+	{
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
@@ -508,7 +518,7 @@ class PersistentManagerMySql implements iPersistentManager
 			$select = "SELECT id, title, id_structure, UNIX_TIMESTAMP(period_of_validity_start) as period_of_validity_start, UNIX_TIMESTAMP(period_of_validity_end) as period_of_validity_end, alias_id, data FROM content WHERE id = '$id'";
 			if ($dbResult = $this->mysqli->query($select)) {
 				//$result = new ContentsDo();
-				while($obj = $dbResult->fetch_object()){
+				while ($obj = $dbResult->fetch_object()) {
 					$documentFound = array();
 					$documentFound['id'] = $obj->id;
 					$documentFound['title'] = $obj->title;
@@ -521,7 +531,7 @@ class PersistentManagerMySql implements iPersistentManager
 					$select = "SELECT id, tag FROM content_tag WHERE id = '$id'";
 					if ($dbResult = $this->mysqli->query($select)) {
 						$aTags = [];
-						while($objTag = $dbResult->fetch_object()){
+						while ($objTag = $dbResult->fetch_object()) {
 							$aTags[] = $objTag->tag;
 						}
 						$documentFound['tags'] = $aTags;
@@ -532,8 +542,7 @@ class PersistentManagerMySql implements iPersistentManager
 					$contentFound->load($documentFound, $structureDo);
 				}
 			}
-		}
-		catch( \Exception $e ) {
+		} catch (\Exception $e) {
 			$contentFound = null;
 		}
 

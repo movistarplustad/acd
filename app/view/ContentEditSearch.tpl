@@ -35,7 +35,12 @@
 	if($resultSearchContents) {
 		$limits = $resultSearchContents->getLimits();
 		$lowerLimit = $limits->getLower();
-		$bMorePage = $limits->getUpper() < $limits->getTotal();
+		$bMorePage = $limits->getUpper() <= $limits->getTotal();
+		$setPrevPage = $lowerLimit > 0;
+		$nextPage = $limits->getUpper() / $limits->getStep();
+		$prevPage = $limits->getLower() / $limits->getStep() -1;
+		$totalPages = ceil($limits->getTotal() / $limits->getStep());
+		$setPagination = $setPrevPage || $bMorePage;
 	?>
 		<form action="content.php?a=edit&id=<?=urlencode($id)?>&idt=<?=urlencode($type)?>" method="post">
 			<input name="a" value="edit" type="hidden"/>
@@ -74,17 +79,20 @@
 				</div>
 			</div>
 		</form>
-	<?php
-	if ($bMorePage) {
-		$nextPage = $limits->getUpper() / $limits->getStep();
-		$totalPages = ceil($limits->getTotal() / $limits->getStep());
-		?>
-		<p class="pagination">[<?=$nextPage?> / <?=$totalPages?>] <a href="?idp=<?=urlencode($id)?>&amp;idtp=<?=urlencode($type)?>&amp;f=<?=urlencode($idField)?>&amp;s=<?=urlencode($titleSearch)?>&amp;idt=<?=urlencode($idStructureTypeSearch)?>&amp;a=search&amp;p=<?=$nextPage?>">More…</a></p>
 		<?php
+		if($setPagination) {
+		?>
+		<p class="pagination">
+			<?php if($setPrevPage) { ?>
+				<a class="test" href="?idp=<?=urlencode($id)?>&amp;idtp=<?=urlencode($type)?>&amp;f=<?=urlencode($idField)?>&amp;s=<?=urlencode($titleSearch)?>&amp;idt=<?=urlencode($idStructureTypeSearch)?>&amp;a=search&amp;p=<?=$prevPage?>">Prev</a>
+			<?php } ?>
+			[<?=$nextPage?> / <?=$totalPages?>]
+			<?php if($bMorePage) {?>
+			<a class="test" href="?idp=<?=urlencode($id)?>&amp;idtp=<?=urlencode($type)?>&amp;f=<?=urlencode($idField)?>&amp;s=<?=urlencode($titleSearch)?>&amp;idt=<?=urlencode($idStructureTypeSearch)?>&amp;a=search&amp;p=<?=$nextPage?>">Next</a>
+			<?php } ?>
+		</p>
+		<?php
+		}
 	}
 	?>
-	<?php
-	}
-	?>
-
 </main>

@@ -1,10 +1,17 @@
 <?php
+
 namespace Acd;
+
 use \Acd\Model\SessionNavigation;
 
-require ('../autoload.php');
+require('../autoload.php');
+
+/* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
+// require ('../offline.php');
+
 session_start();
-function loadNewRef($idRef, $idStructure) {
+function loadNewRef($idRef, $idStructure)
+{
 	if (!$idRef || !$idStructure) {
 		return null;
 	}
@@ -25,7 +32,7 @@ if (!Model\Auth::isLoged()) {
 
 switch ($action) {
 	case 'login':
-		header('Location: index.php?re='.urlencode($_SERVER["REQUEST_URI"]));
+		header('Location: index.php?re=' . urlencode($_SERVER["REQUEST_URI"]));
 		return;
 		break;
 	case 'list_structures':
@@ -75,7 +82,7 @@ switch ($action) {
 		$navigation->push([
 			'hash' => "list_contents - $id - $titleSearch - $numPage",
 			'url' => $_SERVER["REQUEST_URI"],
-			'title' => 'Manage elements of '.$id
+			'title' => 'Manage elements of ' . $id
 		]);
 		$navigation->save();
 
@@ -97,8 +104,7 @@ switch ($action) {
 			$whereCondition['title'] = $titleSearch;
 			$whereCondition['idStructure'] = $id;
 			$contents = $contentLoader->loadContents('editor-search', $whereCondition);
-		}
-		else {
+		} else {
 			$contents = $contentLoader->loadContents('all');
 		}
 		$contentOu->setContents($contents);
@@ -109,7 +115,7 @@ switch ($action) {
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
-		$skeletonOu->setHeadTitle('Manage elements of '.$id);
+		$skeletonOu->setHeadTitle('Manage elements of ' . $id);
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 
@@ -130,7 +136,7 @@ switch ($action) {
 		$navigation->push([
 			'hash' => "edit_content - $idStructureType - *new*",
 			'url' => $_SERVER["REQUEST_URI"],
-			'title' => 'New content ('.$idStructureType.')'
+			'title' => 'New content (' . $idStructureType . ')'
 		]);
 		$navigation->save();
 
@@ -156,7 +162,7 @@ switch ($action) {
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
-		$skeletonOu->setHeadTitle('New content ('.$structure->getName().')');
+		$skeletonOu->setHeadTitle('New content (' . $structure->getName() . ')');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;
@@ -172,14 +178,14 @@ switch ($action) {
 
 		// back button
 		$back = false;
-		if($view === 'page') {
+		if ($view === 'page') {
 			$navigation = new SessionNavigation();
 			$navigation->load();
 			$back = !$navigation->isEmpty();
 			$navigation->push([
 				'hash' => "edit_content - $idStructureType - $id",
 				'url' => $_SERVER["REQUEST_URI"],
-				'title' => 'Manage content ('.$idStructureType.')'
+				'title' => 'Manage content (' . $idStructureType . ')'
 			]);
 			$navigation->save();
 		}
@@ -206,7 +212,8 @@ switch ($action) {
 			$selectedElements = @$_REQUEST['posElement'] ?: [];
 			$insertRelatedPosition = 'bottom';
 			if ((isset($_REQUEST['action']) && $_REQUEST['action'] === 'add top') ||
-				(isset($_REQUEST['relto']) && $_REQUEST['relto'] === 'top')) {
+				(isset($_REQUEST['relto']) && $_REQUEST['relto'] === 'top')
+			) {
 				$insertRelatedPosition = 'top';
 				$selectedElements = array_reverse($selectedElements);
 			}
@@ -229,8 +236,7 @@ switch ($action) {
 								$newRef = $modifiedField->getValue();
 								$position = $insertRelatedPosition === 'top' ? $newRef::PREPEND : null;
 								$newRef->add(loadNewRef($modifiedRef, $modifiedIdStructure), $position);
-							}
-							else {
+							} else {
 								$newRef = $modifiedField->getValue();
 								$newRef->remove($modifiedFieldPosition);
 							}
@@ -246,8 +252,7 @@ switch ($action) {
 					//d($content);
 
 					$modifiedField->setDirty(true, $modifiedFieldPosition);
-				}
-				catch(\Exception $e) {
+				} catch (\Exception $e) {
 					$contentOu->setResultDesc("Error, field <em>$modifiedFieldName</em> not found in content", "fail");
 					$bResult = false;
 				}
@@ -256,7 +261,7 @@ switch ($action) {
 
 		if ($action == 'clone') {
 			$content->setId(null);
-			$content->setTitle('[copy] '.$content->getTitle());
+			$content->setTitle('[copy] ' . $content->getTitle());
 		}
 		$contentOu->setContent($content);
 		$contentOu->setUserRol($_SESSION['rol']);
@@ -267,7 +272,7 @@ switch ($action) {
 
 		$skeletonOu = new View\BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
-		$skeletonOu->setHeadTitle('Manage content ('.$structure->getName().')');
+		$skeletonOu->setHeadTitle('Manage content (' . $structure->getName() . ')');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 

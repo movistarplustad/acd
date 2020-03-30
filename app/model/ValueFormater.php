@@ -1,7 +1,10 @@
 <?php
+
 namespace Acd\Model;
 
-class ValueFormaterInvalidFormatException extends \exception {}
+class ValueFormaterInvalidFormatException extends \exception
+{
+}
 class ValueFormater
 {
 	const TYPE_TEXT_SIMPLE = 'text_simple';
@@ -28,7 +31,8 @@ class ValueFormater
 	const PERIOD_OF_VALIDITY_START = 'start';
 	const PERIOD_OF_VALIDITY_END = 'end';
 
-	public static function decode($value, $type, $format) {
+	public static function decode($value, $type, $format)
+	{
 		//throw new StorageKeyInvalidException("Invalid format type $format.");
 
 		// Array of procesing functions
@@ -38,8 +42,7 @@ class ValueFormater
 				$valueDecode = \DateTime::createFromFormat('Y-m-d', $value);
 				$valueDecode->setTime(0, 0, 0);
 				return $valueDecode->getTimeStamp();
-			}
-			else {
+			} else {
 				return '';
 			}
 		};
@@ -49,9 +52,9 @@ class ValueFormater
 				ValueFormater::PERIOD_OF_VALIDITY_START => -INF,
 				ValueFormater::PERIOD_OF_VALIDITY_END => INF,
 			];
-			if (is_array($aValue)){
+			if (is_array($aValue)) {
 				foreach ($aValue as $attributeName => $value) {
-					if($value) {
+					if ($value) {
 						$valueDecode = \DateTime::createFromFormat('Y-m-d', $value);
 						$valueDecode->setTime(0, 0, 0);
 						$result[$attributeName] = $valueDecode->getTimeStamp();
@@ -65,8 +68,7 @@ class ValueFormater
 			if ($value) {
 				$valueDecode = \DateTime::createFromFormat('Y-m-d*H:i:s*', $value);
 				return $valueDecode->getTimeStamp();
-			}
-			else {
+			} else {
 				return '';
 			}
 		};
@@ -76,9 +78,9 @@ class ValueFormater
 				ValueFormater::PERIOD_OF_VALIDITY_END => INF,
 			];
 
-			if (is_array($aValue)){
+			if (is_array($aValue)) {
 				foreach ($aValue as $attributeName => $value) {
-					if($value) {
+					if ($value) {
 						$valueDecode = \DateTime::createFromFormat('Y-m-d*H:i:s*', $value);
 						$result[$attributeName] = $valueDecode->getTimeStamp();
 					}
@@ -88,12 +90,11 @@ class ValueFormater
 			return $result;
 		};
 		$formater[self::TYPE_TAGS][self::FORMAT_EDITOR] = function ($value) {
-			if($value) {
+			if ($value) {
 				$value = trim($value);
 				$value = preg_replace('/\s+/', ' ', $value);
 				return explode(',', $value);
-			}
-			else {
+			} else {
 				return array();
 			}
 		};
@@ -101,10 +102,9 @@ class ValueFormater
 			return $value == 1;
 		};
 		$formater[self::TYPE_LIST_MULTIPLE][self::FORMAT_EDITOR] = function ($value) {
-			if($value) {
+			if ($value) {
 				return $value;
-			}
-			else {
+			} else {
 				return array();
 			}
 		};
@@ -112,8 +112,7 @@ class ValueFormater
 			// cleanHtmlFragment
 			if (extension_loaded('tidy') === true) {
 				$encoding = 'utf8';
-				$tidy_config = array
-				(
+				$tidy_config = array(
 					//'anchor-as-name' => false, //error en producción
 					'break-before-br' => true,
 					'char-encoding' => $encoding,
@@ -161,8 +160,7 @@ class ValueFormater
 				$tidy->cleanRepair();
 				$result = \tidy_get_output($tidy);
 				return $result;
-			}
-			else {
+			} else {
 				throw new ValueFormaterInvalidFormatException("Text not validated. Tidy extension not instaled", 1);
 				return $value;
 			}
@@ -181,8 +179,7 @@ class ValueFormater
 			// val[rgb] hex format, ej. #46e7da
 			if (isset($value['empty']) && $value['empty']) {
 				$result = null;
-			}
-			else {
+			} else {
 				$result = $value['rgb'];
 			}
 			return $result;
@@ -191,8 +188,7 @@ class ValueFormater
 			// val[rgb] + val[alfa] y hex format, ej. #46e7da01
 			if (isset($value['empty']) && $value['empty']) {
 				$result = null;
-			}
-			else {
+			} else {
 				$result = $value['rgb'];
 				// 0..1 float value to hex zero-padded
 				$result .= sprintf('%02s', dechex($value['alfa']));
@@ -203,14 +199,14 @@ class ValueFormater
 			return $value === '-' ? '' : $value;
 		};
 
-		if(isset($formater[$type][$format])) {
+		if (isset($formater[$type][$format])) {
 			return $formater[$type][$format]($value);
-		}
-		else {
+		} else {
 			return $value;
 		}
 	}
-	public static function encode($value, $type, $format) {
+	public static function encode($value, $type, $format)
+	{
 		// Empty values return empty string
 		$formater[self::TYPE_DATE][self::FORMAT_EDITOR] = function ($value) {
 			return $value ? date('Y-m-d', $value) : '';
@@ -220,9 +216,9 @@ class ValueFormater
 				ValueFormater::PERIOD_OF_VALIDITY_START => '',
 				ValueFormater::PERIOD_OF_VALIDITY_END => '',
 			];
-			if(is_array($aValue)) {
+			if (is_array($aValue)) {
 				foreach ($aValue as $attributeName => $value) {
-					if($value && is_finite($value)) {
+					if ($value && is_finite($value)) {
 						$result[$attributeName] = date('Y-m-d', $value);
 					}
 				}
@@ -238,9 +234,9 @@ class ValueFormater
 				ValueFormater::PERIOD_OF_VALIDITY_START => '',
 				ValueFormater::PERIOD_OF_VALIDITY_END => '',
 			];
-			if(is_array($aValue)) {
+			if (is_array($aValue)) {
 				foreach ($aValue as $attributeName => $value) {
-					if($value && is_finite($value)) {
+					if ($value && is_finite($value)) {
 						$result[$attributeName] = date('Y-m-d\TH:i:s\Z', $value);
 					}
 				}
@@ -250,13 +246,13 @@ class ValueFormater
 		};
 		// Purge infinite values in FORMAT_TOKENIZE, transform to empty string (infinite values not accepted in json grammar)
 		$formater[self::TYPE_DATE][self::FORMAT_TOKENIZE] = function ($value) {
-			$result = is_finite((double) $value) ? $value : '';
+			$result = is_finite((float) $value) ? $value : '';
 			return $result;
 		};
 		$formater[self::TYPE_DATE_RANGE][self::FORMAT_TOKENIZE] = function ($aValue) {
 			$result = [];
 			foreach ($aValue as $key => $value) {
-				$result[$key] = is_finite((double) $value) ? $value : '';
+				$result[$key] = is_finite((float) $value) ? $value : '';
 			}
 			return $result;
 		};
@@ -269,10 +265,9 @@ class ValueFormater
 			return $value ? ' checked="checked"' : '';
 		};
 		$formater[self::TYPE_DATE_TIME][self::FORMAT_HUMAN] = function ($value) {
-			if($value) {
+			if ($value) {
 				return date('j M G:i\h', $value);
-			}
-			else {
+			} else {
 				return '';
 			}
 		};
@@ -282,9 +277,9 @@ class ValueFormater
 				ValueFormater::PERIOD_OF_VALIDITY_END => '∞',
 			];
 			$bModified = false;
-			if(is_array($aValue)) {
+			if (is_array($aValue)) {
 				foreach ($aValue as $attributeName => $value) {
-					if($value && is_finite($value)) {
+					if ($value && is_finite($value)) {
 						$result[$attributeName] = date('j M G:i\h', $value);
 						$bModified = true;
 					}
@@ -317,7 +312,7 @@ class ValueFormater
 			//$result = ['rgb' => '#000000'];
 
 			$result['rgb'] = null;
-			if($value) {
+			if ($value) {
 				$result['rgb'] = '#' . substr($value, 1, 6);
 			}
 
@@ -328,7 +323,7 @@ class ValueFormater
 
 			$result['rgb'] = null;
 			$result['alfa'] = null;
-			if($value) {
+			if ($value) {
 				$result['rgb'] = '#' . substr($value, 1, 6);
 				$result['alfa'] = hexdec(substr($value, 7, 2));
 			}
@@ -338,10 +333,9 @@ class ValueFormater
 			return $value ? $value : '-';
 		};
 
-		if(isset($formater[$type][$format])) {
+		if (isset($formater[$type][$format])) {
 			return $formater[$type][$format]($value);
-		}
-		else {
+		} else {
 			return $value;
 		}
 	}

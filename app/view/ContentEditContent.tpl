@@ -82,6 +82,7 @@
 					catch( \Exception $e ) {
 						$field->loadData($idField, '', true);
 					}
+
 					$fieldOU->setField($field);
 					$fieldOU->setId($n);
 					$fieldOU->setParent($content);
@@ -89,6 +90,7 @@
 
 					$n++;
 				}
+				//die;
 				?>
 				<fieldset class="fields">
 					<legend>Fields</legend>

@@ -1,8 +1,13 @@
 <?php
+
 namespace Acd\Model;
 
-class PersistentStorageUnknownInvalidException extends \exception {}
-class ContentLoaderException extends \exception {}
+class PersistentStorageUnknownInvalidException extends \exception
+{
+}
+class ContentLoaderException extends \exception
+{
+}
 class ContentLoader extends StructureDo
 {
 	const LOAD_ONE = 'ONE';
@@ -11,20 +16,24 @@ class ContentLoader extends StructureDo
 	private $filters; // TODO
 	private $limitis;
 	private $persistentManager; // Load / update / save to persitent repository
-	public function __construct() {
+	public function __construct()
+	{
 		$this->setStructureLoaded(false);
 		$this->setLimits(new Limits());
 		parent::__construct();
 	}
 
 	/* Setters and getters attributes */
-	public function getStructureLoaded() {
+	public function getStructureLoaded()
+	{
 		return $this->bStructureLoaded;
 	}
-	public function setStructureLoaded($bStructureLoaded) {
+	public function setStructureLoaded($bStructureLoaded)
+	{
 		$this->bStructureLoaded = $bStructureLoaded;
 	}
-	private function getManager() {
+	private function getManager()
+	{
 		switch ($this->getStorage()) {
 			case \Acd\conf::$STORAGE_TYPE_TEXTPLAIN:
 				//echo "tipo texto";
@@ -43,16 +52,17 @@ class ContentLoader extends StructureDo
 				return new PersistentManagerMySql();
 				break;
 			default:
-				throw new PersistentStorageUnknownInvalidException("Invalid type of persistent storage ".$this->getStorage().".");
+				throw new PersistentStorageUnknownInvalidException("Invalid type of persistent storage " . $this->getStorage() . ".");
 				break;
 		}
 	}
-	private function getManagers() {
+	private function getManagers()
+	{
 		// Return all active persistent managers
 		// TODO Unify with getManager -> similar code
 		$persistentManagers = [];
 		foreach (\Acd\conf::$STORAGE_TYPES as $idStorage => $storageType) {
-			if(!$storageType['disabled']) {
+			if (!$storageType['disabled']) {
 				switch ($idStorage) {
 					case \Acd\conf::$STORAGE_TYPE_TEXTPLAIN:
 						$persistentManagers[] = new PersistentManagerTextPlain();
@@ -67,7 +77,7 @@ class ContentLoader extends StructureDo
 						$persistentManagers[] = new PersistentManagerMySql();
 						break;
 					default:
-						throw new PersistentStorageUnknownInvalidException("Invalid type of persistent storage ".$this->getStorage().".");
+						throw new PersistentStorageUnknownInvalidException("Invalid type of persistent storage " . $this->getStorage() . ".");
 						break;
 				}
 			}
@@ -75,21 +85,23 @@ class ContentLoader extends StructureDo
 		return $persistentManagers;
 	}
 	// Load structure
-	public function loadStructure() {
+	public function loadStructure()
+	{
 		/* Get metainformation */
 		if (!$this->getStructureLoaded()) {
 			$this->setStructureLoaded($this->loadFromFile());
 		}
 	}
 	// Aseptic loadContent/loadContents return ContentsDo, ContentDo, null, etc loadContent and loadConents resolve this situation
-	private function _loadContents($method, $resultType, $params = null) {
+	private function _loadContents($method, $resultType, $params = null)
+	{
 		switch ($method) {
 			case 'id+countParents':
 				//$content = $this->loadContents('id', $params);
 				$contents = $this->loadContents('id-deep', ['id' => $params, 'depth' => 2]);
 				$content = $contents->one();
 
-				if($content) {
+				if ($content) {
 					// Set the relations number to content, and content is contents->get($id)
 					//$content->get($params)->setCountParents($this->loadContents('countParents', $params));
 					$content->setCountParents($this->_loadContents('countParents', ContentLoader::LOAD_MULTIPLE, $params));
@@ -97,15 +109,14 @@ class ContentLoader extends StructureDo
 				}
 
 				return $content;
-			break;
+				break;
 			case 'difuse-alias-id':
 			case 'meta-information':
-				if($this->getId()) {
+				if ($this->getId()) {
 					$this->loadStructure();
 					$persistentManagers = [];
 					$persistentManagers[] = $this->getManager();
-				}
-				else {
+				} else {
 					$persistentManagers = $this->getManagers();
 				}
 				$query = new Query();
@@ -114,7 +125,7 @@ class ContentLoader extends StructureDo
 				$result = null;
 				// Return only one content
 				foreach ($persistentManagers as $persistentManager) {
-					if(!$result) {
+					if (!$result) {
 						$result = $persistentManager->load($this, $query);
 					}
 				}
@@ -133,42 +144,41 @@ class ContentLoader extends StructureDo
 				}
 				$query->setLimits($this->getLimits());
 				return $persistentManager->load($this, $query);
-			break;
+				break;
 		}
-
 	}
 	// Return always a ContentsDo collection or throw exception
-	public function loadContents($method, $params = null) {
+	public function loadContents($method, $params = null)
+	{
 		$result = $this->_loadContents($method, ContentLoader::LOAD_MULTIPLE, $params);
 		if (is_object($result) && get_class($result) === 'Acd\Model\ContentDo') {
 			// Add ContentDo to ContentsDo collection
 			$resultContents = new ContentsDo();
 			$resultContents->add($result);
 			return $resultContents;
-		}
-		elseif (is_object($result) && get_class($result) === 'Acd\Model\ContentsDo') {
+		} elseif (is_object($result) && get_class($result) === 'Acd\Model\ContentsDo') {
 			// It's a ContentsDo
 			return $result;
-		}
-		else {
+		} else {
 			// Error is not a ContentDo or ContentsDo
 			throw new ContentLoaderException("Error in loadContents '$method' does not support load return ContentsDo", 1);
 			return $result;
 		}
 	}
 	// Return ContentDo object, other value like number or null
-	public function loadContent($method, $params = null) {
+	public function loadContent($method, $params = null)
+	{
 		$result = $this->_loadContents($method, ContentLoader::LOAD_ONE, $params);
 		if (is_object($result) && get_class($result) === 'Acd\Model\ContentsDo') {
 			// Extract first ContentDo from collection
 			return $result->one();
-		}
-		else {
+		} else {
 			// It's a ContentDo or an expected value (number in a count query)
 			return $result;
 		}
 	}
-	public function saveContent($contentDo) {
+	public function saveContent($contentDo)
+	{
 		/* Get metainformation */
 		$this->loadStructure();
 		$persistentManager = $this->getManager();
@@ -176,19 +186,20 @@ class ContentLoader extends StructureDo
 		$NewContentDo = $persistentManager->save($this, $contentDo);
 		return $NewContentDo;
 	}
-	private function saveUpload($contentDo) {
+	private function saveUpload($contentDo)
+	{
 		$contentId = $contentDo->getId();
 		$structureId = $contentDo->getIdStructure();
 		foreach ($contentDo->getFields() as $field) {
-			if ($field->getType() === $field::TYPE_FILE){
+			if ($field->getType() === $field::TYPE_FILE) {
 				$uploadData = $field->getValue();
 				$fieldId = $field->getId();
-				$idFile = md5(urlencode($structureId ).'/'.urlencode($fieldId).'/'.$contentId);
+				$idFile = md5(urlencode($structureId) . '/' . urlencode($fieldId) . '/' . $contentId);
 				$destinationPath = File::getPath($idFile);
 				$dirPath = dirname($destinationPath);
-				if(isset($uploadData['delete']) && $uploadData['delete']) {
-					if (is_writable($destinationPath)){
-						unlink ($destinationPath);
+				if (isset($uploadData['delete']) && $uploadData['delete']) {
+					if (is_writable($destinationPath)) {
+						unlink($destinationPath);
 						if (count(scandir($dirPath)) == 2) {
 							rmdir($dirPath);
 						}
@@ -200,8 +211,8 @@ class ContentLoader extends StructureDo
 						$uploadData['size'] = '';
 					}
 				}
-				if(isset($uploadData['tmp_name']) && $uploadData['tmp_name'] && isset($uploadData['size']) && $uploadData['size']) {
-					if (!is_dir($dirPath)){
+				if (isset($uploadData['tmp_name']) && $uploadData['tmp_name'] && isset($uploadData['size']) && $uploadData['size']) {
+					if (!is_dir($dirPath)) {
 						mkdir($dirPath, 0755, true);
 					}
 					switch ($uploadData['origin']) {
@@ -228,7 +239,8 @@ class ContentLoader extends StructureDo
 
 		return $contentDo;
 	}
-	public function deleteContent($id) {
+	public function deleteContent($id)
+	{
 		$this->loadStructure();
 		$persistentManager = $this->getManager();
 
@@ -237,17 +249,18 @@ class ContentLoader extends StructureDo
 
 		return $persistentManager->delete($this, $id);
 	}
-	private function deleteUpload($contentDo) {
+	private function deleteUpload($contentDo)
+	{
 		$contentId = $contentDo->getId();
 		$structureId = $contentDo->getIdStructure();
 		foreach ($contentDo->getFields() as $field) {
-			if ($field->getType() === $field::TYPE_FILE){
+			if ($field->getType() === $field::TYPE_FILE) {
 				// TODO unify with saveUpload
 				$fieldId = $field->getId();
-				$idFile = md5(urlencode($structureId ).'/'.urlencode($fieldId).'/'.$contentId);
+				$idFile = md5(urlencode($structureId) . '/' . urlencode($fieldId) . '/' . $contentId);
 				$destinationPath = File::getPath($idFile);
-				if (is_writable($destinationPath)){
-					unlink ($destinationPath);
+				if (is_writable($destinationPath)) {
+					unlink($destinationPath);
 					$dirPath = dirname($destinationPath);
 					if (count(scandir($dirPath)) == 2) {
 						rmdir($dirPath);
@@ -257,10 +270,12 @@ class ContentLoader extends StructureDo
 		}
 	}
 
-	public function setLimits($limits) {
+	public function setLimits($limits)
+	{
 		$this->limits = $limits;
 	}
-	public function getLimits() {
+	public function getLimits()
+	{
 		return $this->limits;
 	}
 }
