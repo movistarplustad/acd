@@ -4,22 +4,24 @@
 //	id - alias-id
 namespace Acd;
 
-require('../autoload.php');
+require ('../autoload.php');
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
-// require ('../offline.php');
+require ('../offline.php');
 
 session_start();
 if (!Model\Auth::isLoged()) {
 	$action = 'login';
-	header('Location: index.php?re=' . urlencode($_SERVER["REQUEST_URI"]));
+	header('Location: index.php?re='.urlencode($_SERVER["REQUEST_URI"]));
 	return;
-} else {
+}
+else {
 	if ($_SESSION['rol'] != \Acd\conf::$ROL_DEVELOPER && $_SESSION['rol'] != \Acd\conf::$ROL_EDITOR) {
 		header('HTTP/1.0 403 Forbidden');
 		echo 'Unauthorized, only admin can show this section.';
 		die();
-	} else {
+	}
+	else  {
 		$action = 'ok';
 		@$aliasId = $_GET['id']; // alias-id
 		//$action = 'show';
@@ -31,8 +33,9 @@ try {
 	$aliasIdController->setAliasId($aliasId);
 	$aliasIdController->setRequestUrl($_SERVER["REQUEST_URI"]); // For history back
 	$aliasIdController->load();
-} catch (\Acd\Model\StorageKeyInvalidException $e) {
-	$aliasIdController->setResultDesc("Error, zero results. " . $e->getMessage());
+}
+catch( \Acd\Model\StorageKeyInvalidException $e) {
+	$aliasIdController->setResultDesc("Error, zero results. ".$e->getMessage());
 }
 
 $skeletonOu = new View\BaseSkeleton();

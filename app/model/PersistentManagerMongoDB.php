@@ -3,11 +3,9 @@
 namespace Acd\Model;
 
 use \MongoDB\BSON\ObjectID;
+use Acd\Model\Exception\PersistentManagerMongoDBException;
 
 
-class PersistentManagerMongoDBException extends \exception
-{
-} // TODO Unificar
 class PersistentManagerMongoDB implements iPersistentManager
 {
 	private $db;

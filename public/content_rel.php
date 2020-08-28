@@ -1,14 +1,13 @@
 <?php
-
 namespace Acd;
 
-require('../autoload.php');
+require ('../autoload.php');
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
-// require ('../offline.php');
+require ('../offline.php');
 
 session_start();
-$action = $_GET['a'];
+$action =$_GET['a'];
 @$id = $_GET['id'];
 @$idStructureTypeSearch = $_GET['idt'];
 @$titleSearch = $_GET['s'];
@@ -19,7 +18,7 @@ $idField = $_GET['f'];
 $numPage = isset($_GET['p']) ? (int) $_GET['p'] : 0;
 if (!Model\Auth::isLoged()) {
 	$action = 'login';
-	header('Location: index.php?re=' . urlencode($_SERVER["REQUEST_URI"]));
+	header('Location: index.php?re='.urlencode($_SERVER["REQUEST_URI"]));
 	return;
 }
 
