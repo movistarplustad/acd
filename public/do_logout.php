@@ -3,8 +3,11 @@ namespace Acd;
 
 require ('../autoload.php');
 
-$returnUrl = 'index.php';
+
+ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
 session_start();
+
+$returnUrl = 'index.php';
 Model\Auth::logout();
 session_destroy();
 

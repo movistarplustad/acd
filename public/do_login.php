@@ -5,6 +5,8 @@ use Acd\Model\UserLoader;
 use \Acd\Model\Query;
 
 require ('../autoload.php');
+
+ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
 session_start();
 
 $returnUrl = isset($_POST['re']) ? $_POST['re'] : 'index.php';

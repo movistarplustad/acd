@@ -7,7 +7,9 @@ require ('../autoload.php');
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
 require ('../offline.php');
 
+ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
 session_start();
+
 if (!Model\Auth::isLoged()) {
 	$action = 'login';
 }

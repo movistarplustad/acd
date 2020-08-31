@@ -5,6 +5,7 @@ use \Acd\Model\SessionNavigation;
 // TODO: In future can be diferent views
 require('../autoload.php');
 
+ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
 session_start();
 
 $navigation = new SessionNavigation();

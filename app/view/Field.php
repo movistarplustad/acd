@@ -1,7 +1,6 @@
 <?php
 namespace Acd\View;
 use \Acd\Model\ValueFormater;
-//require_once (DIR_BASE.'/app/view/Template.php');
 // Output
 class Field extends Template {
 	const EXCEPTION_TEMPLATE_FORM_TYPE = 1;
