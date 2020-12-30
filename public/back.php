@@ -3,6 +3,7 @@ namespace Acd;
 use \Acd\Model\SessionNavigation;
 
 require ('../autoload.php');
+ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
 session_start();
 
 $backSteps = isset($_GET['p']) ? (integer) $_GET['p'] : 1;

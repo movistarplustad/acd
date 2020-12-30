@@ -1,23 +1,26 @@
 <?php
-
 namespace Acd;
 
-require('../autoload.php');
+require ('../autoload.php');
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
-// require ('../offline.php');
+require ('../offline.php');
 
+ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
 session_start();
+
 if (!Model\Auth::isLoged()) {
 	$action = 'login';
-	header('Location: index.php?re=' . urlencode($_SERVER["REQUEST_URI"]));
+	header('Location: index.php?re='.urlencode($_SERVER["REQUEST_URI"]));
 	return;
-} else {
+}
+else {
 	if ($_SESSION['rol'] == 'editor') {
 		header('HTTP/1.0 403 Forbidden');
 		echo 'Unauthorized, only admin can show this section.';
 		die();
-	} else {
+	}
+	else  {
 		@$action = $_GET['a'];
 		switch ($action) {
 			case 'edit':
@@ -58,12 +61,12 @@ $toolsOu->setRol($_SESSION['rol']);
 
 $skeletonOu->setTools($toolsOu->render());
 switch ($result) {
-	case 'ok':
-		$skeletonOu->setResultDesc('Done', 'ok');
-		break;
-	case 'ko':
-		$skeletonOu->setResultDesc('Fail', 'ko');
-		break;
+    case 'ok':
+        $skeletonOu->setResultDesc('Done', 'ok');
+        break;
+    case 'ko':
+        $skeletonOu->setResultDesc('Fail', 'ko');
+        break;
 }
 $skeletonOu->setContent($sContent);
 

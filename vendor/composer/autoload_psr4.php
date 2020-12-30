@@ -7,5 +7,4 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'MongoDB\\' => array($vendorDir . '/mongodb/mongodb/src'),
-    'Kint\\' => array($vendorDir . '/kint-php/kint/src'),
 );

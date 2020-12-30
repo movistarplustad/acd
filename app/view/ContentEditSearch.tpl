@@ -86,12 +86,12 @@
 			<?php if($setPrevPage) { ?>
 				<a class="test" href="?idp=<?=urlencode($id)?>&amp;idtp=<?=urlencode($type)?>&amp;f=<?=urlencode($idField)?>&amp;s=<?=urlencode($titleSearch)?>&amp;idt=<?=urlencode($idStructureTypeSearch)?>&amp;a=search&amp;p=<?=$prevPage?>">Prev</a>
 			<?php } ?>
-			[<?=$nextPage?> / <?=$totalPages?>]
+			[<?=$nextPage?> / <?=$totalPages?>] 
 			<?php if($bMorePage) {?>
 			<a class="test" href="?idp=<?=urlencode($id)?>&amp;idtp=<?=urlencode($type)?>&amp;f=<?=urlencode($idField)?>&amp;s=<?=urlencode($titleSearch)?>&amp;idt=<?=urlencode($idStructureTypeSearch)?>&amp;a=search&amp;p=<?=$nextPage?>">Next</a>
 			<?php } ?>
 		</p>
-		<?php
+		<?php 
 		}
 	}
 	?>

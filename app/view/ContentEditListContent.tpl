@@ -30,17 +30,17 @@ $setPagination = $setPrevPage || $bMorePage;
 	</ol>
 	<?php
 	if($setPagination) {
-	?>
+	 ?>
 	<p class="pagination">
 		<?php if($setPrevPage) { ?>
 			<a class="testII" href="?a=list_contents&amp;id=<?=urlencode($structure->getId())?>&amp;p=<?=$prevPage?>&amp;s=<?=urlencode($titleSearch)?>">Prev</a>
 		<?php } ?>
-		[<?=$nextPage?> / <?=$totalPages?>]
+		[<?=$nextPage?> / <?=$totalPages?>] 
 		<?php if($bMorePage) {?>
 		<a class="testII" href="?a=list_contents&amp;id=<?=urlencode($structure->getId())?>&amp;p=<?=$nextPage?>&amp;s=<?=urlencode($titleSearch)?>">Next</a>
 		<?php } ?>
 	</p>
-	<?php
+	<?php 
 	}
 	?>
 	<div id="new_content" class="actions"><a href="?a=new&amp;idt=<?=urlencode($structure->getId())?>" title="New content" class="button new">new content</a></div>

@@ -1,8 +1,16 @@
 <?php
 namespace Acd;
-//Ficheros
-define(__NAMESPACE__ .'\DIR_BASE', dirname(__FILE__));
 
+/* Manage the configuration of the different routes, connection string, enabled storages...
+
+	First load .env file which production configuration, that can be overwritten if there is an .env.APPLICATION_ENV_NAME in the same directory.
+	where APPLICATION_ENV_NAME is the value of the environment variable.
+	An APPLICATION_ENV environment variable will trigger this overwriting mechanism, a common development configuration is to have the APPLICATION_ENV set to 'local' and keep the changes from production in the .env.local
+
+	To enhance the development experience, this task is performed transparently on the objects that need this configuration
+	Internally, a conf::envLoad() is made which loads the .env and if the .env exists.APPLICATION_ENV_NAME overwite the values
+	Then it establishes the values that apply to it in the static class conf by calling conf::load().
+*/
 class conf {
 	public static $DIR_TEMPLATES;
 	public static $DATA_PATH;
@@ -16,7 +24,6 @@ class conf {
 	public static $STORAGE_TYPE_MYSQL;
 	public static $STORAGE_TYPE_MONGODB_LEGACY;
 	public static $DEFAULT_STORAGE;
-	public static $FIELD_TYPES;
 	public static $PERMISSION_PATH;
 	public static $USE_AUTHENTICATION;
 	public static $AUTH_PERSITENT_EXPIRATION_TIME;
@@ -32,70 +39,113 @@ class conf {
 	public static $MONGODB_DB;
 	public static $SESSION_GC_MAXLIFETIME;
 	public static $COOKIE_PREFIX;
+
+	/* Almacena en el objeto las variables de entorno getEnv('ACD_*')
+		los objetos \ACD\* las utilizan através de esta misma clase estática: echo \Acd\conf::$STORAGE_TYPES
+	*/
+	public static function load()
+	{
+		self::$DIR_TEMPLATES = getenv('ACD_DIR_TEMPLATES');
+		self::$DATA_PATH = getenv('ACD_DATA_PATH');
+		self::$DATA_DIR_PATH = getenv('ACD_DATA_DIR_PATH');
+		self::$DATA_CONTENT_PATH = getenv('ACD_DATA_CONTENT_PATH');
+		self::$DATA_CONTENT_BINARY_ORIGIN_FORM_UPLOAD = getenv('ACD_DATA_CONTENT_BINARY_ORIGIN_FORM_UPLOAD');
+		self::$DATA_CONTENT_BINARY_ORIGIN_FORM_PATH = getenv('ACD_DATA_CONTENT_BINARY_ORIGIN_FORM_PATH');
+		self::$STORAGE_TYPE_TEXTPLAIN = getenv('ACD_STORAGE_TYPE_TEXTPLAIN');
+		self::$STORAGE_TYPE_MONGODB = getenv('ACD_STORAGE_TYPE_MONGODB');
+		self::$STORAGE_TYPE_MYSQL = getenv('ACD_STORAGE_TYPE_MYSQL');
+		self::$STORAGE_TYPE_MONGODB_LEGACY = getenv('ACD_STORAGE_TYPE_MONGODB_LEGACY');
+		self::$STORAGE_TYPES = [
+			self::$STORAGE_TYPE_TEXTPLAIN =>
+				[
+					'name' => getenv('ACD_STORAGE_TYPE.TEXTPLAIN.NAME'),
+					'disabled' => filter_var(getenv('ACD_STORAGE_TYPE.TEXTPLAIN.DISABLED'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+				],
+			self::$STORAGE_TYPE_MONGODB =>
+				[
+					'name' => getenv('ACD_STORAGE_TYPE.MONGODB.NAME'),
+					'disabled' => filter_var(getenv('ACD_STORAGE_TYPE.MONGODB.DISABLED'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+				],
+			self::$STORAGE_TYPE_MYSQL =>
+				[
+					'name' => getenv('ACD_STORAGE_TYPE.MYSQL.NAME'),
+					'disabled' => filter_var(getenv('ACD_STORAGE_TYPE.MYSQL.DISABLED'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+				],
+			self::$STORAGE_TYPE_MONGODB_LEGACY =>
+				[
+					'name' => getenv('ACD_STORAGE_TYPE.MONGODB_LEGACY.NAME'),
+					'disabled' => filter_var(getenv('ACD_STORAGE_TYPE.MONGODB_LEGACY.DISABLED'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+				]
+		];
+		self::$DEFAULT_STORAGE = getenv('ACD_DEFAULT_STORAGE');
+		self::$PERMISSION_PATH = getenv('ACD_PERMISSION_PATH');
+		self::$USE_AUTHENTICATION = filter_var(getenv('ACD_USE_AUTHENTICATION'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+		self::$AUTH_PERSITENT_EXPIRATION_TIME = (int) getenv('ACD_AUTH_PERSITENT_EXPIRATION_TIME'); //*
+		self::$PATH_AUTH_CREDENTIALS_FILE = getenv('ACD_PATH_AUTH_CREDENTIALS_FILE');
+		self::$PATH_AUTH_PERMANENT_LOGIN_DIR = getenv('ACD_PATH_AUTH_PERMANENT_LOGIN_DIR');
+		self::$ROL_DEVELOPER = getenv('ACD_ROL_DEVELOPER');
+		self::$ROL_EDITOR = getenv('ACD_ROL_EDITOR');
+		self::$MYSQL_SERVER = getenv('ACD_MYSQL_SERVER');
+		self::$MYSQL_USER = getenv('ACD_MYSQL_USER');
+		self::$MYSQL_PASSWORD = getenv('ACD_MYSQL_PASSWORD');
+		self::$MYSQL_SCHEMA = getenv('ACD_MYSQL_SCHEMA');
+		self::$MONGODB_SERVER = getenv('ACD_MONGODB_SERVER');
+		self::$MONGODB_DB = getenv('ACD_MONGODB_DB');
+		self::$SESSION_GC_MAXLIFETIME = (int) getenv('ACD_SESSION_GC_MAXLIFETIME'); //*
+		self::$COOKIE_PREFIX = getenv('ACD_COOKIE_PREFIX');
+	}
+
+	/**
+		* Set a variable using:
+		* - putenv
+		* - $_ENV
+		* - $_SERVER
+		*
+		* The environment variable value is stripped of single and double quotes.
+		*
+		* @param $path
+		* @param '.env' $file
+	*/
+		public static function envLoad($path, $file = '.env')
+	{
+		$fullPath = $path.'/'.$file;
+		if(is_readable($fullPath)) {
+			$aEnvVariables = \parse_ini_file($fullPath);
+			$typePath = [
+				'ACD_DIR_TEMPLATES',
+				'ACD_DATA_PATH',
+				'ACD_DATA_DIR_PATH',
+				'ACD_DATA_CONTENT_PATH',
+				'ACD_PERMISSION_PATH',
+				'ACD_PATH_AUTH_CREDENTIALS_FILE',
+				'ACD_PATH_AUTH_PERMANENT_LOGIN_DIR'
+			];
+			$dir_base = dirname(__FILE__);
+
+			foreach ($aEnvVariables as $name => $value) {
+				// Expand relative routes
+				if(in_array ($name, $typePath)) {
+					if(substr($value, 0, 2) === './') {
+						$value = $dir_base.substr($value, 1);
+					}
+				}
+
+				// Filter only the ACD_* to prevent pollution with other environmental variables
+				if(substr($name, 0, 4) === 'ACD_') {
+					putenv("$name=$value");
+					$_ENV[$name] = $value;
+					$_SERVER[$name] = $value;
+				}
+			}
+		}
+	}
 }
-conf::$DIR_TEMPLATES = DIR_BASE.'/app/view';
-conf::$DATA_PATH = '/mnt/content/acd/structures.json';
-conf::$DATA_DIR_PATH = '/mnt/content/acd/structures';
-conf::$DATA_CONTENT_PATH = '/mnt/content/acd/contents';
-conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_UPLOAD = 'FORM_UPLOAD';
-conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_PATH = 'PATH';
-conf::$STORAGE_TYPE_TEXTPLAIN  = 'text/plain';
-conf::$STORAGE_TYPE_MONGODB  = 'mongodb';
-conf::$STORAGE_TYPE_MYSQL  = 'mysql';
-conf::$STORAGE_TYPE_MONGODB_LEGACY  = 'mongodb-legacy';
-conf::$STORAGE_TYPES = [
-		conf::$STORAGE_TYPE_TEXTPLAIN =>
-			[
-				'name' => 'text/plain',
-				'disabled' => true
-			],
-		conf::$STORAGE_TYPE_MONGODB =>
-			[
-				'name' => 'Mongo DB',
-				'disabled' => false
-			],
-		conf::$STORAGE_TYPE_MYSQL =>
-			[
-				'name' => 'MySql',
-				'disabled' => true
-			],
-		conf::$STORAGE_TYPE_MONGODB_LEGACY =>
-			[
-				'name' => 'Mongo DB Legacy',
-				'disabled' => true
-			],
-	];
-conf::$DEFAULT_STORAGE = conf::$STORAGE_TYPE_MONGODB;
 
-conf::$PERMISSION_PATH = '/mnt/content/acd/permission.json';
-conf::$USE_AUTHENTICATION = true;
-conf::$AUTH_PERSITENT_EXPIRATION_TIME = 31536000; // 1 year
-conf::$PATH_AUTH_CREDENTIALS_FILE = '/mnt/content/acd/auth.json';
-conf::$PATH_AUTH_PERMANENT_LOGIN_DIR = '/mnt/content/acd/auth_permanent_login';
-
-conf::$ROL_DEVELOPER = 'developer';
-conf::$ROL_EDITOR = 'editor';
-
-conf::$MYSQL_SERVER = 'localhost';
-conf::$MYSQL_USER = 'usuarioweb';
-conf::$MYSQL_PASSWORD = '';
-conf::$MYSQL_SCHEMA = 'acd';
-
-conf::$MONGODB_SERVER = 'mongodb://localhost:27017'; // mongodb://hosting01.int:27017,hosting02.int:27017,hosting03.int:27017/?replicaSet=Replica
-conf::$MONGODB_DB = 'acd';
-
-conf::$SESSION_GC_MAXLIFETIME = 14400;
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
-
-conf::$COOKIE_PREFIX = 'acd_';
-
-// Developer / local / personal  configuration
-// Default  environment  for develop is 'local', in production environment  conf.devel.php does not exist
-$environment = getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'local';
-if (file_exists(DIR_BASE.'/conf.'.$environment.'.php')) {
-	require DIR_BASE.'/conf.'.$environment.'.php';
+// Autoloading, reading the production configuration and overwrite with that of the local environment
+conf::envLoad(__DIR__,'.env');
+if(getenv('APPLICATION_ENV')) {
+	conf::envLoad(__DIR__,'.env.'.getenv('APPLICATION_ENV'));
 }
-/* Debug */
-// if (file_exists(DIR_BASE.'/../tools/kint/Kint.class.php')) {
-// 	require DIR_BASE.'/../tools/kint/Kint.class.php';
-// }
+
+// Store the corresponding variables in the object \Acd\Conf
+conf::load();
