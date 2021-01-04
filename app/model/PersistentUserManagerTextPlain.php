@@ -195,6 +195,15 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
             return $authPersistentCollectionFound;
         }
     }
+	public function getIndexes() {
+		throw new PersistentManagerTextPlainException("Not implemented", self::GET_INDEXES_FAILED);
+	}
+	public function createIndexes() {
+		throw new PersistentManagerTextPlainException("Not implemented", self::CREATE_INDEXES_FAILED);
+	}
+	public function dropIndexes() {
+		throw new PersistentManagerTextPlainException("Not implemented", self::DROP_INDEXES_FAILED);
+	}
     public function normalizeDocument($document)
     {
         unset($document['_id']);

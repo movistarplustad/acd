@@ -256,6 +256,31 @@ class ContentLoader extends StructureDo
 			}
 		}
 	}
+	// Installation
+	public function getIndexes() {
+		// For each manager it returns a list of indexes
+		$indexes = [];
+		foreach($this->getManagers() as $persistentManager) {
+			$indexes[get_class($persistentManager)] = $persistentManager->getIndexes();
+		}
+		return $indexes;
+	}
+	public function createIndexes() : array {
+		// For each manager it returns a list of indexes
+		$indexes = [];
+		foreach($this->getManagers() as $persistentManager) {
+			$indexes[get_class($persistentManager)] = $persistentManager->createIndexes();
+		}
+		return $indexes;
+	}
+	public function dropIndexes() : array {
+		// For each manager it returns a list of indexes
+		$indexes = [];
+		foreach($this->getManagers() as $persistentManager) {
+			$indexes[get_class($persistentManager)] = $persistentManager->dropIndexes();
+		}
+		return $indexes;
+	}
 
 	public function setLimits($limits) {
 		$this->limits = $limits;

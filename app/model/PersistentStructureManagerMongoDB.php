@@ -11,8 +11,8 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
   public function initialize()
   {
     try {
-      //			$this->mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-      //			$this->db = $this->mongo->selectDB(\Acd\conf::$MONGODB_DB);
+      //      $this->mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
+      //      $this->db = $this->mongo->selectDB(\Acd\conf::$MONGODB_DB);
       //TODO: Ver cóm pasarle el servidor, porque si es '' no funciona.
       $this->mongo = new \MongoDB\Client(\Acd\conf::$MONGODB_SERVER);
       $this->db = $this->mongo->selectDatabase(\Acd\conf::$MONGODB_DB);
@@ -36,9 +36,9 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
       $this->initialize();
     }
     $mongoCollection = $this->db->structure;
-    //		$byStructureQuery = array();
+    //    $byStructureQuery = array();
 
-    //		$cursor = $mongoCollection->find($byStructureQuery);
+    //    $cursor = $mongoCollection->find($byStructureQuery);
     $cursor = $mongoCollection->find([], ['sort' => ['name' => 1]]);
     //$cursor->sort(array( 'name' => 1));
     $result = [];
@@ -55,7 +55,7 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
       $this->initialize();
     }
 
-    //		$mongoCollection = $this->db->selectCollection('structure');
+    //    $mongoCollection = $this->db->selectCollection('structure');
     //  $documentFound = $mongoCollection->findOne(array("_id" => $id));
     $mongoCollection = $this->db->structure;
     $documentFound = $mongoCollection->findOne(["_id" => $id]);
@@ -96,5 +96,14 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
   {
     $enumeratedDataManager = $this->getEnumeratedManager();
     return $enumeratedDataManager->load($id);
+  }
+  public function getIndexes() {
+    // Currently no indexes are required
+  }
+  public function createIndexes() {
+    // Currently no indexes are required
+  }
+  public function dropIndexes() {
+    // Currently no indexes are required
   }
 }

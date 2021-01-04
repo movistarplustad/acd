@@ -45,4 +45,13 @@ class PersistentStructureManagerTextPlain implements iPersistentStructureManager
 	public function loadEnumerated($id) {
 		throw new PersistentStructureManagerMySqlException("Not implemented", self::SAVE_FAILED);
 	}
+	public function getIndexes() {
+		// Currently no indexes are required
+	}
+	public function createIndexes() {
+		// Currently no indexes are required
+	}
+	public function dropIndexes() {
+		// Currently no indexes are required
+	}
 }

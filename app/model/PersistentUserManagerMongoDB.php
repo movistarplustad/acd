@@ -138,6 +138,29 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
             }
         }
     }
+    public function getIndexes() {
+        $this->initialize();
+        $indexes = [];
+        $mongoCollection = $this->db->selectCollection('authPermanent');
+        foreach ($mongoCollection->listIndexes() as $index) {
+            $indexes[] = $index;
+        }
+        return $indexes;
+    }
+    public function createIndexes() {
+        $this->initialize();
+        $mongoCollection = $this->db->selectCollection('authPermanent');
+        $indexNames = $mongoCollection->createIndexes([
+            [ 'key' => [ 'login' => 1] ] ,
+        ]);
+        return $indexNames;
+    }
+    public function dropIndexes() {
+        $this->initialize();
+        $mongoCollection = $this->db->selectCollection('authPermanent');
+        $resContent = $mongoCollection->dropIndexes();
+        return true;
+    }
     public function normalizeDocument($document)
     {
         $document['id'] = (string) $document['_id'];

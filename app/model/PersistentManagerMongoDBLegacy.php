@@ -663,4 +663,13 @@ class PersistentManagerMongoDBLegacy implements iPersistentManager
 
 		return $result;
 	}
+	public function getIndexes() {
+		throw new PersistentManagerMongoDBException("Not implemented", self::GET_INDEXES_FAILED);
+	}
+	public function createIndexes() {
+		throw new PersistentManagerMongoDBException("Not implemented", self::CREATE_INDEXES_FAILED);
+	}
+	public function dropIndexes() {
+		throw new PersistentManagerMongoDBException("Not implemented", self::DROP_INDEXES_FAILED);
+	}
 }

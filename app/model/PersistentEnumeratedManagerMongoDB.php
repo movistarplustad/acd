@@ -76,6 +76,15 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 		$mongoCollection = $this->db->enumerated;
 		return $mongoCollection->deleteOne(['_id' => $id]);
 	}
+	public function getIndexes() {
+		// Currently no indexes are required
+	}
+	public function createIndexes() {
+		// Currently no indexes are required
+	}
+	public function dropIndexes() {
+		// Currently no indexes are required
+	}
 	public function normalizeDocument($document) {
 		$document['id'] = (string) $document['_id'];
 		unset($document['_id']);

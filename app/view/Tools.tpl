@@ -27,6 +27,11 @@
 			<li><a href="user.php" class="no-button manage-user">Manage users</a></li>
 			<?php
 				}
+				if ($rol == 'developer') {
+			?>
+			<li><a href="install.php" class="no-button manage-user">Installation</a></li>
+			<?php
+				}
 			?>
 		</ul>
 	</nav>

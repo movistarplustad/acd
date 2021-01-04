@@ -77,4 +77,13 @@ class PersistentEnumeratedManagerMongoDBLegacy implements iPersistentEnumeratedM
 		unset($document['_id']);
 		return $document;
 	}
+	public function getIndexes() {
+		// Currently no indexes are required
+	}
+	public function createIndexes() {
+		// Currently no indexes are required
+	}
+	public function dropIndexes() {
+		// Currently no indexes are required
+	}
 }

@@ -1,6 +1,9 @@
 <?php
 namespace Acd\Model;
 
+class PersistentUserManagerMongoDBLegacyException extends \exception
+{
+} // TODO Unificar
 class PersistentUserManagerMongoDBLegacy implements iPersistentUserManager
 {
     private $db;
@@ -107,7 +110,7 @@ class PersistentUserManagerMongoDBLegacy implements iPersistentUserManager
                     $mongoCollection->update(array('_id' => $documentFound['_id']), $documentFound, array('upsert' => true));
                 }
             } catch (\Exception $e) {
-                throw new \Exception("Unable to load loadPersistSession (MongoDB)");
+                throw new PersistentUserManagerMongoDBLegacyException("Unable to load loadPersistSession (MongoDB)");
             }
         }
         return $userDo;
@@ -139,6 +142,15 @@ class PersistentUserManagerMongoDBLegacy implements iPersistentUserManager
             }
         }
     }
+	public function getIndexes() {
+		throw new PersistentUserManagerMongoDBLegacyException("Not implemented", self::GET_INDEXES_FAILED);
+	}
+	public function createIndexes() {
+		throw new PersistentUserManagerMongoDBLegacyException("Not implemented", self::CREATE_INDEXES_FAILED);
+	}
+	public function dropIndexes() {
+		throw new PersistentUserManagerMongoDBLegacyException("Not implemented", self::DROP_INDEXES_FAILED);
+	}
     public function normalizeDocument($document)
     {
         $document['id'] = (string) $document['_id'];

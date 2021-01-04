@@ -67,5 +67,17 @@ class UserLoader
         $dataManager = $this->getManager();
         return $dataManager->loadUserPersistSessions($id);
     }
-
+    // Install
+    public function getIndexes() {
+        $dataManager = $this->getManager();
+        return $dataManager->getIndexes();
+    }
+    public function createIndexes() {
+        $dataManager = $this->getManager();
+        return $dataManager->createIndexes();
+    }
+    public function dropIndexes() {
+        $dataManager = $this->getManager();
+        return $dataManager->dropIndexes();
+    }
 }

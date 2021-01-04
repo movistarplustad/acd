@@ -540,4 +540,13 @@ class PersistentManagerMySql implements iPersistentManager
 		//return $result;
 		return $contentFound;
 	}
+	public function getIndexes() {
+		throw new PersistentManagerMySqlException("Not implemented", self::GET_INDEXES_FAILED);
+	}
+	public function createIndexes() {
+		throw new PersistentManagerMySqlException("Not implemented", self::CREATE_INDEXES_FAILED);
+	}
+	public function dropIndexes() {
+		throw new PersistentManagerMySqlException("Not implemented", self::DROP_INDEXES_FAILED);
+	}
 }

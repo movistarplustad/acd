@@ -148,17 +148,12 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$insert['save_ts'] = time(); // Log, timestamp for last save / update operation
 		if ($contentDo->getId()) {
 			$oId = new ObjectID($contentDo->getId());
-			//			$oId = new \MongoId($contentDo->getId());
 
 			$mongoCollection->updateOne(['_id' => $oId], ['$set' => $insert]);
 		} else {
 			$result = $mongoCollection->insertOne($insert);
-			//        $contentDo->setId($insert['_id']);
 			$contentDo->setId($result->getInsertedId());
-			//      $oId = new ObjectID($insert['_id']);
-			//            $oId = new ObjectID($insert['_id']);
 			$oId = new ObjectID($result->getInsertedId());
-			//			$oId = new \MongoId($insert['_id']);
 		}
 		if ($bChildsRelated) {
 			$this->updateRelations($this->db, \Acd\Lib\MongoDBRef::create('content', $oId), $oIdChildsRelated);
@@ -171,9 +166,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 	{
 		// Redundant cache content relations
 		$mongoCollection = $db->relation;
-		//d("Padre . Hijos", $parent, $children);
 		// emptying old relations & add news
-		//		$mongoCollection->remove(array('parent' => $parent));
 		$mongoCollection->deleteMany(['parent' => $parent]);
 		foreach ($children as $child) {
 			$mongoCollection->insertOne([
@@ -199,7 +192,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 		} else {
 			$mongoCollection = $this->db->selectCollection('content');
 			$oId = new ObjectID($idContent);
-			//			$oId = new \MongoId($idContent);
 			$mongoCollection->deleteOne(['_id' => $oId]);
 		}
 
@@ -230,16 +222,10 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$documentFound = $this->normalizeDocument($documentFound);
 			$contentFound = new ContentDo();
 			$contentFound->load($documentFound, $structureDo);
-			//+d($documentFound);
-			//+d($contentFound);
-			//$result = new ContentsDo();
-			//$result->add($contentFound, $id);
 		} catch (\Exception $e) {
-			//$result = null;
 			$contentFound = null;
 		}
 
-		//return $result;
 		return $contentFound;
 	}
 
@@ -259,44 +245,44 @@ class PersistentManagerMongoDB implements iPersistentManager
 	Simple relation
 	----------------------
 	{
-	        "_id" : ObjectId("54f5c87f6803fa670c8b4567"),
-	        "data" : {
-	                "titulo" : "Foto 1",
-	                "imagen" : {
-	                        "ref" : DBRef("content", ObjectId("54f5c8016803fa7c058b4568")),
-	                        "id_structure" : "imagen",
-	                },
-	                "enlace" : {
-	                        "ref" : DBRef("content", ObjectId("54f5c82b6803fabb068b4567")),
-	                        "id_structure" : "enlace",
-	                }
-	        },
-	        "id_structure" : "item_mosaico",
-	        "title" : "El segundo del mosaico"
+			"_id" : ObjectId("54f5c87f6803fa670c8b4567"),
+			"data" : {
+					"titulo" : "Foto 1",
+					"imagen" : {
+							"ref" : DBRef("content", ObjectId("54f5c8016803fa7c058b4568")),
+							"id_structure" : "imagen",
+					},
+					"enlace" : {
+							"ref" : DBRef("content", ObjectId("54f5c82b6803fabb068b4567")),
+							"id_structure" : "enlace",
+					}
+			},
+			"id_structure" : "item_mosaico",
+			"title" : "El segundo del mosaico"
 	}
 
 	Collection relation
 	---------------------------
 	{
-	        "_id" : ObjectId("54f5abce6803fa59088b4567"),
-	        "data" : {
-	                "elementos" : {
-	                        "id_structure" : "_collection",
-	                        "ref" : [
-	                                {
-	                                        "ref" : DBRef("content", ObjectId("54f5a6f66803fa7c058b4567")),
-	                                        "id_structure" : "item_mosaico"
-	                                },
-	                                {
-	                                        "ref" : DBRef("content", ObjectId("54f5c87f6803fa670c8b4567")),
-	                                        "id_structure" : "item_mosaico"
-	                                }
-	                        ]
-	                },
-	                "titulo" : "¡Un mosaico!"
-	        },
-	        "id_structure" : "mosaico",
-	        "title" : "Primer mosaico"
+			"_id" : ObjectId("54f5abce6803fa59088b4567"),
+			"data" : {
+					"elementos" : {
+							"id_structure" : "_collection",
+							"ref" : [
+									{
+											"ref" : DBRef("content", ObjectId("54f5a6f66803fa7c058b4567")),
+											"id_structure" : "item_mosaico"
+									},
+									{
+											"ref" : DBRef("content", ObjectId("54f5c87f6803fa670c8b4567")),
+											"id_structure" : "item_mosaico"
+									}
+							]
+					},
+					"titulo" : "¡Un mosaico!"
+			},
+			"id_structure" : "mosaico",
+			"title" : "Primer mosaico"
 	}
 
 	*/
@@ -739,5 +725,48 @@ class PersistentManagerMongoDB implements iPersistentManager
 		}
 
 		return $result;
+	}
+	public function getIndexes() {
+		if (!$this->isInitialized(null)) {
+			$this->initialize(null);
+		}
+		$indexes = [];
+		$mongoCollection = $this->db->content;
+		foreach ($mongoCollection->listIndexes() as $index) {
+			$indexes[] = $index;
+		}
+		$mongoCollection = $this->db->relation;
+		foreach ($mongoCollection->listIndexes() as $index) {
+			$indexes[] = $index;
+		}
+		return $indexes;
+	}
+	public function createIndexes() {
+		if (!$this->isInitialized(null)) {
+			$this->initialize(null);
+		}
+		$mongoCollection = $this->db->content;
+		$indexNamesContent = $mongoCollection->createIndexes([
+			[ 'key' => [ 'alias_id' => 1] ] ,
+			[ 'key' => [ 'id_structure' => 1, 'alias_id' => 1] ] ,
+			[ 'key' => [ 'id_structure' => 1, 'tags' => 1] ] ,
+		]);
+		$mongoCollection = $this->db->relation;
+		$indexNamesRelation = $mongoCollection->createIndexes([
+			[ 'key' => [ 'child' => 1] ] ,
+			[ 'key' => [ 'parent' => 1] ] ,
+		]);
+		return array_merge ($indexNamesContent, $indexNamesRelation);
+	}
+	public function dropIndexes() {
+		if (!$this->isInitialized(null)) {
+			$this->initialize(null);
+		}
+		$mongoCollection = $this->db->content;
+		$resContent = $mongoCollection->dropIndexes();
+		$mongoCollection = $this->db->relation;
+		$resRelation = $mongoCollection->dropIndexes();
+
+		return true;
 	}
 }

@@ -86,6 +86,15 @@ class PersistentStructureManagerMongoDBLegacy implements iPersistentStructureMan
 		$enumeratedDataManager = $this->getEnumeratedManager();
 		return $enumeratedDataManager->load($id);
 	}
+	public function getIndexes() {
+		// Currently no indexes are required
+	}
+	public function createIndexes() {
+		// Currently no indexes are required
+	}
+	public function dropIndexes() {
+		// Currently no indexes are required
+	}
 }
 /*
 db.structure.update({'_id' : 'chat_tienda'},{'_id' : 'chat_tienda',       "name": "Chat de tienda online Mongo", "storage" : "mongodb",
