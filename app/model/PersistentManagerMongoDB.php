@@ -4,7 +4,7 @@ namespace Acd\Model;
 
 use \MongoDB\BSON\ObjectID;
 use Acd\Model\Exception\PersistentManagerMongoDBException;
-
+use Acd\Model\Mongodb\Filter;
 
 class PersistentManagerMongoDB implements iPersistentManager
 {
@@ -195,7 +195,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$mongoCollection->deleteOne(['_id' => $oId]);
 		}
 
-		$this->updateRelations($this->db,  \Acd\Lib\MongoDBRef::create('content', $oId), array());
+		$this->updateRelations($this->db, \Acd\Lib\MongoDBRef::create('content', $oId), array());
 	}
 
 	private function loadById($structureDo, $id)
@@ -373,7 +373,12 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$this->initialize($structureDo);
 		}
 		$mongoCollection = $this->db->selectCollection('content');
-		$documentFound = $mongoCollection->findOne(array("alias_id" => $idContent, 'id_structure' => $structureDo->getId()), array("_id" => true));
+		$filter = [];
+		$filter['alias_id'] = $idContent;
+		$filter['id_structure'] = $structureDo->getId();
+		$validityDate = $filters['validity-date'] ?? null;
+		$filter = Filter::add($filter, Filter::periodOfValidity('period_of_validity', $validityDate));
+		$documentFound = $mongoCollection->findOne($filter, ['projection' => ["_id" => 1]]);
 		if ($documentFound) {
 			return $this->loadIdDepth($structureDo, (string) $documentFound['_id'], $depth, $filters);
 		} else {
@@ -386,8 +391,8 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$depth--;
 			$content = $this->loadById($structureDo, $idContent);
 
-			$validityDate = isset($filters['validity-date']) ? $filters['validity-date'] : null;
-			$profile = isset($filters['profile']) ? $filters['profile'] : '';
+			$validityDate = $filters['validity-date'] ?? null;
+			$profile = $filters['profile'] ?? '';
 			$isValid = $content && $content->checkValidityDate($validityDate) && $content->checkProfile($profile);
 			// TODO Organize code
 			if (!$isValid) return null;
@@ -471,7 +476,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 	private function loadEditorSearch($structureDo, $query)
 	{
 		//db.content.find({"id_structure": "item_mosaico", "title" : /.*quinto.*/i}).pretty()
-		//db.getCollection('content').find({$or : [{"alias_id" : "dos"}, {"title" : "dos"}, {"tags" : [{$in  : 'dos'}]}], 'id_structure' : 'unimongo'})
+		//db.getCollection('content').find({$or : [{"alias_id" : "dos"}, {"title" : "dos"}, {"tags" : [{$in : 'dos'}]}], 'id_structure' : 'unimongo'})
 		$filter = array();
 		$stringFilter = array();
 		if (isset($query->getCondition()['title'])) {
@@ -641,7 +646,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
 		}
-		$fields['sort']  = ['alias_id' => -1];
+		$fields['sort'] = ['alias_id' => -1];
 
 		$mongoCollection = $this->db->content;
 		$cursor = $mongoCollection->find($filter, $fields);
@@ -649,13 +654,13 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		$result = [];
 		$contentCheckValidity = new ContentDo(); // Object from date validity tester
-		$validityDate = isset($filters['validity-date']) ? $filters['validity-date'] : null;
+		$validityDate = $filters['validity-date'] ?? null;
 		foreach ($cursor as $documentFound) {
 			$periodOfValidity = isset($documentFound['period_of_validity']) ? $documentFound['period_of_validity'] : null; // @$documentFound for retrocompatibility
 			$contentCheckValidity->setPeriodOfValidity($periodOfValidity);
 			if ($contentCheckValidity->checkValidityDate($validityDate)) {
 				$result[] = [
-					'id' =>  (string) $documentFound['_id'],
+					'id' => (string) $documentFound['_id'],
 					'id_structure' => $documentFound['id_structure'],
 					'alias_id' => $documentFound['alias_id']
 				];
