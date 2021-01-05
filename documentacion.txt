@@ -1,0 +1,189 @@
+Git
+sudo apt-get install git
+
+Apache
+sudo apt-get install apache2
+
+Php
+sudo apt-get install php5 libapache2-mod-php5 php5-cli php5-mysql
+
+Instalar mongodb desde el Centro de software de Ubuntu
+
+http://www.tecnopedia.net/mongodb/tutorial-instalar-mongodb-en-ubuntu/
+Para tenerlo disponible en php
+sudo apt-get install php-pear
+sudo apt-get install php5-dev
+sudo pecl install mongo
+
+Versión 1:
+	en /etc/php5/apache2/php.ini
+	añadir
+	; mongoDB (fer)
+	extension=mongo.so
+
+Versión 2:
+	en /etc/php5/mods-available/mongo.ini
+	extension=mongo.so
+
+Cuando fallo con ubuntu 14.04
+sudo apt-get install php5-mongo
+
+Instalar Json
+http://stackoverflow.com/questions/18239405/php-fatal-error-call-to-undefined-function-json-decode
+	sudo apt-get install php5-json
+Then of course make sure you restart Apache:
+	sudo service apache2 restart
+Or if you are using PHP-FPM:
+	sudo service php5-fpm restart
+
+PHpUnit
+wget https://phar.phpunit.de/phpunit.phar
+chmod +x phpunit.phar
+mv phpunit.phar /usr/local/bin/phpunit
+
+Notas:
+Apache y hosts
+/etc/hosts
+/etc/apache2
+sudo service apache2 restart
+Errores: /var/log/apache2/error.log
+
+Ejemplo similar: http://www.wufoo.com.mx/examples/#bugtracker
+
+Modelo datos MySql
+CREATE SCHEMA `acd` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci ;
+
+CREATE TABLE `acd`.`content` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(256) NOT NULL,
+  `period_of_validity_start` TIMESTAMP NULL,
+  `period_of_validity_end` TIMESTAMP NULL,
+  `alias_id` VARCHAR(256) NULL,
+  `data` BLOB NULL,
+  `id_structure` VARCHAR(256) NULL,
+  `save_ts` TIMESTAMP NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `content_type` (`id_structure` ASC, `title` ASC));
+
+ALTER TABLE `acd`.`content` ADD `save_ts` TIMESTAMP NOT NULL;
+
+CREATE TABLE `acd`.`relation` (
+  `parent` INT NOT NULL,
+  `child` INT NOT NULL,
+  INDEX `related_contents` (`parent` ASC, `child` ASC));
+
+CREATE  TABLE `acd`.`structure` (
+  `id` VARCHAR(64) NOT NULL ,
+  `name` VARCHAR(256) NOT NULL ,
+  `storage` ENUM('text/plain', 'mysql', 'mongodb') NOT NULL ,
+  `fields` BLOB NOT NULL ,
+  PRIMARY KEY (`id`) );
+
+CREATE TABLE `acd`.`content_tag` (
+		`id` INT NOT NULL,
+		`tag` VARCHAR(128) NOT NULL,
+		PRIMARY KEY (`id`, `tag`));
+
+
+// Ampliación vigencias
+ALTER TABLE `acd`.`content` 
+ADD COLUMN `period_of_validity_start` TIMESTAMP NULL AFTER `title`,
+ADD COLUMN `period_of_validity_end` TIMESTAMP NULL AFTER `period_of_validity_start`;
+
+WYSIWYG editor
+http://ckeditor.com/builder
+Selected plugins
+
+    Optional pluginEditor Resize
+    Optional pluginFormat
+    Optional pluginPaste As Plain Text
+    Optional pluginPaste from Word
+    Plugin included in presetAbout CKEditor
+    Plugin included in presetBasic Styles
+    Plugin included in presetClipboard
+    required by: Paste from Word, Paste As Plain Text
+    Plugin included in presetEditor Toolbar
+    Plugin included in presetEnter Key
+    Plugin included in presetEscape HTML Entities
+    Plugin included in presetFloating Space
+    Plugin included in presetIFrame Editing Area
+    Plugin included in presetIndent List
+    required by: List
+    Plugin included in presetLink
+    Plugin included in presetList
+    Plugin included in presetUndo
+    Plugin is required by other pluginsDialog
+    required by: About CKEditor, Clipboard, Link
+    Plugin is required by other pluginsDialog User Interface
+    required by: Dialog
+    Plugin is required by other pluginsFake Objects
+    required by: Link
+    Optional pluginFloating Panel
+    required by: Rich Combo
+    Plugin is required by other pluginsIndent / Outdent
+    required by: Indent List
+    Optional pluginList Block
+    required by: Rich Combo
+    Optional pluginPanel
+    required by: Floating Panel, List Block
+    Optional pluginRich Combo
+    required by: Format
+    Plugin is required by other pluginsUI Button
+    required by: Rich Combo, Editor Toolbar
+
+    Skin
+    Minimalist
+
+CREATE USER `usuarioweb`@`localhost` IDENTIFIED BY `strip`;
+GRANT SELECT ON acd.* TO `usuarioweb`@`localhost`;
+GRANT INSERT ON acd.* TO `usuarioweb`@`localhost`;
+GRANT UPDATE ON acd.* TO `usuarioweb`@`localhost`;
+GRANT DELETE ON acd.* TO `usuarioweb`@`localhost`;
+FLUSH PRIVILEGES;
+
+
+Resumen:
+Número total de commits:
+git shortlog -s -n
+   115  Fernando García
+    50  Fernando Garcia Gomez
+    12  Fernando García Gómez
+     8  striptm
+= 185
+
+Líneas de código:
+find . -type f -name '*.php' -exec cat {} \; | sed '/^\s*#/d;/^\s*$/d;/^\s*\/\//d' | wc -l
+4328
+
+find . -type f -name '*.tpl' -exec cat {} \; | sed '/^\s*#/d;/^\s*$/d;/^\s*\/\//d' | wc -l
+590
+
+Js propios 
+131
+
+Css propios
+389
+
+Archivos propios:
+find . -type f -name '*.php'
+67
++2 javascript
++1 css
++29 tpl
+
+-- Diagrama de clases usadas para el spring 2 Editar una estructura de contenidos
+
+De /index.php?a=edit&id=demo nos invoca a la controladora do_process_structure que entra por la rama 'save'
+Verifica que el formulario sea correcto y en ese momento crea un objeto Model\StructureDo
+
+Rellena (set) los valores propios de la estructura y por cada campo que viene del formulario obtiene los datos y los va asignado a un objeto de tipo Model\FieldDo que va añadiendo a la estructura mediante el método $modified_structure->addField($field);
+
+Puede que el campo sea nuevo, en este caso lo prepara y lo inserta igualmente en la estructura.
+
+A la estructura cuando se le invoca el método addField($field) lo que hace es ir manteniendo en uno de sus atributos un objeto de tipo Model/FieldsDo, este objeto hereda de la clase Collection ya que se trata de una colleción de objetos FieldDo.
+
+Cuando ya se tienen todos los datos que provienen del formulario estamos listos para persistirlo, para ello entra en juego un objeto de la clase Model\StructuresDo, esta clase de manera análoga a Fieds es una colección de StructureDo, se le añade la estructura recién creada y se invoca a la persistencia mediante el método StructuresDo::save()
+
+En save lo que se hace es recuperar el objeto DataManager que es el responsable de descubrir para este tipo de estructura cual es tipo de almacenamiento es el que persiste los datos (PersistentStructureManagerMongoDB.php, PersistentStructureManagerMySql.php o PersistentStructureManagerTextPlain.php) cada uno de ellos implementan el método save que lo que hace es los datos queden correctamente almacenados.
+
+Si todo ha ido correctamente devuelve el control a /index.php indicandolo para que la página así lo indique.
