@@ -19,19 +19,12 @@
             "Acd\\": "app"
         },
         "files": [
-            "config.php"
+            "conf.php"
         ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Movistarplus\\Acd\\Tests\\": "tests"
+            "Acd\\Tests\\": "tests"
         }
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-    },
-    "config": {
-        "sort-packages": true
     }
 }
