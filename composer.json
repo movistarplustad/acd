@@ -22,17 +22,16 @@
             "config.php"
         ]
     },
-},
-"autoload-dev": {
-    "psr-4": {
-        "Movistarplus\\Acd\\Tests\\": "tests"
+    "autoload-dev": {
+        "psr-4": {
+            "Movistarplus\\Acd\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
     }
-},
-"scripts": {
-    "test": "vendor/bin/phpunit",
-    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-},
-"config": {
-    "sort-packages": true
-}
 }
