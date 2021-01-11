@@ -1,6 +1,6 @@
 <?php
 
-namespace Movistarplus\ACD\Tests;
+namespace Movistarplus\Acd\Tests;
 
 use PHPUnit\Framework\TestCase;
 

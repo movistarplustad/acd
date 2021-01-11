@@ -1,4 +1,5 @@
 <?php
+
 namespace Acd\Model;
 
 use Acd\conf;
@@ -10,11 +11,11 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
 {
     private function getStoragePath($structureDo)
     {
-        return \Acd\conf::$DATA_DIR_PATH.'/'.$structureDo->getId().'.json';
+        return \Acd\conf::$DATA_DIR_PATH . '/' . $structureDo->getId() . '.json';
     }
     private static function persistentFilePath($token)
     {
-        return conf::$PATH_AUTH_PERMANENT_LOGIN_DIR.'/'.$token;
+        return conf::$PATH_AUTH_PERMANENT_LOGIN_DIR . '/' . $token;
     }
     public function initialize()
     {
@@ -84,12 +85,12 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
     }
     private function saveAll($allUsers)
     {
-        $path = \ACD\conf::$PATH_AUTH_CREDENTIALS_FILE;
+        $path = \Acd\conf::$PATH_AUTH_CREDENTIALS_FILE;
         $aData = array();
         foreach ($allUsers as $user) {
             $aData[$user->getId()] = $user->tokenizeData();
         }
-        $tempPath = $path.'.tmp';
+        $tempPath = $path . '.tmp';
         $somecontent = json_encode($aData);
 
         if (!$handle = fopen($tempPath, 'a')) {
@@ -122,11 +123,11 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
     public function persistSession($userDo)
     {
         $persistentData = array(
-                'id' => hash('sha1', uniqid()),
-                'login' => $userDo->getId(),
-                'rol' => $userDo->getRol(),
-                'timestamp' => time()
-            );
+            'id' => hash('sha1', uniqid()),
+            'login' => $userDo->getId(),
+            'rol' => $userDo->getRol(),
+            'timestamp' => time()
+        );
         $jsonCredentials = json_encode($persistentData);
         $path = $this->persistentFilePath($persistentData['id']);
         if (!$handle = fopen($path, 'w')) {
@@ -178,13 +179,13 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
     }
     public function loadUserPersistSessions($id)
     {
-        if($id && $handle = opendir(conf::$PATH_AUTH_PERMANENT_LOGIN_DIR)) {
+        if ($id && $handle = opendir(conf::$PATH_AUTH_PERMANENT_LOGIN_DIR)) {
             $authPersistentCollectionFound = new Collection();
             while (false !== ($entry = readdir($handle))) {
-                if(is_file(conf::$PATH_AUTH_PERMANENT_LOGIN_DIR."/$entry")) {
-                    $documentFound = file_get_contents(conf::$PATH_AUTH_PERMANENT_LOGIN_DIR."/$entry");
+                if (is_file(conf::$PATH_AUTH_PERMANENT_LOGIN_DIR . "/$entry")) {
+                    $documentFound = file_get_contents(conf::$PATH_AUTH_PERMANENT_LOGIN_DIR . "/$entry");
                     $documentFound = json_decode($documentFound, true);
-                    if($documentFound['login'] === $id) {
+                    if ($documentFound['login'] === $id) {
                         $authPersistent = new AuthPersistentDo();
                         $authPersistent->load($documentFound);
                         $authPersistentCollectionFound->add($authPersistent);

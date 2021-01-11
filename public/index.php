@@ -1,19 +1,24 @@
 <?php
-namespace Acd;
-use \Acd\Model\SessionNavigation;
 
-require ('../autoload.php');
+namespace Acd;
+
+require('../autoload.php');
+
+use \Acd\Model\SessionNavigation;
+use Acd\Model\Auth;
+
+
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
-require ('../offline.php');
+
+require('../offline.php');
 
 ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
 session_start();
 
-if (!Model\Auth::isLoged()) {
+if (!Auth::isLoged()) {
 	$action = 'login';
-}
-else {
+} else {
 	// Temporal patch
 	if ($_SESSION['rol'] == 'editor') {
 		header('Location: content.php');
@@ -33,7 +38,7 @@ switch ($action) {
 		$contentOu->setLogin(isset($_GET['login']) ? $_GET['login'] : '');
 		$contentOu->setRemember(isset($_GET['remember']) && $_GET['remember'] === '1');
 		// Referer
-		if(isset($_GET['re'])) {
+		if (isset($_GET['re'])) {
 			$contentOu->setPostLogin($_GET['re']);
 		}
 		break;
@@ -102,7 +107,7 @@ switch ($action) {
 		$navigation->push([
 			'hash' => "edit_structure - $id",
 			'url' => $_SERVER["REQUEST_URI"],
-			'title' => 'Edit structure '.$structure->getName()
+			'title' => 'Edit structure ' . $structure->getName()
 		]);
 		$navigation->save();
 
@@ -113,7 +118,7 @@ switch ($action) {
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
-		$skeletonOu->setHeadTitle('Edit structure '.$structure->getName());
+		$skeletonOu->setHeadTitle('Edit structure ' . $structure->getName());
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;
@@ -125,11 +130,10 @@ switch ($action) {
 			/* Error, intentando editar una estructura que no existe */
 			$skeletonOu->setBodyClass('error');
 			$contentOu->setActionType('error');
-		}
-		else {
+		} else {
 			$skeletonOu->setBodyClass('clone');
 			$contentOu->setActionType('clone');
-			$contentOu->setStructureName('[copy] '.$structure->getName());
+			$contentOu->setStructureName('[copy] ' . $structure->getName());
 			$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
 			$contentOu->setStorage($structure->getStorage());
 			$contentOu->setFieldTypes(Model\FieldDo::getAvailableTypes());
@@ -149,7 +153,7 @@ switch ($action) {
 		$navigation->push([
 			'hash' => "clone_structure - $id",
 			'url' => $_SERVER["REQUEST_URI"],
-			'title' => 'Clone structure '.$structure->getName()
+			'title' => 'Clone structure ' . $structure->getName()
 		]);
 		$navigation->save();
 
@@ -160,7 +164,7 @@ switch ($action) {
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
-		$skeletonOu->setHeadTitle('Clone structure '.$structure->getName());
+		$skeletonOu->setHeadTitle('Clone structure ' . $structure->getName());
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;

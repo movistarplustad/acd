@@ -1,4 +1,5 @@
 <?php
+
 namespace Acd;
 
 class content extends \PHPUnit_Framework_TestCase
@@ -24,20 +25,22 @@ class content extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('structure foo', $c->getIdStructure());
 	}
 
-// TODO revisar
-	public function testLoadContentById() {
+	// TODO revisar
+	public function testLoadContentById()
+	{
 		$cl = new Model\ContentLoader();
 		$cl->setId('estructura_texto');
 		$content = $cl->loadContents('byId', '1');
-		
+
 		$this->assertEquals('structure foo', $content); // dara error
 	}
 
 
-	public function testSaveNewContent() {
+	public function testSaveNewContent()
+	{
 		$cl = new Model\ContentLoader();
 		$cl->setId('programa_tv');
-		$content = new \ACD\Model\ContentDo();
+		$content = new \Acd\Model\ContentDo();
 		$content->setIdStructure($cl->getId());
 		$content->setData('Título', 'el campo Título');
 		$content->setData('Destacada', 'el campo Destacada');
@@ -49,11 +52,12 @@ class content extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($result->getData('Título'), 'el campo Título');
 	}
 
-	public function testUpdataContent() {
+	public function testUpdataContent()
+	{
 		// Save
-		$cl = new \ACD\Model\ContentLoader();
+		$cl = new \Acd\Model\ContentLoader();
 		$cl->setId('programa_tv');
-		$content = new \ACD\Model\ContentDo();
+		$content = new \Acd\Model\ContentDo();
 		$content->setIdStructure($cl->getId());
 		$content->setId('id-fer');
 		$content->setData('Título', 'el campo Título');
@@ -66,12 +70,13 @@ class content extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($result->getData('Título'), 'el campo Título');
 	}
 
-	public function testDeleteContent() {
+	public function testDeleteContent()
+	{
 		// Delete
-		$cl = new \ACD\Model\ContentLoader();
+		$cl = new \Acd\Model\ContentLoader();
 		$cl->setId('programa_tv');
 
-		$content = new \ACD\Model\ContentDo();
+		$content = new \Acd\Model\ContentDo();
 		$content->setIdStructure($cl->getId());
 		$content->setId('id-demo');
 		$content->setData('Título', 'El campo Título');

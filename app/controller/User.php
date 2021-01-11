@@ -1,4 +1,5 @@
 <?php
+
 namespace Acd\Controller;
 
 use \Acd\Model\UserLoader;
@@ -55,16 +56,18 @@ class User
     {
         $this->contentUser = $contentUser;
     }
-	public function getContentUser() {
-		return $this->contentUser;
+    public function getContentUser()
+    {
+        return $this->contentUser;
     }
     private function setContentAuthPermanent($contentAuthPermanent)
     {
         $this->contentAuthPermanent = $contentAuthPermanent;
     }
-	public function getContentAuthPermanent() {
-		return $this->contentAuthPermanent;
-	}
+    public function getContentAuthPermanent()
+    {
+        return $this->contentAuthPermanent;
+    }
     public function load()
     {
         $userLoader = new UserLoader();
@@ -88,7 +91,7 @@ class User
                 return 'Users';
                 break;
             case $this::VIEW_DETAIL:
-                return 'User '.$this->getContentUser()->getId();
+                return 'User ' . $this->getContentUser()->getId();
                 break;
             case $this::VIEW_DETAIL_NEW:
                 return 'New user';
@@ -105,12 +108,12 @@ class User
     {
         switch ($this->getView()) {
             case $this::VIEW_LIST:
-                $ou = new \ACD\View\UserList();
+                $ou = new \Acd\View\UserList();
                 $ou->setUserList($this->getContentUser());
                 break;
             case $this::VIEW_DETAIL:
                 if ($this->getContentUser()->getId()) {
-                    $ou = new \ACD\View\UserDetail();
+                    $ou = new \Acd\View\UserDetail();
                     $ou->setUserElement($this->getContentUser());
                     $ou->setAuthPermanentList($this->getContentAuthPermanent());
                 } else {
@@ -118,17 +121,17 @@ class User
                 }
                 break;
             case $this::VIEW_DETAIL_NEW:
-                $ou = new \ACD\View\UserDetail();
+                $ou = new \Acd\View\UserDetail();
                 $emptyCollection = new UserDo();
                 $ou->setUserElement($emptyCollection);
                 break;
             default:
-                throw new \Exception("View (".$this->getView().") not defined", 1);
+                throw new \Exception("View (" . $this->getView() . ") not defined", 1);
                 break;
         }
 
         $this->sessionNavigation->push([
-            'hash' => 'user - '.$this->getView().' - '.$this->getId(), // Page hash, consecutive same hash no add navigation
+            'hash' => 'user - ' . $this->getView() . ' - ' . $this->getId(), // Page hash, consecutive same hash no add navigation
             'url' => $this->requestUrl,
             'title' => $this->getTitle()
         ]);

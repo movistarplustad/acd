@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/conf.php';
+// require __DIR__ . '/conf.php';
 require __DIR__ . '/vendor/autoload.php';
 
 // //http://stackoverflow.com/questions/5280347/autoload-classes-from-different-folders
