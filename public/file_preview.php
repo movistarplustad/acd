@@ -1,7 +1,13 @@
 <?php
 namespace Acd;
+use \Acd\Controller\RolPermissionHttp;
 
 require ('../autoload.php');
+
+ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+session_start();
+
+if(!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER, \Acd\conf::$ROL_EDITOR])) die();
 
 //  A slightly modified version from  limalopex.eisfux.de. Fixes the missing Headers Content-Type and Content-Length and makes it Camel-Case.
 if( !function_exists('apache_request_headers') ) {

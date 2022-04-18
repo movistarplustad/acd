@@ -64,6 +64,10 @@ class Auth  {
 		}
 	}
 
+	public static function getRol() {
+		return $_SESSION['rol'];
+	}
+
 	// TODO: Borrar
 	protected static function loadAllCredentials() {
 		$path = conf::$PATH_AUTH_CREDENTIALS_FILE;

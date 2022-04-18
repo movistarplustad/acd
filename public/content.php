@@ -1,6 +1,7 @@
 <?php
 namespace Acd;
 use \Acd\Model\SessionNavigation;
+use \Acd\Controller\RolPermissionHttp;
 
 require ('../autoload.php');
 
@@ -9,6 +10,8 @@ require ('../offline.php');
 
 ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
 session_start();
+
+if(!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER, \Acd\conf::$ROL_EDITOR])) die();
 
 function loadNewRef($idRef, $idStructure) {
 	if (!$idRef || !$idStructure) {
