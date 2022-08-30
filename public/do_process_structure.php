@@ -1,7 +1,12 @@
 <?php
 namespace Acd;
+use \Acd\Controller\RolPermissionHttp;
 
 require ('../autoload.php');
+
+ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+session_start();
+if(!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER])) die();
 
 $accion = strtolower($_POST['a']);
 $id = $_POST['id'];
@@ -91,7 +96,6 @@ switch ($accion) {
 			$structures->save();
 			$result = 'ok';
 		} catch (\Exception $e) {
-			d($e);
 			$result = 'ko';
 		}
 

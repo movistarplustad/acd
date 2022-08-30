@@ -1,0 +1,39 @@
+[
+  {
+    "programa_tv": {
+      "name": "Programas TV",
+      "storage": "text/plain",
+      "fields": []
+    },
+    "chat_tienda": {
+      "name": "Chat de tienda online",
+      "storage": "mongodb",
+      "fields": [
+        {
+          "abierta": {
+            "type": "boolean",
+            "name": "Abierta"
+          }
+        },
+        {
+          "foo": {
+            "type": "text_simple",
+            "name": "pretty"
+          }
+        }
+      ]
+    },
+    "estructura_texto": {
+      "name": "Con dos campos",
+      "storage": "text/plain",
+      "fields": [
+        {
+          "abierta": {
+            "type": "boolean",
+            "name": "Abierta"
+          }
+        }
+      ]
+    }
+  }
+]

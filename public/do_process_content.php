@@ -2,10 +2,14 @@
 
 namespace Acd;
 
-require('../autoload.php');
+use \Acd\Controller\RolPermissionHttp;
+use \Acd\Model\ValueFormater;
 
-use Acd\Model\ValueFormater;
-use Acd\Model\ContentLoader;
+require('../autoload.php');
+ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+session_start();
+
+if(!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER, \Acd\conf::$ROL_EDITOR])) die();
 
 const ERROR = 'ERROR';
 
@@ -29,7 +33,7 @@ foreach ($postId as $id) {
 	$profile = isset($_POST['profile'][$id]) ? ValueFormater::decode($_POST['profile'][$id], ValueFormater::TYPE_LIST_MULTIPLE, ValueFormater::FORMAT_EDITOR) : array();
 	$fields = isset($_POST['field'][$id]) ? $_POST['field'][$id] : array();
 
-	$contentLoader = new ContentLoader();
+	$contentLoader = new \ACD\Model\ContentLoader();
 	$contentLoader->setId($idStructure);
 	$content = $contentLoader->loadContent('id', ValueFormater::decode($id, ValueFormater::TYPE_ID, ValueFormater::FORMAT_EDITOR));
 
@@ -67,7 +71,11 @@ foreach ($postId as $id) {
 				//$n = 0; $n < $numFields; $n++) {
 				$fieldId = $fields[$key]['id'];
 				$fieldType = $modified_content->getFieldType($fieldId);
-				@$fields[$key]['value'] = $fields[$key]['value'] ?: ''; // Forze set
+
+				if (!isset($fields[$key]['value'])) {
+					$fields[$key]['value'] = '';
+				};
+				// @$fields[$key]['value'] = $fields[$key]['value'] ?: ''; // Forze set
 				// If get array of values and types the field is collection, preparte normalized value
 				if ($fieldType === 'collection' && is_array($fields[$key]['value']) && is_array($fields[$key]['type'])) {
 					$normalizedvalue = [];

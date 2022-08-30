@@ -593,6 +593,12 @@ input[readonly] {
 	font-size: 0.6em;
 }
 
+/* Install */
+#manageInstallation pre,
+#manageInstallation form {
+	margin: 0 0 0 2em;
+}
+
 /* Media Queries */
 @media screen and (max-width: 480px) {
 	.list_with_options .list_item {

@@ -1,42 +1,31 @@
 <?php
 namespace Acd;
 
-require ('../autoload.php');
+use \Acd\Controller\RolPermissionHttp;
+
+require('../autoload.php');
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
-require ('../offline.php');
+require('../offline.php');
 
 ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
 session_start();
+if(!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER])) die();
 
-if (!Model\Auth::isLoged()) {
-	$action = 'login';
-	header('Location: index.php?re='.urlencode($_SERVER["REQUEST_URI"]));
-	return;
+@$action = $_GET['a'];
+switch ($action) {
+	case 'edit':
+		$action = Controller\Enumerated::VIEW_DETAIL;
+		break;
+	case 'new':
+		$action = Controller\Enumerated::VIEW_DETAIL_NEW;
+		break;
+	default:
+		$action = Controller\Enumerated::VIEW_LIST;
+		break;
 }
-else {
-	if ($_SESSION['rol'] == 'editor') {
-		header('HTTP/1.0 403 Forbidden');
-		echo 'Unauthorized, only admin can show this section.';
-		die();
-	}
-	else  {
-		@$action = $_GET['a'];
-		switch ($action) {
-			case 'edit':
-				$action = Controller\Enumerated::VIEW_DETAIL;
-				break;
-			case 'new':
-				$action = Controller\Enumerated::VIEW_DETAIL_NEW;
-				break;
-			default:
-				$action = Controller\Enumerated::VIEW_LIST;
-				break;
-		}
-		@$id = $_GET['id']; //'PROFILE';
-		@$result = $_GET['r'];
-	}
-}
+@$id = $_GET['id']; //'PROFILE';
+@$result = $_GET['r'];
 
 $enumeratedController = new Controller\Enumerated();
 $enumeratedController->setView($action);
