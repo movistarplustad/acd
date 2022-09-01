@@ -8,10 +8,10 @@ use \Acd\Model\ContentLoader;
 use \Acd\Model\UserLoader;
 use \Acd\Controller\RolPermissionHttp;
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
-if (!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER])) die();
+if (!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER']])) die();
 
 switch($_POST['a']) {
     case 'Create DB indexes':

@@ -4,7 +4,7 @@ namespace Acd;
 //include_once (DIR_BASE.'/app/model/Permission.php');
 $DIR_TEST = dirname(__FILE__).'/..';
 // Set  routes to data tests
-\Acd\conf::$PERMISSION_PATH = $DIR_TEST.'/data/permission.json';
+$_ENV['ACD_PERMISSION_PATH'] = $DIR_TEST.'/data/permission.json';
 
 class permission_Test extends \PHPUnit_Framework_TestCase
 {

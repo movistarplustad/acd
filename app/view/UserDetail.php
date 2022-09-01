@@ -13,8 +13,8 @@ class UserDetail extends Template {
 	public function setUserElement($userElement) {
 		$this->__set('userElement', $userElement);
 		$this->__set('roles', [
-			conf::$ROL_DEVELOPER => conf::$ROL_DEVELOPER,
-			conf::$ROL_EDITOR => conf::$ROL_EDITOR
+			$_ENV['ACD_ROL_DEVELOPER'] => $_ENV[ 'ACD_ROL_DEVELOPER'],
+			$_ENV[ 'ACD_ROL_EDITOR'] => $_ENV[ 'ACD_ROL_EDITOR']
 		]);
 	}
 	public function setAuthPermanentList($authPermanentList) {
@@ -22,7 +22,7 @@ class UserDetail extends Template {
 	}
 
 	public function render($tpl = '') {
-		$tpl = conf::$DIR_TEMPLATES.'/UserDetail.tpl';
+		$tpl = $_ENV[ 'ACD_DIR_TEMPLATES'].'/UserDetail.tpl';
 		return parent::render($tpl);
 	}
 }

@@ -11,8 +11,8 @@ class PersistentUserManagerMongoDBLegacy implements iPersistentUserManager
     {
         // If not is initialized do the initializacion
         if (!$this->isInitialized()) {
-            $mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-            $this->db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
+            $mongo = new \MongoClient($_ENV['ACD_MONGODB_SERVER']);
+            $this->db = $mongo->selectDB($_ENV['ACD_MONGODB_DB']);
         }
     }
     public function isInitialized()

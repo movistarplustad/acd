@@ -11,11 +11,11 @@ class PersistentStructureManagerMongoDB implements iPersistentStructureManager
   public function initialize()
   {
     try {
-      //      $this->mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-      //      $this->db = $this->mongo->selectDB(\Acd\conf::$MONGODB_DB);
+      //      $this->mongo = new \MongoClient($_ENV['ACD_MONGODB_SERVER']);
+      //      $this->db = $this->mongo->selectDB($_ENV['ACD_MONGODB_DB']);
       //TODO: Ver cóm pasarle el servidor, porque si es '' no funciona.
-      $this->mongo = new \MongoDB\Client(\Acd\conf::$MONGODB_SERVER);
-      $this->db = $this->mongo->selectDatabase(\Acd\conf::$MONGODB_DB);
+      $this->mongo = new \MongoDB\Client($_ENV['ACD_MONGODB_SERVER']);
+      $this->db = $this->mongo->selectDatabase($_ENV['ACD_MONGODB_DB']);
       return true;
     } catch (MongoConnectionException $e) {
       throw new PersistentStructureManagerMongoDBException("Failed to connect to MongoDB", self::NO_CONNECTION);

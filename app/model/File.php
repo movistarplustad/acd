@@ -82,6 +82,6 @@ class File
 		}
 	}
 	public static function getPath($idFile) {
-		return \Acd\conf::$DATA_CONTENT_PATH.'/'.substr($idFile, 0, 3).'/'.$idFile;
+		return $_ENV[ 'ACD_DATA_CONTENT_PATH'].'/'.substr($idFile, 0, 3).'/'.$idFile;
 	}
 }

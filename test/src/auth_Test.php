@@ -5,8 +5,8 @@ namespace Acd;
 $DIR_TEST = dirname(__FILE__).'/..';
 
 // Set  routes to data tests
-\Acd\conf::$PATH_AUTH_CREDENTIALS_FILE = $DIR_TEST.'/data/auth.json';
-\Acd\conf::$PATH_AUTH_PERMANENT_LOGIN_DIR = $DIR_TEST.'/data/auth_permanent_login';
+$_ENV['ACD_PATH_AUTH_CREDENTIALS_FILE'] = $DIR_TEST.'/data/auth.json';
+$_ENV['ACD_PATH_AUTH_PERMANENT_LOGIN_DIR'] = $DIR_TEST.'/data/auth_permanent_login';
 
 class auth_Test extends \PHPUnit_Framework_TestCase
 {

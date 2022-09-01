@@ -14,7 +14,7 @@ class Relation extends Template {
 	}
 
 	public function render($tpl = '') {
-		$tpl = \Acd\conf::$DIR_TEMPLATES.'/Relation.tpl';
+		$tpl = $_ENV[ 'ACD_DIR_TEMPLATES'].'/Relation.tpl';
 		return parent::render($tpl);
 	}
 }

@@ -7,10 +7,10 @@ class PersistentManagerMySql implements iPersistentManager
 	private $mysqli;
 	public function initialize($structureDo) {
 		//Data from global.php
-		$dbHost = \Acd\conf::$MYSQL_SERVER;
-		$dbUser = \Acd\conf::$MYSQL_USER;
-		$dbPassword = \Acd\conf::$MYSQL_PASSWORD;
-		$db = \Acd\conf::$MYSQL_SCHEMA;
+		$dbHost = $_ENV[ 'ACD_MYSQL_SERVER'];
+		$dbUser = $_ENV[ 'ACD_MYSQL_USER'];
+		$dbPassword = $_ENV[ 'ACD_MYSQL_PASSWORD'];
+		$db = $_ENV[ 'ACD_MYSQL_SCHEMA'];
 
 		$this->mysqli = new \mysqli($dbHost, $dbUser, $dbPassword, $db);
 		if ($this->mysqli->connect_errno) {

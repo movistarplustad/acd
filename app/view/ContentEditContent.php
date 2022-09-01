@@ -39,7 +39,7 @@ class ContentEditContent extends Template {
 		$this->__set('profileOU', $fieldOU);
 	}
 	public function setUserRol($rol) {
-		$this->__set('tagsReadonly', $rol === \Acd\conf::$ROL_DEVELOPER ? '' : ' readonly="readonly"');
+		$this->__set('tagsReadonly', $rol === $_ENV['ACD_ROL_DEVELOPER'] ? '' : ' readonly="readonly"');
 	}
 	public function newContent($bnewContent) {
 		$this->__set('bNew', true);
@@ -52,7 +52,7 @@ class ContentEditContent extends Template {
 		$this->__set('jsonSummary', $jsonSummary);
 	}
 	public function render($tpl = '') {
-		$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentEditContent.tpl';
+		$tpl = $_ENV[ 'ACD_DIR_TEMPLATES'].'/ContentEditContent.tpl';
 		return parent::render($tpl);
 	}
 }

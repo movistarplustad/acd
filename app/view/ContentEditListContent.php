@@ -31,7 +31,7 @@ class ContentEditListContent extends Template {
 	}
 
 	public function render($tpl = '') {
-		$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentEditListContent.tpl';
+		$tpl = $_ENV[ 'ACD_DIR_TEMPLATES'].'/ContentEditListContent.tpl';
 		return parent::render($tpl);
 	}
 }

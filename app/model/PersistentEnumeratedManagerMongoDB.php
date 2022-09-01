@@ -5,11 +5,11 @@ class PersistentEnumeratedManagerMongoDB implements iPersistentEnumeratedManager
 {
 	private $db;
 	public function initialize() {
-//		$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-//		$this->db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
+//		$mongo = new \MongoClient($_ENV['ACD_MONGODB_SERVER']);
+//		$this->db = $mongo->selectDB($_ENV['ACD_MONGODB_DB']);
     //TODO: Ver cóm pasarle el servidor, porque si es '' no funciona.
-    $mongo = new \MongoDB\Client(\Acd\conf::$MONGODB_SERVER);
-    $this->db = $mongo->selectDatabase(\Acd\conf::$MONGODB_DB);
+    $mongo = new \MongoDB\Client($_ENV['ACD_MONGODB_SERVER']);
+    $this->db = $mongo->selectDatabase($_ENV['ACD_MONGODB_DB']);
 	}
 	public function isInitialized() {
 		return isset($this->db);

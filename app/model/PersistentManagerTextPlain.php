@@ -5,7 +5,7 @@ class PersistentManagerTextPlainException extends \exception {} // TODO Unificar
 class PersistentManagerTextPlain implements iPersistentManager
 {
 	private function getStoragePath($structureDo) {
-		return \Acd\conf::$DATA_DIR_PATH.'/'.$structureDo->getId().'.json';
+		return $_ENV[ 'ACD_DATA_DIR_PATH'].'/'.$structureDo->getId().'.json';
 	}
 
 	private function getNewId() {

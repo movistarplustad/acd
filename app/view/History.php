@@ -16,6 +16,6 @@ class History extends \Acd\View\Template {
 		$this->__set('items', $items);
 	}
 	public function render($tpl = '') {
-		return parent::render(\Acd\conf::$DIR_TEMPLATES.'/History.tpl');
+		return parent::render($_ENV['ACD_DIR_TEMPLATES'].'/History.tpl');
 	}
 }

@@ -36,10 +36,10 @@ class BaseSkeleton extends \Acd\View\Template {
 	protected function getTpl() {
 		switch($this->view) {
 			case 'ajax':
-				$tpl = \Acd\conf::$DIR_TEMPLATES.'/BaseSkeletonAjax.tpl';
+				$tpl = $_ENV[ 'ACD_DIR_TEMPLATES'].'/BaseSkeletonAjax.tpl';
 				break;
 			default:
-				$tpl = \Acd\conf::$DIR_TEMPLATES.'/BaseSkeleton.tpl';
+				$tpl = $_ENV[ 'ACD_DIR_TEMPLATES'].'/BaseSkeleton.tpl';
 				break;
 		}
 		return $tpl;

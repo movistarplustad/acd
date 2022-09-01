@@ -8,8 +8,8 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
     {
         // If not is initialized do the initializacion
         if (!$this->isInitialized()) {
-            $this->mongo = new \MongoDB\Client(\Acd\conf::$MONGODB_SERVER);
-            $this->db = $this->mongo->selectDatabase(\Acd\conf::$MONGODB_DB);
+            $this->mongo = new \MongoDB\Client($_ENV['ACD_MONGODB_SERVER']);
+            $this->db = $this->mongo->selectDatabase($_ENV['ACD_MONGODB_DB']);
         }
     }
     public function isInitialized()

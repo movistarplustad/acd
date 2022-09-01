@@ -1,17 +1,23 @@
 <?php
+// namespace Acd;
+require __DIR__ . '/../vendor/autoload.php';
 
-namespace Acd;
-use \Acd\Model\SessionNavigation;
+use Acd\Model\SessionNavigation;
+use Acd\Model\Auth;
+// use Acd\Conf\conf;
 
-require ('../autoload.php');
+require ('conf2.php');
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
 require ('../offline.php');
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+//$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/..');
+//$dotenv->safeLoad();
+// var_dump('assd', $_ENV['ACD_SESSION_GC_MAXLIFETIME']);die;
+ini_set('session.gc_maxlifetime', $_ENV['ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
-if (!Model\Auth::isLoged()) {
+if (!Auth::isLoged()) {
 	$action = 'login';
 }
 else {
@@ -20,13 +26,13 @@ else {
 		header('Location: content.php');
 		die();
 	}
-	$structures = new Model\StructuresDo();
-	$structures->loadFromFile(conf::$DATA_PATH);
+	$structures = new Acd\Model\StructuresDo();
+	$structures->loadFromFile($_ENV['ACD_DATA_PATH']);
 	$action = isset($_GET['a']) ? $_GET['a'] : 'list';
 }
 /* Show action block */
-$skeletonOu = new View\BaseSkeleton();
-$contentOu = new View\ContentAdmin();
+$skeletonOu = new Acd\View\BaseSkeleton();
+$contentOu = new Acd\View\ContentAdmin();
 switch ($action) {
 	case 'login':
 		$skeletonOu->setBodyClass('login');
@@ -45,7 +51,7 @@ switch ($action) {
 
 		$skeletonOu->setBodyClass('new');
 		$contentOu->setActionType('new');
-		$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
+		$contentOu->setStorageTypes($_ENV['ACD_STORAGE_TYPES']);
 		$contentOu->setStorage($structure->getStorage());
 
 		// back button
@@ -80,7 +86,7 @@ switch ($action) {
 			$skeletonOu->setBodyClass('edit');
 			$contentOu->setActionType('edit');
 			$contentOu->setStructureName($structure->getName());
-			$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
+			$contentOu->setStorageTypes($_ENV['ACD_STORAGE_TYPES']);
 			$contentOu->setStorage($structure->getStorage());
 			$contentOu->setFieldTypes(Model\FieldDo::getAvailableTypes());
 			$contentOu->setFields($structure->getFields());
@@ -131,7 +137,7 @@ switch ($action) {
 			$skeletonOu->setBodyClass('clone');
 			$contentOu->setActionType('clone');
 			$contentOu->setStructureName('[copy] '.$structure->getName());
-			$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
+			$contentOu->setStorageTypes($_ENV['ACD_STORAGE_TYPES']);
 			$contentOu->setStorage($structure->getStorage());
 			$contentOu->setFieldTypes(Model\FieldDo::getAvailableTypes());
 			$contentOu->setFields($structure->getFields());

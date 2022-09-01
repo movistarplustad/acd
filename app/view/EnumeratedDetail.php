@@ -13,7 +13,7 @@ class EnumeratedDetail extends Template {
 	}
 
 	public function render($tpl = '') {
-		$tpl = \Acd\conf::$DIR_TEMPLATES.'/EnumeratedDetail.tpl';
+		$tpl = $_ENV[ 'ACD_DIR_TEMPLATES'].'/EnumeratedDetail.tpl';
 		return parent::render($tpl);
 	}
 }

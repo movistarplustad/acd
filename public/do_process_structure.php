@@ -4,9 +4,9 @@ use \Acd\Controller\RolPermissionHttp;
 
 require ('../autoload.php');
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
-if(!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER])) die();
+if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER']])) die();
 
 $accion = strtolower($_POST['a']);
 $id = $_POST['id'];
@@ -16,7 +16,7 @@ $new_field_type = isset($_POST['new_field']) ? $_POST['new_field'] : null;
 $fields = isset($_POST['field']) ? $_POST['field'] : array();
 
 $structures = new Model\StructuresDo();
-$structures->loadFromFile(\Acd\conf::$DATA_PATH);
+$structures->loadFromFile($_ENV['ACD_DATA_PATH']);
 
 try {
 	$structureFound = $structures->get($id);

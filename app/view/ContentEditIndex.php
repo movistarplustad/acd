@@ -13,7 +13,7 @@ class ContentEditIndex extends Template {
 	}
 
 	public function render($tpl = '') {
-		$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentEditIndex.tpl';
+		$tpl = $_ENV[ 'ACD_DIR_TEMPLATES'].'/ContentEditIndex.tpl';
 		return parent::render($tpl);
 	}
 }

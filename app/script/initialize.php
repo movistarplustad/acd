@@ -7,10 +7,10 @@ $bMongoDB = false;
 $bMySql = true;
 
 if($bMongoDB){
-	//$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-	//$db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
-  $mongo = new \MongoDB\Client(\Acd\conf::$MONGODB_SERVER);
-  //$db = $mongo->selectDatabase(\Acd\conf::$MONGODB_DB);
+	//$mongo = new \MongoClient($_ENV['ACD_MONGODB_SERVER']);
+	//$db = $mongo->selectDB($_ENV['ACD_MONGODB_DB']);
+  $mongo = new \MongoDB\Client($_ENV['ACD_MONGODB_SERVER']);
+  //$db = $mongo->selectDatabase($_ENV['ACD_MONGODB_DB']);
     $db = $mongo->selectDatabase('delete');
 
 	$aCollections = [
@@ -57,10 +57,10 @@ if($bMongoDB){
 }
 
 if($bMySql) {
-	$dbHost = \Acd\conf::$MYSQL_SERVER;
-	$dbUser = 'root'; //\Acd\conf::$MYSQL_USER;
-	$dbPassword = \Acd\conf::$MYSQL_PASSWORD;
-	$db = \Acd\conf::$MYSQL_SCHEMA;
+	$dbHost = $_ENV[ 'ACD_MYSQL_SERVER'];
+	$dbUser = 'root'; //$_ENV['ACD_MYSQL_USER'];
+	$dbPassword = $_ENV['ACD_MYSQL_PASSWORD'];
+	$db = $_ENV[ 'ACD_MYSQL_SCHEMA'];
 
 	$mysqli = new \mysqli($dbHost, $dbUser, $dbPassword, $db);
 	if ($mysqli->connect_errno) {

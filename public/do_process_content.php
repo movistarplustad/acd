@@ -6,10 +6,10 @@ use \Acd\Controller\RolPermissionHttp;
 use \Acd\Model\ValueFormater;
 
 require('../autoload.php');
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
-if(!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER, \Acd\conf::$ROL_EDITOR])) die();
+if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER'], $_ENV['ACD_ROL_EDITOR']])) die();
 
 const ERROR = 'ERROR';
 
@@ -93,7 +93,7 @@ foreach ($postId as $id) {
 					];
 				} elseif ($fieldType === 'file') {
 					$normalizedvalue = [
-						'origin' => conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_UPLOAD,
+						'origin' => $_ENV['ACD_DATA_CONTENT_BINARY_ORIGIN_FORM_UPLOAD'],
 						'value' => $fields[$key]['value'],
 						'tmp_name' => '',
 						'alt' => isset($fields[$key]['alt']) ? $fields[$key]['alt'] : '',

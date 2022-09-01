@@ -5,10 +5,10 @@ use \Acd\Controller\RolPermissionHttp;
 
 require('../autoload.php');
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
-if(!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER])) die();
+if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER']])) die();
 
 $action = Controller\Install::VIEW_INFO;
 @$result = $_GET['r'];

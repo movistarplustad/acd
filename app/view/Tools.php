@@ -9,6 +9,6 @@ class Tools extends \Acd\View\Template {
 		$this->__set('rol', $rol);
 	}
 	public function render($tpl = '') {
-		return parent::render(\Acd\conf::$DIR_TEMPLATES.'/Tools.tpl');
+		return parent::render($_ENV['ACD_DIR_TEMPLATES'].'/Tools.tpl');
 	}
 }

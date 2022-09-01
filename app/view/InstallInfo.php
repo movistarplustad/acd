@@ -15,7 +15,7 @@ class InstallInfo extends Template {
 	}
 
     public function render($tpl = '') {
-        $tpl = conf::$DIR_TEMPLATES.'/InstallInfo.tpl';
+        $tpl = $_ENV[ 'ACD_DIR_TEMPLATES'].'/InstallInfo.tpl';
         return parent::render($tpl);
     }
 }
