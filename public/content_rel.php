@@ -2,7 +2,8 @@
 namespace Acd;
 use \Acd\Controller\RolPermissionHttp;
 
-require ('../autoload.php');
+require '../autoload.php';
+require '../config/conf2.php';
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
 require ('../offline.php');

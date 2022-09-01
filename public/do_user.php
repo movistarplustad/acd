@@ -1,8 +1,11 @@
 <?php
 namespace Acd;
+
 use \Acd\Controller\RolPermissionHttp;
 
-require ('../autoload.php');
+require '../autoload.php';
+require '../config/conf2.php';
+
 ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER']])) die();

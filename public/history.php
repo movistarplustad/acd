@@ -4,7 +4,8 @@ use \Acd\Controller\RolPermissionHttp;
 use \Acd\Model\SessionNavigation;
 
 // TODO: In future can be diferent views
-require('../autoload.php');
+require '../autoload.php';
+require '../config/conf2.php';
 
 ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();

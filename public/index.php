@@ -1,12 +1,18 @@
 <?php
 // namespace Acd;
-require __DIR__ . '/../vendor/autoload.php';
+
 
 use Acd\Model\SessionNavigation;
 use Acd\Model\Auth;
+use Acd\Model\StructureDo;
+use Acd\Model\EnumeratedLoader;
+use Acd\Model\Query;
+use Acd\Model\FieldDo;
+use Acd\View\Tools;
+use Acd\View\HeaderMenu;
 // use Acd\Conf\conf;
-
-require ('conf2.php');
+require '../autoload.php';
+require '../config/conf2.php';
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
 require ('../offline.php');
@@ -47,7 +53,7 @@ switch ($action) {
 	case 'new':
 		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
 
-		$structure = new Model\StructureDo();
+		$structure = new StructureDo();
 
 		$skeletonOu->setBodyClass('new');
 		$contentOu->setActionType('new');
@@ -65,10 +71,10 @@ switch ($action) {
 		]);
 		$navigation->save();
 
-		$headerMenuOu = new View\HeaderMenu();
+		$headerMenuOu = new HeaderMenu();
 		$headerMenuOu->setBack($back);
 
-		$toolsOu = new View\Tools();
+		$toolsOu = new Tools();
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
@@ -88,11 +94,11 @@ switch ($action) {
 			$contentOu->setStructureName($structure->getName());
 			$contentOu->setStorageTypes($_ENV['ACD_STORAGE_TYPES']);
 			$contentOu->setStorage($structure->getStorage());
-			$contentOu->setFieldTypes(Model\FieldDo::getAvailableTypes());
+			$contentOu->setFieldTypes(FieldDo::getAvailableTypes());
 			$contentOu->setFields($structure->getFields());
 
-			$enumeratedLoader = new Model\EnumeratedLoader();
-			$query = new Model\Query();
+			$enumeratedLoader = new EnumeratedLoader();
+			$query = new Query();
 			$query->setType('all');
 			$enumerated = $enumeratedLoader->load($query);
 			$contentOu->setEnumeratedList($enumerated);
@@ -113,10 +119,10 @@ switch ($action) {
 		]);
 		$navigation->save();
 
-		$headerMenuOu = new View\HeaderMenu();
+		$headerMenuOu = new HeaderMenu();
 		$headerMenuOu->setBack($back);
 
-		$toolsOu = new View\Tools();
+		$toolsOu = new Tools();
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
@@ -139,11 +145,11 @@ switch ($action) {
 			$contentOu->setStructureName('[copy] '.$structure->getName());
 			$contentOu->setStorageTypes($_ENV['ACD_STORAGE_TYPES']);
 			$contentOu->setStorage($structure->getStorage());
-			$contentOu->setFieldTypes(Model\FieldDo::getAvailableTypes());
+			$contentOu->setFieldTypes(FieldDo::getAvailableTypes());
 			$contentOu->setFields($structure->getFields());
 
-			$enumeratedLoader = new Model\EnumeratedLoader();
-			$query = new Model\Query();
+			$enumeratedLoader = new EnumeratedLoader();
+			$query = new Query();
 			$query->setType('all');
 			$enumerated = $enumeratedLoader->load($query);
 			$contentOu->setEnumeratedList($enumerated);
@@ -160,10 +166,10 @@ switch ($action) {
 		]);
 		$navigation->save();
 
-		$headerMenuOu = new View\HeaderMenu();
+		$headerMenuOu = new HeaderMenu();
 		$headerMenuOu->setBack($back);
 
-		$toolsOu = new View\Tools();
+		$toolsOu = new Tools();
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
@@ -173,7 +179,7 @@ switch ($action) {
 		break;
 	case 'list':
 	default:
-		$toolsOu = new View\Tools();
+		$toolsOu = new Tools();
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
@@ -188,7 +194,7 @@ switch ($action) {
 		]);
 		$navigation->save();
 
-		$headerMenuOu = new View\HeaderMenu();
+		$headerMenuOu = new HeaderMenu();
 		$headerMenuOu->setBack($back);
 
 		$contentOu->setActionType('index');

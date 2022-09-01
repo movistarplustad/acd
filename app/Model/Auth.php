@@ -1,6 +1,6 @@
 <?php
 namespace Acd\Model;
-use Acd\conf;
+// use Acd\conf;
 
 class AuthInvalidUserException extends \exception {}
 class Auth  {

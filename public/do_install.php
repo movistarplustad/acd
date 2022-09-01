@@ -2,7 +2,8 @@
 
 namespace Acd;
 
-require('../autoload.php');
+require '../autoload.php';
+require '../config/conf2.php';
 
 use \Acd\Model\ContentLoader;
 use \Acd\Model\UserLoader;

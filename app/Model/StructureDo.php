@@ -39,7 +39,7 @@ class StructureDo
 		return $this->name;
 	}
 	public function setStorage($storage) {
-		if (array_key_exists($storage, $_ENV[ 'ACD_STORAGE_TYPES'])) {
+		if (array_key_exists($storage, $_ENV['ACD_STORAGE_TYPES'])) {
 			$this->storage = $storage;
 		}
 		else {
