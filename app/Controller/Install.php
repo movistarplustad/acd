@@ -2,11 +2,11 @@
 
 namespace Acd\Controller;
 
-use \Acd\Model\SessionNavigation;
-use \Acd\Model\ContentLoader;
-use \Acd\Model\UserLoader;
-use \Acd\View\HeaderMenu;
-
+use Acd\Model\SessionNavigation;
+use Acd\Model\ContentLoader;
+use Acd\Model\UserLoader;
+use Acd\View\HeaderMenu;
+use Acd\View\InstallInfo;
 // Output
 class Install
 {
@@ -57,7 +57,7 @@ class Install
     {
         switch ($this->getView()) {
             case $this::VIEW_INFO:
-                $ou = new \ACD\View\InstallInfo();
+                $ou = new InstallInfo();
                 $contentLoader = new ContentLoader();
                 $ou->addCollectionIndexes($contentLoader->getIndexes());
                 $userLoader = new UserLoader();

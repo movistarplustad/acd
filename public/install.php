@@ -1,7 +1,10 @@
 <?php
-namespace Acd;
+// namespace Acd;
 
-use \Acd\Controller\RolPermissionHttp;
+use Acd\Controller\RolPermissionHttp;
+use Acd\Controller\Install;
+use Acd\View\BaseSkeleton;
+use Acd\View\Tools;
 
 require '../autoload.php';
 require '../config/conf2.php';;
@@ -11,10 +14,10 @@ session_start();
 
 if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER']])) die();
 
-$action = Controller\Install::VIEW_INFO;
+$action = Install::VIEW_INFO;
 @$result = $_GET['r'];
 
-$installController = new Controller\Install();
+$installController = new Install();
 $installController->setView($action);
 $installController->setRequestUrl($_SERVER["REQUEST_URI"]); // For history back
 $installController->load();
@@ -25,13 +28,13 @@ try {
     $sContent = "404 element not found.";
 }
 
-$skeletonOu = new View\BaseSkeleton();
+$skeletonOu = new BaseSkeleton();
 $skeletonOu->setBodyClass('install');
 
 $skeletonOu->setHeadTitle($installController->getTitle());
 $skeletonOu->setHeaderMenu($installController->getHeaderMenuOu()->render());
 
-$toolsOu = new View\Tools();
+$toolsOu = new Tools();
 $toolsOu->setLogin($_SESSION['login']);
 $toolsOu->setRol($_SESSION['rol']);
 
