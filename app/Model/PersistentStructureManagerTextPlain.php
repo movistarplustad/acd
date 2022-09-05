@@ -9,7 +9,7 @@ class PersistentStructureManagerTextPlain implements iPersistentStructureManager
 {
 	public function loadAll()
 	{
-		$path = \Acd\conf::$DATA_PATH;
+		$path = $_ENV[ 'ACD_DATA_PATH'];
 		$content = file_get_contents($path);
 		//+d(json_decode($content, true));
 		return json_decode($content, true);
@@ -29,7 +29,7 @@ class PersistentStructureManagerTextPlain implements iPersistentStructureManager
 	}
 	public function save($structuresDo)
 	{
-		$path = \Acd\conf::$DATA_PATH;
+		$path = $_ENV[ 'ACD_DATA_PATH'];
 		/* Construct the json */
 		$data = $structuresDo->tokenizeData();
 		$tempPath = $path . '.tmp';
@@ -51,5 +51,17 @@ class PersistentStructureManagerTextPlain implements iPersistentStructureManager
 	public function loadEnumerated($id)
 	{
 		throw new PersistentStructureManagerMySqlException("Not implemented", self::SAVE_FAILED);
+	}
+	public function getIndexes()
+	{
+		// Currently no indexes are required
+	}
+	public function createIndexes()
+	{
+		// Currently no indexes are required
+	}
+	public function dropIndexes()
+	{
+		// Currently no indexes are required
 	}
 }

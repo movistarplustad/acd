@@ -13,8 +13,7 @@ class ContentLoader extends StructureDo
 	private $filters; // TODO
 	private $limitis;
 	private $persistentManager; // Load / update / save to persitent repository
-	public function __construct()
-	{
+	public function __construct() {
 		$this->setStructureLoaded(false);
 		$this->setLimits(new Limits());
 		parent::__construct();
@@ -31,20 +30,46 @@ class ContentLoader extends StructureDo
 	}
 	private function getManager()
 	{
-		switch ($this->getStorage()) {
-			case \Acd\conf::$STORAGE_TYPE_TEXTPLAIN:
+		return $this->getStorageManager($this->getStorage());
+		// switch ($this->getStorage()) {
+		// 	case $_ENV['ACD_STORAGE_TYPE_TEXTPLAIN:
+		// 		//echo "tipo texto";
+		// 		return new PersistentManagerTextPlain();
+		// 		break;
+		// 	case $_ENV['ACD_STORAGE_TYPE_MONGODB_LEGACY:
+		// 		//echo "tipo mongo legacy";
+		// 		return new PersistentManagerMongoDBLegacy();
+		// 		break;
+		// 	case $_ENV['ACD_STORAGE_TYPE_MONGODB:
+		// 		//echo "tipo mongo";
+		// 		return new PersistentManagerMongoDB();
+		// 		break;
+		// 	case $_ENV['ACD_STORAGE_TYPE_MYSQL:
+		// 		//echo "tipo mysql";
+		// 		return new PersistentManagerMySql();
+		// 		break;
+		// 	default:
+		// 		throw new PersistentStorageUnknownInvalidException("Invalid type of persistent storage " . $this->getStorage() . ".");
+		// 		break;
+		// }
+	}
+
+	private function getStorageManager(string $storage)
+	{
+		switch ($storage) {
+			case $_ENV[ 'ACD_STORAGE_TYPE_TEXTPLAIN']:
 				//echo "tipo texto";
 				return new PersistentManagerTextPlain();
 				break;
-			case \Acd\conf::$STORAGE_TYPE_MONGODB_LEGACY:
+			case $_ENV[ 'ACD_STORAGE_TYPE_MONGODB_LEGACY']:
 				//echo "tipo mongo legacy";
 				return new PersistentManagerMongoDBLegacy();
 				break;
-			case \Acd\conf::$STORAGE_TYPE_MONGODB:
+			case $_ENV[ 'ACD_STORAGE_TYPE_MONGODB']:
 				//echo "tipo mongo";
 				return new PersistentManagerMongoDB();
 				break;
-			case \Acd\conf::$STORAGE_TYPE_MYSQL:
+			case $_ENV[ 'ACD_STORAGE_TYPE_MYSQL']:
 				//echo "tipo mysql";
 				return new PersistentManagerMySql();
 				break;
@@ -53,30 +78,32 @@ class ContentLoader extends StructureDo
 				break;
 		}
 	}
+
 	private function getManagers()
 	{
 		// Return all active persistent managers
 		// TODO Unify with getManager -> similar code
 		$persistentManagers = [];
-		foreach (\Acd\conf::$STORAGE_TYPES as $idStorage => $storageType) {
+		foreach ($_ENV['ACD_STORAGE_TYPES'] as $idStorage => $storageType) {
 			if (!$storageType['disabled']) {
-				switch ($idStorage) {
-					case \Acd\conf::$STORAGE_TYPE_TEXTPLAIN:
-						$persistentManagers[] = new PersistentManagerTextPlain();
-						break;
-					case \Acd\conf::$STORAGE_TYPE_MONGODB_LEGACY:
-						$persistentManagers[] = new PersistentManagerMongoDBLegacy();
-						break;
-					case \Acd\conf::$STORAGE_TYPE_MONGODB:
-						$persistentManagers[] = new PersistentManagerMongoDB();
-						break;
-					case \Acd\conf::$STORAGE_TYPE_MYSQL:
-						$persistentManagers[] = new PersistentManagerMySql();
-						break;
-					default:
-						throw new PersistentStorageUnknownInvalidException("Invalid type of persistent storage " . $this->getStorage() . ".");
-						break;
-				}
+				$persistentManagers[] = $this->getStorageManager($idStorage);
+				// switch ($idStorage) {
+				// 	case $_ENV['ACD_STORAGE_TYPE_TEXTPLAIN:
+				// 		$persistentManagers[] = new PersistentManagerTextPlain();
+				// 		break;
+				// 	case $_ENV['ACD_STORAGE_TYPE_MONGODB_LEGACY:
+				// 		$persistentManagers[] = new PersistentManagerMongoDBLegacy();
+				// 		break;
+				// 	case $_ENV['ACD_STORAGE_TYPE_MONGODB:
+				// 		$persistentManagers[] = new PersistentManagerMongoDB();
+				// 		break;
+				// 	case $_ENV['ACD_STORAGE_TYPE_MYSQL:
+				// 		$persistentManagers[] = new PersistentManagerMySql();
+				// 		break;
+				// 	default:
+				// 		throw new PersistentStorageUnknownInvalidException("Invalid type of persistent storage " . $this->getStorage() . ".");
+				// 		break;
+				// }
 			}
 		}
 		return $persistentManagers;
@@ -213,11 +240,11 @@ class ContentLoader extends StructureDo
 						mkdir($dirPath, 0755, true);
 					}
 					switch ($uploadData['origin']) {
-						case \Acd\conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_UPLOAD:
+						case $_ENV[ 'ACD_DATA_CONTENT_BINARY_ORIGIN_FORM_UPLOAD']:
 							move_uploaded_file($uploadData['tmp_name'], $destinationPath);
 							break;
 
-						case \Acd\conf::$DATA_CONTENT_BINARY_ORIGIN_FORM_PATH:
+						case $_ENV['ACD_DATA_CONTENT_BINARY_ORIGIN_FORM_PATH ']:
 							copy($uploadData['tmp_name'], $destinationPath);
 							break;
 
@@ -265,6 +292,34 @@ class ContentLoader extends StructureDo
 				}
 			}
 		}
+	}
+	// Installation
+	public function getIndexes()
+	{
+		// For each manager it returns a list of indexes
+		$indexes = [];
+		foreach ($this->getManagers() as $persistentManager) {
+			$indexes[get_class($persistentManager)] = $persistentManager->getIndexes();
+		}
+		return $indexes;
+	}
+	public function createIndexes(): array
+	{
+		// For each manager it returns a list of indexes
+		$indexes = [];
+		foreach ($this->getManagers() as $persistentManager) {
+			$indexes[get_class($persistentManager)] = $persistentManager->createIndexes();
+		}
+		return $indexes;
+	}
+	public function dropIndexes(): array
+	{
+		// For each manager it returns a list of indexes
+		$indexes = [];
+		foreach ($this->getManagers() as $persistentManager) {
+			$indexes[get_class($persistentManager)] = $persistentManager->dropIndexes();
+		}
+		return $indexes;
 	}
 
 	public function setLimits($limits)

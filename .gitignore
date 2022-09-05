@@ -3,3 +3,21 @@ composer.lock
 docs
 vendor
 coverage
+
+# Sublime text
+acd.sublime-project
+acd.sublime-workspace
+
+# Persisten data
+data/*
+
+# Local configuration
+conf.local.php
+
+# temp files
+*.swp
+
+# Pruebas
+public/borrador
+public/_
+

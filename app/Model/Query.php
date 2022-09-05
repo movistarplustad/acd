@@ -31,7 +31,7 @@ class Query
 			return $this->condition;
 		}
 		else {
-			return isset($this->condition[$condition])  ? $this->condition[$condition] : null;
+			return isset($this->condition[$condition]) ? $this->condition[$condition] : null;
 		}
 	}
 	public function setLimits($limits) {

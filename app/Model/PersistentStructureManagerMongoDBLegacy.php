@@ -9,8 +9,8 @@ class PersistentStructureManagerMongoDBLegacy implements iPersistentStructureMan
 	private $enumeratedManager;
 	public function initialize() {
 		try {
-			$this->mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-			$this->db = $this->mongo->selectDB(\Acd\conf::$MONGODB_DB);
+			$this->mongo = new \MongoClient($_ENV['ACD_MONGODB_SERVER']);
+			$this->db = $this->mongo->selectDB($_ENV['ACD_MONGODB_DB']);
 			return true;
 		}
 		catch (MongoConnectionException $e) {
@@ -85,6 +85,15 @@ class PersistentStructureManagerMongoDBLegacy implements iPersistentStructureMan
 	public function loadEnumerated($id) {
 		$enumeratedDataManager = $this->getEnumeratedManager();
 		return $enumeratedDataManager->load($id);
+	}
+	public function getIndexes() {
+		// Currently no indexes are required
+	}
+	public function createIndexes() {
+		// Currently no indexes are required
+	}
+	public function dropIndexes() {
+		// Currently no indexes are required
 	}
 }
 /*

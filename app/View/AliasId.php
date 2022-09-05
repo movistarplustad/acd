@@ -20,7 +20,7 @@ class AliasId extends Template {
 	}
 
 	public function render($tpl = '') {
-		$tpl = \Acd\conf::$DIR_TEMPLATES.'/AliasId.tpl';
+		$tpl = $_ENV[ 'ACD_DIR_TEMPLATES'].'/AliasId.tpl';
 		return parent::render($tpl);
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 namespace Acd\Model;
-use Acd\conf;
+// use Acd\conf;
 
 class AuthInvalidUserException extends \exception {}
 class Auth  {
@@ -46,10 +46,10 @@ class Auth  {
 
 	// TODO QUITAR
 	private static function persistentFilePath($login) {
-		return conf::$PATH_AUTH_PERMANENT_LOGIN_DIR.'/'.hash('sha1', $login);
+		return $_ENV['ACD_PATH_AUTH_PERMANENT_LOGIN_DIR'].'/'.hash('sha1', $login);
 	}
 	public static function isLoged() {
-		if (conf::$USE_AUTHENTICATION === false) {
+		if ($_ENV['ACD_USE_AUTHENTICATION'] === false) {
 			Auth::loginByFake();
 			return true;
 		}
@@ -57,16 +57,20 @@ class Auth  {
 			return true;
 		}
 		else {
-			$loginCookie = isset($_COOKIE[conf::$COOKIE_PREFIX.'login']) ? $_COOKIE[conf::$COOKIE_PREFIX.'login'] : null;
-			$token = isset($_COOKIE[conf::$COOKIE_PREFIX.'token']) ? $_COOKIE[conf::$COOKIE_PREFIX.'token'] : null;
+			$loginCookie = isset($_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'login']) ? $_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'login'] : null;
+			$token = isset($_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'token']) ? $_COOKIE[$_ENV['ACD_COOKIE_PREFIX '].'token'] : null;
 
 			return Auth::loginByPersintence($loginCookie, $token);
 		}
 	}
 
+	public static function getRol() {
+		return $_SESSION['rol'];
+	}
+
 	// TODO: Borrar
 	protected static function loadAllCredentials() {
-		$path = conf::$PATH_AUTH_CREDENTIALS_FILE;
+		$path = $_ENV[ 'ACD_PATH_AUTH_CREDENTIALS_FILE'];
 		$content = file_get_contents($path);
 		$aCredentials = json_decode($content, true);
 
@@ -86,9 +90,9 @@ class Auth  {
 		// Remember login
 		if ($bLoginCorrect && $remember) {
 			$token = $userLoader->persistSession($user);
-			$expiration = time()+conf::$AUTH_PERSITENT_EXPIRATION_TIME;
-			setcookie(conf::$COOKIE_PREFIX.'login', $user->getId(), $expiration , '/', '', 0, 0);
-			setcookie(conf::$COOKIE_PREFIX.'token', $token, $expiration, '/', '', 0, 1);
+			$expiration = time()+$_ENV[ 'ACD_AUTH_PERSITENT_EXPIRATION_TIME'];
+			setcookie($_ENV['ACD_COOKIE_PREFIX'].'login', $user->getId(), $expiration , '/', '', 0, 0);
+			setcookie($_ENV['ACD_COOKIE_PREFIX'].'token', $token, $expiration, '/', '', 0, 1);
 		}
 
 		if ($bLoginCorrect) {
@@ -118,7 +122,7 @@ class Auth  {
 			$_SESSION['loged'] = true;
 			$_SESSION['login_method'] = 'fake';
 			$_SESSION['login'] = 'no-login';
-			$_SESSION['rol'] = conf::$ROL_DEVELOPER ;
+			$_SESSION['rol'] = $_ENV[ 'ACD_ROL_DEVELOPER'];
 	}
 	public static function logout() {
 		// Inicializar la sesión.
@@ -144,13 +148,13 @@ class Auth  {
 
 		// Eliminar los datos persistentes
 		$userLoader = new UserLoader();
-		$loginCookie = isset($_COOKIE[conf::$COOKIE_PREFIX.'login']) ? $_COOKIE[conf::$COOKIE_PREFIX.'login'] : null;
-		$token = isset($_COOKIE[conf::$COOKIE_PREFIX.'token']) ? $_COOKIE[conf::$COOKIE_PREFIX.'token'] : null;
+		$loginCookie = isset($_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'login']) ? $_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'login'] : null;
+		$token = isset($_COOKIE[$_ENV['ACD_COOKIE_PREFIX '].'token']) ? $_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'token'] : null;
 		if($token !== '') {
 			$userLoader->deletePersistSession($token);
 		}
-		setcookie(conf::$COOKIE_PREFIX.'login', '', time() - 42000, '/', '', 0, 0);
-		setcookie(conf::$COOKIE_PREFIX.'token', '', time() - 42000, '/', '', 0, 0);
+		setcookie($_ENV['ACD_COOKIE_PREFIX'].'login', '', time() - 42000, '/', '', 0, 0);
+		setcookie($_ENV['ACD_COOKIE_PREFIX'].'token', '', time() - 42000, '/', '', 0, 0);
 	}
 	public static function getCredentials($login) {
 		$aCredentials = Auth::loadAllCredentials();
@@ -175,7 +179,7 @@ class Auth  {
 		if ($login === '' || $password === '') {
 			throw new AuthInvalidUserException("Invalid login or password [$login] : [$password]");
 		}
-		if ($rol !== conf::$ROL_DEVELOPER && $rol !== conf::$ROL_EDITOR) {
+		if ($rol !== $_ENV[ 'ACD_ROL_DEVELOPER'] && $rol !== $_ENV['ACD_ROL_EDITOR']) {
 			throw new AuthInvalidUserException("Invalid rol [$rol]");
 		}
 		$aCredentials = Auth::loadAllCredentials();
@@ -183,8 +187,8 @@ class Auth  {
 		$aCredentials[$login]['rol'] = $rol;
 		$jsonCredentials = json_encode($aCredentials);
 
-		$path = conf::$PATH_AUTH_CREDENTIALS_FILE;
-		$tempPath = conf::$PATH_AUTH_CREDENTIALS_FILE.'.tmp';
+		$path = $_ENV[ 'ACD_PATH_AUTH_CREDENTIALS_FILE'];
+		$tempPath = $_ENV['ACD_PATH_AUTH_CREDENTIALS_FILE'].'.tmp';
 		if (!$handle = fopen($tempPath, 'a')) {
 			 echo "Cannot open file ($tempPath)";
 			 exit;

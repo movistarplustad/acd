@@ -4,19 +4,19 @@ namespace Acd\Model;
 class EnumeratedLoader
 {
 	private function getManager() {
-		switch (\Acd\conf::$DEFAULT_STORAGE) {
-			case \Acd\conf::$STORAGE_TYPE_MONGODB_LEGACY:
+		switch ($_ENV['ACD_DEFAULT_STORAGE']) {
+			case $_ENV[ 'ACD_STORAGE_TYPE_MONGODB_LEGACY']:
 				return new PersistentEnumeratedManagerMongoDBLegacy();
 				break;
-			case \Acd\conf::$STORAGE_TYPE_MONGODB:
+			case $_ENV[ 'ACD_STORAGE_TYPE_MONGODB']:
 				return new PersistentEnumeratedManagerMongoDB();
 				break;
 /*
-			case \Acd\conf::$STORAGE_TYPE_TEXTPLAIN:
+			case $_ENV['ACD_STORAGE_TYPE_TEXTPLAIN:
 				// TODO implement
 				return new PersistentEnumeratedManagerTextPlain();
 				break;
-			case \Acd\conf::$STORAGE_TYPE_MYSQL:
+			case $_ENV['ACD_STORAGE_TYPE_MYSQL:
 				// TODO implement
 				return new PersistentEnumeratedManagerMySql();
 				break;
@@ -41,5 +41,17 @@ class EnumeratedLoader
 		$dataManager = $this->getManager();
 		return $dataManager->delete($id);
 	}
-
+	// Install
+	public function getIndexes() {
+		$dataManager = $this->getManager();
+		return $dataManager->getIndexes();
+	}
+	public function createIndexes() {
+		$dataManager = $this->getManager();
+		return $dataManager->createIndexes();
+	}
+	public function dropIndexes() {
+		$dataManager = $this->getManager();
+		return $dataManager->dropIndexes();
+	}
 }

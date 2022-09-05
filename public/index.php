@@ -1,36 +1,44 @@
 <?php
+// namespace Acd;
 
-namespace Acd;
 
-require('../autoload.php');
-
-use \Acd\Model\SessionNavigation;
+use Acd\Model\SessionNavigation;
 use Acd\Model\Auth;
-
-
+use Acd\Model\StructureDo;
+use Acd\Model\EnumeratedLoader;
+use Acd\Model\Query;
+use Acd\Model\FieldDo;
+use Acd\View\Tools;
+use Acd\View\HeaderMenu;
+// use Acd\Conf\conf;
+require '../autoload.php';
+require '../config/conf2.php';
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
+require ('../offline.php');
 
-require('../offline.php');
-
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+//$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/..');
+//$dotenv->safeLoad();
+// var_dump('assd', $_ENV['ACD_SESSION_GC_MAXLIFETIME']);die;
+ini_set('session.gc_maxlifetime', $_ENV['ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
 if (!Auth::isLoged()) {
 	$action = 'login';
-} else {
+}
+else {
 	// Temporal patch
 	if ($_SESSION['rol'] == 'editor') {
 		header('Location: content.php');
 		die();
 	}
-	$structures = new Model\StructuresDo();
-	$structures->loadFromFile(conf::$DATA_PATH);
+	$structures = new Acd\Model\StructuresDo();
+	$structures->loadFromFile($_ENV['ACD_DATA_PATH']);
 	$action = isset($_GET['a']) ? $_GET['a'] : 'list';
 }
 /* Show action block */
-$skeletonOu = new View\BaseSkeleton();
-$contentOu = new View\ContentAdmin();
+$skeletonOu = new Acd\View\BaseSkeleton();
+$contentOu = new Acd\View\ContentAdmin();
 switch ($action) {
 	case 'login':
 		$skeletonOu->setBodyClass('login');
@@ -38,18 +46,18 @@ switch ($action) {
 		$contentOu->setLogin(isset($_GET['login']) ? $_GET['login'] : '');
 		$contentOu->setRemember(isset($_GET['remember']) && $_GET['remember'] === '1');
 		// Referer
-		if (isset($_GET['re'])) {
+		if(isset($_GET['re'])) {
 			$contentOu->setPostLogin($_GET['re']);
 		}
 		break;
 	case 'new':
 		$bResult = isset($_GET['r']) && $_GET['r'] === 'ko' ? false : true;
 
-		$structure = new Model\StructureDo();
+		$structure = new StructureDo();
 
 		$skeletonOu->setBodyClass('new');
 		$contentOu->setActionType('new');
-		$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
+		$contentOu->setStorageTypes($_ENV['ACD_STORAGE_TYPES']);
 		$contentOu->setStorage($structure->getStorage());
 
 		// back button
@@ -63,10 +71,10 @@ switch ($action) {
 		]);
 		$navigation->save();
 
-		$headerMenuOu = new View\HeaderMenu();
+		$headerMenuOu = new HeaderMenu();
 		$headerMenuOu->setBack($back);
 
-		$toolsOu = new View\Tools();
+		$toolsOu = new Tools();
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
@@ -84,13 +92,13 @@ switch ($action) {
 			$skeletonOu->setBodyClass('edit');
 			$contentOu->setActionType('edit');
 			$contentOu->setStructureName($structure->getName());
-			$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
+			$contentOu->setStorageTypes($_ENV['ACD_STORAGE_TYPES']);
 			$contentOu->setStorage($structure->getStorage());
-			$contentOu->setFieldTypes(Model\FieldDo::getAvailableTypes());
+			$contentOu->setFieldTypes(FieldDo::getAvailableTypes());
 			$contentOu->setFields($structure->getFields());
 
-			$enumeratedLoader = new Model\EnumeratedLoader();
-			$query = new Model\Query();
+			$enumeratedLoader = new EnumeratedLoader();
+			$query = new Query();
 			$query->setType('all');
 			$enumerated = $enumeratedLoader->load($query);
 			$contentOu->setEnumeratedList($enumerated);
@@ -107,18 +115,18 @@ switch ($action) {
 		$navigation->push([
 			'hash' => "edit_structure - $id",
 			'url' => $_SERVER["REQUEST_URI"],
-			'title' => 'Edit structure ' . $structure->getName()
+			'title' => 'Edit structure '.$structure->getName()
 		]);
 		$navigation->save();
 
-		$headerMenuOu = new View\HeaderMenu();
+		$headerMenuOu = new HeaderMenu();
 		$headerMenuOu->setBack($back);
 
-		$toolsOu = new View\Tools();
+		$toolsOu = new Tools();
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
-		$skeletonOu->setHeadTitle('Edit structure ' . $structure->getName());
+		$skeletonOu->setHeadTitle('Edit structure '.$structure->getName());
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;
@@ -130,17 +138,18 @@ switch ($action) {
 			/* Error, intentando editar una estructura que no existe */
 			$skeletonOu->setBodyClass('error');
 			$contentOu->setActionType('error');
-		} else {
+		}
+		else {
 			$skeletonOu->setBodyClass('clone');
 			$contentOu->setActionType('clone');
-			$contentOu->setStructureName('[copy] ' . $structure->getName());
-			$contentOu->setStorageTypes(conf::$STORAGE_TYPES);
+			$contentOu->setStructureName('[copy] '.$structure->getName());
+			$contentOu->setStorageTypes($_ENV['ACD_STORAGE_TYPES']);
 			$contentOu->setStorage($structure->getStorage());
-			$contentOu->setFieldTypes(Model\FieldDo::getAvailableTypes());
+			$contentOu->setFieldTypes(FieldDo::getAvailableTypes());
 			$contentOu->setFields($structure->getFields());
 
-			$enumeratedLoader = new Model\EnumeratedLoader();
-			$query = new Model\Query();
+			$enumeratedLoader = new EnumeratedLoader();
+			$query = new Query();
 			$query->setType('all');
 			$enumerated = $enumeratedLoader->load($query);
 			$contentOu->setEnumeratedList($enumerated);
@@ -153,24 +162,24 @@ switch ($action) {
 		$navigation->push([
 			'hash' => "clone_structure - $id",
 			'url' => $_SERVER["REQUEST_URI"],
-			'title' => 'Clone structure ' . $structure->getName()
+			'title' => 'Clone structure '.$structure->getName()
 		]);
 		$navigation->save();
 
-		$headerMenuOu = new View\HeaderMenu();
+		$headerMenuOu = new HeaderMenu();
 		$headerMenuOu->setBack($back);
 
-		$toolsOu = new View\Tools();
+		$toolsOu = new Tools();
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
-		$skeletonOu->setHeadTitle('Clone structure ' . $structure->getName());
+		$skeletonOu->setHeadTitle('Clone structure '.$structure->getName());
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 		break;
 	case 'list':
 	default:
-		$toolsOu = new View\Tools();
+		$toolsOu = new Tools();
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
@@ -185,7 +194,7 @@ switch ($action) {
 		]);
 		$navigation->save();
 
-		$headerMenuOu = new View\HeaderMenu();
+		$headerMenuOu = new HeaderMenu();
 		$headerMenuOu->setBack($back);
 
 		$contentOu->setActionType('index');

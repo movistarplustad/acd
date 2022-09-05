@@ -1,0 +1,11 @@
+{
+		"developer" : [
+			"login",
+			"edit-structures",
+			"manage-content"
+		],
+		"editor" : [
+			"login",
+			"manage-content"
+		]
+}

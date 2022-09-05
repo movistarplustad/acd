@@ -14,4 +14,8 @@ interface iPersistentEnumeratedManager
 	public function isInitialized(); // Inform if the storage it's ready to use
 	public function load($id);
 	public function save($EnumeratedDo);
+	// Install. Currently no indexes are required
+	public function getIndexes();
+	public function createIndexes();
+	public function dropIndexes();
 }

@@ -4,30 +4,20 @@
 //	id - content id
 //	idt - structure type id
 namespace Acd;
+use \Acd\Controller\RolPermissionHttp;
 
-require ('../autoload.php');
+require '../autoload.php';
+require '../config/conf2.php';
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
-if (!Model\Auth::isLoged()) {
-	$action = 'login';
-	header('Location: index.php?re='.urlencode($_SERVER["REQUEST_URI"]));
-	return;
-}
-else {
-	if ($_SESSION['rol'] != \Acd\conf::$ROL_DEVELOPER && $_SESSION['rol'] != \Acd\conf::$ROL_EDITOR) {
-		header('HTTP/1.0 403 Forbidden');
-		echo 'Unauthorized, only admin can show this section.';
-		die();
-	}
-	else  {
-		$action = 'ok';
-		@$id = $_GET['id']; // id content
-		@$idt = $_GET['idt']; // id structure
-		//$action = 'show';
-	}
-}
+if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER'], $_ENV['ACD_ROL_EDITOR']])) die();
+
+$action = 'ok';
+@$id = $_GET['id']; // id content
+@$idt = $_GET['idt']; // id structure
+//$action = 'show';
 
 $relationController = new Controller\Relation();
 $relationController->setIdContent($id);

@@ -37,20 +37,20 @@ class UserDo
 
 
 	private function getManager() {
-		switch (\Acd\conf::$DEFAULT_STORAGE) {
-			case \Acd\conf::$STORAGE_TYPE_TEXTPLAIN:
+		switch ($_ENV['ACD_DEFAULT_STORAGE']) {
+			case $_ENV[ 'ACD_STORAGE_TYPE_TEXTPLAIN']:
 				//echo "tipo texto";
 				return new PersistentStructureManagerTextPlain();
 				break;
-			case \Acd\conf::$STORAGE_TYPE_MONGODB_LEGACY:
+			case $_ENV[ 'ACD_STORAGE_TYPE_MONGODB_LEGACY']:
 				//echo "tipo mongo";
 				return new PersistentStructureManagerMongoDBLegacy();
 				break;
-			case \Acd\conf::$STORAGE_TYPE_MONGODB:
+			case $_ENV[ 'ACD_STORAGE_TYPE_MONGODB']:
 				//echo "tipo mongo";
 				return new PersistentStructureManagerMongoDB();
 				break;
-			case \Acd\conf::$STORAGE_TYPE_MYSQL:
+			case $_ENV[ 'ACD_STORAGE_TYPE_MYSQL']:
 				//echo "tipo mysql";
 				return new PersistentStructureManagerMySql();
 				break;

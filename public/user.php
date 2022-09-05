@@ -1,37 +1,31 @@
 <?php
 namespace Acd;
 
-require('../autoload.php');
+use \Acd\Controller\RolPermissionHttp;
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+require '../autoload.php';
+require '../config/conf2.php';
+
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
-if (!Model\Auth::isLoged()) {
-    $action = 'login';
-    header('Location: index.php?re='.urlencode($_SERVER["REQUEST_URI"]));
-    return;
-} else {
-    if ($_SESSION['rol'] == 'editor') {
-        header('HTTP/1.0 403 Forbidden');
-        echo 'Unauthorized, only admin can show this section.';
-        die();
-    } else {
-        @$action = $_GET['a'];
-        switch ($action) {
-            case 'edit':
-                $action = Controller\User::VIEW_DETAIL;
-                break;
-            case 'new':
-                $action = Controller\User::VIEW_DETAIL_NEW;
-                break;
-            default:
-                $action = Controller\User::VIEW_LIST;
-                break;
-        }
-        @$id = $_GET['id'];
-        @$result = $_GET['r'];
-    }
+if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER']])) die();
+
+@$action = $_GET['a'];
+switch ($action) {
+	case 'edit':
+		$action = Controller\User::VIEW_DETAIL;
+		break;
+	case 'new':
+		$action = Controller\User::VIEW_DETAIL_NEW;
+		break;
+	default:
+		$action = Controller\User::VIEW_LIST;
+		break;
 }
+@$id = $_GET['id'];
+@$result = $_GET['r'];
+
 
 /* TODO: Revisar */
 $userController = new Controller\User();

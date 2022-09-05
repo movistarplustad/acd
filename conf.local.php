@@ -1,5 +1,4 @@
 <?php
-
 namespace Acd;
 
 conf::$DEFAULT_STORAGE = conf::$STORAGE_TYPE_MONGODB;

@@ -10,7 +10,7 @@ class EnumeratedList extends Template {
 	}
 
 	public function render($tpl = '') {
-		$tpl = \Acd\conf::$DIR_TEMPLATES.'/EnumeratedList.tpl';
+		$tpl = $_ENV[ 'ACD_DIR_TEMPLATES'].'/EnumeratedList.tpl';
 		return parent::render($tpl);
 	}
 }

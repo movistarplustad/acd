@@ -17,7 +17,7 @@
 <body class="<?=$bodyClass?>">
 <header>
 	<?=$headerMenu?>
-	<h1>Acd</h1>
+	<h1>ACD</h1>
 </header>
 <div id="wrapper">
 	<?php

@@ -11,8 +11,8 @@ class PersistentManagerMongoDBLegacy implements iPersistentManager
 	private $structuresCache;
 	public function initialize($structureDo)
 	{
-		$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-		$this->db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
+		$mongo = new \MongoClient($_ENV['ACD_MONGODB_SERVER']);
+		$this->db = $mongo->selectDB($_ENV['ACD_MONGODB_DB']);
 	}
 	public function isInitialized($structureDo)
 	{
@@ -662,5 +662,14 @@ class PersistentManagerMongoDBLegacy implements iPersistentManager
 		}
 
 		return $result;
+	}
+	public function getIndexes() {
+		throw new PersistentManagerMongoDBException("Not implemented", self::GET_INDEXES_FAILED);
+	}
+	public function createIndexes() {
+		throw new PersistentManagerMongoDBException("Not implemented", self::CREATE_INDEXES_FAILED);
+	}
+	public function dropIndexes() {
+		throw new PersistentManagerMongoDBException("Not implemented", self::DROP_INDEXES_FAILED);
 	}
 }

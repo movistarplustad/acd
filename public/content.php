@@ -1,14 +1,18 @@
 <?php
 namespace Acd;
 use \Acd\Model\SessionNavigation;
+use \Acd\Controller\RolPermissionHttp;
 
-require ('../autoload.php');
+require '../autoload.php';
+require '../config/conf2.php';
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
 require ('../offline.php');
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
+
+if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER'], $_ENV['ACD_ROL_EDITOR']])) die();
 
 function loadNewRef($idRef, $idStructure) {
 	if (!$idRef || !$idStructure) {

@@ -37,7 +37,7 @@ class ContentEditSearch extends Template {
 	}
 
 	public function render($tpl = '') {
-		$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentEditSearch.tpl';
+		$tpl = $_ENV[ 'ACD_DIR_TEMPLATES'].'/ContentEditSearch.tpl';
 		return parent::render($tpl);
 	}
 }

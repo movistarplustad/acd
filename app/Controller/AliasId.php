@@ -1,11 +1,13 @@
 <?php
+
 namespace Acd\Controller;
 
 use \Acd\View\HeaderMenu;
 use \Acd\Model\ContentLoader;
 use \Acd\Model\SessionNavigation;
 // Output
-class AliasId {
+class AliasId
+{
 	private $aliasId;
 	private $aliasIdMatches;
 	private $view;
@@ -15,43 +17,55 @@ class AliasId {
 	private $requestUrl;
 	const VIEW_LIST = 'list'; // List of all alias-id matches
 
-	public function __construct() {
+	public function __construct()
+	{
 		$this->initializeSessionNavigation();
 		$this->setAliasIdMatches([]);
 	}
 
 	/* Setters and getters attributes */
-	public function setAliasId($aliasId) {
+	public function setAliasId($aliasId)
+	{
 		$this->aliasId = (string)$aliasId;
 	}
-	public function getAliasId() {
+	public function getAliasId()
+	{
 		return $this->aliasId;
 	}
-	public function setView($view) {
+	public function setView($view)
+	{
 		$this->view = (string)$view;
 	}
-	public function getView() {
+	public function getView()
+	{
 		return $this->view;
 	}
-	public function setResultDesc($resultDesc) {
+	public function setResultDesc($resultDesc)
+	{
 		$this->resultDesc = $resultDesc;
 	}
-	public function getResultDesc() {
+	public function getResultDesc()
+	{
 		return $this->resultDesc;
 	}
-	private function setContent($content) {
+	private function setContent($content)
+	{
 		$this->content = $content;
 	}
-	private function getContent() {
+	private function getContent()
+	{
 		return $this->content;
 	}
-	private function setAliasIdMatches($aliasIdMatches) {
+	private function setAliasIdMatches($aliasIdMatches)
+	{
 		$this->aliasIdMatches = $aliasIdMatches;
 	}
-	private function getAliasIdMatches() {
+	private function getAliasIdMatches()
+	{
 		return $this->aliasIdMatches;
 	}
-	public function load() {
+	public function load()
+	{
 		$contentLoader = new ContentLoader();
 		$matchContentsIds = $contentLoader->loadContent('difuse-alias-id', ['id' => $this->getAliasId()]);
 
@@ -63,23 +77,28 @@ class AliasId {
 		}
 		$this->setAliasIdMatches($matchContents);
 	}
-	public function getTitle() {
+	public function getTitle()
+	{
 		return 'Relations of ';
 	}
 	// back button
-	private function initializeSessionNavigation() {
+	private function initializeSessionNavigation()
+	{
 		$this->sessionNavigation = new SessionNavigation();
 		$this->sessionNavigation->load();
 	}
-	public function setRequestUrl($url) {
+	public function setRequestUrl($url)
+	{
 		$this->requestUrl = $url;
 	}
-	public function getHeaderMenuOu() {
+	public function getHeaderMenuOu()
+	{
 		$headerMenuOu = new HeaderMenu();
 		$headerMenuOu->setBack(!$this->sessionNavigation->isEmpty());
 		return $headerMenuOu;
 	}
-	public function render() {
+	public function render()
+	{
 		$ou = new \Acd\View\AliasId();
 		$ou->setContentTitle($this->getAliasId());
 		$ou->setAliasId($this->getAliasId());
@@ -87,9 +106,9 @@ class AliasId {
 		$ou->setResultDesc($this->getResultDesc());
 
 		$this->sessionNavigation->push([
-			'hash' => 'aliasId - '.$this->getAliasId(), // Page hash, consecutive same hash no add navigation
+			'hash' => 'aliasId - ' . $this->getAliasId(), // Page hash, consecutive same hash no add navigation
 			'url' => $this->requestUrl,
-			'title' => $this->getTitle().$this->getAliasId()
+			'title' => $this->getTitle() . $this->getAliasId()
 		]);
 		$this->sessionNavigation->save();
 

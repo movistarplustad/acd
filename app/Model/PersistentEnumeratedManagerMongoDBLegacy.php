@@ -5,8 +5,8 @@ class PersistentEnumeratedManagerMongoDBLegacy implements iPersistentEnumeratedM
 {
 	private $db;
 	public function initialize() {
-		$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
-		$this->db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
+		$mongo = new \MongoClient($_ENV['ACD_MONGODB_SERVER']);
+		$this->db = $mongo->selectDB($_ENV['ACD_MONGODB_DB']);
 	}
 	public function isInitialized() {
 		return isset($this->db);
@@ -76,5 +76,14 @@ class PersistentEnumeratedManagerMongoDBLegacy implements iPersistentEnumeratedM
 		$document['id'] = (string) $document['_id'];
 		unset($document['_id']);
 		return $document;
+	}
+	public function getIndexes() {
+		// Currently no indexes are required
+	}
+	public function createIndexes() {
+		// Currently no indexes are required
+	}
+	public function dropIndexes() {
+		// Currently no indexes are required
 	}
 }

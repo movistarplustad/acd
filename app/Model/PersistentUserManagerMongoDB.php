@@ -8,8 +8,8 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
     {
         // If not is initialized do the initializacion
         if (!$this->isInitialized()) {
-            $this->mongo = new \MongoDB\Client(\Acd\conf::$MONGODB_SERVER);
-            $this->db = $this->mongo->selectDatabase(\Acd\conf::$MONGODB_DB);
+            $this->mongo = new \MongoDB\Client($_ENV['ACD_MONGODB_SERVER']);
+            $this->db = $this->mongo->selectDatabase($_ENV['ACD_MONGODB_DB']);
         }
     }
     public function isInitialized()
@@ -137,6 +137,29 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
                 return null;
             }
         }
+    }
+    public function getIndexes() {
+        $this->initialize();
+        $indexes = [];
+        $mongoCollection = $this->db->selectCollection('authPermanent');
+        foreach ($mongoCollection->listIndexes() as $index) {
+            $indexes[] = $index;
+        }
+        return $indexes;
+    }
+    public function createIndexes() {
+        $this->initialize();
+        $mongoCollection = $this->db->selectCollection('authPermanent');
+        $indexNames = $mongoCollection->createIndexes([
+            [ 'key' => [ 'login' => 1] ] ,
+        ]);
+        return $indexNames;
+    }
+    public function dropIndexes() {
+        $this->initialize();
+        $mongoCollection = $this->db->selectCollection('authPermanent');
+        $resContent = $mongoCollection->dropIndexes();
+        return true;
     }
     public function normalizeDocument($document)
     {

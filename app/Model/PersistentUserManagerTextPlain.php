@@ -11,17 +11,17 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
 {
     private function getStoragePath($structureDo)
     {
-        return \Acd\conf::$DATA_DIR_PATH . '/' . $structureDo->getId() . '.json';
+        return $_ENV[ 'ACD_DATA_DIR_PATH'] . '/' . $structureDo->getId() . '.json';
     }
     private static function persistentFilePath($token)
     {
-        return conf::$PATH_AUTH_PERMANENT_LOGIN_DIR . '/' . $token;
+        return $_ENV['$PATH_AUTH_PERMANENT_LOGIN_DIR'] . '/' . $token;
     }
     public function initialize()
     {
         if (!$this->isInitialized()) {
             $emptyData = '{}';
-            $path = \Acd\conf::$PATH_AUTH_CREDENTIALS_FILE;
+            $path = $_ENV[ 'ACD_PATH_AUTH_CREDENTIALS_FILE'];
             if (!$handle = fopen($path, 'a')) {
                 throw new PersistentManagerTextPlainException("Cannot open file ($path) to append data", 1);
                 exit;
@@ -37,7 +37,7 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
 
     public function isInitialized()
     {
-        return is_readable(\Acd\conf::$PATH_AUTH_CREDENTIALS_FILE);
+        return is_readable($_ENV['ACD_PATH_AUTH_CREDENTIALS_FILE']);
     }
     public function load($query)
     {
@@ -67,7 +67,7 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
     private function loadAll($query)
     {
         try {
-            $path = \Acd\conf::$PATH_AUTH_CREDENTIALS_FILE;
+            $path = $_ENV[ 'ACD_PATH_AUTH_CREDENTIALS_FILE'];
             $content = file_get_contents($path);
             $aCredentials = json_decode($content, true);
             $userCollectionFound = new Collection();
@@ -85,7 +85,7 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
     }
     private function saveAll($allUsers)
     {
-        $path = \Acd\conf::$PATH_AUTH_CREDENTIALS_FILE;
+        $path = $_ENV[ 'ACD_PATH_AUTH_CREDENTIALS_FILE'];
         $aData = array();
         foreach ($allUsers as $user) {
             $aData[$user->getId()] = $user->tokenizeData();
@@ -179,11 +179,11 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
     }
     public function loadUserPersistSessions($id)
     {
-        if ($id && $handle = opendir(conf::$PATH_AUTH_PERMANENT_LOGIN_DIR)) {
+        if ($id && $handle = opendir($_ENV['$PATH_AUTH_PERMANENT_LOGIN_DIR'])) {
             $authPersistentCollectionFound = new Collection();
             while (false !== ($entry = readdir($handle))) {
-                if (is_file(conf::$PATH_AUTH_PERMANENT_LOGIN_DIR . "/$entry")) {
-                    $documentFound = file_get_contents(conf::$PATH_AUTH_PERMANENT_LOGIN_DIR . "/$entry");
+                if (is_file($_ENV['PATH_AUTH_PERMANENT_LOGIN_DIR'] . "/$entry")) {
+                    $documentFound = file_get_contents($_ENV['PATH_AUTH_PERMANENT_LOGIN_DIR'] . "/$entry");
                     $documentFound = json_decode($documentFound, true);
                     if ($documentFound['login'] === $id) {
                         $authPersistent = new AuthPersistentDo();
@@ -195,6 +195,18 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
             closedir($handle);
             return $authPersistentCollectionFound;
         }
+    }
+    public function getIndexes()
+    {
+        throw new PersistentManagerTextPlainException("Not implemented", self::GET_INDEXES_FAILED);
+    }
+    public function createIndexes()
+    {
+        throw new PersistentManagerTextPlainException("Not implemented", self::CREATE_INDEXES_FAILED);
+    }
+    public function dropIndexes()
+    {
+        throw new PersistentManagerTextPlainException("Not implemented", self::DROP_INDEXES_FAILED);
     }
     public function normalizeDocument($document)
     {

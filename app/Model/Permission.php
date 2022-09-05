@@ -7,7 +7,7 @@ class Permission {
 	public function __construct() {
 	}
 	public function load() {
-		$content = file_get_contents(\Acd\conf::$PERMISSION_PATH);
+		$content = file_get_contents($_ENV['ACD_PERMISSION_PATH']);
 		$this->map = json_decode($content);
 	}
 	public function hasAccess($rol, $item) {

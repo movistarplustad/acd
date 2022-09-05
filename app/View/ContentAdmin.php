@@ -57,24 +57,25 @@ class ContentAdmin extends \Acd\View\Template
 	}
 
 	public function render($tpl = '') {
+		$templatePath = $_ENV['ACD_DIR_TEMPLATES'];
 		switch ($this->getActionType()) {
 			case 'login':
-				$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentLogin.tpl';
+				$tpl = '/ContentLogin.tpl';
 				break;
 			case 'error':
-				$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentError.tpl';
+				$tpl = '/ContentError.tpl';
 				break;
 			case 'index':
-				$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentAdminIndex.tpl';
+				$tpl = '/ContentAdminIndex.tpl';
 				break;
 			case 'new':
-				$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentAdminNew.tpl';
+				$tpl = '/ContentAdminNew.tpl';
 				break;
 			case 'edit':
 			case 'clone':
-				$tpl = \Acd\conf::$DIR_TEMPLATES.'/ContentAdminEdit.tpl';
+				$tpl = '/ContentAdminEdit.tpl';
 				break;
 		}
-		return parent::render($tpl);
+		return parent::render($templatePath . $tpl);
 	}
 }

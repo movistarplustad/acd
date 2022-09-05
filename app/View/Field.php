@@ -60,12 +60,12 @@ class Field extends Template {
 	private function getFormTemplate() {
 		$type = $this->field->getType();
 		if (array_key_exists($type, $this->field->getAvailableTypes())) {
-			$tpl = \Acd\conf::$DIR_TEMPLATES."/field/$type.tpl";
+			$tpl = $_ENV[ 'ACD_DIR_TEMPLATES']."/field/$type.tpl";
 			//d($tpl);
 			return $tpl;
 		}
 		else {
-			throw new Exception("Template form not defined [$type]", EXCEPTION_TEMPLATE_FORM_TYPE);
+			throw new Exception("Template form not defined [$type]", self::EXCEPTION_TEMPLATE_FORM_TYPE);
 
 		}
 	}

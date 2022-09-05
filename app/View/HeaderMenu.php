@@ -11,6 +11,6 @@ class HeaderMenu extends \Acd\View\Template {
 		$this->bBackLink = $bBackLink;
 	}
 	public function render($tpl = '') {
-		return parent::render(\Acd\conf::$DIR_TEMPLATES.'/HeaderMenu.tpl');
+		return parent::render($_ENV['ACD_DIR_TEMPLATES'].'/HeaderMenu.tpl');
 	}
 }

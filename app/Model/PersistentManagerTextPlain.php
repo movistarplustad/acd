@@ -1,10 +1,11 @@
 <?php
 namespace Acd\Model;
 
+class PersistentManagerTextPlainException extends \exception {} // TODO Unificar
 class PersistentManagerTextPlain implements iPersistentManager
 {
 	private function getStoragePath($structureDo) {
-		return \Acd\conf::$DATA_DIR_PATH.'/'.$structureDo->getId().'.json';
+		return $_ENV[ 'ACD_DATA_DIR_PATH'].'/'.$structureDo->getId().'.json';
 	}
 
 	private function getNewId() {
@@ -74,7 +75,7 @@ class PersistentManagerTextPlain implements iPersistentManager
 		$contentKeyValue = $contentDo->tokenizeData();
 		$contentKeyValue['save_ts'] = time(); // Log, timestamp for last save / update operation
 		$allElements[$idContent] = $contentKeyValue;
- 
+
 		/* TODO: Se repite en save y delete */
 		$jAllElements = json_encode($allElements);
 		$path = $this->getStoragePath($structureDo);
@@ -171,5 +172,14 @@ class PersistentManagerTextPlain implements iPersistentManager
 
 		//d("FER", $aContents, $limits, $contents);
 		return $contents;
+	}
+	public function getIndexes() {
+		throw new PersistentManagerTextPlainException("Not implemented", self::GET_INDEXES_FAILED);
+	}
+	public function createIndexes() {
+		throw new PersistentManagerTextPlainException("Not implemented", self::CREATE_INDEXES_FAILED);
+	}
+	public function dropIndexes() {
+		throw new PersistentManagerTextPlainException("Not implemented", self::DROP_INDEXES_FAILED);
 	}
 }

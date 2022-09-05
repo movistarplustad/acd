@@ -1,13 +1,17 @@
 <?php
 namespace Acd;
+use \Acd\Controller\RolPermissionHttp;
 
-require ('../autoload.php');
+require '../autoload.php';
+require '../config/conf2.php';
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
 require ('../offline.php');
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
+
+if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER'], $_ENV['ACD_ROL_EDITOR']])) die();
 
 $action =$_GET['a'];
 @$id = $_GET['id'];
@@ -18,11 +22,6 @@ $idStructureTypeParent = $_GET['idtp'];
 $idField = $_GET['f'];
 @$positionInField = $_GET['p'];
 $numPage = isset($_GET['p']) ? (int) $_GET['p'] : 0;
-if (!Model\Auth::isLoged()) {
-	$action = 'login';
-	header('Location: index.php?re='.urlencode($_SERVER["REQUEST_URI"]));
-	return;
-}
 
 $contentRelationController = new Controller\ContentRelation();
 $contentRelationController->setIdContent($id);
