@@ -1,7 +1,9 @@
 <?php
 namespace Acd\View;
+
+use Acd\View\Template;
 // Output
-class ContentAdmin extends \Acd\View\Template
+class ContentAdmin extends Template
 {
 	protected $actionType;
 	public function __construct() {

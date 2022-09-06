@@ -1,7 +1,7 @@
 <?php
 namespace Acd\View;
 // Output
-class History extends \Acd\View\Template {
+class History extends Template {
 	public function __construct() {
 		$this->setMaxSizeItems(15);
 		$this->setPositionCurrentItem(0);

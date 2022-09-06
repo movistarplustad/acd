@@ -1,8 +1,10 @@
 <?php
 namespace Acd;
-use \Acd\Controller\RolPermissionHttp;
-require '../autoload.php';
-require '../config/conf2.php';
+use Acd\Controller\RolPermissionHttp;
+use Acd\Model\ContentLoader;
+
+
+require '../config/conf.php';
 
 ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
@@ -12,7 +14,7 @@ if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER'], $_ENV['ACD_R
 $action =$_GET['a'];
 @$id = $_GET['id'];
 
-$contentLoader = new \Acd\Model\ContentLoader();
+$contentLoader = new ContentLoader();
 $matchContent = $contentLoader->loadContent('meta-information', ['id' => $id]);
 if($matchContent) {
 	$returnUrl = "content.php?a=edit&id=$id&idt=".$matchContent->getIdStructure();

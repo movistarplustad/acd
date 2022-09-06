@@ -1,9 +1,12 @@
 <?php
-namespace Acd;
-use \Acd\Controller\RolPermissionHttp;
 
-require '../autoload.php';
-require '../config/conf2.php';
+use Acd\Controller\RolPermissionHttp;
+use Acd\Model\StructuresDo;
+use Acd\Model\StructureDo;
+use Acd\Model\EnumeratedDo;
+use Acd\Model\FieldDo;
+
+require '../config/conf.php';
 
 ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
@@ -16,7 +19,7 @@ $storage = isset($_POST['storage']) ? $_POST['storage'] : null;
 $new_field_type = isset($_POST['new_field']) ? $_POST['new_field'] : null;
 $fields = isset($_POST['field']) ? $_POST['field'] : array();
 
-$structures = new Model\StructuresDo();
+$structures = new StructuresDo();
 $structures->loadFromFile($_ENV['ACD_DATA_PATH']);
 
 try {
@@ -41,7 +44,7 @@ switch ($accion) {
 		}
 		if($bIdValid) {
 			// TODO: Set de la estructura, actualizar structures con los nuevos datos
-			$modified_structure = new Model\StructureDo();
+			$modified_structure = new StructureDo();
 			$modified_structure->setId($id);
 			$modified_structure->setName($name);
 			$modified_structure->setStorage($storage);
@@ -49,22 +52,22 @@ switch ($accion) {
 			foreach ($fields as $idField => $data) {
 				//$n = 0; $n < $numFields; $n++) {
 				if (!isset($fields[$idField]['delete'])) {
-					$field = new Model\FieldDo();
+					$field = new FieldDo();
 					$newId = ($fields[$idField]['id'] === ''  || $fields[$idField]['id'] === $field::EMPTY_ID )? $field->generateId($fields[$idField]['name']) : $fields[$idField]['id'];
 					$field->setId($newId);
 					$field->setType($fields[$idField]['type']);
 					$field->setName($fields[$idField]['name']);
 
 					if(isset($fields[$idField]['source'])) {
-						$source = new Model\EnumeratedDo();
+						$source = new EnumeratedDo();
 						$source->setId($fields[$idField]['source']);
 						$field->setOptions($source);
 					}
 
 					if(isset($fields[$idField]['restrictedStructures'])) {
-						$restrictedStructures = new Model\StructuresDo();
+						$restrictedStructures = new StructuresDo();
 						foreach($fields[$idField]['restrictedStructures'] as $idRestrictedStructure) {
-							$restrictedStructure = new Model\StructureDo();
+							$restrictedStructure = new StructureDo();
 							$restrictedStructure->setId($idRestrictedStructure);
 							$restrictedStructures->add($restrictedStructure, $idRestrictedStructure);
 						}
@@ -75,7 +78,7 @@ switch ($accion) {
 				}
 			}
 			if($new_field_type) {
-				$field = new Model\FieldDo();
+				$field = new FieldDo();
 				$field->setType($new_field_type);
 				$modified_structure->addField($field);
 			}

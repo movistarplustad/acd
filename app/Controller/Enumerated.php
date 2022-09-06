@@ -2,12 +2,14 @@
 
 namespace Acd\Controller;
 
-use \Acd\Model\EnumeratedLoader;
-use \Acd\Model\Query;
-use \Acd\Model\EnumeratedDo;
-use \Acd\Model\SessionNavigation;
-use \Acd\View\HeaderMenu;
-// Output
+use Acd\Model\EnumeratedLoader;
+use Acd\Model\Query;
+use Acd\Model\EnumeratedDo;
+use Acd\Model\SessionNavigation;
+use Acd\View\HeaderMenu;
+use Acd\View\EnumeratedList;
+use Acd\View\EnumeratedDetail;
+
 class Enumerated
 {
 	const VIEW_LIST = 'list'; // List of all enumerated collection
@@ -100,19 +102,19 @@ class Enumerated
 	{
 		switch ($this->getView()) {
 			case $this::VIEW_LIST:
-				$ou = new \Acd\View\EnumeratedList();
+				$ou = new EnumeratedList();
 				$ou->setEnumeratedList($this->getContent());
 				break;
 			case $this::VIEW_DETAIL:
 				if ($this->getContent()->getId()) {
-					$ou = new \Acd\View\EnumeratedDetail();
+					$ou = new EnumeratedDetail();
 					$ou->setEnumeratedElement($this->getContent());
 				} else {
 					throw new \Exception('Enumerated collection not found', 404);
 				}
 				break;
 			case $this::VIEW_DETAIL_NEW:
-				$ou = new \Acd\View\EnumeratedDetail();
+				$ou = new EnumeratedDetail();
 				$emptyCollection = new EnumeratedDo();
 				$ou->setEnumeratedElement($emptyCollection);
 				break;

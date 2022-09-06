@@ -1,13 +1,11 @@
 <?php
-// namespace Acd;
-// use Acd\conf;
+
 use Acd\Model\UserLoader;
-use \Acd\Model\Query;
+use Acd\Model\Query;
 use Acd\Model\Auth;
 use Acd\Model\AuthInvalidUserException;
 
-require ('../autoload.php');
-require('../config/conf2.php');
+require('../config/conf.php');
 
 ini_set('session.gc_maxlifetime', $_ENV['ACD_SESSION_GC_MAXLIFETIME']);
 session_start();

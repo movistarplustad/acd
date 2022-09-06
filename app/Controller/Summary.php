@@ -1,6 +1,8 @@
 <?php
 
 namespace Acd\Controller;
+
+use Acd\Model\ContentLoader;
 // Output
 class Summary
 {
@@ -27,7 +29,7 @@ class Summary
 	}
 	public function load()
 	{
-		$contentLoader = new \Acd\Model\ContentLoader();
+		$contentLoader = new ContentLoader();
 		$contentLoader->setId($this->getIdStructure());
 		$this->contentDo = $contentLoader->loadContent('id-deep', ['id' => $this->getIdContent(), 'depth' => 20]);
 		return $this->contentDo;

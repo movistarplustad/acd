@@ -2,8 +2,10 @@
 
 namespace Acd\Controller;
 
-use \Acd\View\HeaderMenu;
-use \Acd\Model\SessionNavigation;
+use Acd\View\HeaderMenu;
+use Acd\Model\SessionNavigation;
+use Acd\Model\ContentLoader;
+use Acd\View\ContentEditSearch;
 // Output
 class ContentRelation
 {
@@ -117,7 +119,7 @@ class ContentRelation
 	}
 	public function load()
 	{
-		$contentLoader = new \Acd\Model\ContentLoader();
+		$contentLoader = new ContentLoader();
 		$contentLoader->setId($this->getIdStructureTypeParent());
 		$this->contentParent = $contentLoader->loadContent('id', $this->getIdParent());
 		$this->structures = $this->contentParent->getFields()->get($this->getIdField())->getRestrictedStructures();
@@ -130,7 +132,7 @@ class ContentRelation
 	}
 	public function render()
 	{
-		$contentOu = new \Acd\View\ContentEditSearch();
+		$contentOu = new ContentEditSearch();
 		$contentOu->setId($this->getIdParent());
 		$contentOu->setType($this->getIdStructureTypeParent());
 		$contentOu->setIdField($this->getIdField());
@@ -140,7 +142,7 @@ class ContentRelation
 		$contentOu->setStructureTypeSeach($this->getIdStructureTypeSearch());
 
 		if ($this->getAction() === 'search') {
-			$contentLoader = new \Acd\Model\ContentLoader();
+			$contentLoader = new ContentLoader();
 			$contentLoader->setId($this->getIdStructureTypeSearch());
 			$whereCondition = [];
 			if ($this->getTitleSearch()) {

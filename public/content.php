@@ -1,10 +1,22 @@
 <?php
-namespace Acd;
-use \Acd\Model\SessionNavigation;
-use \Acd\Controller\RolPermissionHttp;
 
-require '../autoload.php';
-require '../config/conf2.php';
+use Acd\Controller\RolPermissionHttp;
+use Acd\Controller\Summary;
+use Acd\Model\SessionNavigation;
+use Acd\Model\ContentLoader;
+use Acd\Model\Auth;
+use Acd\Model\StructuresDo;
+use Acd\Model\StructureDo;
+use Acd\Model\ContentDo;
+use Acd\Model\FieldDo;
+use Acd\View\BaseSkeleton;
+use Acd\View\Tools;
+use Acd\View\ContentEditListContent;
+use Acd\View\ContentEditIndex;
+use Acd\View\ContentEditContent;
+use Acd\View\HeaderMenu;
+
+require '../config/conf.php';
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
 require ('../offline.php');
@@ -18,7 +30,7 @@ function loadNewRef($idRef, $idStructure) {
 	if (!$idRef || !$idStructure) {
 		return null;
 	}
-	$contentLoader = new Model\ContentLoader();
+	$contentLoader = new ContentLoader();
 	$contentLoader->setId($idStructure);
 	$content = $contentLoader->loadContent('id', $idRef);
 	//$contents = new Model\ContentsDo();
@@ -29,7 +41,7 @@ function loadNewRef($idRef, $idStructure) {
 $action = isset($_REQUEST['a']) ? $_REQUEST['a'] : 'list_structures';
 $view = isset($_REQUEST['v']) ? $_REQUEST['v'] : 'page';
 
-if (!Model\Auth::isLoged()) {
+if (!Auth::isLoged()) {
 	$action = 'login';
 }
 
@@ -39,7 +51,7 @@ switch ($action) {
 		return;
 		break;
 	case 'list_structures':
-		$structures = new Model\StructuresDo();
+		$structures = new StructuresDo();
 		$structures->loadFromFile();
 
 		// back button
@@ -53,19 +65,19 @@ switch ($action) {
 		]);
 		$navigation->save();
 
-		$headerMenuOu = new View\HeaderMenu();
+		$headerMenuOu = new HeaderMenu();
 		$headerMenuOu->setBack($back);
 
-		$toolsOu = new View\Tools();
+		$toolsOu = new Tools();
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
-		$contentOu = new View\ContentEditIndex();
+		$contentOu = new ContentEditIndex();
 		//$contentOu->setActionType('index');
 		$contentOu->setStructures($structures);
 		//$contentOu->setTODO($estructuras);
 
-		$skeletonOu = new View\BaseSkeleton();
+		$skeletonOu = new BaseSkeleton();
 		$skeletonOu->setBodyClass('indexContent');
 		$skeletonOu->setHeadTitle('Content, list of contents type');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
@@ -89,15 +101,15 @@ switch ($action) {
 		]);
 		$navigation->save();
 
-		$headerMenuOu = new View\HeaderMenu();
+		$headerMenuOu = new HeaderMenu();
 		$headerMenuOu->setBack($back);
 
-		$contentOu = new View\ContentEditListContent();
+		$contentOu = new ContentEditListContent();
 		$contentOu->setId($id);
 		$contentOu->setTitleSeach($titleSearch);
 		$contentOu->load();
 
-		$contentLoader = new Model\ContentLoader();
+		$contentLoader = new ContentLoader();
 		$contentLoader->setId($id);
 		$limits = $contentLoader->getLimits();
 		$limits->setPage($numPage);
@@ -113,11 +125,11 @@ switch ($action) {
 		}
 		$contentOu->setContents($contents);
 
-		$toolsOu = new View\Tools();
+		$toolsOu = new Tools();
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
-		$skeletonOu = new View\BaseSkeleton();
+		$skeletonOu = new BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
 		$skeletonOu->setHeadTitle('Manage elements of '.$id);
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
@@ -144,27 +156,27 @@ switch ($action) {
 		]);
 		$navigation->save();
 
-		$headerMenuOu = new View\HeaderMenu();
+		$headerMenuOu = new HeaderMenu();
 		$headerMenuOu->setBack($back);
 
-		$contentOu = new View\ContentEditContent();
-		$structure = new Model\StructureDo();
+		$contentOu = new ContentEditContent();
+		$structure = new StructureDo();
 		$structure->setId($idStructureType);
 		$structure->loadFromFile(['loadEnumerated' => true]);
 
 		$contentOu->setStructure($structure);
 
-		$content = new Model\ContentDo();
+		$content = new ContentDo();
 		$content->setIdStructure($idStructureType);
 		$contentOu->setContent($content);
 		$contentOu->newContent(true);
 		$contentOu->setUserRol($_SESSION['rol']);
 
-		$toolsOu = new View\Tools();
+		$toolsOu = new Tools();
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
-		$skeletonOu = new View\BaseSkeleton();
+		$skeletonOu = new BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
 		$skeletonOu->setHeadTitle('New content ('.$structure->getName().')');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
@@ -194,16 +206,16 @@ switch ($action) {
 			$navigation->save();
 		}
 
-		$headerMenuOu = new View\HeaderMenu();
+		$headerMenuOu = new HeaderMenu();
 		$headerMenuOu->setBack($back);
 
-		$contentOu = new View\ContentEditContent();
-		$structure = new Model\StructureDo();
+		$contentOu = new ContentEditContent();
+		$structure = new StructureDo();
 		$structure->setId($idStructureType);
 		$structure->loadFromFile(['loadEnumerated' => true]);
 		$contentOu->setStructure($structure);
 
-		$contentLoader = new Model\ContentLoader();
+		$contentLoader = new ContentLoader();
 		$contentLoader->setId($idStructureType);
 		$content = $contentLoader->loadContent('id+countParents', $id);
 		//$content = $contents->get($id); // TODO cambiar por next / first...
@@ -229,10 +241,10 @@ switch ($action) {
 					//+d($content->getFields());
 					$modifiedField = $content->getFields()->get($modifiedFieldName);
 					switch ($modifiedField->getType()) {
-						case Model\FieldDo::TYPE_CONTENT:
+						case FieldDo::TYPE_CONTENT:
 							$newRef = loadNewRef($modifiedRef, $modifiedIdStructure);
 							break;
-						case Model\FieldDo::TYPE_COLLECTION:
+						case FieldDo::TYPE_COLLECTION:
 
 							/* Modify or delete item */
 							if ($modifiedRef) {
@@ -271,18 +283,18 @@ switch ($action) {
 		$contentOu->setContent($content);
 		$contentOu->setUserRol($_SESSION['rol']);
 
-		$toolsOu = new View\Tools();
+		$toolsOu = new Tools();
 		$toolsOu->setLogin($_SESSION['login']);
 		$toolsOu->setRol($_SESSION['rol']);
 
-		$skeletonOu = new View\BaseSkeleton();
+		$skeletonOu = new BaseSkeleton();
 		$skeletonOu->setBodyClass('editContent');
 		$skeletonOu->setHeadTitle('Manage content ('.$structure->getName().')');
 		$skeletonOu->setHeaderMenu($headerMenuOu->render());
 		$skeletonOu->setTools($toolsOu->render());
 
 		if ($action == 'summary') {
-			$summaryController = new Controller\Summary();
+			$summaryController = new Summary();
 			$summaryController->setIdContent($id);
 			$summaryController->setIdStructure($idStructureType);
 			$summaryController->load();

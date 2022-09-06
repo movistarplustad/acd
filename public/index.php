@@ -1,6 +1,4 @@
 <?php
-// namespace Acd;
-
 
 use Acd\Model\SessionNavigation;
 use Acd\Model\Auth;
@@ -10,9 +8,8 @@ use Acd\Model\Query;
 use Acd\Model\FieldDo;
 use Acd\View\Tools;
 use Acd\View\HeaderMenu;
-// use Acd\Conf\conf;
-require '../autoload.php';
-require '../config/conf2.php';
+
+require '../config/conf.php';
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
 require ('../offline.php');

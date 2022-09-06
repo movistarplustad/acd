@@ -2,7 +2,7 @@
 
 namespace Acd\Controller;
 
-use \Acd\Model\Auth;
+use Acd\Model\Auth;
 /* Clase encargada de hacer las redirecciones o cortar el acceso a nivel http a los diferentes puntos públicos */
 
 class RolPermissionHttp

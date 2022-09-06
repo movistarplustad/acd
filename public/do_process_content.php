@@ -1,12 +1,13 @@
 <?php
 
-namespace Acd;
+use Acd\Controller\RolPermissionHttp;
+use Acd\Model\ValueFormater;
+use Acd\Model\ContentDo;
+use Acd\Model\StructureDo;
+use Acd\Model\ContentLoader;
+use Acd\Model\File;
 
-use \Acd\Controller\RolPermissionHttp;
-use \Acd\Model\ValueFormater;
-
-require '../autoload.php';
-require '../config/conf2.php';
+require '../config/conf.php';
 
 ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
@@ -25,8 +26,8 @@ foreach ($postId as $id) {
 	$idStructure = $_POST['ids'][$id];
 	$title = isset($_POST['title'][$id]) ? $_POST['title'][$id] : null;
 	$periodOfValidity = array(
-		\Acd\Model\ContentDo::PERIOD_OF_VALIDITY_START => isset($_POST['validityPeriod'][$id]['start']) ? $_POST['validityPeriod'][$id]['start'] : null,
-		\Acd\Model\ContentDo::PERIOD_OF_VALIDITY_END => isset($_POST['validityPeriod'][$id]['end']) ? $_POST['validityPeriod'][$id]['end'] : null
+		ContentDo::PERIOD_OF_VALIDITY_START => isset($_POST['validityPeriod'][$id]['start']) ? $_POST['validityPeriod'][$id]['start'] : null,
+		ContentDo::PERIOD_OF_VALIDITY_END => isset($_POST['validityPeriod'][$id]['end']) ? $_POST['validityPeriod'][$id]['end'] : null
 	);
 	$periodOfValidity = ValueFormater::decode($periodOfValidity, ValueFormater::TYPE_DATE_TIME_RANGE, ValueFormater::FORMAT_EDITOR);
 
@@ -35,7 +36,7 @@ foreach ($postId as $id) {
 	$profile = isset($_POST['profile'][$id]) ? ValueFormater::decode($_POST['profile'][$id], ValueFormater::TYPE_LIST_MULTIPLE, ValueFormater::FORMAT_EDITOR) : array();
 	$fields = isset($_POST['field'][$id]) ? $_POST['field'][$id] : array();
 
-	$contentLoader = new \ACD\Model\ContentLoader();
+	$contentLoader = new ContentLoader();
 	$contentLoader->setId($idStructure);
 	$content = $contentLoader->loadContent('id', ValueFormater::decode($id, ValueFormater::TYPE_ID, ValueFormater::FORMAT_EDITOR));
 
@@ -44,10 +45,10 @@ foreach ($postId as $id) {
 		//if (is_null($contents) || $contents->length() === 0) {
 		if (is_null($content)) {
 			$structureFound = false;
-			$structure = new Model\StructureDo();
+			$structure = new StructureDo();
 			$structure->setId($idStructure);
 			$structure->loadFromFile();
-			$modified_content = new Model\ContentDo();
+			$modified_content = new ContentDo();
 			$modified_content->buildSkeleton($structure);
 		} else {
 			$structureFound = true;
@@ -56,7 +57,7 @@ foreach ($postId as $id) {
 		}
 	} catch (\Exception $e) {
 		$structureFound = null;
-		$modified_content = new Model\ContentDo();
+		$modified_content = new ContentDo();
 	}
 
 	switch ($action) {
@@ -68,7 +69,7 @@ foreach ($postId as $id) {
 			$modified_content->setTags($tags);
 			$modified_content->setProfileValues($profile);
 			$numFields = count($fields);
-			$formater = new Model\ValueFormater();
+			$formater = new ValueFormater();
 			foreach ($fields as $key => $data) {
 				//$n = 0; $n < $numFields; $n++) {
 				$fieldId = $fields[$key]['id'];
@@ -112,7 +113,7 @@ foreach ($postId as $id) {
 						$normalizedvalue['original_name'] = $_FILES['field']['name'][$id][$key]['file'];
 						$normalizedvalue['tmp_name'] = $_FILES['field']['tmp_name'][$id][$key]['file'];
 						$normalizedvalue['size'] = $_FILES['field']['size'][$id][$key]['file'];
-						$fileTools = new \Acd\Model\File();
+						$fileTools = new File();
 						$fileType = $fileTools->getMimeFromFilename($normalizedvalue['original_name']);
 						if (!$fileType) {
 							$fileType = $fileTools->getMimeFromPath($normalizedvalue['tmp_name']);

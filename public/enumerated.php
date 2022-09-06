@@ -1,10 +1,11 @@
 <?php
-namespace Acd;
 
-use \Acd\Controller\RolPermissionHttp;
+use Acd\Controller\RolPermissionHttp;
+use Acd\Controller\Enumerated;
+use Acd\View\BaseSkeleton;
+use Acd\View\Tools;
 
-require '../autoload.php';
-require '../config/conf2.php';
+require '../config/conf.php';
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
 require('../offline.php');
@@ -16,25 +17,25 @@ if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER']])) die();
 @$action = $_GET['a'];
 switch ($action) {
 	case 'edit':
-		$action = Controller\Enumerated::VIEW_DETAIL;
+		$action = Enumerated::VIEW_DETAIL;
 		break;
 	case 'new':
-		$action = Controller\Enumerated::VIEW_DETAIL_NEW;
+		$action = Enumerated::VIEW_DETAIL_NEW;
 		break;
 	default:
-		$action = Controller\Enumerated::VIEW_LIST;
+		$action = Enumerated::VIEW_LIST;
 		break;
 }
 @$id = $_GET['id']; //'PROFILE';
 @$result = $_GET['r'];
 
-$enumeratedController = new Controller\Enumerated();
+$enumeratedController = new Enumerated();
 $enumeratedController->setView($action);
 $enumeratedController->setRequestUrl($_SERVER["REQUEST_URI"]); // For history back
 $enumeratedController->setId($id);
 $enumeratedController->load();
 
-$skeletonOu = new View\BaseSkeleton();
+$skeletonOu = new BaseSkeleton();
 $skeletonOu->setBodyClass('enumerated');
 
 $skeletonOu->setHeadTitle($enumeratedController->getTitle());
@@ -45,7 +46,7 @@ try {
 	header("HTTP/1.0 404 Not Found");
 	$sContent  = "404 element not found.";
 }
-$toolsOu = new View\Tools();
+$toolsOu = new Tools();
 $toolsOu->setLogin($_SESSION['login']);
 $toolsOu->setRol($_SESSION['rol']);
 

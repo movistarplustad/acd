@@ -1,6 +1,8 @@
 <?php
 namespace Acd\View;
-use \Acd\Model\ValueFormater;
+
+use Acd\Model\ValueFormater;
+use Acd\View\Field;
 // Output
 class ContentEditContent extends Template {
 	private $structure;
@@ -32,7 +34,7 @@ class ContentEditContent extends Template {
 		// TODO: add all sticky fields al Field objects
 		// Create fieldOutput object and set options for structure and set value for content
 		$this->structure->getStickyFields()->get('profile')->setValue($content->getProfile()->getValue());
-		$fieldOU = new \Acd\View\Field();
+		$fieldOU = new Field();
 		$fieldOU->setId('profile');
 		$fieldOU->setField($this->structure->getStickyFields()->get('profile'));
 		$fieldOU->setParent($content);
