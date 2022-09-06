@@ -1,11 +1,13 @@
 <?php
 namespace Acd\View;
+
+use Acd\Model\StructureDo;
 // Output
 class ContentEditListContent extends Template {
 	public function __construct() {
 		$this->__set('resultDesc', '');
 		$this->__set('resultCode', '');
-		$structure = new \Acd\Model\StructureDo();
+		$structure = new StructureDo();
 		$this->__set('structure', $structure);
 	}	
 

@@ -1,9 +1,9 @@
 <?php
-namespace Acd;
-use \Acd\Controller\RolPermissionHttp;
 
-require '../autoload.php';
-require '../config/conf2.php';
+use Acd\Controller\RolPermissionHttp;
+use Acd\Model\File;
+
+require '../config/conf.php';
 
 ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
@@ -37,9 +37,9 @@ if( !function_exists('apache_request_headers') ) {
 
 $idFile = $_GET['id'];
 $fileName = $_GET['n'];
-$path = \Acd\Model\File::getPath($idFile);
+$path = File::getPath($idFile);
 if (is_readable($path)){
-	$fileTools = new \Acd\Model\File();
+	$fileTools = new File();
 	$fileType = $fileTools->getMimeFromFilename($fileName);
 	if (!$fileType) {
 		$fileType = $fileTools->getMimeFromPath($path);

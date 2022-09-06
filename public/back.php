@@ -1,9 +1,9 @@
 <?php
-namespace Acd;
-use \Acd\Model\SessionNavigation;
 
-require '../autoload.php';
-require '../config/conf2.php';
+use Acd\Model\SessionNavigation;
+use Acd\Model\SessionNavigationException;
+
+require '../config/conf.php';
 
 ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
@@ -20,7 +20,7 @@ try {
 	$returnUrl = $lastNavigation['url'];
 	$navigation->save();
 }
-catch(Model\SessionNavigationException $e) {
+catch(SessionNavigationException $e) {
 	$returnUrl = 'index.php';
 }
 

@@ -2,12 +2,13 @@
 
 namespace Acd\Controller;
 
-use \Acd\Model\UserLoader;
-use \Acd\Model\Query;
-use \Acd\Model\UserDo;
-use \Acd\Model\SessionNavigation;
-use \Acd\View\HeaderMenu;
-
+use Acd\Model\UserLoader;
+use Acd\Model\Query;
+use Acd\Model\UserDo;
+use Acd\Model\SessionNavigation;
+use Acd\View\HeaderMenu;
+use Acd\View\UserList;
+use Acd\View\UserDetail;
 // Output
 class User
 {
@@ -108,12 +109,12 @@ class User
     {
         switch ($this->getView()) {
             case $this::VIEW_LIST:
-                $ou = new \Acd\View\UserList();
+                $ou = new UserList();
                 $ou->setUserList($this->getContentUser());
                 break;
             case $this::VIEW_DETAIL:
                 if ($this->getContentUser()->getId()) {
-                    $ou = new \Acd\View\UserDetail();
+                    $ou = new UserDetail();
                     $ou->setUserElement($this->getContentUser());
                     $ou->setAuthPermanentList($this->getContentAuthPermanent());
                 } else {
@@ -121,7 +122,7 @@ class User
                 }
                 break;
             case $this::VIEW_DETAIL_NEW:
-                $ou = new \Acd\View\UserDetail();
+                $ou = new UserDetail();
                 $emptyCollection = new UserDo();
                 $ou->setUserElement($emptyCollection);
                 break;

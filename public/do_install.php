@@ -1,13 +1,10 @@
 <?php
 
-namespace Acd;
+require '../config/conf.php';
 
-require '../autoload.php';
-require '../config/conf2.php';
-
-use \Acd\Model\ContentLoader;
-use \Acd\Model\UserLoader;
-use \Acd\Controller\RolPermissionHttp;
+use Acd\Model\ContentLoader;
+use Acd\Model\UserLoader;
+use Acd\Controller\RolPermissionHttp;
 
 ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();

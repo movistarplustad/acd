@@ -1,10 +1,9 @@
 <?php
-namespace Acd;
 
-use \Acd\Controller\RolPermissionHttp;
+use Acd\Controller\RolPermissionHttp;
+use Acd\Model\UserLoader;
 
-require '../autoload.php';
-require '../config/conf2.php';
+require '../config/conf.php';
 
 ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
@@ -17,7 +16,7 @@ $login = isset($_POST['login']) ? $_POST['login'] : null;
 
 switch ($action) {
     case 'delete':
-        $userLoader = new Model\UserLoader();
+        $userLoader = new UserLoader();
         $result = $userLoader->deletePersistSession($token) ? 'ok' : 'ko';
         $returnUrl = 'user.php?a=edit&id=' . urlencode($login) . '&r=' . $result;
         break;

@@ -1,8 +1,8 @@
 <?php
 namespace Acd\View;
-use \Acd\Model\SessionNavigation;
+
 // Output
-class HeaderMenu extends \Acd\View\Template {
+class HeaderMenu extends Template {
 	protected $bBackLink;
 	public function __construct() {
 		$this->setBack(false);

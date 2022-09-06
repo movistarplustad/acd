@@ -1,10 +1,11 @@
 <?php
-namespace Acd;
 
-use \Acd\Controller\RolPermissionHttp;
+use Acd\Controller\RolPermissionHttp;
+use Acd\Controller\User;
+use Acd\View\BaseSkeleton;
+use Acd\View\Tools;
 
-require '../autoload.php';
-require '../config/conf2.php';
+require '../config/conf.php';
 
 ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
@@ -14,13 +15,13 @@ if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER']])) die();
 @$action = $_GET['a'];
 switch ($action) {
 	case 'edit':
-		$action = Controller\User::VIEW_DETAIL;
+		$action = User::VIEW_DETAIL;
 		break;
 	case 'new':
-		$action = Controller\User::VIEW_DETAIL_NEW;
+		$action = User::VIEW_DETAIL_NEW;
 		break;
 	default:
-		$action = Controller\User::VIEW_LIST;
+		$action = User::VIEW_LIST;
 		break;
 }
 @$id = $_GET['id'];
@@ -28,7 +29,7 @@ switch ($action) {
 
 
 /* TODO: Revisar */
-$userController = new Controller\User();
+$userController = new User();
 $userController->setView($action);
 $userController->setRequestUrl($_SERVER["REQUEST_URI"]); // For history back
 $userController->setId($id);
@@ -41,13 +42,13 @@ try {
 }
 /* FIN TODO: Pendiente */
 
-$skeletonOu = new View\BaseSkeleton();
+$skeletonOu = new BaseSkeleton();
 $skeletonOu->setBodyClass('user');
 
 $skeletonOu->setHeadTitle($userController->getTitle());
 $skeletonOu->setHeaderMenu($userController->getHeaderMenuOu()->render());
 
-$toolsOu = new View\Tools();
+$toolsOu = new Tools();
 $toolsOu->setLogin($_SESSION['login']);
 $toolsOu->setRol($_SESSION['rol']);
 

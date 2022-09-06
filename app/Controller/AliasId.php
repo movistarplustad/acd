@@ -2,9 +2,10 @@
 
 namespace Acd\Controller;
 
-use \Acd\View\HeaderMenu;
-use \Acd\Model\ContentLoader;
-use \Acd\Model\SessionNavigation;
+use Acd\View\HeaderMenu;
+use Acd\Model\ContentLoader;
+use Acd\Model\SessionNavigation;
+use Acd\View\AliasId as AliasIdView;
 // Output
 class AliasId
 {
@@ -99,7 +100,7 @@ class AliasId
 	}
 	public function render()
 	{
-		$ou = new \Acd\View\AliasId();
+		$ou = new AliasIdView();
 		$ou->setContentTitle($this->getAliasId());
 		$ou->setAliasId($this->getAliasId());
 		$ou->setMatchList($this->getAliasIdMatches());

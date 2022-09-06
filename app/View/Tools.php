@@ -1,7 +1,7 @@
 <?php
 namespace Acd\View;
 // Output
-class Tools extends \Acd\View\Template {
+class Tools extends Template {
 	public function setLogin($login) {
 		$this->__set('login', $login);
 	}

@@ -2,9 +2,10 @@
 
 namespace Acd\Controller;
 
-use \Acd\View\HeaderMenu;
-use \Acd\Model\ContentLoader;
-use \Acd\Model\SessionNavigation;
+use Acd\View\HeaderMenu;
+use Acd\View\Relation as RelationView;
+use Acd\Model\ContentLoader;
+use Acd\Model\SessionNavigation;
 // Output
 class Relation
 {
@@ -93,7 +94,7 @@ class Relation
 	}
 	public function render()
 	{
-		$ou = new \Acd\View\Relation();
+		$ou = new RelationView();
 		$ou->setContentTitle($this->getContent()->getTitle());
 		$ou->setParentList($this->getParents());
 

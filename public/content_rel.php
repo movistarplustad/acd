@@ -1,9 +1,11 @@
 <?php
-namespace Acd;
-use \Acd\Controller\RolPermissionHttp;
 
-require '../autoload.php';
-require '../config/conf2.php';
+use Acd\Controller\RolPermissionHttp;
+use Acd\Controller\ContentRelation;
+use Acd\View\BaseSkeleton;
+use Acd\View\Tools;
+
+require '../config/conf.php';
 
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
 require ('../offline.php');
@@ -23,7 +25,7 @@ $idField = $_GET['f'];
 @$positionInField = $_GET['p'];
 $numPage = isset($_GET['p']) ? (int) $_GET['p'] : 0;
 
-$contentRelationController = new Controller\ContentRelation();
+$contentRelationController = new ContentRelation();
 $contentRelationController->setIdContent($id);
 $contentRelationController->setIdStructureTypeSearch($idStructureTypeSearch);
 $contentRelationController->setTitleSearch($titleSearch);
@@ -36,13 +38,13 @@ $contentRelationController->setRequestUrl($_SERVER["REQUEST_URI"]); // For histo
 $contentRelationController->setAction($action);
 $contentRelationController->load();
 
-$skeletonOu = new View\BaseSkeleton();
+$skeletonOu = new BaseSkeleton();
 $skeletonOu->setBodyClass('relation');
 
 $skeletonOu->setHeadTitle($contentRelationController->getTitle());
 $skeletonOu->setHeaderMenu($contentRelationController->getHeaderMenuOu()->render());
 
-$toolsOu = new View\Tools();
+$toolsOu = new Tools();
 $toolsOu->setLogin($_SESSION['login']);
 $toolsOu->setRol($_SESSION['rol']);
 $skeletonOu->setTools($toolsOu->render());

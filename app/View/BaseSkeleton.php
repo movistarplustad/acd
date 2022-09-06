@@ -1,8 +1,10 @@
 <?php
 
 namespace Acd\View;
+
+use Acd\View\Template;
 // Output
-class BaseSkeleton extends \Acd\View\Template {
+class BaseSkeleton extends Template {
 	protected $view;
 	public function __construct() {
 		$this->__set('bodyClass', '');
