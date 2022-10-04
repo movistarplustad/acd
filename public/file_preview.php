@@ -1,13 +1,14 @@
 <?php
-namespace Acd;
-use \Acd\Controller\RolPermissionHttp;
 
-require ('../autoload.php');
+use Acd\Controller\RolPermissionHttp;
+use Acd\Model\File;
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+require '../config/conf.php';
+
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
-if(!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER, \Acd\conf::$ROL_EDITOR])) die();
+if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER'], $_ENV['ACD_ROL_EDITOR']])) die();
 
 //  A slightly modified version from  limalopex.eisfux.de. Fixes the missing Headers Content-Type and Content-Length and makes it Camel-Case.
 if( !function_exists('apache_request_headers') ) {
@@ -36,9 +37,9 @@ if( !function_exists('apache_request_headers') ) {
 
 $idFile = $_GET['id'];
 $fileName = $_GET['n'];
-$path = \Acd\Model\File::getPath($idFile);
+$path = File::getPath($idFile);
 if (is_readable($path)){
-	$fileTools = new \Acd\Model\File();
+	$fileTools = new File();
 	$fileType = $fileTools->getMimeFromFilename($fileName);
 	if (!$fileType) {
 		$fileType = $fileTools->getMimeFromPath($path);

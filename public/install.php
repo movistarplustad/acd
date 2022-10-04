@@ -1,18 +1,20 @@
 <?php
-namespace Acd;
-use \Acd\Controller\RolPermissionHttp;
+use Acd\Controller\RolPermissionHttp;
+use Acd\Controller\Install;
+use Acd\View\BaseSkeleton;
+use Acd\View\Tools;
 
-require('../autoload.php');
+require '../config/conf.php';
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
-if(!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER])) die();
+if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER']])) die();
 
-$action = Controller\Install::VIEW_INFO;
+$action = Install::VIEW_INFO;
 @$result = $_GET['r'];
 
-$installController = new Controller\Install();
+$installController = new Install();
 $installController->setView($action);
 $installController->setRequestUrl($_SERVER["REQUEST_URI"]); // For history back
 $installController->load();
@@ -20,28 +22,28 @@ try {
 	$sContent = $installController->render();
 } catch (\Exception $e) {
 	header("HTTP/1.0 404 Not Found");
-	$sContent  = "404 element not found.";
+    $sContent = "404 element not found.";
 }
 
-$skeletonOu = new View\BaseSkeleton();
+$skeletonOu = new BaseSkeleton();
 $skeletonOu->setBodyClass('install');
 
 $skeletonOu->setHeadTitle($installController->getTitle());
 $skeletonOu->setHeaderMenu($installController->getHeaderMenuOu()->render());
 
-$toolsOu = new View\Tools();
+$toolsOu = new Tools();
 $toolsOu->setLogin($_SESSION['login']);
 $toolsOu->setRol($_SESSION['rol']);
 
 $skeletonOu->setTools($toolsOu->render());
 
 switch ($result) {
-	case 'ok':
-		$skeletonOu->setResultDesc('Done', 'ok');
-		break;
-	case 'ko':
-		$skeletonOu->setResultDesc('Fail', 'ko');
-		break;
+    case 'ok':
+        $skeletonOu->setResultDesc('Done', 'ok');
+        break;
+    case 'ko':
+        $skeletonOu->setResultDesc('Fail', 'ko');
+        break;
 }
 
 $skeletonOu->setContent($sContent);

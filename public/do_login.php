@@ -1,33 +1,34 @@
 <?php
-namespace Acd;
-use Acd\conf;
+
 use Acd\Model\UserLoader;
-use \Acd\Model\Query;
+use Acd\Model\Query;
+use Acd\Model\Auth;
+use Acd\Model\AuthInvalidUserException;
 
-require ('../autoload.php');
+require('../config/conf.php');
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+ini_set('session.gc_maxlifetime', $_ENV['ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
 $returnUrl = isset($_POST['re']) ? $_POST['re'] : 'index.php';
 $queryStringSeparator = strpos($returnUrl, '?') ? '&' : '?';
 // First: check is loged
-$loginCookie = isset($_COOKIE[conf::$COOKIE_PREFIX.'login']) ? $_COOKIE[conf::$COOKIE_PREFIX.'login'] : null;
-$token = isset($_COOKIE[conf::$COOKIE_PREFIX.'token']) ? $_COOKIE[conf::$COOKIE_PREFIX.'token'] : null;
+$loginCookie = isset($_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'login']) ? $_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'login'] : null;
+$token = isset($_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'token']) ? $_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'token'] : null;
 $loginForm = isset($_POST['login']) && $_POST['login'] !== '' ? $_POST['login'] : null;
 $password = isset($_POST['password']) ? $_POST['password'] : null;
 $remember = isset($_POST['remember']) && ($_POST['remember'] === '1');
 
 try {
-	if (Model\Auth::loginByCredentials($loginForm, $password, $remember)) {
+	if (Auth::loginByCredentials($loginForm, $password, $remember)) {
 		$returnUrl .= $queryStringSeparator.'r=okcred';
 	}
-	elseif (Model\Auth::loginByPersintence($loginCookie, $token)) {
+	elseif (Auth::loginByPersintence($loginCookie, $token)) {
 		$returnUrl .= $queryStringSeparator.'r=okpers';
 	}
 	else {
 		$result = 'kologin';
-		Model\Auth::logout();
+		Auth::logout();
 		// Count total users un database, report if zero users found
 		$userLoader = new UserLoader();
 		$query = new Query();
@@ -43,7 +44,7 @@ try {
 	header("Pragma: no-cache");
 	header("Location:$returnUrl");
 }
-catch(Model\AuthInvalidUserException $e) {
+catch(AuthInvalidUserException $e) {
 	header("HTTP/1.0 404 Not Found");
 	die("Error 404. ".$e->getMessage());
 }

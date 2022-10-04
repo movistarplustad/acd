@@ -1,14 +1,13 @@
 <?php
-namespace Acd;
+use Acd\Model\Auth;
 
-require ('../autoload.php');
+require '../config/conf.php';
 
-
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
 $returnUrl = 'index.php';
-Model\Auth::logout();
+Auth::logout();
 session_destroy();
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

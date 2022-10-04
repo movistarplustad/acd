@@ -2,40 +2,43 @@
 // Show list of contents with the same alias-id
 // Params:
 //	id - alias-id
-namespace Acd;
-use \Acd\Controller\RolPermissionHttp;
 
-require ('../autoload.php');
+use Acd\Controller\RolPermissionHttp;
+use Acd\Model\StorageKeyInvalidException;
+use Acd\Controller\AliasId;
+use Acd\View\BaseSkeleton;
+use Acd\View\Tools;
 
+require('../config/conf.php');
 /* Temporal hasta que ACD incorpore su propio sistema de modo mantenimiento */
 require ('../offline.php');
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
-if(!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER, \Acd\conf::$ROL_EDITOR])) die();
+if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER'], $_ENV['ACD_ROL_EDITOR']])) die();
 
 $action = 'ok';
 @$aliasId = $_GET['id']; // alias-id
 //$action = 'show';
 
-$aliasIdController = new Controller\AliasId();
+$aliasIdController = new AliasId();
 try {
 	$aliasIdController->setAliasId($aliasId);
 	$aliasIdController->setRequestUrl($_SERVER["REQUEST_URI"]); // For history back
 	$aliasIdController->load();
 }
-catch( \Acd\Model\StorageKeyInvalidException $e) {
+catch( StorageKeyInvalidException $e) {
 	$aliasIdController->setResultDesc("Error, zero results. ".$e->getMessage());
 }
 
-$skeletonOu = new View\BaseSkeleton();
+$skeletonOu = new BaseSkeleton();
 $skeletonOu->setBodyClass('aliasId');
 
 $skeletonOu->setHeadTitle($aliasIdController->getTitle());
 $skeletonOu->setHeaderMenu($aliasIdController->getHeaderMenuOu()->render());
 
-$toolsOu = new View\Tools();
+$toolsOu = new Tools();
 $toolsOu->setLogin($_SESSION['login']);
 $toolsOu->setRol($_SESSION['rol']);
 $skeletonOu->setTools($toolsOu->render());

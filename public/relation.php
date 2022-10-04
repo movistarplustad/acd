@@ -3,34 +3,37 @@
 // Params:
 //	id - content id
 //	idt - structure type id
-namespace Acd;
-use \Acd\Controller\RolPermissionHttp;
 
-require ('../autoload.php');
+use Acd\Controller\RolPermissionHttp;
+use Acd\Controller\Relation;
+use Acd\View\BaseSkeleton;
+use Acd\View\Tools;
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+require '../config/conf.php';
+
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
-if(!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER, \Acd\conf::$ROL_EDITOR])) die();
+if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER'], $_ENV['ACD_ROL_EDITOR']])) die();
 
 $action = 'ok';
 @$id = $_GET['id']; // id content
 @$idt = $_GET['idt']; // id structure
 //$action = 'show';
 
-$relationController = new Controller\Relation();
+$relationController = new Relation();
 $relationController->setIdContent($id);
 $relationController->setIdStructure($idt);
 $relationController->setRequestUrl($_SERVER["REQUEST_URI"]); // For history back
 $relationController->load();
 
-$skeletonOu = new View\BaseSkeleton();
+$skeletonOu = new BaseSkeleton();
 $skeletonOu->setBodyClass('relation');
 
 $skeletonOu->setHeadTitle($relationController->getTitle());
 $skeletonOu->setHeaderMenu($relationController->getHeaderMenuOu()->render());
 
-$toolsOu = new View\Tools();
+$toolsOu = new Tools();
 $toolsOu->setLogin($_SESSION['login']);
 $toolsOu->setRol($_SESSION['rol']);
 $skeletonOu->setTools($toolsOu->render());

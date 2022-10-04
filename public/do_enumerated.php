@@ -1,20 +1,24 @@
 <?php
-namespace Acd;
-use \Acd\Controller\RolPermissionHttp;
 
-require ('../autoload.php');
+use Acd\Controller\RolPermissionHttp;
+use Acd\Model\EnumeratedLoader;
+use Acd\Model\Query;
+use Acd\Model\EnumeratedDo;
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+
+require '../config/conf.php';
+
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
-if(!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER])) die();
+if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER']])) die();
 
 $action = strtolower($_POST['a']);
 $id = $_POST['id'];
 $elements = isset($_POST['element']) ? $_POST['element'] : array();
 
-$enumeratedLoader = new Model\EnumeratedLoader();
-$query = new Model\Query();
+$enumeratedLoader = new EnumeratedLoader();
+$query = new Query();
 $query->setType('id');
 $query->setCondition(['id' => $id]);
 $enumerated = $enumeratedLoader->load($query);
@@ -35,7 +39,7 @@ switch ($action) {
 			$bIdValid = ($objectFound !== null);
 		}
 		if($bIdValid) {
-			$modifiedEnumerated = new Model\EnumeratedDo();
+			$modifiedEnumerated = new EnumeratedDo();
 			$modifiedEnumerated->setId($id);
 			$saveItems = array();
 			foreach ($elements as $key => $value) {
@@ -48,7 +52,7 @@ switch ($action) {
 				}
 			}
 			$modifiedEnumerated->setItems($saveItems);
-			$enumeratedLoader = new Model\EnumeratedLoader();
+			$enumeratedLoader = new EnumeratedLoader();
 			$enumeratedLoader->save($modifiedEnumerated);
 			$returnUrl = 'enumerated.php?a=edit&r=ok&id='.urlencode($id);
 		}
@@ -57,7 +61,7 @@ switch ($action) {
 		}
 		break;
 	case 'delete':
-		$enumeratedLoader = new Model\EnumeratedLoader();
+		$enumeratedLoader = new EnumeratedLoader();
 		$result = $enumeratedLoader->delete($id) ? 'ok' : 'ko';
 		//d("borrar");
 		$returnUrl = 'enumerated.php?a=delete&r='.$result;

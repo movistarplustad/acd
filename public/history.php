@@ -1,20 +1,20 @@
 <?php
-namespace Acd;
-use \Acd\Controller\RolPermissionHttp;
-use \Acd\Model\SessionNavigation;
+use Acd\Controller\RolPermissionHttp;
+use Acd\Model\SessionNavigation;
+use Acd\View\History;
 
 // TODO: In future can be diferent views
-require('../autoload.php');
+require '../config/conf.php';
 
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
-if(!RolPermissionHttp::checkUserEditor([\Acd\conf::$ROL_DEVELOPER, \Acd\conf::$ROL_EDITOR])) die();
+if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER'], $_ENV['ACD_ROL_EDITOR']])) die();
 
 $navigation = new SessionNavigation();
 $navigation->load();
 
-$historyOu = new View\History();
+$historyOu = new History();
 $historyOu->setItems($navigation->getStack());
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

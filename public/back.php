@@ -1,9 +1,10 @@
 <?php
-namespace Acd;
-use \Acd\Model\SessionNavigation;
+use Acd\Model\SessionNavigation;
+use Acd\Model\SessionNavigationException;
 
-require ('../autoload.php');
-ini_set('session.gc_maxlifetime', conf::$SESSION_GC_MAXLIFETIME);
+require '../config/conf.php';
+
+ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
 $backSteps = isset($_GET['p']) ? (integer) $_GET['p'] : 1;
@@ -18,7 +19,7 @@ try {
 	$returnUrl = $lastNavigation['url'];
 	$navigation->save();
 }
-catch(Model\SessionNavigationException $e) {
+catch(SessionNavigationException $e) {
 	$returnUrl = 'index.php';
 }
 

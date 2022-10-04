@@ -1,4 +1,30 @@
 {
+    "name": "movistarplus/acd",
+    "description": "Editor de contenidos",
+    "keywords": [
+        "movistarplus",
+        "content manager",
+        "acd"
+    ],
+    "license": "GPL3",
+    "type": "project",
+    "require": {
+        "php": "^7.1",
+        "mongodb/mongodb": "^1.2",
+        "vlucas/phpdotenv": "^4.0"
+    },
     "require-dev": {
+        "phpunit/phpunit": "^8.3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Acd\\": "app",
+            "Acd\\Conf\\": "config"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Acd\\Tests\\": "tests"
+        }
     }
 }
