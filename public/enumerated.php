@@ -1,5 +1,4 @@
 <?php
-
 use Acd\Controller\RolPermissionHttp;
 use Acd\Controller\Enumerated;
 use Acd\View\BaseSkeleton;

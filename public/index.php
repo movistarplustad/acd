@@ -1,5 +1,4 @@
 <?php
-
 use Acd\Model\SessionNavigation;
 use Acd\Model\Auth;
 use Acd\Model\StructureDo;

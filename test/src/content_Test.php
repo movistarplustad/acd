@@ -1,5 +1,4 @@
 <?php
-
 namespace Acd;
 
 class content extends \PHPUnit_Framework_TestCase

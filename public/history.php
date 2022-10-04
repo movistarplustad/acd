@@ -1,5 +1,4 @@
 <?php
-
 use Acd\Controller\RolPermissionHttp;
 use Acd\Model\SessionNavigation;
 use Acd\View\History;
