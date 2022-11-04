@@ -1,4 +1,5 @@
 <?php
+
 use Acd\Model\Auth;
 
 require '../config/conf.php';

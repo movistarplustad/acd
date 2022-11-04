@@ -1,4 +1,5 @@
 <?php
+
 require '../config/conf.php';
 
 use Acd\Model\ContentLoader;
