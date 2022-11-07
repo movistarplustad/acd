@@ -1,4 +1,5 @@
 <?php
+
 use Acd\Model\SessionNavigation;
 use Acd\Model\SessionNavigationException;
 
