@@ -1,5 +1,4 @@
 build
-composer.lock
 docs
 vendor
 coverage
@@ -11,9 +10,6 @@ acd.sublime-workspace
 # Persisten data
 data/*
 
-# Local configuration
-conf.local.php
-
 # temp files
 *.swp
 
@@ -21,3 +17,4 @@ conf.local.php
 public/borrador
 public/_
 
+.env
