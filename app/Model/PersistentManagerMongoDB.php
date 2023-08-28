@@ -2,11 +2,9 @@
 
 namespace Acd\Model;
 
-use MongoDB\BSON\ObjectID;
+use \MongoDB\BSON\ObjectID;
 use Acd\Model\Exception\PersistentManagerMongoDBException;
 use Acd\Model\Mongodb\Filter;
-use Acd\Lib\MongoDBRef;
-
 
 class PersistentManagerMongoDB implements iPersistentManager
 {
@@ -15,12 +13,12 @@ class PersistentManagerMongoDB implements iPersistentManager
 	private $structuresCache;
 	public function initialize($structureDo)
 	{
-		//		$mongo = new \MongoClient($_ENV['ACD_MONGODB_SERVER']);
-		//		$this->db = $mongo->selectDB($_ENV['ACD_MONGODB_DB']);
+		//		$mongo = new \MongoClient(\Acd\conf::$MONGODB_SERVER);
+		//		$this->db = $mongo->selectDB(\Acd\conf::$MONGODB_DB);
 
 		//TODO: Ver cóm pasarle el servidor, porque si es '' no funciona.
-		$mongo = new \MongoDB\Client($_ENV['ACD_MONGODB_SERVER']);
-		$this->db = $mongo->selectDatabase($_ENV['ACD_MONGODB_DB']);
+		$mongo = new \MongoDB\Client(\Acd\conf::$MONGODB_SERVER);
+		$this->db = $mongo->selectDatabase(\Acd\conf::$MONGODB_DB);
 	}
 	public function isInitialized($structureDo)
 	{
@@ -114,7 +112,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 					if ($value['ref']) {
 						$mongoId = new ObjectID($value['ref']);
 						//						$insert['data'][$key]['ref'] = \MongoDBRef::create('content', new \MongoId($value['ref']));
-						$insert['data'][$key]['ref'] = MongoDBRef::create('content', $mongoId);
+						$insert['data'][$key]['ref'] = \Acd\Lib\MongoDBRef::create('content', $mongoId);
 						$insert['data'][$key]['id_structure'] = $value['id_structure'];
 
 						$oIdChildsRelated[] = $insert['data'][$key]['ref']; // For table relations
@@ -129,7 +127,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 					foreach ($value as $id => $item) {
 						$mongoId = new ObjectID($item['ref']);
 						//						$value[$id]['ref'] = \MongoDBRef::create('content', new \MongoId($item['ref']));
-						$value[$id]['ref'] = MongoDBRef::create('content', $mongoId);
+						$value[$id]['ref'] = \Acd\Lib\MongoDBRef::create('content', $mongoId);
 						$value[$id]['id_structure'] = $item['id_structure'];
 
 
@@ -158,7 +156,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$oId = new ObjectID($result->getInsertedId());
 		}
 		if ($bChildsRelated) {
-			$this->updateRelations($this->db, MongoDBRef::create('content', $oId), $oIdChildsRelated);
+			$this->updateRelations($this->db, \Acd\Lib\MongoDBRef::create('content', $oId), $oIdChildsRelated);
 		}
 
 		return $contentDo;
@@ -197,7 +195,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$mongoCollection->deleteOne(['_id' => $oId]);
 		}
 
-		$this->updateRelations($this->db, MongoDBRef::create('content', $oId), array());
+		$this->updateRelations($this->db, \Acd\Lib\MongoDBRef::create('content', $oId), array());
 	}
 
 	private function loadById($structureDo, $id)
@@ -294,7 +292,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 
 		foreach ($document['data'] as $key => $value) {
 			// External content
-			if (isset($value['ref']) && MongoDBRef::isRef($value['ref'])) {
+			if (isset($value['ref']) && \Acd\Lib\MongoDBRef::isRef($value['ref'])) {
 				$document['data'][$key] = $this->normalizeRef($value);
 			}
 			// Collection
@@ -532,7 +530,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			return 0;
 		}
 		$mongold = new ObjectID($id);
-		$filter = ['child' => MongoDBRef::create('content', $mongold)];
+		$filter = ['child' => \Acd\Lib\MongoDBRef::create('content', $mongold)];
 
 		if (!$this->isInitialized($structureDo)) {
 			$this->initialize($structureDo);
@@ -552,7 +550,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 		// Id's from parents
 		$id = $query->getCondition();
 		$mongold = new ObjectID($id);
-		$filter = ['child' => MongoDBRef::create('content', $mongold)];
+		$filter = ['child' => \Acd\Lib\MongoDBRef::create('content', $mongold)];
 		$mongoCollection = $this->db->relation;
 		$cursor = $mongoCollection->find($filter, ['typeMap' => [
 			'array' => 'array',
@@ -600,22 +598,24 @@ class PersistentManagerMongoDB implements iPersistentManager
 	}
 	private function difuseAliasId($structureDo, $id, $filters = [])
 	{
-		// return array
-		// [
-		//	[
-		//		'idStructure' => 'foo',
-		//		'idContent' => 'var1',
-		//		'aliasId' => 'uno'
-		//	],
-		//	[
-		//		'idStructure' => 'foo',
-		//		'idContent' => 'var2',
-		//		'aliasId' => 'uno/dos'
-		//	]
-		//];
+    // return array
+    // [
+    //	[
+    //		'idStructure' => 'foo',
+    //		'idContent' => 'var1',
+    //		'aliasId' => 'uno'
+    //	],
+    //	[
+    //		'idStructure' => 'foo',
+    //		'idContent' => 'var2',
+    //		'aliasId' => 'uno/dos'
+    //	]
+    //];
 
-		// db.content.find({"alias_id" : {$in : ["alias", "alias/dos"]}}, {"_id": true, "id_structure" : true, "alias_id" : true});
-		// Select elements with alias-id start match ie. one match with one/two
+    // db.content.find({"alias_id" : {$in : ["alias", "alias/dos"]}}, {"_id": true, "id_structure" : true, "alias_id" : true});
+    // Select elements with alias-id start match ie. one match with one/two
+
+
 		$aDirectoryParts = explode('/', $id);
 		$aDirectory = [];
 		$directoryTmp = '';
@@ -628,6 +628,11 @@ class PersistentManagerMongoDB implements iPersistentManager
 				$aDirectory[] = $directoryTmp;
 			}
 		}
+
+    if (strlen(implode($aDirectory)) == 0) {
+      $aDirectory = [];
+      $aDirectory[] = $id;
+    }
 
 		$filter = [
 			'alias_id' => [
