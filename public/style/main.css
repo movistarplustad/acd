@@ -465,7 +465,7 @@ input[readonly] {
 	margin: 0;
 }
 .collection.ui-sortable > li.find {
-	margin: 1em 0 0 -1em;
+	margin: 1em 0 0 0;
 	background-image: none;
 	cursor: auto;
 	list-style-type: none;

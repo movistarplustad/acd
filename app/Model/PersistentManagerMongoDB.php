@@ -7,7 +7,6 @@ use Acd\Model\Exception\PersistentManagerMongoDBException;
 use Acd\Model\Mongodb\Filter;
 use Acd\Lib\MongoDBRef;
 
-
 class PersistentManagerMongoDB implements iPersistentManager
 {
 	private $db;
@@ -15,9 +14,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 	private $structuresCache;
 	public function initialize($structureDo)
 	{
-		//		$mongo = new \MongoClient($_ENV['ACD_MONGODB_SERVER']);
-		//		$this->db = $mongo->selectDB($_ENV['ACD_MONGODB_DB']);
-
 		//TODO: Ver cóm pasarle el servidor, porque si es '' no funciona.
 		$mongo = new \MongoDB\Client($_ENV['ACD_MONGODB_SERVER']);
 		$this->db = $mongo->selectDatabase($_ENV['ACD_MONGODB_DB']);
@@ -412,6 +408,10 @@ class PersistentManagerMongoDB implements iPersistentManager
 							if ($contentsTemp) {
 								$field->setValue($contentsTemp->one());
 							}
+							else {
+								// Without validity we delete the value, as if not setted
+								$field->setValue(null);
+							}
 						} else {
 							$field->setValue(null);
 						}
@@ -600,22 +600,6 @@ class PersistentManagerMongoDB implements iPersistentManager
 	}
 	private function difuseAliasId($structureDo, $id, $filters = [])
 	{
-		// return array
-		// [
-		//	[
-		//		'idStructure' => 'foo',
-		//		'idContent' => 'var1',
-		//		'aliasId' => 'uno'
-		//	],
-		//	[
-		//		'idStructure' => 'foo',
-		//		'idContent' => 'var2',
-		//		'aliasId' => 'uno/dos'
-		//	]
-		//];
-
-		// db.content.find({"alias_id" : {$in : ["alias", "alias/dos"]}}, {"_id": true, "id_structure" : true, "alias_id" : true});
-		// Select elements with alias-id start match ie. one match with one/two
 		$aDirectoryParts = explode('/', $id);
 		$aDirectory = [];
 		$directoryTmp = '';
@@ -628,6 +612,11 @@ class PersistentManagerMongoDB implements iPersistentManager
 				$aDirectory[] = $directoryTmp;
 			}
 		}
+
+    if (strlen(implode($aDirectory)) == 0) {
+      $aDirectory = [];
+      $aDirectory[] = $id;
+    }
 
 		$filter = [
 			'alias_id' => [
