@@ -9,7 +9,7 @@
     "license": "GPL3",
     "type": "project",
     "require": {
-        "php": "^7.1",
+        "php": "^8.3",
         "mongodb/mongodb": "^1.2",
         "vlucas/phpdotenv": "^4.0"
     },

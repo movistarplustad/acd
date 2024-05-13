@@ -180,7 +180,7 @@ class FieldDo
 	}
 	// Load structure configuration
 	public function load($data) {
-		$id = key($data);
+		$id = key($data->getArrayCopy());
 		$this->setid($id);
 		$this->setType($data[$id]['type']);
 		$this->setName($data[$id]['name']);

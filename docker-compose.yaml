@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  acd:
+    build:
+      context: .
+      target: development
+    environment:
+      APPLICATION_ENV: local
+    entrypoint: /usr/local/bin/docker-syslog-entrypoint.sh
+    volumes:
+      - .:/var/www/html
+      # Share volumes.
+      - ./../contenido:/mnt/contenido:z
+      - ./dev-utils/conf/syslog/docker-syslog-entrypoint.sh:/usr/local/bin/docker-syslog-entrypoint.sh
+    ports:
+      - 13010:80
+      - 13011:443
+    networks:
+      - movistar-network
+networks:
+  movistar-network:
+    driver: brigde
+    external: true
+    attachable: true
