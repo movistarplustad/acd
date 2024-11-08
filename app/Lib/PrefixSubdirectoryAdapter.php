@@ -6,11 +6,10 @@ namespace Acd\Lib;
 use League\Flysystem\Local\FallbackMimeTypeDetector;
 
 use const DIRECTORY_SEPARATOR;
-
-
-
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\Flysystem\Config;
+use League\Flysystem\FileAttributes;
+
 class PrefixSubdirectoryAdapter extends LocalFilesystemAdapter
 {
     protected function pathWithSubdirectory(string $path): string
@@ -42,5 +41,15 @@ class PrefixSubdirectoryAdapter extends LocalFilesystemAdapter
     public function delete(string $path): void {
         $pathWithSubdirectory = self::pathWithSubdirectory($path);
         parent::delete($pathWithSubdirectory);
+    }
+    public function lastModified(string $path): FileAttributes
+    {
+        $pathWithSubdirectory = self::pathWithSubdirectory($path);
+        return parent::lastModified($pathWithSubdirectory);
+    }
+    public function mimeType(string $path): FileAttributes
+    {
+        $pathWithSubdirectory = self::pathWithSubdirectory($path);
+        return parent::mimeType($pathWithSubdirectory);
     }
 }
