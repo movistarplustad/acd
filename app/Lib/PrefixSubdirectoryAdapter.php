@@ -40,7 +40,26 @@ class PrefixSubdirectoryAdapter extends LocalFilesystemAdapter
     }
     public function delete(string $path): void {
         $pathWithSubdirectory = self::pathWithSubdirectory($path);
+        $dirPath = dirname($pathWithSubdirectory);
         parent::delete($pathWithSubdirectory);
+        $directoryIsEmpty = self::directoryIsEmpty($dirPath);
+        if ($directoryIsEmpty) {
+            parent::deleteDirectory($dirPath);
+        }
+    }
+    private function directoryIsEmpty(string $path): bool
+    {
+        try {
+            $listing = parent::listContents($path, false);
+
+            /** @var \League\Flysystem\StorageAttributes $item */
+            foreach ($listing as $item) {
+                return false;
+            }
+            return true;
+        } catch (FilesystemException $exception) {
+            return false;
+        }
     }
     public function lastModified(string $path): FileAttributes
     {

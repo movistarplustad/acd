@@ -16,7 +16,7 @@ use League\Flysystem\UnableToDeleteFile;
 $storageBinaryAdapter = getenv('ACD_DATA_CONTENT_STORAGE_ADAPTER');
 $filesystem = StorageSystemFactory::getFilesystem($storageBinaryAdapter);
 $path = 'fichero';
-echo "<p>Sistema de almacenamiento $storageBinaryAdapter</p>";
+echo "<p>Sistema de almacenamiento <strong>$storageBinaryAdapter</strong></p>";
 echo "<p>Ruta $path</p>";
 
 if(($_POST['action'] ?? null) === 'save') {
@@ -47,6 +47,14 @@ if(($_POST['action'] ?? null) === 'delete') {
     try {
         $filesystem->delete($path);
         var_dump("ok delete", $path);
+        try {
+            $pathDir = dirname($path);
+            var_dump("ok delete dir", $pathDir);
+        } catch (FilesystemException | UnableToCheckExistence $exception) {
+            // handle the error
+            var_dump("fail", $exception->getMessage());
+        }
+
     } catch (FilesystemException | UnableToDeleteFile $exception) {
         // handle the error
         var_dump("fail", $exception->getMessage());
