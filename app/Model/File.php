@@ -1,6 +1,14 @@
 <?php
 namespace Acd\Model;
 
+use Acd\Lib\StorageSystemFactory;
+use Acd\Lib\StorageSystemException;
+
+use League\Flysystem\FilesystemException;
+use League\Flysystem\UnableToReadFile;
+use League\Flysystem\UnableToWriteFile;
+use League\Flysystem\UnableToDeleteFile;
+
 class File
 {
 	private $mimeTypes;
@@ -81,7 +89,8 @@ class File
 			return ['width' => '', 'height' => ''];
 		}
 	}
-	public static function getPath($idFile) {
-		return $_ENV[ 'ACD_DATA_CONTENT_PATH'].'/'.substr($idFile, 0, 3).'/'.$idFile;
+	public static function getFileSystemFromEnvConfiguration() {
+		$storageBinaryAdapter = getenv('ACD_DATA_CONTENT_STORAGE_ADAPTER');
+		return StorageSystemFactory::getFilesystem($storageBinaryAdapter);
 	}
 }

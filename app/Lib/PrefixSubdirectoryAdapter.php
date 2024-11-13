@@ -71,4 +71,19 @@ class PrefixSubdirectoryAdapter extends LocalFilesystemAdapter
         $pathWithSubdirectory = self::pathWithSubdirectory($path);
         return parent::mimeType($pathWithSubdirectory);
     }
+    public function fileSize(string $path): FileAttributes
+    {
+        $pathWithSubdirectory = self::pathWithSubdirectory($path);
+        return parent::fileSize($pathWithSubdirectory);
+    }
+    public function fileExists(string $location): bool
+    {
+        $pathWithSubdirectory = self::pathWithSubdirectory($path);
+        return parent::fileExists($pathWithSubdirectory);
+    }
+    public function checksum(string $path, Config $config): string
+    {
+        $pathWithSubdirectory = self::pathWithSubdirectory($path);
+        return parent::checksum($path, $config);
+    }
 }

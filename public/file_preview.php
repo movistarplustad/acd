@@ -37,30 +37,34 @@ if( !function_exists('apache_request_headers') ) {
 
 $idFile = $_GET['id'];
 $fileName = $_GET['n'];
-$path = File::getPath($idFile);
-if (is_readable($path)){
-	$fileTools = new File();
-	$fileType = $fileTools->getMimeFromFilename($fileName);
-	if (!$fileType) {
-		$fileType = $fileTools->getMimeFromPath($path);
-	}
-
+try {
+	$filesystem = File::getFileSystemFromEnvConfiguration();
+    $response = $filesystem->read($idFile);
+    $lastModified = $filesystem->lastModified($idFile);
+	$fileSize = $filesystem->fileSize($idFile);
+    try {
+        $mimeType = $filesystem->mimeType($idFile);
+    } catch (FilesystemException | UnableToRetrieveMetadata $exception) {
+		// to uknown 'application/octet-stream';
+        $mimeType = 'application/octet-stream';
+    }
 	// Getting headers sent by the client.
 	$headers = apache_request_headers();
 
 	// Checking if the client is validating his cache and if it is current.
-	if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == filemtime($path))) {
+	if (isset($headers['If-Modified-Since']) && (strtotime($headers['If-Modified-Since']) == $lastModified)) {
 		// Client's cache IS current, so we just respond '304 Not Modified'.
-		header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($path)).' GMT', true, 304);
+		header('Last-Modified: '.gmdate('D, d M Y H:i:s', $lastModified).' GMT', true, 304);
 	} else {
 		// Image not cached or cache outdated, we respond '200 OK' and output the image.
-		header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($path)).' GMT', true, 200);
-		header('Content-Length: '.filesize($path));
-		header('Content-Type: '.$fileType);
-		print file_get_contents($path);
+		header('Last-Modified: '.gmdate('D, d M Y H:i:s', $lastModified).' GMT', true, 200);
+		header('Content-Length: '.$fileSize);
+		header('Content-Type: '.$mimeType);
+		print $response;
 	}
-}
-else {
+} catch (FilesystemException | UnableToReadFile $exception) {
+    // handle the error
 	header("HTTP/1.0 404 Not Found");
 	echo "404. File not found";
+    echo $exception->getMessage();
 }

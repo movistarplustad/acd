@@ -214,50 +214,52 @@ class ContentLoader extends StructureDo
 	{
 		$contentId = $contentDo->getId();
 		$structureId = $contentDo->getIdStructure();
+		$filesystem = File::getFileSystemFromEnvConfiguration();
 		foreach ($contentDo->getFields() as $field) {
 			if ($field->getType() === $field::TYPE_FILE) {
 				$uploadData = $field->getValue();
 				$fieldId = $field->getId();
 				$idFile = md5(urlencode($structureId) . '/' . urlencode($fieldId) . '/' . $contentId);
-				$destinationPath = File::getPath($idFile);
-				$dirPath = dirname($destinationPath);
 				if (isset($uploadData['delete']) && $uploadData['delete']) {
-					if (is_writable($destinationPath)) {
-						unlink($destinationPath);
-						if (count(scandir($dirPath)) == 2) {
-							rmdir($dirPath);
-						}
+					try {
+						$filesystem->delete($idFile);
 						// after the attribute 'delete' is removed
 						$uploadData['alt'] = '';
 						$uploadData['value'] = '';
 						$uploadData['original_name'] = '';
 						$uploadData['type'] = '';
 						$uploadData['size'] = '';
+					} catch (FilesystemException | UnableToDeleteFile $exception) {
+						throw new ContentLoaderException($exception->getMessage());
 					}
 				}
 				if (isset($uploadData['tmp_name']) && $uploadData['tmp_name'] && isset($uploadData['size']) && $uploadData['size']) {
-					if (!is_dir($dirPath)) {
-						mkdir($dirPath, 0755, true);
+					try {
+						$contents = file_get_contents($uploadData['tmp_name']);
+						$config = [];
+						if(!empty($uploadData['type'])) {
+							$config['mimetype'] = $uploadData['type'];
+						}
+						switch ($uploadData['origin']) {
+							case $_ENV[ 'ACD_DATA_CONTENT_BINARY_ORIGIN_FORM_UPLOAD']:
+								$filesystem->write($idFile, $contents, $config);
+								unlink($uploadData['tmp_name']);
+								break;
+							case $_ENV['ACD_DATA_CONTENT_BINARY_ORIGIN_FORM_PATH ']:
+								$filesystem->write($idFile, $contents, $config);
+								break;
+							default:
+								throw new ContentLoaderException('Error on save file, origin method not supported.', 1);
+								break;
+						}
+						$uploadData['value'] = $idFile;
+						unset($uploadData['tmp_name']);
+						unset($uploadData['delete']);
+						$field->setValue($uploadData);
+					} catch (FilesystemException | UnableToWriteFile $exception) {
+						throw new ContentLoaderException($exception->getMessage(), 1);
 					}
-					switch ($uploadData['origin']) {
-						case $_ENV[ 'ACD_DATA_CONTENT_BINARY_ORIGIN_FORM_UPLOAD']:
-							move_uploaded_file($uploadData['tmp_name'], $destinationPath);
-							break;
-
-						case $_ENV['ACD_DATA_CONTENT_BINARY_ORIGIN_FORM_PATH ']:
-							copy($uploadData['tmp_name'], $destinationPath);
-							break;
-
-						default:
-							throw new ContentLoaderException('Error on save file, origin method not supported.', 1);
-							break;
-					}
-
-					$uploadData['value'] = $idFile;
 				}
-				unset($uploadData['tmp_name']);
-				unset($uploadData['delete']);
-				$field->setValue($uploadData);
 			}
 		}
 
@@ -282,13 +284,11 @@ class ContentLoader extends StructureDo
 				// TODO unify with saveUpload
 				$fieldId = $field->getId();
 				$idFile = md5(urlencode($structureId) . '/' . urlencode($fieldId) . '/' . $contentId);
-				$destinationPath = File::getPath($idFile);
-				if (is_writable($destinationPath)) {
-					unlink($destinationPath);
-					$dirPath = dirname($destinationPath);
-					if (count(scandir($dirPath)) == 2) {
-						rmdir($dirPath);
-					}
+				$filesystem = File::getFileSystemFromEnvConfiguration();
+				try {
+					$filesystem->delete($idFile);
+				} catch (FilesystemException | UnableToDeleteFile $exception) {
+					throw new ContentLoaderException($exception->getMessage());
 				}
 			}
 		}
