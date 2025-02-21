@@ -58,7 +58,7 @@ class Auth  {
 		}
 		else {
 			$loginCookie = isset($_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'login']) ? $_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'login'] : null;
-			$token = isset($_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'token']) ? $_COOKIE[$_ENV['ACD_COOKIE_PREFIX '].'token'] : null;
+			$token = isset($_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'token']) ? $_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'token'] : null;
 
 			return Auth::loginByPersintence($loginCookie, $token);
 		}
@@ -149,7 +149,7 @@ class Auth  {
 		// Eliminar los datos persistentes
 		$userLoader = new UserLoader();
 		$loginCookie = isset($_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'login']) ? $_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'login'] : null;
-		$token = isset($_COOKIE[$_ENV['ACD_COOKIE_PREFIX '].'token']) ? $_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'token'] : null;
+		$token = isset($_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'token']) ? $_COOKIE[$_ENV['ACD_COOKIE_PREFIX'].'token'] : null;
 		if($token !== '') {
 			$userLoader->deletePersistSession($token);
 		}

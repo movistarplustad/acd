@@ -376,6 +376,8 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$filter['id_structure'] = $structureDo->getId();
 		$validityDate = $filters['validity-date'] ?? null;
 		$filter = Filter::add($filter, Filter::periodOfValidity('period_of_validity', $validityDate));
+		$profile = $filters['profile'] ?? null;
+		$filter = Filter::add($filter, Filter::profile($profile));
 		$documentFound = $mongoCollection->findOne($filter, ['projection' => ["_id" => 1]]);
 		if ($documentFound) {
 			return $this->loadIdDepth($structureDo, (string) $documentFound['_id'], $depth, $filters);
