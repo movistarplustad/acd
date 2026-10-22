@@ -361,7 +361,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$result->add($this->loadIdDepth($structureDo, (string) $documentFound['_id'], $depth, $filters)->one());
 		}
 
-		$limits->setTotal($mongoCollection->count($query));
+		$limits->setTotal($mongoCollection->countDocuments($query));
 		$result->setLimits($limits);
 		return $result;
 	}
@@ -469,7 +469,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$contentFound->load($documentFound, $structureDo);
 			$result->add($contentFound, $documentFound['id']);
 		}
-		$limits->setTotal($mongoCollection->count($byStructureQuery));
+		$limits->setTotal($mongoCollection->countDocuments($byStructureQuery));
 		$result->setLimits($limits);
 
 		return $result;
@@ -520,7 +520,7 @@ class PersistentManagerMongoDB implements iPersistentManager
 			$result->add($contentFound, $documentFound['id']);
 		}
 
-		$limits->setTotal($mongoCollection->count($filter));
+		$limits->setTotal($mongoCollection->countDocuments($filter));
 		$result->setLimits($limits);
 		return $result;
 	}
