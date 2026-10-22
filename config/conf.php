@@ -9,7 +9,7 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
   throw new Exception('Can\'t find autoload.php. Did you install dependencies with Composer?');
 }
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/../');
 $dotenv->safeLoad();
 
 $_ENV['ACD_STORAGE_TYPES'] = [
