@@ -62,6 +62,8 @@ function expectString($value) {
 function expectObjectMongo($value){
     return gettype($value) === "object" && is_a($value, 'MongoDB\Driver\Manager') ;
 }
+echo "<h1>Php</h1>";
+echo "Version: " . phpversion();
 echo "<h1>Session</h1>";
 dump("session_save_handler", ini_get('session.save_handler'));
 dump("session_save_path", session_save_path());
