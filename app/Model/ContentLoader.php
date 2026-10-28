@@ -11,6 +11,7 @@ class ContentLoader extends StructureDo
 	const LOAD_MULTIPLE = 'MULTIPLE';
 	private $bStructureLoaded;
 	private $filters; // TODO
+	private $limits;
 	private $limitis;
 	private $persistentManager; // Load / update / save to persitent repository
 	public function __construct() {

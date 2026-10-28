@@ -31,11 +31,11 @@ class Limits
 		return $this->total;
 	}
 	public function setStep($step) {
-		$this->setStep = (int) $step;
-		$this->setUpper($this->getLower() + $this->setStep);
+		$this->step = (int) $step;
+		$this->setUpper($this->getLower() + $this->step);
 	}
 	public function getStep() {
-		return $this->setStep;
+		return $this->step;
 	}
 	public function setPage($nPage) {
 		$this->setLower($nPage * $this->getStep());

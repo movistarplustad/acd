@@ -15,6 +15,7 @@ class Relation
 	private $content;
 	private $sessionNavigation;
 	private $requestUrl;
+	private $parents;
 	const VIEW_LIST = 'list'; // List of all parents of a contents
 
 	public function __construct()
@@ -25,11 +26,11 @@ class Relation
 	/* Setters and getters attributes */
 	public function setIdContent($id)
 	{
-		$this->id = (string)$id;
+		$this->idContent = (string)$id;
 	}
 	public function getIdContent()
 	{
-		return $this->id;
+		return $this->idContent;
 	}
 	public function setIdStructure($idStructure)
 	{

@@ -3,6 +3,7 @@ namespace Acd\Model;
 
 class PersistentUserManagerMongoDB implements iPersistentUserManager
 {
+    private $mongo;
     private $db;
     public function initialize()
     {

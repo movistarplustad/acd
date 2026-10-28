@@ -5,6 +5,7 @@ class PersistentManagerMySqlException extends \exception {} // TODO Unificar
 class PersistentManagerMySql implements iPersistentManager
 {
 	private $mysqli;
+	private $structuresCache;
 	public function initialize($structureDo) {
 		//Data from global.php
 		$dbHost = $_ENV[ 'ACD_MYSQL_SERVER'];

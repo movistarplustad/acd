@@ -39,6 +39,7 @@ class FieldDo
 	private $instance; // Attributes for the relation width external content, eg. date validation
 	private $options; // Enumerated posible options
 	private $bDirty; // Field indicator to store if the value has modified without save
+	private $dirtyNumItem; // Position of the modified item (0 for simple fields)
 	private $restrictedStructures; // In field type collection or content restrict to certain structures
 
 	public static function getAvailableTypes() {

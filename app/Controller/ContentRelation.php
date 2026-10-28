@@ -20,6 +20,8 @@ class ContentRelation
 	private $action;
 	private $structures;
 	private $contentParent;
+	private $sessionNavigation;
+	private $requestUrl;
 
 	public function __construct()
 	{

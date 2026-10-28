@@ -13,11 +13,11 @@ class Summary
 	/* Setters and getters attributes */
 	public function setIdContent($id)
 	{
-		$this->id = (string)$id;
+		$this->idContent = (string)$id;
 	}
 	public function getIdContent()
 	{
-		return $this->id;
+		return $this->idContent;
 	}
 	public function setIdStructure($idStructure)
 	{

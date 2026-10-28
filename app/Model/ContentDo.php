@@ -21,7 +21,7 @@ class ContentDo
 	private $saveTime;
 	private $tags;
 	private $profile;
-	//private $data; /* Array key/value of variable fields */
+	private $data; /* Array key/value of variable fields */
 	private $fields;
 	private $parent; /* ContentDo Relation in complex structures */
 	private $countParents; /* Number of parent, used in content editor for info */
