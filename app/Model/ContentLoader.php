@@ -124,6 +124,9 @@ class ContentLoader extends StructureDo
 			case 'id+countParents':
 				//$content = $this->loadContents('id', $params);
 				$contents = $this->loadContents('id-deep', ['id' => $params, 'depth' => 2]);
+				if (!$contents) {
+					return null;
+				}
 				$content = $contents->one();
 
 				if ($content) {
@@ -172,7 +175,7 @@ class ContentLoader extends StructureDo
 				break;
 		}
 	}
-	// Return always a ContentsDo collection or throw exception
+	// Return a ContentsDo collection, or null if nothing was found
 	public function loadContents($method, $params = null)
 	{
 		$result = $this->_loadContents($method, ContentLoader::LOAD_MULTIPLE, $params);
@@ -185,9 +188,8 @@ class ContentLoader extends StructureDo
 			// It's a ContentsDo
 			return $result;
 		} else {
-			// Error is not a ContentDo or ContentsDo
-			throw new ContentLoaderException("Error in loadContents '$method' does not support load return ContentsDo", 1);
-			return $result;
+			// Error: is not a ContentDo or ContentsDo
+			return null;
 		}
 	}
 	// Return ContentDo object, other value like number or null
@@ -270,6 +272,9 @@ class ContentLoader extends StructureDo
 		$persistentManager = $this->getManager();
 
 		$contentDo = $this->loadContent('id', $id);
+		if (!$contentDo) {
+			throw new ContentLoaderException("Unable to delete content with ID $id: not found", 404);
+		}
 		$this->deleteUpload($contentDo);
 
 		return $persistentManager->delete($this, $id);

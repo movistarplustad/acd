@@ -218,6 +218,10 @@ switch ($action) {
 		$contentLoader = new ContentLoader();
 		$contentLoader->setId($idStructureType);
 		$content = $contentLoader->loadContent('id+countParents', $id);
+		if (!$content) {
+			header("HTTP/1.0 404 Not Found");
+			die("Error 404, content with ID " . htmlspecialchars($id) . " not found. Go back to <a href='content.php?a=list_contents&amp;id=" . urlencode($idStructureType) . "'>content list</a>.");
+		}
 		//$content = $contents->get($id); // TODO cambiar por next / first...
 		//dd($contentLoader->getFields(),$structure, $content);
 

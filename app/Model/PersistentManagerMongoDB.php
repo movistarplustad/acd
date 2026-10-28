@@ -220,9 +220,13 @@ class PersistentManagerMongoDB implements iPersistentManager
 					'document' => 'array'
 				]
 			]);
-			$documentFound = $this->normalizeDocument($documentFound);
-			$contentFound = new ContentDo();
-			$contentFound->load($documentFound, $structureDo);
+			if ($documentFound) {
+				$documentFound = $this->normalizeDocument($documentFound);
+				$contentFound = new ContentDo();
+				$contentFound->load($documentFound, $structureDo);
+			} else {
+				$contentFound = null;
+			}
 		} catch (\Exception $e) {
 			$contentFound = null;
 		}
@@ -437,6 +441,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 		if ($depth > 0) {
 			$depth--;
 			$content = $this->loadById($structureDo, $idContent);
+			if (!$content) {
+				return null;
+			}
 
 			$validityDate = $filters['validity-date'] ?? null;
 			$profile = $filters['profile'] ?? '';
