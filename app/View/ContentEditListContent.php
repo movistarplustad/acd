@@ -21,7 +21,7 @@ class ContentEditListContent extends Template {
 		$this->__set('structure', $structure);
 	}
 	public function setTitleSeach($titleSearch) {
-		$this->__set('titleSearch', $titleSearch);
+		$this->__set('titleSearch', $titleSearch ?? '');
 	}
 	public function load() {
 		$this->structure->loadFromFile();

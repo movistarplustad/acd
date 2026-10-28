@@ -18,11 +18,11 @@ class ContentEditSearch extends Template {
 		$this->__set('idField', $idField);
 	}
 	public function setPositionInField($positionInField) {
-		$this->__set('positionInField', $positionInField);
+		$this->__set('positionInField', $positionInField ?? '');
 	}
 
 	public function setTitleSeach($titleSearch) {
-		$this->__set('titleSearch', $titleSearch);
+		$this->__set('titleSearch', $titleSearch ?? '');
 	}
 	public function setStructureTypeSeach($idStructureTypeSearch) {
 		$this->__set('idStructureTypeSearch', $idStructureTypeSearch);

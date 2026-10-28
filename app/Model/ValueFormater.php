@@ -203,7 +203,7 @@ class ValueFormater
 			return $value === '-' ? '' : $value;
 		};
 
-		if(isset($formater[$type][$format])) {
+		if($type !== null && $format !== null && isset($formater[$type][$format])) {
 			return $formater[$type][$format]($value);
 		}
 		else {
@@ -338,7 +338,7 @@ class ValueFormater
 			return $value ? $value : '-';
 		};
 
-		if(isset($formater[$type][$format])) {
+		if($type !== null && $format !== null && isset($formater[$type][$format])) {
 			return $formater[$type][$format]($value);
 		}
 		else {

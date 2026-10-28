@@ -28,8 +28,8 @@ class ContentEditContent extends Template {
 	public function setContent($content) {
 		$this->__set('content', $content);
 		$this->__set('idContent', ValueFormater::encode($content->getId(), ValueFormater::TYPE_ID, ValueFormater::FORMAT_EDITOR));
-		$this->__set('contentTitle', ValueFormater::encode($content->getTitle(), ValueFormater::TYPE_TEXT_SIMPLE, ValueFormater::FORMAT_EDITOR));
-		$this->__set('aliasId', ValueFormater::encode($content->getAliasId(), ValueFormater::TYPE_TEXT_SIMPLE, ValueFormater::FORMAT_EDITOR));
+		$this->__set('contentTitle', ValueFormater::encode($content->getTitle(), ValueFormater::TYPE_TEXT_SIMPLE, ValueFormater::FORMAT_EDITOR) ?? '');
+		$this->__set('aliasId', ValueFormater::encode($content->getAliasId(), ValueFormater::TYPE_TEXT_SIMPLE, ValueFormater::FORMAT_EDITOR) ?? '');
 		$this->__set('contentTags', ValueFormater::encode($content->getTags(), ValueFormater::TYPE_TAGS, ValueFormater::FORMAT_EDITOR));
 		// TODO: add all sticky fields al Field objects
 		// Create fieldOutput object and set options for structure and set value for content

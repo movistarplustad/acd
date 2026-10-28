@@ -17,7 +17,7 @@ try {
 	}
 	$lastNavigation = $navigation->top();
 	//d($lastNavigation);
-	$returnUrl = $lastNavigation['url'];
+	$returnUrl = $lastNavigation['url'] ?? 'index.php';
 	$navigation->save();
 }
 catch(SessionNavigationException $e) {
