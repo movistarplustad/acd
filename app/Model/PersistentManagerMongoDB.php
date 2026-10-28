@@ -348,20 +348,50 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$limits = $query->getLimits();
 		$mongoCollection = $this->db->content;
 		// db.content.find({"tags":{ $in : ["portadacine"]}, "id_structure" : "padre"}).pretty()
-		$query = ['tags' => ['$in' => $tags], 'id_structure' => $structureDo->getId()];
-		$cursor = $mongoCollection->find($query, [
-			'skip' => $limits->getLower(),
-			'limit' => $limits->getUpper() - $limits->getLower(),
-			'typeMap' => [
-				'array' => 'array',
-				'root' => 'array',
-				'document' => 'array'
-			]
-		]);
+		$queryObject = $query;
+
+		$query = [];
+
+		if (!empty($tags)) {
+			$query['tags'] = ['$in' => $tags];
+		}
+
+		$query['id_structure'] = $structureDo->getId();
+
+		$validityDate = $queryObject->getCondition('validity-date');
+		$validityFrom = $queryObject->getCondition('validity-from');
+		$validityTo = $queryObject->getCondition('validity-to');
+
+		if ($validityDate) {
+			$query = Filter::add($query, Filter::periodOfValidity('period_of_validity', $validityDate));
+		} elseif ($validityFrom || $validityTo) {
+			$query = Filter::add($query, Filter::periodOfValidityRange('period_of_validity', $validityFrom, $validityTo));
+		}
+
+		$opciones = [];
+
+		if ($limits) {
+			$opciones['skip'] = $limits->getLower();
+			$opciones['limit'] = $limits->getUpper() - $limits->getLower();
+		}
+
+		$opciones['typeMap'] = [
+			'array' => 'array',
+			'root' => 'array',
+			'document' => 'array'
+		];
+
+		$opciones['sort'] = ['data.titulo' => -1];
+
+		$cursor = $mongoCollection->find($query, $opciones);
 
 		$result = new ContentsDo();
 		foreach ($cursor as $documentFound) {
-			$result->add($this->loadIdDepth($structureDo, (string) $documentFound['_id'], $depth, $filters)->one());
+			$test = $this->loadIdDepth($structureDo, (string) $documentFound['_id'], $depth, $filters);
+
+			if (!is_null($test)) {
+				$result->add($test->one());
+			}
 		}
 
 		$limits->setTotal($mongoCollection->countDocuments($query));
