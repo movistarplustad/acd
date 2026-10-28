@@ -498,6 +498,11 @@ class PersistentManagerMongoDB implements iPersistentManager
 		// Set pagination limits
 		$limits = $query->getLimits();
 
+		//TODO [GW-21] Importante, controlar de otra manera la gestión del filtrado de estos elementos
+		if (Auth::getRol() === $_ENV['ACD_ROL_EDITOR']) {
+			$byStructureQuery['tags'] = ['$nin' => ['blog']];
+		}
+
 		$cursor = $mongoCollection->find($byStructureQuery, [
 			'sort' => ['_id' => -1],
 			'skip' => $limits->getLower(),
