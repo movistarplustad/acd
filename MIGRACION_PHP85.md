@@ -121,7 +121,7 @@ Al declarar las propiedades que antes eran dinámicas, hay que ponerlas **al fin
 |---|---|---|---|
 | 1 | **Composer de redirecciones.** Redirecciones vive en `webplus/editores` con Laravel 7, que exige phpdotenv ^4. Esta versión del ACD exige `php ^8.3` y phpdotenv ^5, así que no se puede instalar ahí tal como está. Redirecciones se va a migrar a PHP 8.5.12, y esa migración tiene que incluir un Laravel con phpdotenv 5. Avatar (Laravel 13, phpdotenv 5.7) sí es compatible | Alta para el despliegue | Decidido: se resuelve con la migración de redirecciones a PHP 8.5.12 (fuera de este repo). Hasta entonces, no desplegar esta versión en redirecciones |
 | 2 | **tag-deep ordena siempre por `data.titulo` -1.** Igual que en neo, pero en master no se ordenaba, así que `loadContent('tag-deep')` puede devolver otro contenido. Con títulos repetidos, o en estructuras sin `data.titulo` (como `pagina`), el orden quedaba al azar del motor. No se ha visto que avatar ni redirecciones usen tag-deep | Baja | Decidido: igual que neo, para mantener los dos ACD sincronizados. Se probó `_id` como desempate (`5d4d06b`) y se revirtió (`ffd761b`); queda como mejora a hacer a la vez aquí y en neo. En neo solo lo usa el blog, que ordena por `save_ts` (`order=desc` por defecto) |
-| 3 | **tag-deep filtra la vigencia en MongoDB.** Excluye los documentos sin `period_of_validity` o con `start`/`end` a `null`, que en PHP se trataban como sin límite. Solo afecta a documentos antiguos, porque al guardar se escribe `''`. `alias-id-deep` ya lo hacía en master | Baja-media | Por decidir |
+| 3 | **tag-deep filtra la vigencia en MongoDB.** Cuando se pasa `validity-date`, solo `''` cuenta como sin límite: los documentos sin `period_of_validity`, con `start`/`end` ausentes o `null`, o con `[]` quedan fuera, mientras que en PHP (`id-deep` y relacionados) se dan por vigentes. `alias-id-deep` ya lo hacía en master. En los datos reales hay 1.587 de 70.469 contenidos en ese caso: 1.141 de 2015 sin campo y sin tags, 440 de `meta-tags`, `blog_modulo_libre` y `post_modulo_base` con `[]` (se cargan como relacionados, con la comprobación de PHP), 4 `blog_post` caducados en 1970 (excluidos con los dos métodos) y 2 `base_legal` de 2011 con tag `migracion`. Ninguna llamada actual de neo cambia de resultado | Baja | Decidido: igual que neo, para mantener los dos ACD sincronizados. La corrección queda en «Mejoras futuras conjuntas con neo» |
 | 4 | **`ACD_ROL_EDITOR` en los consumidores.** Si no está definida, o si se comparte sesión con un login de editor del ACD, `all` oculta los contenidos con tag `blog`. `editor-search` no aplica el filtro, igual que en neo | Baja | Definirla en avatar y redirecciones |
 | 5 | **`content.php?s[]=x`.** Ahora da TypeError (500); antes, un aviso. Solo afecta a usuarios autenticados | Baja | Pendiente |
 | 6 | **MongoDB 8 sin probar** | Media | Probar en un host con kernel compatible |
@@ -130,6 +130,17 @@ Al declarar las propiedades que antes eran dinámicas, hay que ponerlas **al fin
 | 9 | **Tag para avatar y redirecciones** (fijan `v1.1.0`) | — | Cuando se decida |
 | 10 | **`content_rel.php` con un padre inexistente** da error | Baja | Ya ocurría en master |
 | 11 | **Al clonar no se copian los ficheros.** `file.tpl` es igual en master y neo | — | Comportamiento de siempre |
+
+### Mejoras futuras conjuntas con neo
+
+No se hacen en esta migración, que busca comportarse igual que el ACD de neo. Hay que hacerlas a la vez aquí y en neo para que los dos sigan sincronizados.
+
+| Mejora | Qué resuelve |
+|---|---|
+| **Filtro de vigencia con vacíos.** Que `Filter::periodOfValidity` y `Filter::periodOfValidityRange` traten como sin límite el campo ausente, `null` y `[]`, igual que `ContentDo::checkValidityDate` | El riesgo 3: tag-deep y `alias-id-deep` darían el mismo resultado que PHP. Es requisito para llevar a MongoDB el filtro de los relacionados, porque si no desaparecerían los 440 módulos del blog con `[]` |
+| **`profile` en MongoDB.** Añadir `Filter::profile` a la consulta de tag-deep | Hoy el perfil se comprueba en PHP después de paginar: con `profile`, las páginas salen incompletas y el total cuenta contenidos de otros perfiles |
+| **Agrupar las consultas de los relacionados.** Una consulta `_id` `$in` por campo `collection` (con vigencia y perfil en el filtro), reordenando en PHP según el orden de la colección | Ahora `loadIdDepth` hace un `findOne` por cada relacionado y nivel. Se pasaría de N consultas a una por campo |
+| **Desempate por `_id` en tag-deep.** Añadirlo al orden (`data.titulo` o `save_ts`) | Con títulos o fechas repetidos, o en estructuras sin `data.titulo`, el orden lo decide el motor y la paginación no es estable (riesgo 2) |
 
 ## Plan de pruebas
 
