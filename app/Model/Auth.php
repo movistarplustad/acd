@@ -65,7 +65,7 @@ class Auth  {
 	}
 
 	public static function getRol() {
-		return $_SESSION['rol'];
+		return $_SESSION['rol'] ?? null;
 	}
 
 	// TODO: Borrar
