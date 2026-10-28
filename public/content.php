@@ -116,7 +116,7 @@ switch ($action) {
 
 		if ($titleSearch) {
 			$whereCondition = [];
-			$whereCondition['title'] = $titleSearch;
+			$whereCondition['all'] = $titleSearch;
 			$whereCondition['idStructure'] = $id;
 			$contents = $contentLoader->loadContents('editor-search', $whereCondition);
 		}

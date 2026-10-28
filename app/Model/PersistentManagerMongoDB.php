@@ -485,12 +485,34 @@ class PersistentManagerMongoDB implements iPersistentManager
 		//db.content.find({"id_structure": "item_mosaico", "title" : /.*quinto.*/i}).pretty()
 		//db.getCollection('content').find({$or : [{"alias_id" : "dos"}, {"title" : "dos"}, {"tags" : [{$in : 'dos'}]}], 'id_structure' : 'unimongo'})
 		$filter = array();
-		$stringFilter = array();
-		if (isset($query->getCondition()['title'])) {
-			$search = $query->getCondition()['title'];
-			$stringFilter[] = array('title' => array('$regex' => new \MongoDB\BSON\Regex("^.*$search.*", 'i')));
-			$stringFilter[] = array('alias_id' => array('$regex' => new \MongoDB\BSON\Regex("^.*$search.*", 'i')));
+		$stringFilter = [];
+
+		$commonSearch = $query->getCondition()['all'] ?? '';
+		$titleSearch = $query->getCondition()['title'] ?? '';
+		$aliasIdSearch = $query->getCondition()['alias_id'] ?? '';
+		$tagsSearch = $query->getCondition()['tags'] ?? '';
+
+		if ($titleSearch != '' || $commonSearch != '') {
+			$search = $titleSearch ?: $commonSearch;
+			$escapedSearch = preg_quote($search, '/');
+
+			$stringFilter[] = array('title' => array('$regex' => new \MongoDB\BSON\Regex("^.*$escapedSearch.*", 'i')));
+		}
+
+		if ($aliasIdSearch != '' || $commonSearch != '') {
+			$search = $aliasIdSearch ?: $commonSearch;
+			$escapedSearch = preg_quote($search, '/');
+
+			$stringFilter[] = array('alias_id' => array('$regex' => new \MongoDB\BSON\Regex("^.*$escapedSearch.*", 'i')));
+		}
+
+		if ($tagsSearch != '' || $commonSearch != '') {
+			$search = $tagsSearch ?: $commonSearch;
+
 			$stringFilter[] = array('tags' => array('$in' => array($search)));
+		}
+
+		if (!empty($stringFilter)) {
 			$filter['$or'] = $stringFilter;
 		}
 		if (isset($query->getCondition()['idStructure'])) {

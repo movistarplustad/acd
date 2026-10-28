@@ -146,7 +146,7 @@ class ContentRelation
 			$contentLoader->setId($this->getIdStructureTypeSearch());
 			$whereCondition = [];
 			if ($this->getTitleSearch()) {
-				$whereCondition['title'] = $this->getTitleSearch();
+				$whereCondition['all'] = $this->getTitleSearch();
 			}
 			if ($this->getIdStructureTypeSearch()) {
 				$whereCondition['idStructure'] = $this->getIdStructureTypeSearch();
