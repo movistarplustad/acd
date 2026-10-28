@@ -244,7 +244,7 @@ class ContentLoader extends StructureDo
 							move_uploaded_file($uploadData['tmp_name'], $destinationPath);
 							break;
 
-						case $_ENV['ACD_DATA_CONTENT_BINARY_ORIGIN_FORM_PATH ']:
+						case $_ENV['ACD_DATA_CONTENT_BINARY_ORIGIN_FORM_PATH']:
 							copy($uploadData['tmp_name'], $destinationPath);
 							break;
 
