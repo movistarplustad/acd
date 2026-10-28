@@ -131,8 +131,8 @@ Al declarar las propiedades que antes eran dinámicas, hay que ponerlas **al fin
 | 9 | **Tag para avatar y redirecciones** (fijan `v1.1.0`) | — | Cuando se decida |
 | 10 | **`content_rel.php` con un padre inexistente** da error | Baja | Ya ocurría en master |
 | 11 | **Al clonar no se copian los ficheros.** `file.tpl` es igual en master y neo | — | Comportamiento de siempre |
-| 12 | **Estructura o contenido ausente o inexistente en la URL.** `content.php` (`a=new`/`edit` sin `idt` válido), `content_rel.php` (sin `idp`, `idtp`, `idt` o `f` válidos), `relation.php` (sin `id` o `idt` válidos) y `do_process_content.php` (sin `ids`) acaban en una excepción sin capturar (500) en vez de un 404. Solo con URLs manipuladas | Baja | Ya ocurría en master. Pendiente de decidir si se convierte en 404 |
-| 13 | **Alta de usuario o enumerado con el id vacío.** Desde el formulario normal, dejar el id en blanco da 500 (`Collection::getId()`/`getPassword()`): con id vacío se cargan todos en vez de uno | Baja | Ya ocurría en master. Pendiente de decidir si se valida el id |
+| 12 | **Estructura o contenido ausente o inexistente en la URL.** `content.php` (`a=new`/`edit` sin `idt` válido), `content_rel.php` (sin `idp`, `idtp`, `idt` o `f` válidos), `relation.php` (sin `id` o `idt` válidos) y `do_process_content.php` (sin `ids`) acaban en una excepción sin capturar (500) en vez de un 404. Solo con URLs manipuladas | Baja | Mejora por hacer: devolver 404. Ya ocurría en master |
+| 13 | **Alta de usuario o enumerado con el id vacío.** Desde el formulario normal, dejar el id en blanco da 500 (`Collection::getId()`/`getPassword()`): con id vacío se cargan todos en vez de uno | Baja | Mejora por hacer: validar el id y volver al formulario con error. Ya ocurría en master |
 
 ### Mejoras futuras conjuntas con neo
 
