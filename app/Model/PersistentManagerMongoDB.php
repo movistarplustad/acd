@@ -400,6 +400,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 		} else {
 			$opciones['sort'] = ['data.titulo' => -1];
 		}
+		// Desempate para que la paginación sea estable con títulos o fechas repetidos (o sin
+		// data.titulo). Ascendente, para acercarse al orden natural que se devolvía hasta ahora
+		$opciones['sort']['_id'] = 1;
 
 		$cursor = $mongoCollection->find($query, $opciones);
 
