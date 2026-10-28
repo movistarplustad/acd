@@ -167,7 +167,7 @@ class FieldDo
 		return $this->restrictedStructures;
 	}
 	public function setDirty($bDirty, $numItem = 0) {
-		$this->bDirty = (boolean)$bDirty;
+		$this->bDirty = (bool)$bDirty;
 		if($this->bDirty) {
 			$this->dirtyNumItem = $numItem; // For collections, other fields numItem === 0
 		}

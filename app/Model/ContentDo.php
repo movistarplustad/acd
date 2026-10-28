@@ -88,7 +88,7 @@ class ContentDo
 				// Purge infinite values, transform to empty string (infinite values not accepted in json grammar)
 				$periodOfValidityTmp = [];
 				foreach ($this->periodOfValidity as $key => $value) {
-					$periodOfValidityTmp[$key] = is_finite((double) $value) ? $value : '';
+					$periodOfValidityTmp[$key] = is_finite((float) $value) ? $value : '';
 				}
 
 				return $periodOfValidityTmp;

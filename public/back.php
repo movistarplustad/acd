@@ -8,7 +8,7 @@ require '../config/conf.php';
 ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
-$backSteps = isset($_GET['p']) ? (integer) $_GET['p'] : 1;
+$backSteps = isset($_GET['p']) ? (int) $_GET['p'] : 1;
 $navigation = new SessionNavigation();
 $navigation->load();
 try {

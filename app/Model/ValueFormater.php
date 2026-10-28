@@ -250,13 +250,13 @@ class ValueFormater
 		};
 		// Purge infinite values in FORMAT_TOKENIZE, transform to empty string (infinite values not accepted in json grammar)
 		$formater[self::TYPE_DATE][self::FORMAT_TOKENIZE] = function ($value) {
-			$result = is_finite((double) $value) ? $value : '';
+			$result = is_finite((float) $value) ? $value : '';
 			return $result;
 		};
 		$formater[self::TYPE_DATE_RANGE][self::FORMAT_TOKENIZE] = function ($aValue) {
 			$result = [];
 			foreach ($aValue as $key => $value) {
-				$result[$key] = is_finite((double) $value) ? $value : '';
+				$result[$key] = is_finite((float) $value) ? $value : '';
 			}
 			return $result;
 		};
