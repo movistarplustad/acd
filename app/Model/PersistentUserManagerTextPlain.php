@@ -15,7 +15,7 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
     }
     private static function persistentFilePath($token)
     {
-        return $_ENV['$PATH_AUTH_PERMANENT_LOGIN_DIR'] . '/' . $token;
+        return $_ENV['ACD_PATH_AUTH_PERMANENT_LOGIN_DIR'] . '/' . $token;
     }
     public function initialize()
     {
@@ -179,11 +179,11 @@ class PersistentUserManagerTextPlain implements iPersistentUserManager
     }
     public function loadUserPersistSessions($id)
     {
-        if ($id && $handle = opendir($_ENV['$PATH_AUTH_PERMANENT_LOGIN_DIR'])) {
+        if ($id && $handle = opendir($_ENV['ACD_PATH_AUTH_PERMANENT_LOGIN_DIR'])) {
             $authPersistentCollectionFound = new Collection();
             while (false !== ($entry = readdir($handle))) {
-                if (is_file($_ENV['PATH_AUTH_PERMANENT_LOGIN_DIR'] . "/$entry")) {
-                    $documentFound = file_get_contents($_ENV['PATH_AUTH_PERMANENT_LOGIN_DIR'] . "/$entry");
+                if (is_file($_ENV['ACD_PATH_AUTH_PERMANENT_LOGIN_DIR'] . "/$entry")) {
+                    $documentFound = file_get_contents($_ENV['ACD_PATH_AUTH_PERMANENT_LOGIN_DIR'] . "/$entry");
                     $documentFound = json_decode($documentFound, true);
                     if ($documentFound['login'] === $id) {
                         $authPersistent = new AuthPersistentDo();
