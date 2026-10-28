@@ -7,10 +7,12 @@ class Query
 	private $condition;
 	private $limits;
 	private $depth;
+	private $order;
 
 	public function __construct() {
 		$this->setLimits (new Limits(0, 50));
 		$this->setDepth (10);
+		$this->setOrder ('');
 	}
 	public function setType($type) {
 		$this->type = $type;
@@ -22,6 +24,10 @@ class Query
 		if(isset($condition['depth'])) {
 			$this->setDepth($condition['depth']);
 			unset($condition['depth']);
+		}
+		if(isset($condition['order'])) {
+			$this->setOrder($condition['order']);
+			unset($condition['order']);
 		}
 		$this->condition = $condition;
 	}
@@ -45,5 +51,11 @@ class Query
 	}
 	public function getDepth() {
 		return $this->depth;
+	}
+	public function setOrder($order) {
+		$this->order = $order;
+	}
+	public function getOrder() {
+		return $this->order;
 	}
 }

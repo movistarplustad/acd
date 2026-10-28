@@ -381,7 +381,21 @@ class PersistentManagerMongoDB implements iPersistentManager
 			'document' => 'array'
 		];
 
-		$opciones['sort'] = ['data.titulo' => -1];
+		if (!is_null($queryObject->getOrder())) {
+			$orderTranslation = [
+				'asc' => ['save_ts' => 1],
+				'desc' => ['save_ts' => -1]
+			];
+
+			$order = $queryObject->getOrder();
+			if (isset($orderTranslation[$order])) {
+				$opciones['sort'] = $orderTranslation[$order];
+			} else {
+				$opciones['sort'] = ['data.titulo' => -1];
+			}
+		} else {
+			$opciones['sort'] = ['data.titulo' => -1];
+		}
 
 		$cursor = $mongoCollection->find($query, $opciones);
 
