@@ -180,7 +180,8 @@ class FieldDo
 	}
 	// Load structure configuration
 	public function load($data) {
-		$id = key($data->getArrayCopy());
+		// Text plain storage gives an array, MongoDB a BSONDocument (ArrayObject)
+		$id = key($data instanceof \ArrayObject ? $data->getArrayCopy() : $data);
 		$this->setid($id);
 		$this->setType($data[$id]['type']);
 		$this->setName($data[$id]['name']);
