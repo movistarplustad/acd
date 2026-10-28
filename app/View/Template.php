@@ -11,7 +11,7 @@ class Template {
 
 	public function __set($name, $value) {
 		if($name == 'view_template_file') {
-			throw new Exception("Cannot bind variable named 'view_template_file'");
+			throw new \Exception("Cannot bind variable named 'view_template_file'");
 		}
 		$this->vars[$name] = $value;
 	}

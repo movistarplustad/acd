@@ -66,7 +66,7 @@ class Field extends Template {
 			return $tpl;
 		}
 		else {
-			throw new Exception("Template form not defined [$type]", self::EXCEPTION_TEMPLATE_FORM_TYPE);
+			throw new \Exception("Template form not defined [$type]", self::EXCEPTION_TEMPLATE_FORM_TYPE);
 
 		}
 	}
