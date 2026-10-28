@@ -617,10 +617,12 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$filters = ['id_structure' => $structureDo->getId()];
 
 		if (!empty($conditions['q'])) {
+			// q is plain text, not a regular expression
+			$escapedSearch = preg_quote($conditions['q'], '/');
 			$filters['$or'] = [];
-			$filters['$or'][] = ['title' => ['$regex' => new \MongoDB\BSON\Regex($conditions['q'], 'i')]];
-			$filters['$or'][] = ['alias_id' => ['$regex' => new \MongoDB\BSON\Regex($conditions['q'], 'i')]];
-			$filters['$or'][] = ['data.destino.href' => ['$regex' => new \MongoDB\BSON\Regex($conditions['q'], 'i')]];
+			$filters['$or'][] = ['title' => ['$regex' => new \MongoDB\BSON\Regex($escapedSearch, 'i')]];
+			$filters['$or'][] = ['alias_id' => ['$regex' => new \MongoDB\BSON\Regex($escapedSearch, 'i')]];
+			$filters['$or'][] = ['data.destino.href' => ['$regex' => new \MongoDB\BSON\Regex($escapedSearch, 'i')]];
 		}
 
 		if (!empty($conditions['validity-date'])) {
