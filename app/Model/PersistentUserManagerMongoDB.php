@@ -164,7 +164,8 @@ class PersistentUserManagerMongoDB implements iPersistentUserManager
     }
     public function normalizeDocument($document)
     {
-        $document['id'] = (string) $document['_id'];
+        // findOne() returns null for a missing id; it is still normalized to an empty document
+        $document['id'] = (string) ($document['_id'] ?? '');
         unset($document['_id']);
         return $document;
     }

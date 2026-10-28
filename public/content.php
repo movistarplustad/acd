@@ -15,6 +15,7 @@ use Acd\View\ContentEditListContent;
 use Acd\View\ContentEditIndex;
 use Acd\View\ContentEditContent;
 use Acd\View\HeaderMenu;
+use Acd\Lib\Request;
 
 require '../config/conf.php';
 
@@ -38,8 +39,8 @@ function loadNewRef($idRef, $idStructure) {
 
 	return $content;
 }
-$action = isset($_REQUEST['a']) ? $_REQUEST['a'] : 'list_structures';
-$view = isset($_REQUEST['v']) ? $_REQUEST['v'] : 'page';
+$action = Request::string($_REQUEST, 'a') ?? 'list_structures';
+$view = Request::string($_REQUEST, 'v') ?? 'page';
 
 if (!Auth::isLoged()) {
 	$action = 'login';
@@ -85,8 +86,8 @@ switch ($action) {
 		break;
 	case 'delete':
 	case 'list_contents':
-		$id = $_REQUEST['id'];
-		@$titleSearch = $_REQUEST['s'];
+		$id = Request::string($_REQUEST, 'id') ?? '';
+		$titleSearch = Request::string($_REQUEST, 's') ?? '';
 		$numPage = isset($_REQUEST['p']) ? (int) $_REQUEST['p'] : 0;
 		$bResult = isset($_REQUEST['r']) && $_REQUEST['r'] === 'ko' ? false : true;
 
@@ -140,10 +141,10 @@ switch ($action) {
 		}
 		break;
 	case 'new':
-		$idStructureType = $_REQUEST['idt'];
+		$idStructureType = Request::string($_REQUEST, 'idt');
 		// Posible parent
-		@$idParent = $_REQUEST['idp'] ?: null; // TODO duplicado en edit y clone
-		@$idTypeParent = $_REQUEST['idtp'] ?: null;
+		$idParent = Request::string($_REQUEST, 'idp') ?: null; // TODO duplicado en edit y clone
+		$idTypeParent = Request::string($_REQUEST, 'idtp') ?: null;
 
 		// back button
 		$navigation = new SessionNavigation();
@@ -186,11 +187,11 @@ switch ($action) {
 	case 'clone':
 	case 'summary':
 		$bResult = isset($_REQUEST['r']) && $_REQUEST['r'] == 'ok' ? true : false;
-		$id = $_REQUEST['id'];
-		$idStructureType = $_REQUEST['idt'];
+		$id = Request::string($_REQUEST, 'id') ?? '';
+		$idStructureType = Request::string($_REQUEST, 'idt');
 		// Posible parent
-		@$idParent = $_REQUEST['idp'] ?: null;
-		@$idTypeParent = $_REQUEST['idtp'] ?: null;
+		$idParent = Request::string($_REQUEST, 'idp') ?: null;
+		$idTypeParent = Request::string($_REQUEST, 'idtp') ?: null;
 
 		// back button
 		$back = false;
@@ -228,8 +229,8 @@ switch ($action) {
 		// Modify relations or collection of relations
 		//&idm=imagen alternativa&refm=yy54f5c82b6803fabb068b4567&reftm=enlace&posm=0
 		if (isset($_REQUEST['modrel']) && isset($_REQUEST['element'])) {
-			$elements = $_REQUEST['element'];
-			$selectedElements = @$_REQUEST['posElement'] ?: [];
+			$elements = Request::array($_REQUEST, 'element');
+			$selectedElements = Request::strings($_REQUEST, 'posElement');
 			$insertRelatedPosition = 'bottom';
 			if ((isset($_REQUEST['action']) && $_REQUEST['action'] === 'add top') ||
 				(isset($_REQUEST['relto']) && $_REQUEST['relto'] === 'top')) {
@@ -237,10 +238,10 @@ switch ($action) {
 				$selectedElements = array_reverse($selectedElements);
 			}
 			foreach ($selectedElements as $position) {
-				$modifiedFieldName = $elements[$position]['idm']; //'imagen alternativa'; // elementos
-				$modifiedRef = $elements[$position]['refm']; //'xx54f5c82b6803fabb068b4567';
-				$modifiedIdStructure = $elements[$position]['reftm']; //''enlace';
-				$modifiedFieldPosition = isset($elements[$position]['posm']) ? $elements[$position]['posm'] : null;
+				$modifiedFieldName = Request::string($elements[$position] ?? null, 'idm') ?? ''; //'imagen alternativa'; // elementos
+				$modifiedRef = Request::string($elements[$position] ?? null, 'refm') ?? ''; //'xx54f5c82b6803fabb068b4567';
+				$modifiedIdStructure = Request::string($elements[$position] ?? null, 'reftm') ?? ''; //''enlace';
+				$modifiedFieldPosition = Request::string($elements[$position] ?? null, 'posm');
 				try {
 					//+d($content->getFields());
 					$modifiedField = $content->getFields()->get($modifiedFieldName);
@@ -258,7 +259,7 @@ switch ($action) {
 							}
 							else {
 								$newRef = $modifiedField->getValue();
-								$newRef->remove($modifiedFieldPosition);
+								$newRef->remove($modifiedFieldPosition ?? '');
 							}
 
 							break;

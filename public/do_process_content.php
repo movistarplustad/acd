@@ -6,6 +6,7 @@ use Acd\Model\ContentDo;
 use Acd\Model\StructureDo;
 use Acd\Model\ContentLoader;
 use Acd\Model\File;
+use Acd\Lib\Request;
 
 require '../config/conf.php';
 
@@ -16,23 +17,24 @@ if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER'], $_ENV['ACD_R
 
 const ERROR = 'ERROR';
 
-$action = isset($_POST['a']) ? strtolower($_POST['a']) : ERROR;
-$postId = isset($_POST['id']) ? $_POST['id'] : [];
+$action = strtolower(Request::string($_POST, 'a') ?? ERROR);
+$postId = Request::strings($_POST, 'id');
 if ($action == 'save' && $postId == '') {
 	$action = 'new';
 }
 $returnUrl = null;
 foreach ($postId as $id) {
-	$idStructure = $_POST['ids'][$id];
-	$title = isset($_POST['title'][$id]) ? $_POST['title'][$id] : null;
+	$idStructure = Request::string($_POST['ids'] ?? null, $id);
+	$title = Request::string($_POST['title'] ?? null, $id);
 	$periodOfValidity = array(
-		ContentDo::PERIOD_OF_VALIDITY_START => isset($_POST['validityPeriod'][$id]['start']) ? $_POST['validityPeriod'][$id]['start'] : null,
-		ContentDo::PERIOD_OF_VALIDITY_END => isset($_POST['validityPeriod'][$id]['end']) ? $_POST['validityPeriod'][$id]['end'] : null
+		ContentDo::PERIOD_OF_VALIDITY_START => Request::string($_POST['validityPeriod'][$id] ?? null, 'start'),
+		ContentDo::PERIOD_OF_VALIDITY_END => Request::string($_POST['validityPeriod'][$id] ?? null, 'end')
 	);
 	$periodOfValidity = ValueFormater::decode($periodOfValidity, ValueFormater::TYPE_DATE_TIME_RANGE, ValueFormater::FORMAT_EDITOR);
 
-	$aliasId = isset($_POST['aliasId'][$id]) ? $_POST['aliasId'][$id] : null;
-	$tags = isset($_POST['tags'][$id]) ? ValueFormater::decode($_POST['tags'][$id], ValueFormater::TYPE_TAGS, ValueFormater::FORMAT_EDITOR) : array();
+	$aliasId = Request::string($_POST['aliasId'] ?? null, $id);
+	$tags = Request::string($_POST['tags'] ?? null, $id);
+	$tags = $tags !== null ? ValueFormater::decode($tags, ValueFormater::TYPE_TAGS, ValueFormater::FORMAT_EDITOR) : array();
 	$profile = isset($_POST['profile'][$id]) ? ValueFormater::decode($_POST['profile'][$id], ValueFormater::TYPE_LIST_MULTIPLE, ValueFormater::FORMAT_EDITOR) : array();
 	$fields = isset($_POST['field'][$id]) ? $_POST['field'][$id] : array();
 

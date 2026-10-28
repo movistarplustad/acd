@@ -4,6 +4,7 @@ use Acd\Controller\RolPermissionHttp;
 use Acd\Model\EnumeratedLoader;
 use Acd\Model\Query;
 use Acd\Model\EnumeratedDo;
+use Acd\Lib\Request;
 
 
 require '../config/conf.php';
@@ -13,9 +14,9 @@ session_start();
 
 if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER']])) die();
 
-$action = strtolower($_POST['a']);
-$id = $_POST['id'];
-$elements = isset($_POST['element']) ? $_POST['element'] : array();
+$action = strtolower(Request::string($_POST, 'a') ?? '');
+$id = Request::string($_POST, 'id') ?? '';
+$elements = Request::array($_POST, 'element');
 
 $enumeratedLoader = new EnumeratedLoader();
 $query = new Query();
@@ -45,10 +46,11 @@ switch ($action) {
 			foreach ($elements as $key => $value) {
 				if (!isset($elements[$key]['delete'])) {
 					// New element
-					if ($key === $modifiedEnumerated::EMPTY_ID && $elements[$key]['id'] === '') {
+					$elementId = Request::string($value, 'id');
+					if ($elementId === null || ($key === $modifiedEnumerated::EMPTY_ID && $elementId === '')) {
 						continue;
 					}
-					$saveItems[$elements[$key]['id']] = $elements[$key]['description'];
+					$saveItems[$elementId] = Request::string($value, 'description') ?? '';
 				}
 			}
 			$modifiedEnumerated->setItems($saveItems);

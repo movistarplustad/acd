@@ -4,6 +4,7 @@ use Acd\Controller\RolPermissionHttp;
 use Acd\Model\UserLoader;
 use Acd\Model\UserDo;
 use Acd\Model\Query;
+use Acd\Lib\Request;
 
 require '../config/conf.php';
 
@@ -11,10 +12,10 @@ ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER']])) die();
 
-$action = strtolower($_POST['a']);
-$id = $_POST['id'];
-$password = isset($_POST['password']) && $_POST['password'] !== '' ? $_POST['password'] : null; // If password is not setted store a null value
-$rol = isset($_POST['rol']) ? $_POST['rol'] : null;
+$action = strtolower(Request::string($_POST, 'a') ?? '');
+$id = Request::string($_POST, 'id') ?? '';
+$password = Request::string($_POST, 'password') ?: null; // If password is not setted store a null value
+$rol = Request::string($_POST, 'rol');
 
 $userLoader = new UserLoader();
 $query = new Query();

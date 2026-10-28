@@ -8,6 +8,7 @@ use Acd\Controller\RolPermissionHttp;
 use Acd\Controller\Relation;
 use Acd\View\BaseSkeleton;
 use Acd\View\Tools;
+use Acd\Lib\Request;
 
 require '../config/conf.php';
 
@@ -17,8 +18,8 @@ session_start();
 if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER'], $_ENV['ACD_ROL_EDITOR']])) die();
 
 $action = 'ok';
-@$id = $_GET['id']; // id content
-@$idt = $_GET['idt']; // id structure
+$id = Request::string($_GET, 'id'); // id content
+$idt = Request::string($_GET, 'idt'); // id structure
 //$action = 'show';
 
 $relationController = new Relation();

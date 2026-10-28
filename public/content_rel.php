@@ -4,6 +4,7 @@ use Acd\Controller\RolPermissionHttp;
 use Acd\Controller\ContentRelation;
 use Acd\View\BaseSkeleton;
 use Acd\View\Tools;
+use Acd\Lib\Request;
 
 require '../config/conf.php';
 
@@ -15,14 +16,14 @@ session_start();
 
 if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER'], $_ENV['ACD_ROL_EDITOR']])) die();
 
-$action =$_GET['a'];
-@$id = $_GET['id'];
-@$idStructureTypeSearch = $_GET['idt'];
-@$titleSearch = $_GET['s'];
-$idParent = $_GET['idp'];
-$idStructureTypeParent = $_GET['idtp'];
-$idField = $_GET['f'];
-@$positionInField = $_GET['p'];
+$action = Request::string($_GET, 'a');
+$id = Request::string($_GET, 'id');
+$idStructureTypeSearch = Request::string($_GET, 'idt');
+$titleSearch = Request::string($_GET, 's') ?? '';
+$idParent = Request::string($_GET, 'idp');
+$idStructureTypeParent = Request::string($_GET, 'idtp');
+$idField = Request::string($_GET, 'f') ?? '';
+$positionInField = Request::string($_GET, 'p');
 $numPage = isset($_GET['p']) ? (int) $_GET['p'] : 0;
 
 $contentRelationController = new ContentRelation();

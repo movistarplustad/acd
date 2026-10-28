@@ -5,6 +5,7 @@ use Acd\Model\StructuresDo;
 use Acd\Model\StructureDo;
 use Acd\Model\EnumeratedDo;
 use Acd\Model\FieldDo;
+use Acd\Lib\Request;
 
 require '../config/conf.php';
 
@@ -12,11 +13,11 @@ ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 if(!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER']])) die();
 
-$accion = strtolower($_POST['a']);
-$id = $_POST['id'];
-$name = isset($_POST['name']) ? $_POST['name'] : null;
-$storage = isset($_POST['storage']) ? $_POST['storage'] : null;
-$new_field_type = isset($_POST['new_field']) ? $_POST['new_field'] : null;
+$accion = strtolower(Request::string($_POST, 'a') ?? '');
+$id = Request::string($_POST, 'id') ?? ''; // never null: a new structure without id must be rejected
+$name = Request::string($_POST, 'name');
+$storage = Request::string($_POST, 'storage');
+$new_field_type = Request::string($_POST, 'new_field');
 $fields = isset($_POST['field']) ? $_POST['field'] : array();
 
 $structures = new StructuresDo();
@@ -88,7 +89,7 @@ switch ($accion) {
 			$returnUrl = 'index.php?a=edit&r=ok&id='.urlencode($id);
 		}
 		else {
-			$returnUrl = 'index.php?a='.$accion.'&r=ko&id='.urlencode($id).'&name='.urlencode($name).'&storage='.urlencode($storage);
+			$returnUrl = 'index.php?a='.$accion.'&r=ko&id='.urlencode($id).'&name='.urlencode($name ?? '').'&storage='.urlencode($storage ?? '');
 		}
 		break;
 	case 'clone':
