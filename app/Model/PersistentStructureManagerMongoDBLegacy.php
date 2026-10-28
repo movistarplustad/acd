@@ -1,7 +1,6 @@
 <?php
 namespace Acd\Model;
 
-class PersistentStructureManagerMongoDBException extends \exception {} // TODO Unificar
 class PersistentStructureManagerMongoDBLegacy implements iPersistentStructureManager
 {
 	private $mongo;

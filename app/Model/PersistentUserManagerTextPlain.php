@@ -4,9 +4,6 @@ namespace Acd\Model;
 
 use Acd\conf;
 
-class PersistentManagerTextPlainException extends \exception
-{
-} // TODO Unificar
 class PersistentUserManagerTextPlain implements iPersistentUserManager
 {
     private function getStoragePath($structureDo)

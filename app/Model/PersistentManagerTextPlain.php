@@ -1,7 +1,6 @@
 <?php
 namespace Acd\Model;
 
-class PersistentManagerTextPlainException extends \exception {} // TODO Unificar
 class PersistentManagerTextPlain implements iPersistentManager
 {
 	private function getStoragePath($structureDo) {
