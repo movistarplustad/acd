@@ -2,6 +2,8 @@
 namespace Acd\View;
 
 use Acd\Model\StructureDo;
+use Acd\Model\ContentsDo;
+use Acd\Model\Limits;
 // Output
 class ContentEditListContent extends Template {
 	public function __construct() {
@@ -25,6 +27,13 @@ class ContentEditListContent extends Template {
 		$this->structure->loadFromFile();
 	}
 	public function setContents($contents) {
+		// No result: show an empty list
+		if (!$contents) {
+			$contents = new ContentsDo();
+			$limits = new Limits();
+			$limits->setTotal(0);
+			$contents->setLimits($limits);
+		}
 		$this->__set('contents', $contents);
 	}
 	public function setResultDesc($description, $code) {

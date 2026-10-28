@@ -1,5 +1,7 @@
 <?php
 namespace Acd\View;
+
+use Acd\Model\ContentsDo;
 // Output
 class Relation extends Template {
 	public function __construct() {
@@ -10,7 +12,7 @@ class Relation extends Template {
 		$this->__set('contentTitle', $contentTitle);
 	}
 	public function setParentList($parentList) {
-		$this->__set('parentList', $parentList);
+		$this->__set('parentList', $parentList ?? new ContentsDo()); // No result: show an empty list
 	}
 
 	public function render($tpl = '') {

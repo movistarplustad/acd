@@ -52,7 +52,7 @@ class Relation
 	{
 		$this->content = $content;
 	}
-	private function getContent()
+	public function getContent()
 	{
 		return $this->content;
 	}

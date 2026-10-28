@@ -26,6 +26,10 @@ $relationController->setIdContent($id);
 $relationController->setIdStructure($idt);
 $relationController->setRequestUrl($_SERVER["REQUEST_URI"]); // For history back
 $relationController->load();
+if (!$relationController->getContent()) {
+	header("HTTP/1.0 404 Not Found");
+	die("Error 404, content with ID " . htmlspecialchars($id) . " not found.");
+}
 
 $skeletonOu = new BaseSkeleton();
 $skeletonOu->setBodyClass('relation');
