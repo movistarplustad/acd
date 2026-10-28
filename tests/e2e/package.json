@@ -1,0 +1,15 @@
+{
+    "name": "acd-e2e",
+    "version": "1.0.0",
+    "description": "Pruebas E2E del editor ACD con Playwright",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "test": "npx playwright test",
+        "report": "npx playwright show-report"
+    },
+    "devDependencies": {
+        "@playwright/test": "1.58.2",
+        "@types/node": "^22.0.0"
+    }
+}
