@@ -21,11 +21,13 @@ class ContentDo
 	private $saveTime;
 	private $tags;
 	private $profile;
-	private $data; /* Array key/value of variable fields */
 	private $fields;
 	private $parent; /* ContentDo Relation in complex structures */
 	private $countParents; /* Number of parent, used in content editor for info */
 	private $countAliasId; /* Number aliad_id in all contents, used in content editor for info */
+	// Declared last: master created it dynamically at the end, and consumers such as
+	// redirecciones read (array) casts of this object by position
+	private $data; /* Array key/value of variable fields */
 
 	public function __construct()
 	{
