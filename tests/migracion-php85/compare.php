@@ -82,7 +82,8 @@ q('structures', function () {
 
 // Muestra determinista: los 8 primeros contenidos (por _id) de cada estructura
 $sample = [];
-foreach ($db->content->distinct('id_structure') as $st) {
+// Sin los documentos antiguos sin estructura: según el plan (con índice o no) distinct devuelve null o no
+foreach (array_filter($db->content->distinct('id_structure'), function ($s) { return (string) $s !== ''; }) as $st) {
 	foreach ($db->content->find(['id_structure' => $st], ['sort' => ['_id' => 1], 'limit' => 8, 'projection' => ['_id' => 1, 'alias_id' => 1]]) as $d) {
 		$sample[] = [$st, (string) $d['_id'], $d['alias_id'] ?? ''];
 	}
