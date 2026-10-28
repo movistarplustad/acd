@@ -21,6 +21,16 @@ class Query
 		return $this->type;
 	}
 	public function setCondition($condition) {
+		// Contract: validity dates are Unix timestamps
+		foreach (['validity-date', 'validity-from', 'validity-to'] as $name) {
+			if (!empty($condition[$name])) {
+				$timestamp = filter_var($condition[$name], FILTER_VALIDATE_INT);
+				if ($timestamp === false) {
+					throw new \InvalidArgumentException("'$name' must be a Unix timestamp, received: " . var_export($condition[$name], true));
+				}
+				$condition[$name] = $timestamp;
+			}
+		}
 		if(isset($condition['depth'])) {
 			$this->setDepth($condition['depth']);
 			unset($condition['depth']);
