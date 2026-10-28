@@ -85,6 +85,7 @@ En el conflicto de `composer.json` se mantuvieron las versiones de php85.
 | `661b5dd` | `shortlink-search` escapa el texto `q` |
 | `5047ea9` | El listado y las relaciones toleran `null`; `relation.php` da 404 si el contenido no existe |
 | `175ce41` | Editor sin avisos de PHP 8.5 con valores vacíos (plantillas, `ValueFormater`, `back.php`) |
+| `57b342e` | Parámetros de la petición con tipo (`Acd\Lib\Request`): un array donde se espera texto (`s[]=x`) se trata como ausente en vez de acabar en TypeError (500). En los `do_*`, el `id` ausente es `''`, así que el alta de estructura ya no puede guardar una estructura sin id. Sin aviso de PHP 8 al dar de alta usuarios y enumerados |
 | `da5946a` | Pruebas: suite Playwright y scripts de comparación |
 
 ## Cambios que afectan a los consumidores
@@ -123,13 +124,15 @@ Al declarar las propiedades que antes eran dinámicas, hay que ponerlas **al fin
 | 2 | **tag-deep ordena siempre por `data.titulo` -1.** Igual que en neo, pero en master no se ordenaba, así que `loadContent('tag-deep')` puede devolver otro contenido. Con títulos repetidos, o en estructuras sin `data.titulo` (como `pagina`), el orden quedaba al azar del motor. No se ha visto que avatar ni redirecciones usen tag-deep | Baja | Decidido: igual que neo, para mantener los dos ACD sincronizados. Se probó `_id` como desempate (`5d4d06b`) y se revirtió (`ffd761b`); queda como mejora a hacer a la vez aquí y en neo. En neo solo lo usa el blog, que ordena por `save_ts` (`order=desc` por defecto) |
 | 3 | **tag-deep filtra la vigencia en MongoDB.** Cuando se pasa `validity-date`, solo `''` cuenta como sin límite: los documentos sin `period_of_validity`, con `start`/`end` ausentes o `null`, o con `[]` quedan fuera, mientras que en PHP (`id-deep` y relacionados) se dan por vigentes. `alias-id-deep` ya lo hacía en master. En los datos reales hay 1.587 de 70.469 contenidos en ese caso: 1.141 de 2015 sin campo y sin tags, 440 de `meta-tags`, `blog_modulo_libre` y `post_modulo_base` con `[]` (se cargan como relacionados, con la comprobación de PHP), 4 `blog_post` caducados en 1970 (excluidos con los dos métodos) y 2 `base_legal` de 2011 con tag `migracion`. Ninguna llamada actual de neo cambia de resultado | Baja | Decidido: igual que neo, para mantener los dos ACD sincronizados. La corrección queda en «Mejoras futuras conjuntas con neo» |
 | 4 | **`ACD_ROL_EDITOR` en los consumidores.** Si no está definida, o si se comparte sesión con un login de editor del ACD, `all` oculta los contenidos con tag `blog`. `editor-search` no aplica el filtro, igual que en neo | Baja | Definirla en avatar y redirecciones |
-| 5 | **`content.php?s[]=x`.** Ahora da TypeError (500); antes, un aviso. Solo afecta a usuarios autenticados | Baja | Pendiente |
+| 5 | **Parámetros enviados como array** (`content.php?s[]=x` y similares). Con PHP 8 daban TypeError (500); antes, un aviso. Se revisaron todos los parámetros del editor enviando cada uno como array (142 peticiones) | Baja | Resuelto en `57b342e`. Un array se trata como parámetro ausente; lo que sigue fallando con un valor ausente está en los riesgos 12 y 13 |
 | 6 | **MongoDB 8 sin probar** | Media | Probar en un host con kernel compatible |
 | 7 | **Convención de variables de entorno** en avatar, redirecciones, neo y legacy | — | Más adelante |
 | 8 | **El blog de neo pasa la fecha en texto** | — | Al pasar neo a esta versión |
 | 9 | **Tag para avatar y redirecciones** (fijan `v1.1.0`) | — | Cuando se decida |
 | 10 | **`content_rel.php` con un padre inexistente** da error | Baja | Ya ocurría en master |
 | 11 | **Al clonar no se copian los ficheros.** `file.tpl` es igual en master y neo | — | Comportamiento de siempre |
+| 12 | **Estructura o contenido ausente o inexistente en la URL.** `content.php` (`a=new`/`edit` sin `idt` válido), `content_rel.php` (sin `idp`, `idtp`, `idt` o `f` válidos), `relation.php` (sin `id` o `idt` válidos) y `do_process_content.php` (sin `ids`) acaban en una excepción sin capturar (500) en vez de un 404. Solo con URLs manipuladas | Baja | Ya ocurría en master. Pendiente de decidir si se convierte en 404 |
+| 13 | **Alta de usuario o enumerado con el id vacío.** Desde el formulario normal, dejar el id en blanco da 500 (`Collection::getId()`/`getPassword()`): con id vacío se cargan todos en vez de uno | Baja | Ya ocurría en master. Pendiente de decidir si se valida el id |
 
 ### Mejoras futuras conjuntas con neo
 
@@ -154,6 +157,7 @@ No se hacen en esta migración, que busca comportarse igual que el ACD de neo. H
 | `02-navegacion.spec.ts` | Con los dos roles, en cada estructura: listado, paginación, alta, búsqueda con `a`, `(test)`, `.*`, `[` y `ñ`, ficha, resumen, clonado, relaciones, alias-id y búsqueda de relaciones |
 | `03-contenido.spec.ts` | Con el rol editor: alta (con ñ y acentos), subida de imagen y vista previa (bytes idénticos), relación de dos contenidos desde la búsqueda, padre visible en la página de relaciones del hijo, borrado desactivado si tiene padres, resumen, clonado y borrado de copia y original. Deja la base como estaba |
 | `04-no-encontrado.spec.ts` | 404 al editar un id inexistente o no válido, id escapado en el 404, 404 en relaciones y «volver» sin historial |
+| `05-parametros.spec.ts` | Parámetros enviados como array: búsqueda del listado y de relaciones con `s[]` (búsqueda vacía), ficha con `idp[]`/`idtp[]`, y alta de estructura con `id[]` (se rechaza y no rompe el listado de estructuras) |
 
 Todas las páginas se comprueban también en busca de errores de PHP en el HTML.
 
@@ -234,13 +238,15 @@ No están automatizadas. Hay que hacerlas en el entorno de preproducción, con l
 
 ### 3. Resultados (28-10-2026)
 
-Pruebas con el código de `366bb51`, el último cambio de la aplicación (el desempate de `5d4d06b` se revirtió en `ffd761b`, que deja el código igual):
+Pruebas con el código de `366bb51` (el desempate de `5d4d06b` se revirtió en `ffd761b`, que deja el código igual). `57b342e` solo cambia la lectura de parámetros del editor y la carga de usuarios y enumerados; con ese código se repitió Playwright en MongoDB 9:
 
 | Prueba | MongoDB 9.0 | MongoDB 7.0.45 |
 |---|---|---|
-| Playwright, 123 estructuras, 2 roles | 20/20, log de PHP vacío | 20/20, log de PHP vacío |
+| Playwright, 123 estructuras, 2 roles | 20/20, log de PHP vacío; con `57b342e`, 23/23 | 20/20, log de PHP vacío |
 | Paridad de consultas (3.856, 2 roles) | Solo las 3 diferencias esperadas | Solo las 3 diferencias esperadas |
 | Escritura (`smoke.php`) | Correcta | Igual que en MongoDB 9 |
 | Contrato con redirecciones | 300/300 | 300/300 |
+
+Con `57b342e` y MongoDB 9 también se enviaron como array, uno a uno, todos los parámetros de las 23 páginas y 13 formularios del editor (142 peticiones): ninguno acaba ya en TypeError. Y se comprobaron con los formularios reales el alta, la edición y la baja de usuarios, enumerados y estructuras, sin avisos en el log.
 
 Además, con el código de `175ce41` y MongoDB 9 se hizo un recorrido HTTP más amplio: 3.182 páginas por rol, abriendo hasta 6 contenidos de cada estructura. No dio errores y el log de PHP quedó vacío.
