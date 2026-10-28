@@ -119,7 +119,7 @@ Al declarar las propiedades que antes eran dinámicas, hay que ponerlas **al fin
 
 | # | Asunto | Gravedad | Estado |
 |---|---|---|---|
-| 1 | **Composer de redirecciones.** Redirecciones vive en `webplus/editores` con Laravel 7, que exige phpdotenv ^4. Esta versión del ACD exige `php ^8.3` y phpdotenv ^5, así que no se podrá instalar ahí hasta migrar redirecciones. Avatar (Laravel 13, phpdotenv 5.7) sí es compatible | Alta para el despliegue | Pendiente, fuera de este repo |
+| 1 | **Composer de redirecciones.** Redirecciones vive en `webplus/editores` con Laravel 7, que exige phpdotenv ^4. Esta versión del ACD exige `php ^8.3` y phpdotenv ^5, así que no se puede instalar ahí tal como está. Redirecciones se va a migrar a PHP 8.5.12, y esa migración tiene que incluir un Laravel con phpdotenv 5. Avatar (Laravel 13, phpdotenv 5.7) sí es compatible | Alta para el despliegue | Decidido: se resuelve con la migración de redirecciones a PHP 8.5.12 (fuera de este repo). Hasta entonces, no desplegar esta versión en redirecciones |
 | 2 | **tag-deep ordena siempre por `data.titulo` -1.** Igual que en neo, pero en master no se ordenaba. `loadContent('tag-deep')` puede devolver otro contenido, y sin desempate la paginación no es estable. No se ha visto que avatar ni redirecciones usen tag-deep | Media | Por decidir: mantener lo de neo, no ordenar sin `order` o añadir `_id` como desempate |
 | 3 | **tag-deep filtra la vigencia en MongoDB.** Excluye los documentos sin `period_of_validity` o con `start`/`end` a `null`, que en PHP se trataban como sin límite. Solo afecta a documentos antiguos, porque al guardar se escribe `''`. `alias-id-deep` ya lo hacía en master | Baja-media | Por decidir |
 | 4 | **`ACD_ROL_EDITOR` en los consumidores.** Si no está definida, o si se comparte sesión con un login de editor del ACD, `all` oculta los contenidos con tag `blog`. `editor-search` no aplica el filtro, igual que en neo | Baja | Definirla en avatar y redirecciones |
@@ -217,7 +217,7 @@ No están automatizadas. Hay que hacerlas en el entorno de preproducción, con l
 - [ ] **Avatar con esta versión:**
   - páginas que usan `alias-id-deep` con fecha y perfil;
   - variables `ACD_*`, incluida `ACD_ROL_EDITOR`, recibidas desde el contenedor.
-- [ ] **Redirecciones con esta versión** (cuando se resuelva el riesgo 1): descarga, alta con búsqueda de coincidencias y borrado.
+- [ ] **Redirecciones con esta versión** (tras migrar redirecciones a PHP 8.5.12, riesgo 1): descarga, alta con búsqueda de coincidencias y borrado.
 - [ ] **MongoDB 8,** si es la versión elegida: repetir 1.1 a 1.4.
 - [ ] **Log de PHP de preproducción** sin `Deprecated` ni `Warning` del ACD tras una jornada de uso.
 
