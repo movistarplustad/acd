@@ -133,6 +133,7 @@ Al declarar las propiedades que antes eran dinámicas, hay que ponerlas **al fin
 | 11 | **Al clonar no se copian los ficheros.** `file.tpl` es igual en master y neo | — | Comportamiento de siempre |
 | 12 | **Estructura o contenido ausente o inexistente en la URL.** `content.php` (`a=new`/`edit` sin `idt` válido), `content_rel.php` (sin `idp`, `idtp`, `idt` o `f` válidos), `relation.php` (sin `id` o `idt` válidos) y `do_process_content.php` (sin `ids`) acaban en una excepción sin capturar (500) en vez de un 404. Solo con URLs manipuladas | Baja | Mejora por hacer: devolver 404. Ya ocurría en master |
 | 13 | **Alta de usuario o enumerado con el id vacío.** Desde el formulario normal, dejar el id en blanco da 500 (`Collection::getId()`/`getPassword()`): con id vacío se cargan todos en vez de uno | Baja | Mejora por hacer: validar el id y volver al formulario con error. Ya ocurría en master |
+| 14 | **`do_install.php` sin una acción válida.** Si `a` no es «Create DB indexes» ni «Drop DB indexes», `$returnUrl` queda sin definir: aviso de PHP y redirección vacía | Baja | Mejora por hacer: volver a `install.php`. Ya ocurría en master |
 
 ### Mejoras futuras conjuntas con neo
 

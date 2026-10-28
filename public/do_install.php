@@ -5,15 +5,13 @@ require '../config/conf.php';
 use Acd\Model\ContentLoader;
 use Acd\Model\UserLoader;
 use Acd\Controller\RolPermissionHttp;
-use Acd\Lib\Request;
 
 ini_set('session.gc_maxlifetime', $_ENV[ 'ACD_SESSION_GC_MAXLIFETIME']);
 session_start();
 
 if (!RolPermissionHttp::checkUserEditor([$_ENV['ACD_ROL_DEVELOPER']])) die();
 
-$returnUrl = 'install.php';
-switch(Request::string($_POST, 'a')) {
+switch($_POST['a']) {
     case 'Create DB indexes':
         $total = 0;
         $contentLoader = new ContentLoader();
