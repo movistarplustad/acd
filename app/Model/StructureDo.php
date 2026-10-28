@@ -1,6 +1,8 @@
 <?php
 namespace Acd\Model;
 
+use Acd\Model\Exception\PersistentStorageUnknownInvalidException;
+
 class StorageKeyInvalidException extends \exception {}
 class StructureDo
 {

@@ -1,6 +1,8 @@
 <?php
 namespace Acd\Model;
 
+use Acd\Model\Exception\PersistentStorageUnknownInvalidException;
+
 class StructuresDo extends Collection
 {
 	private function getManager() {
