@@ -35,4 +35,33 @@ class Filter
         ];
         return $filter;
     }
+
+    public static function periodOfValidityRange($field, $validityFrom = null, $validityTo = null)
+    {
+        if (!$validityFrom && !$validityTo) {
+            return null;
+        }
+
+        $filter = ['$and' => []];
+
+        if ($validityFrom) {
+            $filter['$and'][] = [
+                '$or' => [
+                    [$field . '.end' => ['$gte' => $validityFrom]],
+                    [$field . '.end' => '']
+                ]
+            ];
+        }
+
+        if ($validityTo) {
+            $filter['$and'][] = [
+                '$or' => [
+                    [$field . '.start' => ['$lte' => $validityTo]],
+                    [$field . '.start' => '']
+                ]
+            ];
+        }
+
+        return $filter;
+    }
 }

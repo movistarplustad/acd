@@ -63,6 +63,9 @@ class PersistentManagerMongoDB implements iPersistentManager
 			case 'editor-search':
 				return $this->loadEditorSearch($structureDo, $query);
 				break;
+			case 'shortlink-search':
+				return $this->loadShortlinkSearch($structureDo, $query);
+				break;
 			case 'countParents':
 				return $this->countParents($structureDo, $query);
 				break;
@@ -525,6 +528,68 @@ class PersistentManagerMongoDB implements iPersistentManager
 		$limits->setTotal($mongoCollection->countDocuments($filter));
 		$result->setLimits($limits);
 		return $result;
+	}
+
+	private function loadShortlinkSearch($structureDo, $query)
+	{
+		if (!$this->isInitialized($structureDo)) {
+			$this->initialize($structureDo);
+		}
+
+		$conditions = $query->getCondition();
+		$limits = $query->getLimits();
+
+		if (!empty($conditions['alias_id'])) {
+			return $this->loadAliasIdDepth($structureDo, $conditions['alias_id'], 1, !empty($conditions['validity-date']) ? ['validity-date' => $conditions['validity-date']] : []);
+		}
+
+		$filters = ['id_structure' => $structureDo->getId()];
+
+		if (!empty($conditions['q'])) {
+			$filters['$or'] = [];
+			$filters['$or'][] = ['title' => ['$regex' => new \MongoDB\BSON\Regex($conditions['q'], 'i')]];
+			$filters['$or'][] = ['alias_id' => ['$regex' => new \MongoDB\BSON\Regex($conditions['q'], 'i')]];
+			$filters['$or'][] = ['data.destino.href' => ['$regex' => new \MongoDB\BSON\Regex($conditions['q'], 'i')]];
+		}
+
+		if (!empty($conditions['validity-date'])) {
+			$filters = Filter::add($filters, Filter::periodOfValidity('period_of_validity', $conditions['validity-date']));
+		} else {
+			if (!empty($conditions['validity-from']) || !empty($conditions['validity-to'])) {
+				$filters = Filter::add($filters, Filter::periodOfValidityRange('period_of_validity', $conditions['validity-from'] ?? null, $conditions['validity-to'] ?? null));
+			}
+		}
+
+		// Set pagination limits
+		$mongoCollection = $this->db->content;
+		$cursor = $mongoCollection->find($filters, [
+			'sort' => ['_id' => -1],
+			'skip' => $limits->getLower(),
+			'limit' => $limits->getUpper() - $limits->getLower(),
+			'typeMap' => [
+				'array' => 'array',
+				'root' => 'array',
+				'document' => 'array'
+			]
+		]);
+
+		$result = new ContentsDo();
+
+		foreach ($cursor as $documentFound) {
+			$documentFound = $this->normalizeDocument($documentFound);
+			$contentFound = new ContentDo();
+			$contentFound->load($documentFound, $structureDo);
+			$result->add($contentFound, $documentFound['id']);
+		}
+
+		$limits->setTotal($mongoCollection->countDocuments($filters));
+		$result->setLimits($limits);
+
+		if ($result->length() > 0) {
+			return $result;
+		}
+
+		return null;
 	}
 
 	private function countParents($structureDo, $query)
