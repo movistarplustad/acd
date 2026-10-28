@@ -75,6 +75,7 @@ En el conflicto de `composer.json` se mantuvieron las versiones de php85.
 | `d3025d2` | Propiedades declaradas en lugar de dinámicas. `Limits` usa `$step`; `Relation` y `Summary` usan `$idContent` |
 | `da90d36` | `Collection::getIterator(): \Traversable` |
 | `366bb51` | `ContentDo::$data` y `FieldDo::$dirtyNumItem`, declaradas al final de la clase (ver «Contrato con redirecciones») |
+| `5d4d06b` | tag-deep: `_id` ascendente como desempate del orden, para que la paginación sea estable |
 
 ### Configuración, contratos y editor
 
@@ -120,7 +121,7 @@ Al declarar las propiedades que antes eran dinámicas, hay que ponerlas **al fin
 | # | Asunto | Gravedad | Estado |
 |---|---|---|---|
 | 1 | **Composer de redirecciones.** Redirecciones vive en `webplus/editores` con Laravel 7, que exige phpdotenv ^4. Esta versión del ACD exige `php ^8.3` y phpdotenv ^5, así que no se puede instalar ahí tal como está. Redirecciones se va a migrar a PHP 8.5.12, y esa migración tiene que incluir un Laravel con phpdotenv 5. Avatar (Laravel 13, phpdotenv 5.7) sí es compatible | Alta para el despliegue | Decidido: se resuelve con la migración de redirecciones a PHP 8.5.12 (fuera de este repo). Hasta entonces, no desplegar esta versión en redirecciones |
-| 2 | **tag-deep ordena siempre por `data.titulo` -1.** Igual que en neo, pero en master no se ordenaba. `loadContent('tag-deep')` puede devolver otro contenido, y sin desempate la paginación no es estable. No se ha visto que avatar ni redirecciones usen tag-deep | Media | Por decidir: mantener lo de neo, no ordenar sin `order` o añadir `_id` como desempate |
+| 2 | **tag-deep ordena siempre por `data.titulo` -1.** Igual que en neo, pero en master no se ordenaba, así que `loadContent('tag-deep')` puede devolver otro contenido. Con títulos repetidos, o en estructuras sin `data.titulo` (como `pagina`), el orden quedaba al azar del motor. No se ha visto que avatar ni redirecciones usen tag-deep | Baja | Decidido: se mantiene el orden de neo y se añade `_id` ascendente como desempate (`5d4d06b`). Cambia el orden de 6 consultas de `pagina` respecto a neo; en una de ellas (`migracion`) cambian también los contenidos de la primera página |
 | 3 | **tag-deep filtra la vigencia en MongoDB.** Excluye los documentos sin `period_of_validity` o con `start`/`end` a `null`, que en PHP se trataban como sin límite. Solo afecta a documentos antiguos, porque al guardar se escribe `''`. `alias-id-deep` ya lo hacía en master | Baja-media | Por decidir |
 | 4 | **`ACD_ROL_EDITOR` en los consumidores.** Si no está definida, o si se comparte sesión con un login de editor del ACD, `all` oculta los contenidos con tag `blog`. `editor-search` no aplica el filtro, igual que en neo | Baja | Definirla en avatar y redirecciones |
 | 5 | **`content.php?s[]=x`.** Ahora da TypeError (500); antes, un aviso. Solo afecta a usuarios autenticados | Baja | Pendiente |
@@ -180,7 +181,8 @@ tests/e2e/entorno.sh down
 - **Precaución:** el `.env` base de ese contenedor apunta a producción; hay que forzar siempre el servidor local.
 - **Comparación:** con `diff.php referencia.json nuevo.json`.
 
-**Criterio:** solo las 3 diferencias esperadas:
+**Criterio:** solo las diferencias esperadas:
+- 7 consultas `tag-deep*|pagina|…` cambian de orden por el desempate por `_id` (riesgo 2).
 - `shortlink|2` devuelve `null` en vez de una excepción (NEODES-618).
 - `shortlink|3` y `shortlink|4` rechazan las fechas en texto (contrato de timestamps).
 
@@ -223,12 +225,12 @@ No están automatizadas. Hay que hacerlas en el entorno de preproducción, con l
 
 ### 3. Resultados (28-10-2026)
 
-Pruebas con el código de `366bb51`, el último cambio de la aplicación:
+Pruebas con el código de `5d4d06b`, el último cambio de la aplicación (escritura y redirecciones, con `366bb51`):
 
 | Prueba | MongoDB 9.0 | MongoDB 7.0.45 |
 |---|---|---|
 | Playwright, 123 estructuras, 2 roles | 20/20, log de PHP vacío | 20/20, log de PHP vacío |
-| Paridad de consultas (3.856, 2 roles) | Solo las 3 diferencias esperadas | Solo las 3 diferencias esperadas |
+| Paridad de consultas (3.856, 2 roles) | Las 3 diferencias esperadas y 7 de tag-deep por el desempate | Idéntico a MongoDB 9 (0 diferencias) |
 | Escritura (`smoke.php`) | Correcta | Igual que en MongoDB 9 |
 | Contrato con redirecciones | 300/300 | 300/300 |
 
